@@ -1,0 +1,10 @@
+# VitePress
+.vitepress/dist
+.vitepress/cache
+
+# Dependencies
+node_modules
+
+# Misc
+.DS_Store
+*.log

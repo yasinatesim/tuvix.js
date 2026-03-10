@@ -35,3 +35,11 @@ pnpm-debug.log*
 # Changeset
 .changeset/*.md
 !.changeset/config.json
+
+# VitePress (website)
+website/.vitepress/dist
+website/.vitepress/cache
+
+# Temp
+*.tmp
+tmp/
