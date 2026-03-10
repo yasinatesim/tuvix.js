@@ -6,10 +6,10 @@ import { createOrchestrator } from '@tuvix.js/core';
 export const bus = createEventBus();
 
 // Expose on window so micro apps can import it in dev mode
-(window as Record<string, unknown>).__TUVIX_BUS__ = bus;
+(window as unknown as Record<string, unknown>).__TUVIX_BUS__ = bus;
 
 const orchestrator = createOrchestrator({
-  onError(error, appName) {
+  onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
@@ -17,7 +17,7 @@ const orchestrator = createOrchestrator({
 // All three apps are always mounted (no route-based activation in this example)
 orchestrator.register({
   name: 'header',
-  entry: { type: 'module', url: '/src/apps/header/main.tsx' },
+  entry: '/src/apps/header/main.tsx',
   container: '#header',
   activeWhen: () => true,
   props: { bus },
@@ -25,7 +25,7 @@ orchestrator.register({
 
 orchestrator.register({
   name: 'sidebar',
-  entry: { type: 'module', url: '/src/apps/sidebar/main.tsx' },
+  entry: '/src/apps/sidebar/main.tsx',
   container: '#sidebar',
   activeWhen: () => true,
   props: { bus },
@@ -33,7 +33,7 @@ orchestrator.register({
 
 orchestrator.register({
   name: 'content',
-  entry: { type: 'module', url: '/src/apps/content/main.tsx' },
+  entry: '/src/apps/content/main.tsx',
   container: '#content',
   activeWhen: () => true,
   props: { bus },

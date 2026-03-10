@@ -1,14 +1,14 @@
-import { createOrchestrator } from 'tuvix.js';
+import { createOrchestrator } from '@tuvix.js/core';
 
 const orchestrator = createOrchestrator({
-  onError(error, appName) {
+  onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
 
 orchestrator.register({
   name: 'home',
-  entry: { type: 'module', url: '/src/apps/home/main.ts' },
+  entry: '/src/apps/home/main.ts',
   container: '#home',
   activeWhen: () => true,
   props: { name: 'Alice' },
@@ -16,7 +16,7 @@ orchestrator.register({
 
 orchestrator.register({
   name: 'profile',
-  entry: { type: 'module', url: '/src/apps/profile/main.ts' },
+  entry: '/src/apps/profile/main.ts',
   container: '#profile',
   activeWhen: () => true,
   props: { theme: 'dark' },

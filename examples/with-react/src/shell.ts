@@ -8,7 +8,7 @@ const orchestrator = createOrchestrator({
       { path: '/about/*', app: 'about' },
     ],
   },
-  onError(error, appName) {
+  onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
@@ -17,7 +17,7 @@ const orchestrator = createOrchestrator({
 // e.g. 'https://cdn.example.com/home/main.js'
 orchestrator.register({
   name: 'home',
-  entry: { type: 'module', url: '/src/apps/home/main.tsx' },
+  entry: '/src/apps/home/main.tsx',
   container: '#app',
   activeWhen: '/home',
   props: { theme: 'dark', user: 'Alice' },
@@ -25,7 +25,7 @@ orchestrator.register({
 
 orchestrator.register({
   name: 'about',
-  entry: { type: 'module', url: '/src/apps/about/main.tsx' },
+  entry: '/src/apps/about/main.tsx',
   container: '#app',
   activeWhen: '/about',
 });

@@ -1,4 +1,4 @@
-import { createOrchestrator } from 'tuvix.js';
+import { createOrchestrator } from '@tuvix.js/core';
 import { createFederatedLoader } from '@tuvix.js/module-federation';
 
 // 1. Initialize the Module Federation loader with remote configurations
@@ -10,7 +10,7 @@ const mfLoader = createFederatedLoader({
 });
 
 const orchestrator = createOrchestrator({
-  onError(error, appName) {
+  onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });

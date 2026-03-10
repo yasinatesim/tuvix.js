@@ -1,21 +1,21 @@
-import { createOrchestrator } from 'tuvix.js';
+import { createOrchestrator } from '@tuvix.js/core';
 
 const orchestrator = createOrchestrator({
-  onError(error, appName) {
+  onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
 
 orchestrator.register({
   name: 'react-app',
-  entry: { type: 'module', url: '/src/apps/react-app/main.tsx' },
+  entry: '/src/apps/react-app/main.tsx',
   container: '#react-app',
   activeWhen: () => true,
 });
 
 orchestrator.register({
   name: 'vue-app',
-  entry: { type: 'module', url: '/src/apps/vue-app/main.ts' },
+  entry: '/src/apps/vue-app/main.ts',
   container: '#vue-app',
   activeWhen: () => true,
 });

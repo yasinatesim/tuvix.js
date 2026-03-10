@@ -11,28 +11,28 @@ const orchestrator = createOrchestrator({
       { path: '/settings/*', app: 'settings' },
     ],
   },
-  onError(error, appName) {
+  onError(error: Error, appName: string) {
     console.error(`[Shell] "${appName}" failed:`, error);
   },
 });
 
 orchestrator.register({
   name: 'dashboard',
-  entry: { type: 'module', url: '/src/apps/dashboard/main.tsx' },
+  entry: '/src/apps/dashboard/main.tsx',
   container: '#app',
   activeWhen: '/dashboard',
 });
 
 orchestrator.register({
   name: 'profile',
-  entry: { type: 'module', url: '/src/apps/profile/main.tsx' },
+  entry: '/src/apps/profile/main.tsx',
   container: '#app',
   activeWhen: '/profile',
 });
 
 orchestrator.register({
   name: 'settings',
-  entry: { type: 'module', url: '/src/apps/settings/main.tsx' },
+  entry: '/src/apps/settings/main.tsx',
   container: '#app',
   activeWhen: '/settings',
 });
