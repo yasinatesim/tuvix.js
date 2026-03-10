@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/angular",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Angular bindings for Tuvix.js microfrontend framework",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
