@@ -1,5 +1,5 @@
 import express from 'express';
-import { createServerRenderer } from '@tuvix.js/server';
+import { composeHTML } from '@tuvix.js/server';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 
@@ -7,7 +7,7 @@ const app = express();
 const port = 3000;
 
 // Basic html shell template
-// Notice the `<tuvix-slot id="app-name">` elements. The server renderer will inject matched fragments here.
+// Notice the `<tuvix-slot name="app-name">` elements. The server renderer will inject matched fragments here.
 const shellTemplate = `
 <!DOCTYPE html>
 <html lang="en">
@@ -32,14 +32,14 @@ const shellTemplate = `
       <h1>Dashboard SSR</h1>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
         <!-- Tuvix will inject the "left-service" HTML here -->
-        <tuvix-slot id="left-service">
+        <tuvix-slot name="left-service">
           <div style="padding: 24px; background: #222; border-radius: 8px;">
             Loading left service fallback...
           </div>
         </tuvix-slot>
 
         <!-- Tuvix will inject the "right-service" HTML here -->
-        <tuvix-slot id="right-service">
+        <tuvix-slot name="right-service">
            <div style="padding: 24px; background: #222; border-radius: 8px;">
             Loading right service fallback...
           </div>
@@ -65,41 +65,28 @@ function RightApp() {
   );
 }
 
-// 1. Initialize the Server Renderer
-const renderer = createServerRenderer({
-  template: shellTemplate,
-  timeoutMs: 2000,
-});
-
-// 2. Define our page route
-app.get('/', async (req, res) => {
+// Define our page route
+app.get('/', (req, res) => {
   console.log('[Express] rendering /');
-  
-  // We provide the fragments to Tuvix.
+
+  // Render each micro-app fragment server-side.
   // In a real microservice setup, these might be fetch calls to remote endpoints.
-  const fragments = {
-    'left-service': {
-      html: renderToString(React.createElement(LeftApp)),
-      assets: [] // Pass CSS/JS paths if needed
-    },
-    'right-service': {
-      html: renderToString(React.createElement(RightApp)),
-      assets: []
-    }
+  const slots = {
+    'left-service': renderToString(React.createElement(LeftApp)),
+    'right-service': renderToString(React.createElement(RightApp)),
   };
 
-  // Provide the html snippets mapped to their Tuvix slot IDs.
-  // Tuvix will stream the stitched response to the client.
-  try {
-    const finalHtml = await renderer.render(fragments);
-    res.setHeader('Content-Type', 'text/html');
-    res.send(finalHtml);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Composer failed');
-  }
+  // Stitch the fragments into the shell template via Tuvix slot replacement.
+  const finalHtml = composeHTML(shellTemplate, slots);
+  res.setHeader('Content-Type', 'text/html');
+  res.send(finalHtml);
 });
 
-app.listen(port, () => {
-  console.log(\`🚀 SSR example running at http://localhost:\${port}\`);
-});
+// Only start the server when run directly, not when imported by tests
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  app.listen(port, () => {
+    console.log(`🚀 SSR example running at http://localhost:${port}`);
+  });
+}
+
+export { app };
