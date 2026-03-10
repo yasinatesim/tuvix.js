@@ -66,6 +66,12 @@
   color: var(--vp-c-brand-1);
 }
 
+/* ─── Links ──────────────────────────────────────────────────────── */
+.vp-doc a {
+  text-decoration: none;
+}
+
+
 /* ─── Code blocks ────────────────────────────────────────────────── */
 .vp-doc div[class*='language-'] {
   border-radius: 10px;
