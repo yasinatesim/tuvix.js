@@ -1,5 +1,14 @@
 # @tuvix.js/vue
 
+## 0.1.2
+
+### Patch Changes
+
+- fix: provide NODE_AUTH_TOKEN to CI pipeline
+- Updated dependencies
+  - @tuvix.js/event-bus@0.1.2
+  - @tuvix.js/loader@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

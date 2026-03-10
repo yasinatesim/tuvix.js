@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/loader",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Dynamic module loader for Tuvix.js microfrontend framework",
 	"main": "dist/index.cjs",
 	"module": "dist/index.mjs",

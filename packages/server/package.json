@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/server",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Server-side composition for Tuvix.js microfrontends",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",

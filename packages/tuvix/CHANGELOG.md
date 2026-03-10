@@ -1,5 +1,17 @@
 # tuvix.js
 
+## 0.1.2
+
+### Patch Changes
+
+- fix: provide NODE_AUTH_TOKEN to CI pipeline
+- Updated dependencies
+  - @tuvix.js/core@0.1.2
+  - @tuvix.js/event-bus@0.1.2
+  - @tuvix.js/loader@0.1.2
+  - @tuvix.js/router@0.1.2
+  - @tuvix.js/sandbox@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/devtools",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "In-page debug panel for Tuvix.js microfrontend framework",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
