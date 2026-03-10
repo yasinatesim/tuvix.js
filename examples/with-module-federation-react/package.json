@@ -2,6 +2,11 @@
   "name": "with-module-federation-react",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "@tuvix.js/core": "workspace:^",
+    "@tuvix.js/module-federation": "workspace:^",
+    "@tuvix.js/react": "workspace:^"
+  },
   "scripts": {
     "start": "pnpm run serve:remote1 & pnpm run serve:remote2 & pnpm run serve:shell",
     "build": "pnpm run build:remote1 && pnpm run build:remote2 && pnpm run build:shell",
