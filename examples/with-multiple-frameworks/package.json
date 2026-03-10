@@ -1,0 +1,26 @@
+{
+  "name": "with-multiple-frameworks",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tuvix.js/core": "^0.1.0",
+    "@tuvix.js/react": "^0.1.0",
+    "@tuvix.js/vue": "^0.1.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vue-tsc": "^2.0.0"
+  }
+}

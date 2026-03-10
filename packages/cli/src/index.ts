@@ -8,6 +8,7 @@ const HELP = `
 
   Options:
     --template <name>    Template to use: shell, react-app, vue-app, vanilla-app (default: shell)
+    --example <name>     Example a fully scaffolded example (e.g., with-react)
     --typescript         Use TypeScript (default: true)
     --help               Show this help message
     --version            Show version
@@ -15,12 +16,13 @@ const HELP = `
   Examples:
     npx create-tuvix-app my-shell
     npx create-tuvix-app my-dashboard --template react-app
-    npx create-tuvix-app my-settings --template vue-app
+    npx create-tuvix-app my-app --example with-react
 `;
 
 function parseArgs(argv: string[]): {
   projectName: string;
   template: string;
+  example: string | null;
   typescript: boolean;
   help: boolean;
   version: boolean;
@@ -28,6 +30,7 @@ function parseArgs(argv: string[]): {
   const args = argv.slice(2);
   let projectName = '';
   let template = 'shell';
+  let example: string | null = null;
   let typescript = true;
   let help = false;
   let version = false;
@@ -41,6 +44,8 @@ function parseArgs(argv: string[]): {
       version = true;
     } else if (arg === '--template' || arg === '-t') {
       template = args[++i] ?? 'shell';
+    } else if (arg === '--example' || arg === '-e') {
+      example = args[++i] ?? null;
     } else if (arg === '--no-typescript') {
       typescript = false;
     } else if (!arg.startsWith('-')) {
@@ -48,11 +53,11 @@ function parseArgs(argv: string[]): {
     }
   }
 
-  return { projectName, template, typescript, help, version };
+  return { projectName, template, example, typescript, help, version };
 }
 
 async function main(): Promise<void> {
-  const { projectName, template, typescript, help, version } =
+  const { projectName, template, example, typescript, help, version } =
     parseArgs(process.argv);
 
   if (help) {
@@ -72,13 +77,18 @@ async function main(): Promise<void> {
   }
 
   console.log(`\n  ⬡ Creating Tuvix.js project: ${projectName}`);
-  console.log(`    Template: ${template}`);
-  console.log(`    TypeScript: ${typescript}\n`);
+  if (example) {
+    console.log(`    Example: ${example}\n`);
+  } else {
+    console.log(`    Template: ${template}`);
+    console.log(`    TypeScript: ${typescript}\n`);
+  }
 
   try {
     await createProject({
       name: projectName,
       template,
+      example,
       typescript,
     });
 

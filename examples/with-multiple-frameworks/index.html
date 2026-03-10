@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tuvix.js — Micro Frontends, Multiple Frameworks</title>
+  </head>
+  <body style="margin: 0; background: #0f0f1a; color: #e0e0e0; font-family: system-ui;">
+    <div style="padding: 16px 24px; background: #16213e; display: flex; gap: 16px;">
+      <span style="font-weight: 700;">⬡ Tuvix.js Polyglot Example</span>
+    </div>
+    
+    <div style="padding: 40px 24px; max-width: 900px; margin: 0 auto;">
+      <h1 style="margin-bottom: 24px; text-align: center;">React + Vue 3 Together 🤝</h1>
+      <p style="text-align: center; color: #aaa; margin-bottom: 40px;">
+        These two micro apps are written in different frameworks but share the same Tuvix orchestrator lifecycle.
+      </p>
+
+      <div style="display: grid; gap: 24px; grid-template-columns: 1fr 1fr;">
+        <div id="react-app"></div>
+        <div id="vue-app"></div>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/shell.ts"></script>
+  </body>
+</html>

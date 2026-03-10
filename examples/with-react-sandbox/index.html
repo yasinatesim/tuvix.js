@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tuvix.js — with-react-sandbox</title>
+    <!-- 1. Global CSS to show how sandbox protects the rest of the page -->
+    <style>
+      body {
+        margin: 0;
+        background: #0f0f1a;
+        color: #e0e0e0;
+        font-family: system-ui, sans-serif;
+      }
+      .global-card {
+        padding: 24px;
+        background: #16213e;
+        border-radius: 12px;
+        margin-bottom: 24px;
+      }
+      /* This global style would normally affect all paragraphs */
+      p {
+        color: #93c5fd;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="max-width: 900px; margin: 40px auto; padding: 0 24px;">
+      <h1 style="margin-bottom: 24px;">🛡️ Tuvix.js Sandbox Example</h1>
+      
+      <div class="global-card">
+        <h2>Shell (Global Scope)</h2>
+        <p>This paragraph is styled by the global CSS (light blue).</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div id="app1"></div>
+        <div id="app2"></div>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/shell.ts"></script>
+  </body>
+</html>

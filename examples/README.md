@@ -1,21 +1,38 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/yasinatesim/tuvix.js/main/packages/core/tuvix-logo.png" width="150" alt="Tuvix.js">
+</p>
+
 # Tuvix.js Examples
 
-Ready-to-run examples demonstrating how to use Tuvix.js with each supported framework.
+This directory contains standalone, fully-runnable project examples demonstrating various features and framework integrations of the **Tuvix.js** orchestrator.
 
-Each example contains:
-- A **shell** (`shell/index.ts`) — boots the orchestrator and registers two micro apps
-- Two **micro apps** (`apps/home/`, `apps/profile/`) — demonstrate mounting, unmounting, props, and event bus communication
+## Quick Start
 
-> **Note on `entry` paths:** The shell files use local source file paths for illustration. In production, `entry` must point to a built JS bundle URL (e.g. `https://cdn.example.com/home/main.js`).
+The easiest way to start any example is to use the `create-tuvix-app` CLI with the `--example` flag:
 
-> **Note on the event bus:** Each framework example creates a module-level `bus` instance. In a real multi-repo setup you would share a single bus instance (e.g. via a shared npm package or a global provided by the shell).
+```bash
+npx create-tuvix-app@latest --example <example-name> my-app
+cd my-app
+npm install && npm run dev
+```
 
-## Examples
+*(You can also clone this repository and manually run `npm install` and `npm run dev` inside any example folder).*
 
-| Directory | Framework | Version |
-| --- | --- | --- |
-| [`react/`](./react) | React | 18+ |
-| [`vue/`](./vue) | Vue | 3 |
-| [`svelte/`](./svelte) | Svelte | 5 |
-| [`angular/`](./angular) | Angular | 15+ (standalone API) |
-| [`vanilla/`](./vanilla) | Vanilla JS | — |
+## Available Examples
+
+| Example Name | Framework | Key Feature Demonstrated |
+|--------------|-----------|--------------------------|
+| [`with-react`](./with-react/) | React 18 | Basic Shell, Routing, and Prop passing via `@tuvix.js/react` |
+| [`with-react-event-bus`](./with-react-event-bus/) | React 18 | Cross-app pub/sub communication using `@tuvix.js/event-bus` |
+| [`with-react-router`](./with-react-router/) | React 18 | URL-based active routing using `@tuvix.js/router` |
+| [`with-react-sandbox`](./with-react-sandbox/) | React 18 | Strict Shadow DOM CSS isolation via `@tuvix.js/sandbox` |
+| [`with-react-devtools`](./with-react-devtools/) | React 18 | In-page orchestrator debugging via `@tuvix.js/devtools` |
+| [`with-module-federation-react`](./with-module-federation-react/) | React (Webpack 5) | Dynamic remote module loading via `@tuvix.js/module-federation` |
+| [`with-ssr-react`](./with-ssr-react/) | React (Express) | Asynchronous SSR HTML fragment composition via `@tuvix.js/server` |
+| [`with-vue`](./with-vue/) | Vue 3 | Vue 3 composition API integration via `@tuvix.js/vue` |
+| [`with-svelte`](./with-svelte/) | Svelte 4 | Svelte integration and Context API props via `@tuvix.js/svelte` |
+| [`with-angular`](./with-angular/) | Angular 15+ | Angular CLI setup and `@Input()` injection via `@tuvix.js/angular` |
+| [`with-multiple-frameworks`](./with-multiple-frameworks/) | React & Vue 3 | Polyglot architecture (sharing a single shell across frameworks) |
+
+## Multi-language Support
+Each example provides documentation in **10 languages** (English, Turkish, Spanish, German, French, Japanese, Chinese, Italian, Portuguese, and Hindi). Open any example's directory to see the localized README files.

@@ -1,0 +1,15 @@
+{
+  "name": "with-module-federation-react",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "pnpm run serve:remote1 & pnpm run serve:remote2 & pnpm run serve:shell",
+    "build": "pnpm run build:remote1 && pnpm run build:remote2 && pnpm run build:shell",
+    "serve:remote1": "cd remote1 && npx serve -l 3001 dist",
+    "serve:remote2": "cd remote2 && npx serve -l 3002 dist",
+    "serve:shell": "cd shell && pnpm run dev",
+    "build:remote1": "cd remote1 && pnpm install && pnpm run build",
+    "build:remote2": "cd remote2 && pnpm install && pnpm run build",
+    "build:shell": "cd shell && pnpm install && pnpm run build"
+  }
+}
