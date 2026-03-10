@@ -1,0 +1,31 @@
+[build]
+  base    = "website"
+  command = "pnpm install --frozen-lockfile && pnpm build"
+  publish = ".vitepress/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[context.deploy-preview]
+  command = "pnpm install --frozen-lockfile && pnpm build"
+
+[context.branch-deploy]
+  command = "pnpm install --frozen-lockfile && pnpm build"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "no-referrer-when-downgrade"
+    Cache-Control          = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
+  from   = "/*"
+  to     = "/404.html"
+  status = 404
