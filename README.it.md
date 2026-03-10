@@ -5,8 +5,8 @@
 <h1 align="center">Tuvix.js</h1>
 
 <p align="center">
-  A lightweight and flexible <strong>microfrontend framework</strong> for building scalable, independently deployable frontend applications.<br/>
-  Tuvix.js merges multiple frontend applications into a seamless, unified user experience — just like its name suggests.
+  Un framework <strong>microfrontend</strong> leggero e flessibile per creare applicazioni frontend scalabili e distribuibili in modo indipendente.<br/>
+  Tuvix.js unisce più applicazioni frontend in un'esperienza utente fluida e coerente — proprio come suggerisce il suo nome.
 </p>
 
 <p align="center">
@@ -24,34 +24,34 @@
 
 ---
 
-## ✨ Features
+## ✨ Funzionalità
 
-- 🧩 **Framework Agnostic** — Use React, Vue, Svelte, Angular or Vanilla JS
-- 📦 **Independent Deployment** — Deploy each micro app separately
-- 🔗 **Dynamic Module Loading** — Load micro frontends on demand
-- 🛣️ **Built-in Routing** — Seamless routing across micro apps
-- 📡 **Inter-App Communication** — Event bus for cross-app messaging
-- ⚡ **Lightweight** — Zero runtime dependencies, minimal core
-- 🔄 **Lifecycle Management** — Mount, unmount, update hooks
-- 🔒 **Type-Safe** — Full TypeScript support with strict types
+- 🧩 **Indipendente dal Framework** — Usa React, Vue, Svelte, Angular o Vanilla JS
+- 📦 **Deploy Indipendente** — Distribuisci ogni micro app separatamente
+- 🔗 **Caricamento Dinamico dei Moduli** — Carica i microfrontend on demand
+- 🛣️ **Routing Integrato** — Routing trasparente tra le micro app
+- 📡 **Comunicazione tra App** — Event bus per la messaggistica cross-app
+- ⚡ **Leggero** — Zero dipendenze runtime, core minimale
+- 🔄 **Gestione del Ciclo di Vita** — Hook di mount, unmount e update
+- 🔒 **Type-Safe** — Supporto completo a TypeScript con tipi rigorosi
 
 ---
 
-## 📦 Installation
+## 📦 Installazione
 
 ```bash
-# All-in-one package
+# Pacchetto tutto-in-uno
 npm install tuvix.js
 
-# Or install individual packages
+# Oppure installa i pacchetti singolarmente
 npm install @tuvix.js/core @tuvix.js/router
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Avvio Rapido
 
-### Host (Shell) Application
+### Applicazione Host (Shell)
 
 ```ts
 import { createOrchestrator } from 'tuvix.js';
@@ -83,7 +83,7 @@ orchestrator.register({
 orchestrator.start();
 ```
 
-### Micro Frontend App
+### App Micro Frontend
 
 ```ts
 import { defineMicroApp } from 'tuvix.js';
@@ -111,17 +111,17 @@ export default defineMicroApp({
 
 ---
 
-## 🔌 Inter-App Communication
+## 🔌 Comunicazione tra App
 
 ```ts
 import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — emit event
+// App A — emetti evento
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — listen for event
+// App B — ascolta evento
 bus.on('user:login', (data) => {
   console.log(`${data.name} logged in!`);
 });
@@ -146,7 +146,7 @@ const router = createRouter({
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architettura
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -167,28 +167,28 @@ const router = createRouter({
 
 ---
 
-## 📦 Packages
+## 📦 Pacchetti
 
-| Package | Description |
+| Pacchetto | Descrizione |
 | --- | --- |
-| [`tuvix.js`](./packages/tuvix) | All-in-one umbrella package |
-| [`@tuvix.js/core`](./packages/core) | Core orchestrator with lifecycle management |
-| [`@tuvix.js/router`](./packages/router) | URL-based micro app routing |
-| [`@tuvix.js/event-bus`](./packages/event-bus) | Inter-app communication event bus |
-| [`@tuvix.js/loader`](./packages/loader) | Dynamic module loader |
-| [`@tuvix.js/sandbox`](./packages/sandbox) | CSS/JS isolation (Shadow DOM + Proxy) |
-| [`@tuvix.js/react`](./packages/react) | React 18+ bindings & hooks |
-| [`@tuvix.js/vue`](./packages/vue) | Vue 3 bindings & composables |
-| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5 bindings |
-| [`@tuvix.js/angular`](./packages/angular) | Angular 15+ bindings |
-| [`create-tuvix-app`](./packages/cli) | CLI scaffolding tool |
-| [`@tuvix.js/devtools`](./packages/devtools) | In-page debug panel |
-| [`@tuvix.js/server`](./packages/server) | Server-side composition |
-| [`@tuvix.js/module-federation`](./packages/module-federation) | Webpack Module Federation integration |
+| [`tuvix.js`](./packages/tuvix) | Pacchetto ombrello tutto-in-uno |
+| [`@tuvix.js/core`](./packages/core) | Orchestratore core con gestione del ciclo di vita |
+| [`@tuvix.js/router`](./packages/router) | Routing delle micro app basato su URL |
+| [`@tuvix.js/event-bus`](./packages/event-bus) | Event bus per la comunicazione tra app |
+| [`@tuvix.js/loader`](./packages/loader) | Caricatore dinamico di moduli |
+| [`@tuvix.js/sandbox`](./packages/sandbox) | Isolamento CSS/JS (Shadow DOM + Proxy) |
+| [`@tuvix.js/react`](./packages/react) | Binding e hook per React 18+ |
+| [`@tuvix.js/vue`](./packages/vue) | Binding e composables per Vue 3 |
+| [`@tuvix.js/svelte`](./packages/svelte) | Binding per Svelte 3-5 |
+| [`@tuvix.js/angular`](./packages/angular) | Binding per Angular 15+ |
+| [`create-tuvix-app`](./packages/cli) | Strumento CLI di scaffolding |
+| [`@tuvix.js/devtools`](./packages/devtools) | Pannello di debug in-page |
+| [`@tuvix.js/server`](./packages/server) | Composizione lato server |
+| [`@tuvix.js/module-federation`](./packages/module-federation) | Integrazione Webpack Module Federation |
 
 ---
 
-## 📁 Project Structure
+## 📁 Struttura del Progetto
 
 ```
 tuvix.js/
@@ -206,16 +206,16 @@ tuvix.js/
 │   ├── devtools/           # @tuvix.js/devtools
 │   ├── server/             # @tuvix.js/server
 │   ├── module-federation/  # @tuvix.js/module-federation
-│   └── tuvix/              # tuvix.js (umbrella)
+│   └── tuvix/              # tuvix.js (ombrello)
 ├── examples/
-│   ├── react/              # React 18+ example
-│   ├── vue/                # Vue 3 example
-│   ├── svelte/             # Svelte 5 example
-│   ├── angular/            # Angular 15+ example
-│   └── vanilla/            # Vanilla JS example
-├── website/                # Documentation site (VitePress, 10 languages)
-├── .github/                # CI/CD workflows
-├── package.json            # Root workspace config
+│   ├── react/              # Esempio React 18+
+│   ├── vue/                # Esempio Vue 3
+│   ├── svelte/             # Esempio Svelte 5
+│   ├── angular/            # Esempio Angular 15+
+│   └── vanilla/            # Esempio Vanilla JS
+├── website/                # Sito di documentazione (VitePress, 10 lingue)
+├── .github/                # Workflow CI/CD
+├── package.json            # Configurazione root del workspace
 ├── pnpm-workspace.yaml
 ├── tsconfig.base.json
 └── vitest.config.ts
@@ -225,79 +225,79 @@ tuvix.js/
 
 ## 🗺️ Roadmap
 
-### ✅ Completed
+### ✅ Completati
 
-- [x] Core orchestrator
-- [x] Lifecycle management
-- [x] Dynamic module loading
+- [x] Orchestratore core
+- [x] Gestione del ciclo di vita
+- [x] Caricamento dinamico dei moduli
 - [x] Event bus
-- [x] URL routing with history/hash modes
-- [x] CSS/JS sandbox isolation
-- [x] CLI scaffolding tool (`npx create-tuvix-app`)
-- [x] DevTools browser extension
-- [x] Server-side composition
-- [x] Module federation support
-- [x] Framework bindings (React, Vue, Svelte, Angular)
-- [x] i18n documentation (10 languages)
+- [x] Routing URL con modalità history/hash
+- [x] Isolamento sandbox CSS/JS
+- [x] Strumento CLI di scaffolding (`npx create-tuvix-app`)
+- [x] Estensione browser DevTools
+- [x] Composizione lato server
+- [x] Supporto module federation
+- [x] Binding per framework (React, Vue, Svelte, Angular)
+- [x] Documentazione i18n (10 lingue)
 
-### 🔜 Coming Soon
+### 🔜 In Arrivo
 
-- [ ] Hot module reload across micro apps
-- [ ] Shared state management adapter
-- [ ] Preloading & prefetching strategies
-- [ ] Plugin system & middleware API
-- [ ] Visual dependency graph in DevTools
-- [ ] Testing utilities & mock orchestrator
-- [ ] Native ESM / importmap support
-- [ ] Edge/CDN-aware server composition
-- [ ] VS Code extension for DevTools integration
-- [ ] Storybook integration for micro app isolation
+- [ ] Hot module reload tra micro app
+- [ ] Adattatore per la gestione dello stato condiviso
+- [ ] Strategie di preloading e prefetching
+- [ ] Sistema di plugin e API middleware
+- [ ] Grafo visuale delle dipendenze nei DevTools
+- [ ] Utility di testing e mock orchestrator
+- [ ] Supporto ESM nativo / importmap
+- [ ] Composizione server-side per Edge/CDN
+- [ ] Estensione VS Code per integrazione DevTools
+- [ ] Integrazione Storybook per l'isolamento delle micro app
 
 ---
 
-## 🧪 Examples
+## 🧪 Esempi
 
-Ready-to-run examples for each supported framework are available in the [`examples/`](./examples) directory:
+Esempi pronti all'uso per ogni framework supportato sono disponibili nella directory [`examples/`](./examples):
 
-| Example | Framework | Path |
+| Esempio | Framework | Percorso |
 | --- | --- | --- |
-| [React Example](./examples/react) | React 18+ | `examples/react/` |
-| [Vue Example](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelte Example](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angular Example](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Vanilla JS Example](./examples/vanilla) | No framework | `examples/vanilla/` |
+| [Esempio React](./examples/react) | React 18+ | `examples/react/` |
+| [Esempio Vue](./examples/vue) | Vue 3 | `examples/vue/` |
+| [Esempio Svelte](./examples/svelte) | Svelte 5 | `examples/svelte/` |
+| [Esempio Angular](./examples/angular) | Angular 15+ | `examples/angular/` |
+| [Esempio Vanilla JS](./examples/vanilla) | Nessun framework | `examples/vanilla/` |
 
-Each example demonstrates:
-- A **shell (host)** application that boots the orchestrator
-- Two **micro frontend apps** registered and loaded dynamically
-- Inter-app communication via the event bus
+Ogni esempio dimostra:
+- Un'applicazione **shell (host)** che avvia l'orchestratore
+- Due **app micro frontend** registrate e caricate dinamicamente
+- Comunicazione tra app tramite l'event bus
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contribuire
 
-Contributions are welcome! Please read the [Contributing Guide](./CONTRIBUTING.md) before submitting a PR.
+I contributi sono benvenuti! Per favore leggi la [Guida ai Contributi](./CONTRIBUTING.md) prima di inviare una PR.
 
 ```bash
-# Clone the repo
+# Clona il repository
 git clone https://github.com/yasinatesim/tuvix.js.git
 
-# Install dependencies
+# Installa le dipendenze
 pnpm install
 
-# Build all packages
+# Compila tutti i pacchetti
 pnpm build
 
-# Run tests
+# Esegui i test
 pnpm test
 ```
 
 ---
 
-## 🔑 License
+## 🔑 Licenza
 
-Copyright © 2026 - MIT License.
-See [LICENSE](./LICENSE) for more information.
+Copyright © 2026 - Licenza MIT.
+Consulta [LICENSE](./LICENSE) per maggiori informazioni.
 
 
 ---
