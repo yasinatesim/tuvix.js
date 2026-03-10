@@ -1,9 +1,3 @@
-# Cloudflare Pages
-# ─────────────────
-# Build settings (if deploying from a repo):
-#   Build command:  (none — static HTML)
-#   Output dir:     /  (root)
-#   Root dir:       /
-
-# Add this file as: public/_redirects
-/*    /index.html   200
+# VitePress generates static HTML for every route — no SPA redirect needed.
+# This file is kept as a fallback for Cloudflare Pages if ever migrated.
+/docs/* /guide/:splat 301

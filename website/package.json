@@ -1,0 +1,22 @@
+{
+  "name": "@tuvix.js/website",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "eslint": "^9.15.0",
+    "eslint-plugin-vue": "^9.31.0",
+    "globals": "^15.12.0",
+    "typescript-eslint": "^8.15.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.13"
+  }
+}

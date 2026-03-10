@@ -53,3 +53,35 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm format --check || true
+
+  website-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install website dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: website
+      - name: Lint website
+        run: pnpm lint
+        working-directory: website
+
+  website-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install website dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: website
+      - name: Build website
+        run: pnpm build
+        working-directory: website

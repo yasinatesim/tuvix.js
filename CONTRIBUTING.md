@@ -31,13 +31,59 @@ pnpm test
 ## Project Structure
 
 ```
-packages/
-├── core/           # @tuvix.js/core — Orchestrator
-├── router/         # @tuvix.js/router — URL routing
-├── event-bus/      # @tuvix.js/event-bus — Inter-app communication
-├── loader/         # @tuvix.js/loader — Dynamic module loading
-└── tuvix/          # tuvix.js — Umbrella package
+tuvix.js/
+├── packages/
+│   ├── core/           @tuvix.js/core — Orchestrator
+│   ├── router/         @tuvix.js/router — URL routing
+│   ├── event-bus/      @tuvix.js/event-bus — Inter-app communication
+│   ├── loader/         @tuvix.js/loader — Dynamic module loading
+│   ├── sandbox/        @tuvix.js/sandbox — CSS/JS isolation
+│   ├── react/          @tuvix.js/react — React bindings
+│   ├── vue/            @tuvix.js/vue — Vue bindings
+│   ├── svelte/         @tuvix.js/svelte — Svelte bindings
+│   ├── angular/        @tuvix.js/angular — Angular bindings
+│   ├── devtools/       @tuvix.js/devtools — Debug panel
+│   ├── server/         @tuvix.js/server — SSR composition
+│   ├── module-federation/  @tuvix.js/module-federation
+│   ├── create-tuvix-app/   CLI scaffolding tool
+│   └── tuvix/          tuvix.js — Umbrella package
+└── website/
+    ├── .vitepress/     VitePress config and theme
+    ├── guide/          English documentation (Markdown)
+    ├── packages/       Package API docs (Markdown)
+    ├── tr/             Turkish translations
+    ├── es/             Spanish translations
+    ├── de/             German translations
+    ├── fr/             French translations
+    ├── ja/             Japanese translations
+    ├── zh/             Chinese translations
+    ├── it/             Italian translations
+    ├── pt/             Portuguese translations
+    └── hi/             Hindi translations
 ```
+
+## Working on the Website / Docs
+
+The documentation is Markdown-based, powered by [VitePress](https://vitepress.dev).
+
+```bash
+cd website
+pnpm install        # Install website deps
+pnpm dev            # Start dev server at http://localhost:5173
+pnpm build          # Build static docs
+pnpm lint           # Lint Vue/JS files
+```
+
+### Adding or Improving Translations
+
+Each language has its own directory under `website/`. To add or improve a translation:
+
+1. Copy the relevant `.md` file from `website/guide/` (English) to `website/<lang>/guide/`
+2. Translate the content — **keep all code blocks in English**
+3. If the language isn't yet in the sidebar, update `website/.vitepress/config/<lang>.ts`
+4. Run `pnpm dev` inside `website/` to preview
+
+Supported languages: `en`, `tr`, `es`, `de`, `fr`, `ja`, `zh`, `it`, `pt`, `hi`
 
 ## Code Style
 

@@ -1,0 +1,274 @@
+/* ─── Custom Properties ──────────────────────────────────────────── */
+:root {
+  --vp-c-brand-1: #00e5a0;
+  --vp-c-brand-2: #00c987;
+  --vp-c-brand-3: #00b574;
+  --vp-c-brand-soft: rgba(0, 229, 160, 0.08);
+
+  --vp-font-family-base: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Override nav */
+  --vp-nav-height: 64px;
+}
+
+/* Dark mode colors */
+.dark {
+  --vp-c-bg: #080c10;
+  --vp-c-bg-soft: #0d1117;
+  --vp-c-bg-mute: #111820;
+  --vp-c-divider: #1e2d3d;
+  --vp-c-text-1: #eaf2f8;
+  --vp-c-text-2: #c9d5e0;
+  --vp-c-text-3: #5c7080;
+}
+
+/* ─── Typography ─────────────────────────────────────────────────── */
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4 {
+  font-family: 'Syne', var(--vp-font-family-base);
+  letter-spacing: -0.02em;
+}
+
+/* ─── Home Hero ──────────────────────────────────────────────────── */
+.VPHero .tagline {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+.VPButton.brand {
+  background-color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: #080c10;
+  font-weight: 700;
+}
+
+.VPButton.brand:hover {
+  background-color: var(--vp-c-brand-2);
+  border-color: var(--vp-c-brand-2);
+}
+
+/* ─── Nav ────────────────────────────────────────────────────────── */
+.VPNav {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ─── Sidebar active link ────────────────────────────────────────── */
+.VPSidebarItem.is-active > .item .link .text {
+  color: var(--vp-c-brand-1);
+}
+
+/* ─── Code blocks ────────────────────────────────────────────────── */
+.vp-doc div[class*='language-'] {
+  border-radius: 10px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* ─── Package card components ────────────────────────────────────── */
+.pkg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.pkg-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  padding: 24px;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
+}
+
+.pkg-card:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+}
+
+.pkg-card-name {
+  font-family: var(--vp-font-family-mono);
+  font-size: 13px;
+  color: var(--vp-c-brand-1);
+  margin-bottom: 8px;
+}
+
+.pkg-card-title {
+  font-family: 'Syne', var(--vp-font-family-base);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+  margin-bottom: 8px;
+}
+
+.pkg-card-desc {
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+  line-height: 1.65;
+}
+
+.pkg-card-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-family: var(--vp-font-family-mono);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 12px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  border: 1px solid rgba(0, 229, 160, 0.2);
+}
+
+/* ─── Package header ─────────────────────────────────────────────── */
+.pkg-header {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.pkg-header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--vp-c-brand-soft);
+  border: 1px solid rgba(0, 229, 160, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.pkg-header-info {
+  flex: 1;
+}
+
+.pkg-header-name {
+  font-family: var(--vp-font-family-mono);
+  font-size: 14px;
+  color: var(--vp-c-brand-1);
+  margin-bottom: 4px;
+}
+
+.pkg-header-title {
+  font-family: 'Syne', var(--vp-font-family-base);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--vp-c-text-1);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.pkg-header-desc {
+  font-size: 15px;
+  color: var(--vp-c-text-2);
+  line-height: 1.7;
+}
+
+.pkg-header-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pkg-header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-family: var(--vp-font-family-mono);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.pkg-header-link:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}
+
+/* ─── Code example tabs ──────────────────────────────────────────── */
+.code-example {
+  margin: 24px 0;
+}
+
+.code-example-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  margin-bottom: 0;
+}
+
+.code-example-tab {
+  padding: 8px 16px;
+  border-radius: 8px 8px 0 0;
+  font-size: 12px;
+  font-family: var(--vp-font-family-mono);
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-bottom: none;
+  color: var(--vp-c-text-3);
+  background: transparent;
+  transition: color 0.2s, background 0.2s;
+}
+
+.code-example-tab.active {
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-divider);
+  border-bottom-color: var(--vp-c-bg-soft);
+}
+
+/* ─── Feature grid ───────────────────────────────────────────────── */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.feature-item {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.feature-item-icon {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.feature-item-title {
+  font-weight: 700;
+  color: var(--vp-c-text-1);
+  margin-bottom: 6px;
+}
+
+.feature-item-desc {
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+  line-height: 1.6;
+}
+
+/* ─── Search kbd hint ────────────────────────────────────────────── */
+.DocSearch-Button-Keys {
+  font-family: var(--vp-font-family-mono) !important;
+}
