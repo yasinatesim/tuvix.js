@@ -63,9 +63,8 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Install website dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: website
       - name: Lint website
         run: pnpm lint
         working-directory: website
@@ -79,9 +78,8 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Install website dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: website
       - name: Build website
         run: pnpm build
         working-directory: website

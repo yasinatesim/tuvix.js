@@ -11,11 +11,19 @@ defineProps<{
 
 <template>
   <div class="pkg-header">
-    <div class="pkg-header-icon">{{ icon ?? '📦' }}</div>
+    <div class="pkg-header-icon">
+      {{ icon ?? '📦' }}
+    </div>
     <div class="pkg-header-info">
-      <div class="pkg-header-name">{{ name }}</div>
-      <div class="pkg-header-title">{{ title }}</div>
-      <div class="pkg-header-desc">{{ description }}</div>
+      <div class="pkg-header-name">
+        {{ name }}
+      </div>
+      <div class="pkg-header-title">
+        {{ title }}
+      </div>
+      <div class="pkg-header-desc">
+        {{ description }}
+      </div>
       <div class="pkg-header-links">
         <a
           v-if="npm"
@@ -44,7 +52,7 @@ defineProps<{
             :src="`https://img.shields.io/npm/v/${name}?style=flat&colorA=080c10&colorB=00e5a0`"
             :alt="`${name} version`"
             style="height: 18px; border-radius: 3px"
-          />
+          >
         </a>
       </div>
     </div>
