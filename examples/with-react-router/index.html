@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tuvix.js — with-react-router</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { background: #0f0f1a; color: #e0e0e0; font-family: system-ui; }
+      nav { padding: 16px 24px; background: #16213e; display: flex; gap: 16px; align-items: center; }
+      nav a { color: #e0e0e0; text-decoration: none; padding: 6px 14px; border-radius: 6px; transition: background 0.2s; }
+      nav a:hover { background: #0f3460; }
+      nav a.active { background: #533483; }
+      #app { padding: 24px; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <span style="font-weight:700; margin-right:8px;">⬡ Tuvix.js</span>
+      <a href="/dashboard">📊 Dashboard</a>
+      <a href="/profile">👤 Profile</a>
+      <a href="/settings">⚙️ Settings</a>
+    </nav>
+    <div id="app"></div>
+    <script type="module" src="/src/shell.ts"></script>
+  </body>
+</html>
