@@ -20,7 +20,7 @@
     "@types/node": "^22.10.0",
     "@vitest/coverage-v8": "^2.1.6",
     "eslint": "^9.15.0",
-    "jsdom": "^28.1.0",
+    "jsdom": "22",
     "prettier": "^3.4.1",
     "tsup": "^8.3.5",
     "turbo": "^2.3.1",
