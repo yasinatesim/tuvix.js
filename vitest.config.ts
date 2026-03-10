@@ -15,5 +15,10 @@ export default defineConfig({
         '**/*.d.ts',
       ],
     },
+    server: {
+      deps: {
+        inline: [/@exodus\/bytes/],
+      },
+    },
   },
 });
