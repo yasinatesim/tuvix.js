@@ -17,6 +17,8 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.3.0",
     "@vitejs/plugin-vue": "^5.0.0",
     "typescript": "^5.7.0",

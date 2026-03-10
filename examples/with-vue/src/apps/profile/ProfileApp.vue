@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTuvixProps } from '@tuvix.js/vue';
 
-const props = useTuvixProps<{ theme: string }>();
+const props = useTuvixProps<{ theme: string }>({ theme: '' });
 </script>
 
 <template>

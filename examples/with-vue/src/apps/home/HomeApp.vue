@@ -2,7 +2,7 @@
 import { useTuvixProps } from '@tuvix.js/vue';
 
 // Read props passed from the Tuvix shell
-const props = useTuvixProps<{ name: string }>();
+const props = useTuvixProps<{ name: string }>({ name: '' });
 </script>
 
 <template>

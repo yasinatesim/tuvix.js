@@ -11,6 +11,9 @@ module.exports = {
   output: {
     publicPath: 'auto',
   },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   module: {
     rules: [
       {
