@@ -9,11 +9,13 @@
     sans-serif;
   --vp-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  /* Override nav */
+  /* Heading font */
+  --font-heading: 'Plus Jakarta Sans', var(--vp-font-family-base);
+
   --vp-nav-height: 64px;
 }
 
-/* Dark mode colors */
+/* ─── Dark mode ──────────────────────────────────────────────────── */
 .dark {
   --vp-c-bg: #080c10;
   --vp-c-bg-soft: #0d1117;
@@ -28,9 +30,11 @@
 .vp-doc h1,
 .vp-doc h2,
 .vp-doc h3,
-.vp-doc h4 {
-  font-family: 'Syne', var(--vp-font-family-base);
-  letter-spacing: -0.02em;
+.vp-doc h4,
+.VPHero .name,
+.VPHero .text {
+  font-family: var(--font-heading);
+  letter-spacing: -0.025em;
 }
 
 /* ─── Home Hero ──────────────────────────────────────────────────── */
@@ -68,63 +72,146 @@
   border: 1px solid var(--vp-c-divider);
 }
 
-/* ─── Package card components ────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   PACKAGE GRID & CARDS
+   ═══════════════════════════════════════════════════════════════════ */
+
 .pkg-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin: 24px 0;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 20px 0 36px;
 }
 
 .pkg-card {
+  position: relative;
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
-  border-radius: 10px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 20px 20px 16px;
   text-decoration: none;
   color: inherit;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
   transition:
-    border-color 0.2s,
-    transform 0.15s;
+    border-color 0.22s ease,
+    background 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease;
+}
+
+/* top accent line — hidden by default */
+.pkg-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
+  opacity: 0;
+  transition: opacity 0.22s ease;
 }
 
 .pkg-card:hover {
-  border-color: var(--vp-c-brand-1);
-  transform: translateY(-2px);
+  border-color: rgba(0, 229, 160, 0.35);
+  background: var(--vp-c-bg-mute);
+  box-shadow:
+    0 0 0 1px rgba(0, 229, 160, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.25);
+  transform: translateY(-3px);
+}
+
+.pkg-card:hover::before {
+  opacity: 1;
+}
+
+/* icon row */
+.pkg-card-icon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.pkg-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(0, 229, 160, 0.07);
+  border: 1px solid rgba(0, 229, 160, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+  transition: background 0.22s ease, border-color 0.22s ease;
+}
+
+.pkg-card:hover .pkg-card-icon {
+  background: rgba(0, 229, 160, 0.13);
+  border-color: rgba(0, 229, 160, 0.3);
+}
+
+/* arrow — slides in on hover */
+.pkg-card-arrow {
+  font-size: 16px;
+  color: var(--vp-c-text-3);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.pkg-card:hover .pkg-card-arrow {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .pkg-card-name {
   font-family: var(--vp-font-family-mono);
-  font-size: 13px;
+  font-size: 12px;
   color: var(--vp-c-brand-1);
-  margin-bottom: 8px;
+  letter-spacing: 0.01em;
 }
 
 .pkg-card-title {
-  font-family: 'Syne', var(--vp-font-family-base);
-  font-size: 16px;
+  font-family: var(--font-heading);
+  font-size: 15px;
   font-weight: 700;
   color: var(--vp-c-text-1);
-  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .pkg-card-desc {
   font-size: 13px;
   color: var(--vp-c-text-3);
-  line-height: 1.65;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.pkg-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--vp-c-divider);
 }
 
 .pkg-card-badge {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
   font-family: var(--vp-font-family-mono);
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 4px;
-  margin-top: 12px;
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1);
-  border: 1px solid rgba(0, 229, 160, 0.2);
+  border: 1px solid rgba(0, 229, 160, 0.18);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* ─── Package header ─────────────────────────────────────────────── */
@@ -132,19 +219,31 @@
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
   border-radius: 12px;
-  padding: 32px;
+  padding: 28px 32px;
   margin-bottom: 32px;
   display: flex;
   align-items: flex-start;
   gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pkg-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--vp-c-brand-1), var(--vp-c-brand-3));
 }
 
 .pkg-header-icon {
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  background: var(--vp-c-brand-soft);
-  border: 1px solid rgba(0, 229, 160, 0.2);
+  background: rgba(0, 229, 160, 0.07);
+  border: 1px solid rgba(0, 229, 160, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,24 +251,22 @@
   flex-shrink: 0;
 }
 
-.pkg-header-info {
-  flex: 1;
-}
+.pkg-header-info { flex: 1; }
 
 .pkg-header-name {
   font-family: var(--vp-font-family-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--vp-c-brand-1);
   margin-bottom: 4px;
 }
 
 .pkg-header-title {
-  font-family: 'Syne', var(--vp-font-family-base);
+  font-family: var(--font-heading);
   font-size: 22px;
   font-weight: 800;
   color: var(--vp-c-text-1);
   margin-bottom: 8px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
 .pkg-header-desc {
@@ -205,15 +302,12 @@
 }
 
 /* ─── Code example tabs ──────────────────────────────────────────── */
-.code-example {
-  margin: 24px 0;
-}
+.code-example { margin: 24px 0; }
 
 .code-example-tabs {
   display: flex;
   gap: 2px;
   border-bottom: 1px solid var(--vp-c-divider);
-  margin-bottom: 0;
 }
 
 .code-example-tab {
@@ -251,24 +345,6 @@
   padding: 20px;
 }
 
-.feature-item-icon {
-  font-size: 24px;
-  margin-bottom: 12px;
-}
-
-.feature-item-title {
-  font-weight: 700;
-  color: var(--vp-c-text-1);
-  margin-bottom: 6px;
-}
-
-.feature-item-desc {
-  font-size: 13px;
-  color: var(--vp-c-text-3);
-  line-height: 1.6;
-}
-
-/* ─── Search kbd hint ────────────────────────────────────────────── */
-.DocSearch-Button-Keys {
-  font-family: var(--vp-font-family-mono) !important;
-}
+.feature-item-icon { font-size: 24px; margin-bottom: 12px; }
+.feature-item-title { font-weight: 700; color: var(--vp-c-text-1); margin-bottom: 6px; }
+.feature-item-desc { font-size: 13px; color: var(--vp-c-text-3); line-height: 1.6; }

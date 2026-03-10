@@ -159,10 +159,16 @@ const l = labels[lang.value] ?? labels.en;
         :href="pkg.link"
         class="pkg-card"
       >
-        <div class="pkg-card-name">{{ pkg.icon }} {{ pkg.name }}</div>
+        <div class="pkg-card-icon-row">
+          <div class="pkg-card-icon">{{ pkg.icon }}</div>
+          <span class="pkg-card-arrow">→</span>
+        </div>
+        <div class="pkg-card-name">{{ pkg.name }}</div>
         <div class="pkg-card-title">{{ pkg.title }}</div>
         <div class="pkg-card-desc">{{ pkg.description }}</div>
-        <span class="pkg-card-badge">{{ pkg.badge }}</span>
+        <div class="pkg-card-footer">
+          <span class="pkg-card-badge">{{ pkg.badge }}</span>
+        </div>
       </a>
     </div>
 
@@ -174,10 +180,16 @@ const l = labels[lang.value] ?? labels.en;
         :href="pkg.link"
         class="pkg-card"
       >
-        <div class="pkg-card-name">{{ pkg.icon }} {{ pkg.name }}</div>
+        <div class="pkg-card-icon-row">
+          <div class="pkg-card-icon">{{ pkg.icon }}</div>
+          <span class="pkg-card-arrow">→</span>
+        </div>
+        <div class="pkg-card-name">{{ pkg.name }}</div>
         <div class="pkg-card-title">{{ pkg.title }}</div>
         <div class="pkg-card-desc">{{ pkg.description }}</div>
-        <span class="pkg-card-badge">{{ pkg.badge }}</span>
+        <div class="pkg-card-footer">
+          <span class="pkg-card-badge">{{ pkg.badge }}</span>
+        </div>
       </a>
     </div>
 
@@ -189,10 +201,16 @@ const l = labels[lang.value] ?? labels.en;
         :href="pkg.link"
         class="pkg-card"
       >
-        <div class="pkg-card-name">{{ pkg.icon }} {{ pkg.name }}</div>
+        <div class="pkg-card-icon-row">
+          <div class="pkg-card-icon">{{ pkg.icon }}</div>
+          <span class="pkg-card-arrow">→</span>
+        </div>
+        <div class="pkg-card-name">{{ pkg.name }}</div>
         <div class="pkg-card-title">{{ pkg.title }}</div>
         <div class="pkg-card-desc">{{ pkg.description }}</div>
-        <span class="pkg-card-badge">{{ pkg.badge }}</span>
+        <div class="pkg-card-footer">
+          <span class="pkg-card-badge">{{ pkg.badge }}</span>
+        </div>
       </a>
     </div>
   </div>
