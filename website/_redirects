@@ -1,0 +1,9 @@
+# Cloudflare Pages
+# ─────────────────
+# Build settings (if deploying from a repo):
+#   Build command:  (none — static HTML)
+#   Output dir:     /  (root)
+#   Root dir:       /
+
+# Add this file as: public/_redirects
+/*    /index.html   200

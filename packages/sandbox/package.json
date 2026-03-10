@@ -1,0 +1,39 @@
+{
+	"name": "@tuvix.js/sandbox",
+	"version": "0.1.0",
+	"description": "CSS and JS isolation for Tuvix.js micro frontends via Shadow DOM and Proxy",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"microfrontend",
+		"sandbox",
+		"shadow-dom",
+		"isolation",
+		"proxy"
+	],
+	"license": "MIT",
+	"sideEffects": false
+}

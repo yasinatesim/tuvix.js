@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tuvix.js — Microfrontend Framework</title>
+  <meta name="description" content="A lightweight, framework-agnostic microfrontend orchestrator. Build scalable, independently deployable frontend applications." />
+  <meta property="og:title" content="Tuvix.js — Microfrontend Framework" />
+  <meta property="og:description" content="Merge your frontends into one. Lightweight orchestrator for React, Vue, Svelte, Angular." />
+  <meta property="og:url" content="https://tuvixjs.dev" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080c10;
+      --bg2:      #0d1117;
+      --bg3:      #111820;
+      --border:   #1e2d3d;
+      --green:    #00e5a0;
+      --green-dim:#00e5a022;
+      --amber:    #f5a623;
+      --blue:     #4d9de0;
+      --text:     #c9d5e0;
+      --text-dim: #5c7080;
+      --text-hi:  #eaf2f8;
+      --r:        6px;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ──────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(8,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-head); font-size: 18px; font-weight: 700;
+      color: var(--text-hi); text-decoration: none;
+    }
+    .nav-logo-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(1.4); }
+    }
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-dim); text-decoration: none;
+      font-size: 14px; font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text-hi); }
+    .nav-cta {
+      display: flex; gap: 12px; align-items: center;
+    }
+    .btn-ghost {
+      padding: 8px 16px; border-radius: var(--r);
+      border: 1px solid var(--border);
+      color: var(--text); background: transparent;
+      font-size: 13px; font-weight: 500;
+      text-decoration: none; cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+    .btn-primary {
+      padding: 8px 18px; border-radius: var(--r);
+      background: var(--green); color: #080c10;
+      font-size: 13px; font-weight: 700;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ─── HERO ─────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,229,160,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(77,157,224,.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 70%);
+      opacity: .35;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid rgba(0,229,160,.3);
+      background: rgba(0,229,160,.06);
+      font-family: var(--font-mono); font-size: 12px;
+      color: var(--green); margin-bottom: 32px;
+      position: relative; z-index: 1;
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 800; line-height: 1.05;
+      color: var(--text-hi); letter-spacing: -.02em;
+      margin-bottom: 8px;
+      position: relative; z-index: 1;
+    }
+    .hero-sub {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 600; color: var(--green);
+      letter-spacing: -.01em;
+      margin-bottom: 28px;
+      position: relative; z-index: 1;
+    }
+    .hero-desc {
+      max-width: 560px;
+      color: var(--text-dim); font-size: 17px; line-height: 1.75;
+      margin: 0 auto 48px;
+      position: relative; z-index: 1;
+    }
+    .hero-actions {
+      display: flex; gap: 14px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 72px;
+      position: relative; z-index: 1;
+    }
+    .btn-lg {
+      padding: 14px 28px; font-size: 15px; font-weight: 700;
+      border-radius: var(--r);
+    }
+    .hero-stats {
+      display: flex; gap: 48px; justify-content: center;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: var(--font-head); font-size: 28px; font-weight: 800;
+      color: var(--text-hi);
+    }
+    .stat-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ─── INSTALL STRIP ─────────────────── */
+    .install-strip {
+      background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex; align-items: center; justify-content: center; gap: 24px;
+      flex-wrap: wrap;
+    }
+    .install-label { font-size: 13px; color: var(--text-dim); }
+    .install-cmd {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 10px 20px;
+      font-family: var(--font-mono); font-size: 14px;
+      color: var(--green);
+    }
+    .copy-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-dim); font-size: 16px;
+      transition: color .2s; padding: 2px;
+    }
+    .copy-btn:hover { color: var(--green); }
+    .install-sep { color: var(--border); }
+
+    /* ─── SECTION HEADERS ───────────────── */
+    .section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: .15em;
+      color: var(--green); text-transform: uppercase; margin-bottom: 14px;
+    }
+    h2 {
+      font-family: var(--font-head); font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; color: var(--text-hi); line-height: 1.1;
+      letter-spacing: -.02em; margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 17px; color: var(--text-dim); max-width: 560px; line-height: 1.75;
+      margin-bottom: 56px;
+    }
+
+    /* ─── FEATURES ──────────────────────── */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .feature {
+      background: var(--bg2); padding: 32px;
+      transition: background .2s;
+    }
+    .feature:hover { background: var(--bg3); }
+    .feature-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: var(--green-dim); border: 1px solid rgba(0,229,160,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; margin-bottom: 20px;
+    }
+    .feature h3 {
+      font-family: var(--font-head); font-size: 17px; font-weight: 700;
+      color: var(--text-hi); margin-bottom: 10px;
+    }
+    .feature p { font-size: 14px; color: var(--text-dim); line-height: 1.65; }
+
+    /* ─── CODE DEMO ─────────────────────── */
+    .demo-wrap {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .demo-wrap { grid-template-columns: 1fr; } }
+    .demo-info h3 {
+      font-family: var(--font-head); font-size: 22px; font-weight: 700;
+      color: var(--text-hi); margin-bottom: 12px;
+    }
+    .demo-info p { font-size: 15px; color: var(--text-dim); line-height: 1.7; margin-bottom: 20px; }
+    .demo-tabs {
+      display: flex; gap: 4px; margin-bottom: 0;
+    }
+    .tab-btn {
+      padding: 8px 16px; border-radius: 6px 6px 0 0;
+      border: 1px solid var(--border); border-bottom: none;
+      background: var(--bg2); color: var(--text-dim);
+      font-size: 12px; font-family: var(--font-mono);
+      cursor: pointer; transition: background .2s, color .2s;
+    }
+    .tab-btn.active { background: var(--bg3); color: var(--green); }
+    .code-block {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 0 8px 8px 8px;
+      padding: 28px; overflow-x: auto;
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.8;
+      color: var(--text);
+      display: none;
+    }
+    .code-block.active { display: block; }
+    .kw  { color: #c678dd; }
+    .fn  { color: #61afef; }
+    .str { color: #98c379; }
+    .cmt { color: var(--text-dim); font-style: italic; }
+    .prop{ color: #e06c75; }
+    .num { color: #d19a66; }
+
+    /* ─── ARCH ──────────────────────────── */
+    .arch-diagram {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 40px; font-family: var(--font-mono); font-size: 13px;
+      line-height: 1.8; color: var(--text-dim); overflow-x: auto;
+    }
+    .arch-diagram .hl { color: var(--green); font-weight: 500; }
+    .arch-diagram .dim { color: #1e3a4a; }
+
+    /* ─── FRAMEWORKS ─────────────────────── */
+    .fw-grid {
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .fw-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg2);
+      font-size: 14px; font-weight: 500; color: var(--text);
+      transition: border-color .2s, background .2s;
+    }
+    .fw-chip:hover { border-color: var(--green); background: var(--bg3); }
+    .fw-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ─── PACKAGES ──────────────────────── */
+    .pkg-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+    }
+    .pkg-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 24px; transition: border-color .2s;
+    }
+    .pkg-card:hover { border-color: rgba(0,229,160,.3); }
+    .pkg-name {
+      font-family: var(--font-mono); font-size: 13px; color: var(--green);
+      margin-bottom: 8px;
+    }
+    .pkg-card h4 {
+      font-family: var(--font-head); font-size: 16px; font-weight: 700;
+      color: var(--text-hi); margin-bottom: 8px;
+    }
+    .pkg-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+    /* ─── ROADMAP ────────────────────────── */
+    .roadmap-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .roadmap-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg2);
+    }
+    .roadmap-item.done { border-color: rgba(0,229,160,.2); background: rgba(0,229,160,.03); }
+    .roadmap-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0;
+    }
+    .roadmap-item.done .roadmap-icon { background: rgba(0,229,160,.15); color: var(--green); }
+    .roadmap-item:not(.done) .roadmap-icon { background: var(--bg3); color: var(--text-dim); border: 1px solid var(--border); }
+    .roadmap-text { font-size: 14px; color: var(--text); }
+    .roadmap-item.done .roadmap-text { color: var(--text-hi); }
+
+    /* ─── CTA BANNER ────────────────────── */
+    .cta-section {
+      padding: 100px 40px;
+      background: linear-gradient(135deg, var(--bg2) 0%, var(--bg) 100%);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .cta-inner { max-width: 600px; margin: 0 auto; }
+    .cta-section h2 { margin-bottom: 16px; }
+    .cta-section p { color: var(--text-dim); font-size: 17px; margin-bottom: 36px; }
+
+    /* ─── FOOTER ────────────────────────── */
+    footer {
+      padding: 60px 40px;
+      border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    @media (max-width: 768px) { footer { grid-template-columns: 1fr 1fr; } }
+    .footer-brand p { font-size: 14px; color: var(--text-dim); line-height: 1.65; margin-top: 12px; max-width: 280px; }
+    .footer-col h5 {
+      font-family: var(--font-head); font-size: 13px; font-weight: 700;
+      color: var(--text-hi); text-transform: uppercase; letter-spacing: .08em;
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block; color: var(--text-dim); text-decoration: none;
+      font-size: 14px; line-height: 2;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--green); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding: 24px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+      font-size: 13px; color: var(--text-dim);
+    }
+
+    /* ─── ANIMS ─────────────────────────── */
+    .fade-in { opacity: 0; transform: translateY(24px); animation: fadeIn .7s ease forwards; }
+    @keyframes fadeIn { to { opacity:1; transform:translateY(0); } }
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+    .delay-4 { animation-delay: .4s; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+      .hero-stats { gap: 24px; }
+      .section { padding: 60px 20px; }
+      .install-strip { padding: 16px 20px; flex-direction: column; gap: 12px; }
+      footer { padding: 40px 20px; }
+      .footer-bottom { padding: 20px; flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    Tuvix.js
+  </a>
+  <ul class="nav-links">
+    <li><a href="docs/index.html">Docs</a></li>
+    <li><a href="docs/index.html#packages">Packages</a></li>
+    <li><a href="docs/index.html#examples">Examples</a></li>
+    <li><a href="https://github.com" target="_blank">GitHub</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="docs/index.html" class="btn-ghost">Documentation</a>
+    <a href="docs/index.html#quickstart" class="btn-primary">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-badge fade-in">
+    <span>⬡</span> v0.1.0 — Now in beta
+  </div>
+  <h1 class="fade-in delay-1">Merge your</h1>
+  <div class="hero-sub fade-in delay-2">frontends into one.</div>
+  <p class="hero-desc fade-in delay-3">
+    A lightweight, framework-agnostic microfrontend orchestrator.
+    Build scalable, independently deployable applications with React, Vue, Svelte, or Angular.
+  </p>
+  <div class="hero-actions fade-in delay-4">
+    <a href="docs/index.html#quickstart" class="btn-primary btn-lg">Quick Start →</a>
+    <a href="https://github.com" class="btn-ghost btn-lg">★ Star on GitHub</a>
+  </div>
+  <div class="hero-stats fade-in delay-4">
+    <div class="stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Runtime Dependencies</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Packages</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">TypeScript</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">MIT</div>
+      <div class="stat-label">License</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL STRIP -->
+<div class="install-strip">
+  <span class="install-label">Install</span>
+  <div class="install-cmd" id="cmd-npm">
+    <span>$ npm install tuvix.js</span>
+    <button class="copy-btn" onclick="copyCmd('npm install tuvix.js', this)" title="Copy">⧉</button>
+  </div>
+  <span class="install-sep">or</span>
+  <div class="install-cmd">
+    <span>$ pnpm add tuvix.js</span>
+    <button class="copy-btn" onclick="copyCmd('pnpm add tuvix.js', this)" title="Copy">⧉</button>
+  </div>
+  <span class="install-sep">or</span>
+  <div class="install-cmd">
+    <span>$ yarn add tuvix.js</span>
+    <button class="copy-btn" onclick="copyCmd('yarn add tuvix.js', this)" title="Copy">⧉</button>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div style="max-width:1200px;margin:0 auto">
+<section class="section">
+  <div class="section-label">Why Tuvix.js</div>
+  <h2>Everything you need to<br/>orchestrate micro apps</h2>
+  <p class="section-desc">One framework to manage loading, routing, communication, and lifecycle of all your independent frontends.</p>
+
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">🧩</div>
+      <h3>Framework Agnostic</h3>
+      <p>Use React, Vue, Svelte, Angular, or Vanilla JS — all in the same shell. Every team picks their own stack.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <h3>Independent Deployment</h3>
+      <p>Deploy each micro app on its own schedule. No coordinated releases, no cross-team bottlenecks.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔗</div>
+      <h3>Dynamic Module Loading</h3>
+      <p>Load micro frontends on demand with caching, retry logic, and timeout protection built in.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🛣️</div>
+      <h3>Built-in Routing</h3>
+      <p>URL-based app activation with history and hash mode. Wildcards, parameters, and navigation guards.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📡</div>
+      <h3>Inter-App Communication</h3>
+      <p>A type-safe pub/sub event bus lets apps talk to each other without tight coupling or shared state.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Zero Runtime Deps</h3>
+      <p>The entire framework ships with zero external runtime dependencies. Tiny, fast, self-contained.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔄</div>
+      <h3>Lifecycle Management</h3>
+      <p>bootstrap → mount → update → unmount hooks give you full control over each micro app's lifecycle.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <h3>TypeScript First</h3>
+      <p>Written entirely in TypeScript. Full type safety from orchestrator configuration to lifecycle methods.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🧪</div>
+      <h3>Fully Tested</h3>
+      <p>Comprehensive test suite with Vitest. Every core behavior and edge case is covered.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CODE DEMO -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">Code</div>
+  <h2>Simple API,<br/>powerful results</h2>
+  <p class="section-desc">Get from zero to a working microfrontend shell in minutes — not days.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-info">
+      <h3>Host (Shell) Application</h3>
+      <p>Create an orchestrator, register your micro apps, and start. Route changes automatically mount and unmount the right apps.</p>
+      <br/>
+      <h3>Micro Frontend App</h3>
+      <p>Any app just needs to expose <code style="color:var(--green);font-family:var(--font-mono);font-size:13px">mount</code> and <code style="color:var(--green);font-family:var(--font-mono);font-size:13px">unmount</code>. Use <code style="color:var(--green);font-family:var(--font-mono);font-size:13px">defineMicroApp</code> for full TypeScript support and automatic registration.</p>
+      <br/>
+      <h3>Inter-App Communication</h3>
+      <p>Any app can emit or listen to events. The shared event bus keeps apps decoupled while staying in sync.</p>
+    </div>
+    <div>
+      <div class="demo-tabs">
+        <button class="tab-btn active" onclick="showTab('shell', this)">shell.ts</button>
+        <button class="tab-btn" onclick="showTab('micro', this)">app.ts</button>
+        <button class="tab-btn" onclick="showTab('events', this)">events.ts</button>
+      </div>
+
+      <div id="tab-shell" class="code-block active"><pre><span class="kw">import</span> { <span class="fn">createOrchestrator</span> } <span class="kw">from</span> <span class="str">'tuvix.js'</span>;
+
+<span class="kw">const</span> orchestrator = <span class="fn">createOrchestrator</span>({
+  router: {
+    mode: <span class="str">'history'</span>,
+    routes: [
+      { path: <span class="str">'/dashboard/*'</span>, app: <span class="str">'dashboard'</span> },
+      { path: <span class="str">'/settings/*'</span>,  app: <span class="str">'settings'</span>  },
+      { path: <span class="str">'/profile/*'</span>,   app: <span class="str">'profile'</span>   },
+    ],
+  },
+});
+
+<span class="cmt">// Register micro apps</span>
+orchestrator.<span class="fn">register</span>({
+  name:       <span class="str">'dashboard'</span>,
+  entry:      <span class="str">'https://cdn.example.com/dashboard/main.js'</span>,
+  container:  <span class="str">'#main-content'</span>,
+  activeWhen: <span class="str">'/dashboard/*'</span>,
+});
+
+orchestrator.<span class="fn">register</span>({
+  name:       <span class="str">'navbar'</span>,
+  entry:      <span class="str">'https://cdn.example.com/navbar/main.js'</span>,
+  container:  <span class="str">'#header'</span>,
+  activeWhen: <span class="str">'/'</span>, <span class="cmt">// always active</span>
+});
+
+<span class="cmt">// Start — mounts apps for current URL</span>
+orchestrator.<span class="fn">start</span>();</pre></div>
+
+      <div id="tab-micro" class="code-block"><pre><span class="kw">import</span> { <span class="fn">defineMicroApp</span> } <span class="kw">from</span> <span class="str">'tuvix.js'</span>;
+
+<span class="kw">export default</span> <span class="fn">defineMicroApp</span>({
+  name: <span class="str">'dashboard'</span>,
+
+  <span class="kw">async</span> <span class="fn">bootstrap</span>() {
+    <span class="cmt">// Called once — set up shared resources</span>
+    <span class="kw">await</span> <span class="fn">loadTranslations</span>();
+  },
+
+  <span class="kw">async</span> <span class="fn">mount</span>({ container, props }) {
+    <span class="cmt">// Called on every navigation to /dashboard/*</span>
+    container.innerHTML = <span class="str">`
+      &lt;h1&gt;Welcome, <span class="prop">${props.user}</span>!&lt;/h1&gt;
+    `</span>;
+  },
+
+  <span class="kw">async</span> <span class="fn">unmount</span>({ container }) {
+    <span class="cmt">// Clean up DOM and listeners</span>
+    container.innerHTML = <span class="str">''</span>;
+  },
+
+  <span class="kw">async</span> <span class="fn">update</span>({ props }) {
+    <span class="cmt">// Called when props change while mounted</span>
+    console.<span class="fn">log</span>(<span class="str">'Props updated:'</span>, props);
+  },
+});</pre></div>
+
+      <div id="tab-events" class="code-block"><pre><span class="kw">import</span> { <span class="fn">getGlobalBus</span> } <span class="kw">from</span> <span class="str">'tuvix.js'</span>;
+
+<span class="kw">const</span> bus = <span class="fn">getGlobalBus</span>();
+
+<span class="cmt">// ── App A: emit an event ──────────────</span>
+bus.<span class="fn">emit</span>(<span class="str">'user:login'</span>, {
+  userId: <span class="num">42</span>,
+  name:   <span class="str">'Ahmet'</span>,
+  role:   <span class="str">'admin'</span>,
+});
+
+<span class="cmt">// ── App B: listen to the event ────────</span>
+<span class="kw">const</span> unsub = bus.<span class="fn">on</span>(<span class="str">'user:login'</span>, (data) => {
+  console.<span class="fn">log</span>(<span class="str">`<span class="prop">${data.name}</span> logged in`</span>);
+  <span class="fn">updateNavbar</span>(data);
+});
+
+<span class="cmt">// ── Listen to all events (debug) ──────</span>
+bus.<span class="fn">onAny</span>((event, data) => {
+  console.<span class="fn">log</span>(<span class="str">`[<span class="prop">${event}</span>]`</span>, data);
+});
+
+<span class="cmt">// ── Unsubscribe ───────────────────────</span>
+unsub(); <span class="cmt">// removes the user:login listener</span></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">Architecture</div>
+  <h2>How it works</h2>
+  <p class="section-desc">The Orchestrator sits at the center, managing every micro app through a clean lifecycle pipeline.</p>
+
+  <div class="arch-diagram">
+<pre>
+<span class="hl">┌─────────────────────────────────────────────────────────────────┐</span>
+<span class="hl">│</span>                      <span class="hl">Tuvix.js Shell</span>                           <span class="hl">│</span>
+<span class="hl">│</span>  ┌──────────────────────────────────────────────────────────┐   <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│</span>                     <span class="hl">Orchestrator</span>                         <span class="hl">│</span>   <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│</span>   ┌─────────────┐  ┌────────────┐  ┌──────────────────┐  <span class="hl">│</span>   <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│</span>   <span class="hl">│  @tuvix.js  │  │ @tuvix.js  │  │   @tuvix.js      │</span>  <span class="hl">│</span>   <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│</span>   <span class="hl">│   /router   │  │ /event-bus │  │    /loader       │</span>  <span class="hl">│</span>   <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│</span>   └─────────────┘  └────────────┘  └──────────────────┘  <span class="hl">│</span>   <span class="hl">│</span>
+<span class="hl">│</span>  └──────────────────────────────────────────────────────────┘   <span class="hl">│</span>
+<span class="hl">│</span>                                                                 <span class="hl">│</span>
+<span class="hl">│</span>  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│   App: React  │  │   App: Vue   │  │ App: Svelte  │</span>  ...   <span class="hl">│</span>
+<span class="hl">│</span>  <span class="hl">│  /dashboard   │  │  /settings   │  │   /profile   │</span>         <span class="hl">│</span>
+<span class="hl">│</span>  └──────────────┘  └──────────────┘  └──────────────┘         <span class="hl">│</span>
+<span class="hl">└─────────────────────────────────────────────────────────────────┘</span>
+
+<span style="color:var(--text-dim)">Lifecycle flow per app:</span>
+  <span class="hl">registered</span> → <span class="hl">bootstrapping</span> → <span class="hl">bootstrapped</span> → <span class="hl">mounting</span> → <span class="hl">mounted</span> → <span class="hl">unmounting</span> → <span class="hl">unmounted</span>
+</pre>
+  </div>
+</section>
+
+<!-- FRAMEWORKS -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">Compatibility</div>
+  <h2>Works with every framework</h2>
+  <p class="section-desc">Mix and match freely. Each micro app is isolated — your teams keep full ownership of their stack.</p>
+
+  <div class="fw-grid">
+    <div class="fw-chip"><div class="dot" style="background:#61dafb"></div> React</div>
+    <div class="fw-chip"><div class="dot" style="background:#42b883"></div> Vue</div>
+    <div class="fw-chip"><div class="dot" style="background:#ff3e00"></div> Svelte</div>
+    <div class="fw-chip"><div class="dot" style="background:#dd0031"></div> Angular</div>
+    <div class="fw-chip"><div class="dot" style="background:#f0db4f"></div> Vanilla JS</div>
+    <div class="fw-chip"><div class="dot" style="background:var(--text-dim)"></div> Any framework</div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">Packages</div>
+  <h2>Modular by design</h2>
+  <p class="section-desc">Install just what you need, or use the umbrella package for everything at once.</p>
+
+  <div class="pkg-grid">
+    <div class="pkg-card">
+      <div class="pkg-name">tuvix.js</div>
+      <h4>Umbrella Package</h4>
+      <p>All packages in one. The easiest way to get started — includes orchestrator, router, event bus, and loader.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/core</div>
+      <h4>Core Orchestrator</h4>
+      <p>The main orchestrator engine with lifecycle management, app registration, and reconciliation loop.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/router</div>
+      <h4>Router</h4>
+      <p>URL-based micro app activation. History and hash mode, wildcards, params, and navigation guards.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/event-bus</div>
+      <h4>Event Bus</h4>
+      <p>Lightweight pub/sub for inter-app communication. Type-safe, with wildcard listeners and singleton support.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/loader</div>
+      <h4>Module Loader</h4>
+      <p>Dynamic script loading with caching, retry logic, timeout protection, and prefetch strategies.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/sandbox</div>
+      <h4>Sandbox</h4>
+      <p>CSS and JS isolation via Shadow DOM and Proxy-based sandboxing for style and script safety.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/react</div>
+      <h4>React</h4>
+      <p>React 18+ bindings and hooks for seamless integration.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/vue</div>
+      <h4>Vue</h4>
+      <p>Vue 3 plugin and composables with full lifecycle support.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/svelte</div>
+      <h4>Svelte</h4>
+      <p>Svelte 3-5 bindings to easily mount Svelte apps as micro frontends.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/angular</div>
+      <h4>Angular</h4>
+      <p>Angular 15+ bindings for robust micro app orchestration.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">create-tuvix-app</div>
+      <h4>CLI</h4>
+      <p>Scaffolding tool to quickly bootstrap new Tuvix.js apps and shells.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/devtools</div>
+      <h4>DevTools</h4>
+      <p>In-page debug panel for monitoring orchestrator state and events.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/server</div>
+      <h4>Server</h4>
+      <p>Server-side composition and streaming support for microfrontends.</p>
+    </div>
+    <div class="pkg-card">
+      <div class="pkg-name">@tuvix.js/module-federation</div>
+      <h4>Module Federation</h4>
+      <p>Webpack Module Federation integration out of the box.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="section" style="padding-top:0">
+  <div class="section-label">Roadmap</div>
+  <h2>What's coming</h2>
+  <p class="section-desc">Tuvix.js is actively developed. Here's what's shipping next.</p>
+
+  <ul class="roadmap-list">
+    <li class="roadmap-item done"><div class="roadmap-icon">✓</div><span class="roadmap-text">Core orchestrator with lifecycle management</span></li>
+    <li class="roadmap-item done"><div class="roadmap-icon">✓</div><span class="roadmap-text">Dynamic module loading with caching &amp; retry</span></li>
+    <li class="roadmap-item done"><div class="roadmap-icon">✓</div><span class="roadmap-text">URL-based routing (history + hash mode)</span></li>
+    <li class="roadmap-item done"><div class="roadmap-icon">✓</div><span class="roadmap-text">Type-safe inter-app event bus</span></li>
+    <li class="roadmap-item done"><div class="roadmap-icon">✓</div><span class="roadmap-text">Full TypeScript support across all packages</span></li>
+    <li class="roadmap-item done"><div class="roadmap-icon">✓</div><span class="roadmap-text">@tuvix.js/sandbox — CSS &amp; JS isolation (Shadow DOM + Proxy)</span></li>
+    <li class="roadmap-item"><div class="roadmap-icon">○</div><span class="roadmap-text">@tuvix.js/react — React bindings and hooks</span></li>
+    <li class="roadmap-item"><div class="roadmap-icon">○</div><span class="roadmap-text">@tuvix.js/vue — Vue plugin and composables</span></li>
+    <li class="roadmap-item"><div class="roadmap-icon">○</div><span class="roadmap-text">@tuvix.js/cli — <code style="font-family:var(--font-mono);font-size:12px">npx create-tuvix-app</code> scaffolding</span></li>
+    <li class="roadmap-item"><div class="roadmap-icon">○</div><span class="roadmap-text">DevTools browser extension</span></li>
+    <li class="roadmap-item"><div class="roadmap-icon">○</div><span class="roadmap-text">Server-side composition support</span></li>
+  </ul>
+</section>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="section-label" style="margin-bottom:12px">Ready to build?</div>
+    <h2>Start in minutes,<br/>scale without limits.</h2>
+    <p>Read the documentation, explore the examples, or install and go. Tuvix.js gets out of your way.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="docs/index.html#quickstart" class="btn-primary btn-lg">Read the Docs →</a>
+      <a href="https://github.com" class="btn-ghost btn-lg">View on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="nav-logo" style="margin-bottom:8px">
+      <div class="nav-logo-dot"></div>
+      Tuvix.js
+    </div>
+    <p>A lightweight, framework-agnostic microfrontend orchestrator for building scalable frontend applications.</p>
+  </div>
+  <div class="footer-col">
+    <h5>Docs</h5>
+    <a href="docs/index.html#quickstart">Quick Start</a>
+    <a href="docs/index.html#concepts">Core Concepts</a>
+    <a href="docs/index.html#api">API Reference</a>
+    <a href="docs/index.html#guides">Guides</a>
+  </div>
+  <div class="footer-col">
+    <h5>Packages</h5>
+    <a href="docs/index.html#packages">tuvix.js</a>
+    <a href="docs/index.html#packages">@tuvix.js/core</a>
+    <a href="docs/index.html#packages">@tuvix.js/router</a>
+    <a href="docs/index.html#packages">@tuvix.js/event-bus</a>
+  </div>
+  <div class="footer-col">
+    <h5>Community</h5>
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="https://github.com/issues" target="_blank">Issues</a>
+    <a href="https://github.com/discussions" target="_blank">Discussions</a>
+    <a href="#">Contributing</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2026 Tuvix.js Contributors. MIT License.</span>
+  <span>tuvixjs.dev</span>
+</div>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.code-block').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function copyCmd(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓';
+      setTimeout(() => btn.textContent = '⧉', 1500);
+    });
+  }
+
+  // Intersection observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature, .pkg-card, .roadmap-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

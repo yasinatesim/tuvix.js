@@ -1,0 +1,27 @@
+{
+	"name": "create-tuvix-app",
+	"version": "0.1.0",
+	"description": "CLI scaffolding tool for Tuvix.js microfrontend projects",
+	"bin": {
+		"create-tuvix-app": "dist/index.js"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist",
+		"templates"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"cli",
+		"scaffold",
+		"microfrontend",
+		"tuvix",
+		"create-app"
+	],
+	"license": "MIT"
+}

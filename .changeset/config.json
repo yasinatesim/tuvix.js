@@ -1,0 +1,26 @@
+{
+	"$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+	"changelog": "@changesets/cli/changelog",
+	"commit": false,
+	"fixed": [],
+	"linked": [
+		[
+			"@tuvix.js/core",
+			"@tuvix.js/router",
+			"@tuvix.js/event-bus",
+			"@tuvix.js/loader",
+			"@tuvix.js/sandbox",
+			"@tuvix.js/react",
+			"@tuvix.js/vue",
+			"@tuvix.js/svelte",
+			"@tuvix.js/angular",
+			"@tuvix.js/devtools",
+			"@tuvix.js/server",
+			"@tuvix.js/module-federation"
+		]
+	],
+	"access": "public",
+	"baseBranch": "master",
+	"updateInternalDependencies": "patch",
+	"ignore": []
+}

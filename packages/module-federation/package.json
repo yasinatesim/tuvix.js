@@ -1,0 +1,40 @@
+{
+	"name": "@tuvix.js/module-federation",
+	"version": "0.1.0",
+	"description": "Webpack Module Federation integration for Tuvix.js",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"microfrontend",
+		"module-federation",
+		"webpack",
+		"tuvix"
+	],
+	"license": "MIT",
+	"sideEffects": false,
+	"dependencies": {
+		"@tuvix.js/loader": "workspace:^"
+	}
+}

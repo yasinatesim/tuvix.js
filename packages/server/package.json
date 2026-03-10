@@ -1,0 +1,38 @@
+{
+	"name": "@tuvix.js/server",
+	"version": "0.1.0",
+	"description": "Server-side composition for Tuvix.js microfrontends",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"microfrontend",
+		"ssr",
+		"server-side",
+		"composition",
+		"tuvix"
+	],
+	"license": "MIT",
+	"sideEffects": false
+}
