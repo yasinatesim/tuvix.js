@@ -42,6 +42,19 @@ export interface MicroAppConfig {
 
   /** Custom sandbox options for this app */
   sandbox?: boolean;
+
+  /**
+   * HTML string rendered into the container when the app fails to mount.
+   * Shown immediately on any mount error (load failure, timeout, runtime error).
+   */
+  fallback?: string;
+
+  /**
+   * When true, the app is lazy-mounted via IntersectionObserver once its
+   * container scrolls into the viewport (10 % visibility threshold).
+   * Incompatible with `activeWhen` — use one or the other.
+   */
+  mountWhenVisible?: boolean;
 }
 
 /**

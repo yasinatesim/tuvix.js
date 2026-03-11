@@ -173,6 +173,124 @@ describe('Orchestrator', () => {
   });
 });
 
+// Helper: pre-register a module in the global registry so the loader
+// resolves it instantly without making any network requests.
+function preRegisterModule(
+  name: string,
+  module: { mount: () => void; unmount: () => void }
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const g = window as any;
+  g.__TUVIX_MODULES__ = g.__TUVIX_MODULES__ ?? {};
+  g.__TUVIX_MODULES__[name] = module;
+}
+
+describe('fallback HTML', () => {
+  it('renders fallback into container when mount fails', async () => {
+    const orchestrator = new Orchestrator();
+    setupDOM();
+
+    preRegisterModule('broken-app', {
+      mount: () => { throw new Error('mount failed'); },
+      unmount: () => {},
+    });
+
+    orchestrator.register({
+      name: 'broken-app',
+      entry: { scripts: [] }, // empty — loader resolves from global registry
+      container: '#main',
+      fallback: '<p>Service unavailable</p>',
+    });
+
+    await expect(orchestrator.mountApp('broken-app')).rejects.toThrow();
+
+    const container = document.querySelector('#main') as HTMLElement;
+    expect(container.innerHTML).toBe('<p>Service unavailable</p>');
+  });
+
+  it('leaves container unchanged when no fallback is provided', async () => {
+    const orchestrator = new Orchestrator();
+    setupDOM();
+    document.querySelector('#main')!.innerHTML = '<p>original</p>';
+
+    preRegisterModule('broken-no-fallback', {
+      mount: () => { throw new Error('mount failed'); },
+      unmount: () => {},
+    });
+
+    orchestrator.register({
+      name: 'broken-no-fallback',
+      entry: { scripts: [] },
+      container: '#main',
+    });
+
+    await expect(
+      orchestrator.mountApp('broken-no-fallback')
+    ).rejects.toThrow();
+
+    expect(document.querySelector('#main')!.innerHTML).toBe('<p>original</p>');
+  });
+
+  it('sets app status to error when mount fails', async () => {
+    const orchestrator = new Orchestrator();
+    setupDOM();
+
+    preRegisterModule('err-app', {
+      mount: () => { throw new Error('boom'); },
+      unmount: () => {},
+    });
+
+    orchestrator.register({
+      name: 'err-app',
+      entry: { scripts: [] },
+      container: '#main',
+      fallback: '<span>error</span>',
+    });
+
+    await expect(orchestrator.mountApp('err-app')).rejects.toThrow();
+    expect(orchestrator.getAppStatus('err-app')).toBe('error');
+  });
+});
+
+describe('mountWhenVisible (viewport mounting)', () => {
+  it('does not mount viewport app during reconcileApps', async () => {
+    const orchestrator = new Orchestrator({
+      router: { mode: 'hash', routes: [] },
+    });
+    setupDOM();
+
+    orchestrator.register({
+      name: 'viewport-app',
+      entry: 'https://example.com/app.js',
+      container: '#main',
+      mountWhenVisible: true,
+    });
+
+    await orchestrator.start();
+
+    // Viewport apps are handled by IntersectionObserver, not reconciliation.
+    expect(orchestrator.getAppStatus('viewport-app')).toBe('registered');
+
+    await orchestrator.destroy();
+  });
+
+  it('viewport app is excluded from reconciliation even when activeWhen is set', () => {
+    const orchestrator = new Orchestrator();
+    setupDOM();
+
+    orchestrator.register({
+      name: 'lazy-app',
+      entry: 'https://example.com/app.js',
+      container: '#main',
+      mountWhenVisible: true,
+      activeWhen: '/',
+    });
+
+    // mountWhenVisible takes priority — app stays in 'registered' state.
+    expect(orchestrator.getMountedApps()).not.toContain('lazy-app');
+  });
+});
+
 describe('defineMicroApp', () => {
   it('should create a valid module', () => {
     const module = defineMicroApp({

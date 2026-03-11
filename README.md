@@ -235,23 +235,41 @@ tuvix.js/
 - [x] CSS/JS sandbox isolation
 - [x] CLI scaffolding tool (`npx create-tuvix-app`)
 - [x] DevTools browser extension
-- [x] Server-side composition
+- [x] Server-side composition (`@tuvix.js/server`)
 - [x] Module federation support
 - [x] Framework bindings (React, Vue, Svelte, Angular)
 - [x] i18n documentation (10 languages)
+- [x] Example tests & CI coverage for examples
 
 ### 🔜 Coming Soon
 
+**Core Runtime**
 - [ ] Hot module reload across micro apps
-- [ ] Shared state management adapter
-- [ ] Preloading & prefetching strategies
+- [ ] Shared state management adapter (Zustand / Pinia adapter layer)
 - [ ] Plugin system & middleware API
-- [ ] Visual dependency graph in DevTools
-- [ ] Testing utilities & mock orchestrator
 - [ ] Native ESM / importmap support
-- [ ] Edge/CDN-aware server composition
+- [x] Intersection Observer–based viewport mounting — lazy-mount apps only when their container scrolls into view, reducing initial JS execution cost
+
+**Server-Side Rendering**
+- [x] BigPipe-style streaming SSR — send the shell HTML immediately over chunked transfer encoding, then stream each micro-app fragment as it resolves; dramatically reduces Time To First Byte compared to the current synchronous `composeHTML` approach
+- [x] Pre-compiled shell templates — compile the slot-injection template once at server startup rather than per request
+- [ ] Critical CSS extraction — inline above-the-fold styles in SSR responses for faster Largest Contentful Paint
+- [ ] Edge/CDN-aware server composition with stale-while-revalidate fragment caching
+
+**Resilience**
+- [x] Fail-safe fallback fragments — declarative per-app fallback HTML shown automatically when a micro-app fails to load or exceeds its timeout; keeps the page usable even when one service is down
+- [ ] Fragment A/B testing — register multiple versions of a micro-app and select at runtime via cookie matcher or custom predicate, enabling gradual rollouts without redeploying the shell
+
+**Observability**
+- [x] Prometheus-compatible metrics endpoint (`/metrics`) from `@tuvix.js/server` — track mount/unmount counts, load durations, and error rates per app
+- [ ] Visual dependency graph in DevTools
 - [ ] VS Code extension for DevTools integration
+
+**Developer Experience**
+- [ ] Testing utilities & mock orchestrator
 - [ ] Storybook integration for micro app isolation
+- [ ] Preloading & prefetching strategies (already partially available via `prefetch.strategy` config)
+
 
 ---
 

@@ -43,6 +43,7 @@ export class Orchestrator {
   private started: boolean;
   private destroyed: boolean;
   private routerUnsubscribe: (() => void) | null;
+  private viewportObserver: IntersectionObserver | null;
 
   constructor(config: OrchestratorConfig = {}) {
     this.config = config;
@@ -53,6 +54,7 @@ export class Orchestrator {
     this.started = false;
     this.destroyed = false;
     this.routerUnsubscribe = null;
+    this.viewportObserver = null;
 
     if (config.router) {
       this.router = new Router(config.router);
@@ -100,6 +102,12 @@ export class Orchestrator {
     this.emitEvent(OrchestratorEvent.APP_REGISTERED, {
       name: appConfig.name,
     });
+
+    // If the orchestrator is already running and this app uses viewport mounting,
+    // start observing its container immediately.
+    if (this.started && appConfig.mountWhenVisible) {
+      this.observeViewportApp(registeredApp);
+    }
   }
 
   /**
@@ -146,6 +154,7 @@ export class Orchestrator {
 
     await this.reconcileApps();
     this.setupPrefetching();
+    this.setupViewportObserver();
 
     this.emitEvent(OrchestratorEvent.STARTED, {});
   }
@@ -199,8 +208,13 @@ export class Orchestrator {
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       app.error = err;
-      this.setAppStatus(app, 'error');
 
+      // Render fallback HTML into the container when the app fails to mount.
+      if (app.config.fallback != null && app.container) {
+        app.container.innerHTML = app.config.fallback;
+      }
+
+      this.setAppStatus(app, 'error');
       this.emitEvent(OrchestratorEvent.APP_ERROR, { name, error: err });
       this.config.onError?.(err, name);
 
@@ -330,6 +344,9 @@ export class Orchestrator {
       this.routerUnsubscribe = null;
     }
 
+    this.viewportObserver?.disconnect();
+    this.viewportObserver = null;
+
     this.router?.destroy();
     this.loader.clearCache();
     this.eventBus.emit(OrchestratorEvent.DESTROYED, {});
@@ -377,6 +394,9 @@ export class Orchestrator {
   }
 
   private shouldAppBeActive(app: RegisteredApp, path: string): boolean {
+    // Viewport apps are handled by IntersectionObserver, not route reconciliation.
+    if (app.config.mountWhenVisible) return false;
+
     const { activeWhen } = app.config;
 
     if (activeWhen === undefined) {
@@ -464,6 +484,68 @@ export class Orchestrator {
       case 'hover':
         setTimeout(prefetchAll, 2000);
         break;
+    }
+  }
+
+  private setupViewportObserver(): void {
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const viewportApps = Array.from(this.apps.values()).filter(
+      (app) => app.config.mountWhenVisible
+    );
+
+    if (viewportApps.length === 0) return;
+
+    this.viewportObserver = new IntersectionObserver(
+      this.handleViewportIntersection.bind(this),
+      { threshold: 0.1 }
+    );
+
+    for (const app of viewportApps) {
+      this.observeViewportApp(app);
+    }
+  }
+
+  private observeViewportApp(app: RegisteredApp): void {
+    if (!this.viewportObserver) {
+      // Observer not created yet (e.g. register() called before start()).
+      // setupViewportObserver() will pick it up when start() runs.
+      return;
+    }
+    try {
+      const container = this.resolveContainer(app.config.container);
+      app.container = container;
+      this.viewportObserver.observe(container);
+    } catch {
+      // Container may not be in the DOM yet; ignore.
+    }
+  }
+
+  private handleViewportIntersection(
+    entries: IntersectionObserverEntry[]
+  ): void {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+
+      for (const [name, app] of this.apps) {
+        if (
+          app.config.mountWhenVisible &&
+          app.container === entry.target &&
+          app.status !== 'mounted' &&
+          app.status !== 'mounting' &&
+          app.status !== 'bootstrapping'
+        ) {
+          // Stop observing — we are about to mount.
+          this.viewportObserver?.unobserve(entry.target);
+          this.mountApp(name).catch((err) => {
+            console.error(
+              `[Tuvix] Viewport mount failed for "${name}":`,
+              err
+            );
+          });
+          break;
+        }
+      }
     }
   }
 
