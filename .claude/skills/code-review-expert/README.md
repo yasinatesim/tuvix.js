@@ -1,6 +1,6 @@
 # Code Review Expert
 
-A comprehensive code review skill for AI agents. Performs structured reviews with a senior engineer lens, covering architecture, security, performance, and code quality.
+A comprehensive code review skill for AI agents. Performs structured reviews with a senior engineer lens, covering architecture (SOLID), security, performance, and code quality. It detects violations, identifies removal candidates, and proposes actionable improvements.
 
 ## Installation
 
