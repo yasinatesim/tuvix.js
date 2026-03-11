@@ -20,7 +20,7 @@ Demonstrates **cross-app event communication** using `@tuvix.js/event-bus` and t
 | Package | Role |
 |---|---|
 | `@tuvix.js/core` | Shell orchestrator |
-| `@tuvix.js/event-bus` | `createEventBus` — shared singleton |
+| `@tuvix.js/event-bus` | `createEventBus` - shared singleton |
 | `@tuvix.js/react` | `createReactMicroApp`, `useTuvixBus` hook |
 
 ## What's inside
@@ -61,6 +61,6 @@ Open [http://localhost:5173](http://localhost:5173) and click "Login as Alice / 
 
 ## Key concepts
 
-- **`createEventBus()`** — creates a typed pub/sub channel. Instantiated once in the shell and passed as a prop to every micro app.
-- **`useTuvixBus(bus, event, handler)`** — React hook that auto-subscribes on mount and unsubscribes on unmount, preventing memory leaks.
-- **Zero coupling** — apps communicate via string event names only; no shared module references or global state mutations.
+- **`createEventBus()`** - creates a typed pub/sub channel. Instantiated once in the shell and passed as a prop to every micro app.
+- **`useTuvixBus(bus, event, handler)`** - React hook that auto-subscribes on mount and unsubscribes on unmount, preventing memory leaks.
+- **Zero coupling** - apps communicate via string event names only; no shared module references or global state mutations.

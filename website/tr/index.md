@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: Tuvix.js
-  text: Mikro Frontend Çatısı
+  text: Mikro Frontend Framework'ü
   tagline: Hafif, framework'ten bağımsız bir orkestratör. React, Vue, Svelte, Angular veya Vanilla JS ile ölçeklenebilir, bağımsız olarak dağıtılabilir frontend uygulamaları oluşturun.
   image:
     src: /logo.svg
@@ -22,7 +22,7 @@ hero:
 features:
   - icon: 🔧
     title: Framework Bağımsız
-    details: React, Vue, Svelte, Angular ve Vanilla JS mikro uygulamalarını tek bir shell'de karıştırın — hepsi aynı anda.
+    details: React, Vue, Svelte, Angular ve Vanilla JS mikro uygulamalarını tek bir shell'de karıştırın - hepsi aynı anda.
   - icon: 📦
     title: Sıfır Çalışma Zamanı Bağımlılığı
     details: Her paket sıfır çalışma zamanı bağımlılığıyla gelir. Tree-shakeable ve ağda küçük.

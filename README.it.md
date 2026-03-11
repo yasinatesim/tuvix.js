@@ -6,7 +6,7 @@
 
 <p align="center">
   Un framework <strong>microfrontend</strong> leggero e flessibile per creare applicazioni frontend scalabili e distribuibili in modo indipendente.<br/>
-  Tuvix.js unisce più applicazioni frontend in un'esperienza utente fluida e coerente — proprio come suggerisce il suo nome.
+  Tuvix.js unisce più applicazioni frontend in un'esperienza utente fluida e coerente - proprio come suggerisce il suo nome.
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ Funzionalità
 
-- 🧩 **Indipendente dal Framework** — Usa React, Vue, Svelte, Angular o Vanilla JS
-- 📦 **Deploy Indipendente** — Distribuisci ogni micro app separatamente
-- 🔗 **Caricamento Dinamico dei Moduli** — Carica i microfrontend on demand
-- 🛣️ **Routing Integrato** — Routing trasparente tra le micro app
-- 📡 **Comunicazione tra App** — Event bus per la messaggistica cross-app
-- ⚡ **Leggero** — Zero dipendenze runtime, core minimale
-- 🔄 **Gestione del Ciclo di Vita** — Hook di mount, unmount e update
-- 🔒 **Type-Safe** — Supporto completo a TypeScript con tipi rigorosi
+- 🧩 **Indipendente dal Framework** - Usa React, Vue, Svelte, Angular o Vanilla JS
+- 📦 **Deploy Indipendente** - Distribuisci ogni micro app separatamente
+- 🔗 **Caricamento Dinamico dei Moduli** - Carica i microfrontend on demand
+- 🛣️ **Routing Integrato** - Routing trasparente tra le micro app
+- 📡 **Comunicazione tra App** - Event bus per la messaggistica cross-app
+- ⚡ **Lightweight** - Zero dipendenze runtime, core minimale
+- 🔄 **Gestione del Lifecycle** - Hook di mount, unmount e update
+- 🔒 **Type-Safe** - Supporto completo a TypeScript con tipi rigorosi
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — emetti evento
+// App A - emetti evento
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — ascolta evento
+// App B - ascolta evento
 bus.on('user:login', (data) => {
   console.log(`${data.name} logged in!`);
 });
@@ -172,7 +172,7 @@ const router = createRouter({
 | Pacchetto | Descrizione |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Pacchetto ombrello tutto-in-uno |
-| [`@tuvix.js/core`](./packages/core) | Orchestratore core con gestione del ciclo di vita |
+| [`@tuvix.js/core`](./packages/core) | Orchestratore core con gestione del Lifecycle |
 | [`@tuvix.js/router`](./packages/router) | Routing delle micro app basato su URL |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Event bus per la comunicazione tra app |
 | [`@tuvix.js/loader`](./packages/loader) | Caricatore dinamico di moduli |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ Completati
 
 - [x] Orchestratore core
-- [x] Gestione del ciclo di vita
+- [x] Gestione del Lifecycle
 - [x] Caricamento dinamico dei moduli
 - [x] Event bus
 - [x] Routing URL con modalità history/hash

@@ -56,5 +56,5 @@ Open [http://localhost:3000](http://localhost:3000). Upon inspecting the network
 
 ## Key concepts
 
-- **`<tuvix-slot id="name">`** — You define an HTML shell string containing these placeholder slots.
-- **`renderer.render(fragments)`** — The Express handler passes a map of fragment IDs to their HTML strings (rendered by React's `renderToString` or fetched via `fetch()`). Tuvix safely stitches the slots together.
+- **`<tuvix-slot id="name">`** - You define an HTML shell string containing these placeholder slots.
+- **`renderer.render(fragments)`** - The Express handler passes a map of fragment IDs to their HTML strings (rendered by React's `renderToString` or fetched via `fetch()`). Tuvix safely stitches the slots together.

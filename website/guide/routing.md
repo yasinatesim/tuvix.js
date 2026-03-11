@@ -29,8 +29,8 @@ Routes are matched in order. The first match wins.
 
 | Pattern | Matches | Params |
 |---------|---------|--------|
-| `/` | `/` | — |
-| `/dashboard` | `/dashboard` | — |
+| `/` | `/` | - |
+| `/dashboard` | `/dashboard` | - |
 | `/users/:id` | `/users/42` | `{ id: '42' }` |
 | `/files/*` | `/files/a/b/c` | `{ '*': 'a/b/c' }` |
 

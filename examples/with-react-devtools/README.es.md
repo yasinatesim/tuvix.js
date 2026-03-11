@@ -49,5 +49,5 @@ Open [http://localhost:5173](http://localhost:5173). You will see a floating **T
 
 ## Key concepts
 
-- **`initDevtools(orchestrator)`** — Imports the devtools bundle and injects a floating UI onto the page. Safe to leave in code (it is typically tree-shaken away in production builds if wrapped in `process.env.NODE_ENV !== 'production'`).
-- **Simulate Error button** — App 2 has a button that throws an error. Click it and check the DevTools "Errors" tab to see how the orchestrator catches and logs it.
+- **`initDevtools(orchestrator)`** - Imports the devtools bundle and injects a floating UI onto the page. Safe to leave in code (it is typically tree-shaken away in production builds if wrapped in `process.env.NODE_ENV !== 'production'`).
+- **Simulate Error button** - App 2 has a button that throws an error. Click it and check the DevTools "Errors" tab to see how the orchestrator catches and logs it.

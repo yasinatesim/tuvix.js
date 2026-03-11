@@ -47,6 +47,6 @@ npm run dev
 
 ## Schlüsselkonzepte
 
-- **`createReactMicroApp`** — Kapselt eine React-Komponente in ein Tuvix.js-kompatibles Modul mit `bootstrap`-, `mount`-, `unmount`- und `update`-Hooks.
-- **Prop-Weiterleitung** — Die Shell übergibt `{ theme, user }` Props an die `home`-App.
-- **Lebenszyklus** — Jede App wird nur dann eingebunden, wenn ihre Route aktiv ist.
+- **`createReactMicroApp`** - Kapselt eine React-Komponente in ein Tuvix.js-kompatibles Modul mit `bootstrap`-, `mount`-, `unmount`- und `update`-Hooks.
+- **Prop-Weiterleitung** - Die Shell übergibt `{ theme, user }` Props an die `home`-App.
+- **Lebenszyklus** - Jede App wird nur dann eingebunden, wenn ihre Route aktiv ist.

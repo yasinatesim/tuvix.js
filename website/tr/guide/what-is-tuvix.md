@@ -7,7 +7,7 @@ Tuvix.js, bağımsız olarak dağıtılabilir parçalardan oluşan ölçeklenebi
 Frontend'ler büyüdükçe, yekpare single-page uygulamaları şöyle hale gelir:
 
 - Birden fazla ekip arasında ölçeklendirilmesi zor
-- Yavaş build ve dağıtım — bir değişiklik her şeyi yeniden build eder
+- Yavaş build ve dağıtım - bir değişiklik her şeyi yeniden build eder
 - Tek bir framework veya versiyona kilitli
 - İzole olarak test edilmesi ve anlaşılması zor
 
@@ -15,9 +15,9 @@ Frontend'ler büyüdükçe, yekpare single-page uygulamaları şöyle hale gelir
 
 Mikro frontend'ler, microservice ilkelerini frontend'e uygular. Her **mikro uygulama**:
 
-- **Bağımsız olarak geliştirilir** — ayrı kod tabanı, ayrı ekip
-- **Bağımsız olarak dağıtılır** — kendi CI/CD pipeline'ı
-- **Framework bağımsızdır** — bir ekip React, diğeri Vue, diğeri Svelte kullanır
+- **Bağımsız olarak geliştirilir** - ayrı kod tabanı, ayrı ekip
+- **Bağımsız olarak dağıtılır** - kendi CI/CD pipeline'ı
+- **Framework bağımsızdır** - bir ekip React, diğeri Vue, diğeri Svelte kullanır
 
 Tuvix.js, tüm mikro uygulamaları çalışma zamanında yükleyen, bağlayan ve koordine eden **shell**'i sağlar.
 

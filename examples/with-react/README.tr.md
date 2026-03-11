@@ -47,6 +47,6 @@ npm run dev
 
 ## Temel kavramlar
 
-- **`createReactMicroApp`** — Bir React bileşenini `bootstrap`, `mount`, `unmount` ve `update` kancalarına sahip Tuvix.js uyumlu bir modüle sarar.
-- **Prop aktarımı** — Kabuk, `home` uygulamasına `{ theme, user }` proplarını iletir; bileşen bunları standart React propları olarak alır.
-- **Yaşam döngüsü** — Her uygulama yalnızca rotası aktif olduğunda monte edilir ve navigasyondan ayrılırken temiz şekilde sökülür.
+- **`createReactMicroApp`** - Bir React bileşenini `bootstrap`, `mount`, `unmount` ve `update` kancalarına sahip Tuvix.js uyumlu bir modüle sarar.
+- **Prop aktarımı** - Kabuk, `home` uygulamasına `{ theme, user }` proplarını iletir; bileşen bunları standart React propları olarak alır.
+- **Yaşam döngüsü** - Her uygulama yalnızca rotası aktif olduğunda monte edilir ve navigasyondan ayrılırken temiz şekilde sökülür.

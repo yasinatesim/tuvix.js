@@ -51,5 +51,5 @@ Open [http://localhost:5173](http://localhost:5173). You will see App 2's CSS br
 
 ## Key concepts
 
-- **Shadow DOM** (`cssIsolation: true`) — attaches the micro app to an open ShadowRoot instead of a normal div, ensuring full CSS encapsulation.
-- **Proxy Sandbox** (`jsIsolation`) — (optional) proxies the global `window` object to prevent globals leaks.
+- **Shadow DOM** (`cssIsolation: true`) - attaches the micro app to an open ShadowRoot instead of a normal div, ensuring full CSS encapsulation.
+- **Proxy Sandbox** (`jsIsolation`) - (optional) proxies the global `window` object to prevent globals leaks.

@@ -1,6 +1,6 @@
-# Yaşam Döngüsü Kancaları
+# Lifecycle Kancaları
 
-Her mikro uygulama öngörülebilir bir yaşam döngüsü takip eder.
+Her mikro uygulama öngörülebilir bir lifecycle takip eder.
 
 ## mount
 

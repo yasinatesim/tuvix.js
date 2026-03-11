@@ -5,7 +5,7 @@
 Tuvix.js, küçük, birleştirilebilir paketlerden oluşan bir monorepo olarak yapılandırılmıştır. Yalnızca kullandığınız şeyleri içe aktarırsınız.
 
 ```
-@tuvix.js/core          ← Orkestratör, yaşam döngüsü, kayıt
+@tuvix.js/core          ← Orkestratör, lifecycle, kayıt
 @tuvix.js/router        ← URL tabanlı yönlendirme
 @tuvix.js/event-bus     ← Uygulamalar arası yayın/abone
 @tuvix.js/loader        ← Dinamik paket yükleme
@@ -42,7 +42,7 @@ URL değişikliği
 Mikro Uygulama .mount()  ← Uygulama container elementine render eder
 ```
 
-## Yaşam Döngüsü
+## Lifecycle
 
 Her mikro uygulama `MicroApp` arayüzünü uygulamalıdır:
 

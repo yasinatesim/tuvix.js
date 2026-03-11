@@ -13,7 +13,7 @@
 
 # with-react-router
 
-Dimostra il **routing di micro app basato su URL** alimentato da `@tuvix.js/router`. Tre micro app React indipendenti — Dashboard, Profile e Settings — vengono registrate su route specifiche e montate/smontate automaticamente durante la navigazione.
+Dimostra il **routing di micro app basato su URL** alimentato da `@tuvix.js/router`. Tre micro app React indipendenti - Dashboard, Profile e Settings - vengono registrate su route specifiche e montate/smontate automaticamente durante la navigazione.
 
 ## Pacchetti utilizzati
 
@@ -61,6 +61,6 @@ Apri [http://localhost:5173/dashboard](http://localhost:5173/dashboard) e usa i 
 
 ## Concetti chiave
 
-- **Corrispondenza delle route** — ogni pattern `activeWhen` viene confrontato con `window.location.pathname`. I pattern glob (`/dashboard/*`) consentono alle micro app di controllare le proprie sotto-route.
-- **Modalità history** — utilizza l'API History HTML5 per URL puliti senza `#`.
-- **Zero duplicazione di bundle** — in qualsiasi momento viene eseguito solo il codice della micro app attiva.
+- **Corrispondenza delle route** - ogni pattern `activeWhen` viene confrontato con `window.location.pathname`. I pattern glob (`/dashboard/*`) consentono alle micro app di controllare le proprie sotto-route.
+- **Modalità history** - utilizza l'API History HTML5 per URL puliti senza `#`.
+- **Zero duplicazione di bundle** - in qualsiasi momento viene eseguito solo il codice della micro app attiva.

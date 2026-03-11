@@ -57,6 +57,6 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Key concepts
 
-- **`createFederatedLoader`** — Creates a loader configured with your Webpack remote URLs.
-- **Custom `load` hook** — Instead of a standard URL entry, the orchestrator app config overrides the `load` phase: `load: () => loader.createFederatedApp('remote1', './App')`.
-- **Shared Dependencies** — The Webpack remotes are configured to share `react` and `react-dom` as singletons, reducing network payload and preventing duplicate React context crashes.
+- **`createFederatedLoader`** - Creates a loader configured with your Webpack remote URLs.
+- **Custom `load` hook** - Instead of a standard URL entry, the orchestrator app config overrides the `load` phase: `load: () => loader.createFederatedApp('remote1', './App')`.
+- **Shared Dependencies** - The Webpack remotes are configured to share `react` and `react-dom` as singletons, reducing network payload and preventing duplicate React context crashes.

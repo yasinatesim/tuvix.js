@@ -6,7 +6,7 @@
 
 <p align="center">
   Ein leichtgewichtiges und flexibles <strong>Microfrontend-Framework</strong> zum Erstellen skalierbarer, unabhängig deploybarer Frontend-Anwendungen.<br/>
-  Tuvix.js vereint mehrere Frontend-Anwendungen zu einer nahtlosen, einheitlichen Benutzererfahrung — ganz wie der Name vermuten lässt.
+  Tuvix.js vereint mehrere Frontend-Anwendungen zu einer nahtlosen, einheitlichen Benutzererfahrung - ganz wie der Name vermuten lässt.
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ Funktionen
 
-- 🧩 **Framework-unabhängig** — Verwende React, Vue, Svelte, Angular oder Vanilla JS
-- 📦 **Unabhängiges Deployment** — Deploye jede Micro-App separat
-- 🔗 **Dynamisches Modulladen** — Lade Microfrontends bei Bedarf
-- 🛣️ **Integriertes Routing** — Nahtloses Routing zwischen Micro-Apps
-- 📡 **Inter-App-Kommunikation** — Event-Bus für App-übergreifende Nachrichtenübermittlung
-- ⚡ **Leichtgewichtig** — Keine Laufzeitabhängigkeiten, minimaler Kern
-- 🔄 **Lifecycle-Management** — Hooks für Mounten, Unmounten und Aktualisieren
-- 🔒 **Typsicher** — Vollständige TypeScript-Unterstützung mit strikten Typen
+- 🧩 **Framework-unabhängig** - Verwende React, Vue, Svelte, Angular oder Vanilla JS
+- 📦 **Unabhängiges Deployment** - Deploye jede Micro-App separat
+- 🔗 **Dynamisches Modulladen** - Lade Microfrontends bei Bedarf
+- 🛣️ **Integriertes Routing** - Nahtloses Routing zwischen Micro-Apps
+- 📡 **Inter-App-Kommunikation** - Event-Bus für App-übergreifende Nachrichtenübermittlung
+- ⚡ **Lightweight** - Keine Laufzeitabhängigkeiten, minimaler Kern
+- 🔄 **Lifecycle-Management** - Hooks für Mounten, Unmounten und Aktualisieren
+- 🔒 **Type-Safe** - Vollständige TypeScript-Unterstützung mit strikten Typen
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — Event senden
+// App A - Event senden
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — auf Event lauschen
+// App B - auf Event lauschen
 bus.on('user:login', (data) => {
   console.log(`${data.name} hat sich angemeldet!`);
 });

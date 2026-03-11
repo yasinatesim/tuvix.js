@@ -21,7 +21,7 @@ import App from './App';
 export const app = createMicroApp(App);
 ```
 
-`createMicroApp` handles the `mount`, `unmount` and `update` lifecycle automatically — it creates a React root, renders your component with `props`, and tears it down on unmount.
+`createMicroApp` handles the `mount`, `unmount` and `update` lifecycle automatically - it creates a React root, renders your component with `props`, and tears it down on unmount.
 
 ## Props
 

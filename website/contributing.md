@@ -1,14 +1,14 @@
 # Contributing to Tuvix.js
 
-Thank you for your interest in contributing! Whether it's a bug fix, new feature, documentation improvement, or translation — all contributions are welcome.
+Thank you for your interest in contributing! Whether it's a bug fix, new feature, documentation improvement, or translation - all contributions are welcome.
 
 ## Ways to Contribute
 
-- **Bug reports** — [Open an issue](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **Feature requests** — [Start a discussion](https://github.com/yasinatesim/tuvix.js/discussions)
-- **Code** — Fix bugs, add features, improve tests
-- **Documentation** — Fix typos, add examples, improve clarity
-- **Translations** — Add or improve documentation in other languages
+- **Bug reports** - [Open an issue](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
+- **Feature requests** - [Start a discussion](https://github.com/yasinatesim/tuvix.js/discussions)
+- **Code** - Fix bugs, add features, improve tests
+- **Documentation** - Fix typos, add examples, improve clarity
+- **Translations** - Add or improve documentation in other languages
 
 ## Getting Started
 
@@ -79,11 +79,11 @@ tuvix.js/
 
 ## Code Style
 
-- **TypeScript** — strict mode, all code must be typed
-- **Prettier** — run `pnpm format` to format
-- **No runtime dependencies** — packages must have zero runtime deps
-- **Named exports** — avoid default exports
-- **Error messages** — prefix with `[Tuvix ...]`
+- **TypeScript** - strict mode, all code must be typed
+- **Prettier** - run `pnpm format` to format
+- **No runtime dependencies** - packages must have zero runtime deps
+- **Named exports** - avoid default exports
+- **Error messages** - prefix with `[Tuvix ...]`
 
 ## Commit Messages
 

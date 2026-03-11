@@ -6,7 +6,7 @@
 
 <p align="center">
   A lightweight and flexible <strong>microfrontend framework</strong> for building scalable, independently deployable frontend applications.<br/>
-  Tuvix.js merges multiple frontend applications into a seamless, unified user experience — just like its name suggests.
+  Tuvix.js merges multiple frontend applications into a seamless, unified user experience - just like its name suggests.
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ Features
 
-- 🧩 **Framework Agnostic** — Use React, Vue, Svelte, Angular or Vanilla JS
-- 📦 **Independent Deployment** — Deploy each micro app separately
-- 🔗 **Dynamic Module Loading** — Load micro frontends on demand
-- 🛣️ **Built-in Routing** — Seamless routing across micro apps
-- 📡 **Inter-App Communication** — Event bus for cross-app messaging
-- ⚡ **Lightweight** — Zero runtime dependencies, minimal core
-- 🔄 **Lifecycle Management** — Mount, unmount, update hooks
-- 🔒 **Type-Safe** — Full TypeScript support with strict types
+- 🧩 **Framework Agnostic** - Use React, Vue, Svelte, Angular or Vanilla JS
+- 📦 **Independent Deployment** - Deploy each micro app separately
+- 🔗 **Dynamic Module Loading** - Load micro frontends on demand
+- 🛣️ **Built-in Routing** - Seamless routing across micro apps
+- 📡 **Inter-App Communication** - Event bus for cross-app messaging
+- ⚡ **Lightweight** - Zero runtime dependencies, minimal core
+- 🔄 **Lifecycle Management** - Mount, unmount, update hooks
+- 🔒 **Type-Safe** - Full TypeScript support with strict types
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — emit event
+// App A - emit event
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — listen for event
+// App B - listen for event
 bus.on('user:login', (data) => {
   console.log(`${data.name} logged in!`);
 });
@@ -248,20 +248,20 @@ tuvix.js/
 - [ ] Shared state management adapter (Zustand / Pinia adapter layer)
 - [ ] Plugin system & middleware API
 - [ ] Native ESM / importmap support
-- [x] Intersection Observer–based viewport mounting — lazy-mount apps only when their container scrolls into view, reducing initial JS execution cost
+- [x] Intersection Observer–based viewport mounting - lazy-mount apps only when their container scrolls into view, reducing initial JS execution cost
 
 **Server-Side Rendering**
-- [x] BigPipe-style streaming SSR — send the shell HTML immediately over chunked transfer encoding, then stream each micro-app fragment as it resolves; dramatically reduces Time To First Byte compared to the current synchronous `composeHTML` approach
-- [x] Pre-compiled shell templates — compile the slot-injection template once at server startup rather than per request
-- [ ] Critical CSS extraction — inline above-the-fold styles in SSR responses for faster Largest Contentful Paint
+- [x] BigPipe-style streaming SSR - send the shell HTML immediately over chunked transfer encoding, then stream each micro-app fragment as it resolves; dramatically reduces Time To First Byte compared to the current synchronous `composeHTML` approach
+- [x] Pre-compiled shell templates - compile the slot-injection template once at server startup rather than per request
+- [ ] Critical CSS extraction - inline above-the-fold styles in SSR responses for faster Largest Contentful Paint
 - [ ] Edge/CDN-aware server composition with stale-while-revalidate fragment caching
 
 **Resilience**
-- [x] Fail-safe fallback fragments — declarative per-app fallback HTML shown automatically when a micro-app fails to load or exceeds its timeout; keeps the page usable even when one service is down
-- [ ] Fragment A/B testing — register multiple versions of a micro-app and select at runtime via cookie matcher or custom predicate, enabling gradual rollouts without redeploying the shell
+- [x] Fail-safe fallback fragments - declarative per-app fallback HTML shown automatically when a micro-app fails to load or exceeds its timeout; keeps the page usable even when one service is down
+- [ ] Fragment A/B testing - register multiple versions of a micro-app and select at runtime via cookie matcher or custom predicate, enabling gradual rollouts without redeploying the shell
 
 **Observability**
-- [x] Prometheus-compatible metrics endpoint (`/metrics`) from `@tuvix.js/server` — track mount/unmount counts, load durations, and error rates per app
+- [x] Prometheus-compatible metrics endpoint (`/metrics`) from `@tuvix.js/server` - track mount/unmount counts, load durations, and error rates per app
 - [ ] Visual dependency graph in DevTools
 - [ ] VS Code extension for DevTools integration
 

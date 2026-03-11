@@ -47,6 +47,6 @@ npm run dev
 
 ## मुख्य अवधारणाएं
 
-- **`createReactMicroApp`** — एक React कम्पोनेंट को `bootstrap`, `mount`, `unmount` और `update` हुक के साथ Tuvix.js-संगत मॉड्यूल में लपेटता है।
-- **Props पासिंग** — शेल `{ theme, user }` props `home` ऐप को भेजता है।
-- **लाइफसाइकल** — प्रत्येक ऐप केवल तब माउंट होती है जब उसका रूट सक्रिय हो।
+- **`createReactMicroApp`** - एक React कम्पोनेंट को `bootstrap`, `mount`, `unmount` और `update` हुक के साथ Tuvix.js-संगत मॉड्यूल में लपेटता है।
+- **Props पासिंग** - शेल `{ theme, user }` props `home` ऐप को भेजता है।
+- **लाइफसाइकल** - प्रत्येक ऐप केवल तब माउंट होती है जब उसका रूट सक्रिय हो।

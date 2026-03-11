@@ -47,6 +47,6 @@ npm run dev
 
 ## 主要コンセプト
 
-- **`createReactMicroApp`** — React コンポーネントを `bootstrap`、`mount`、`unmount`、`update` フックを持つ Tuvix.js 互換モジュールにラップします。
-- **Props の受け渡し** — シェルは `{ theme, user }` props を `home` アプリに渡します。
-- **ライフサイクル** — 各アプリはルートがアクティブな場合にのみマウントされます。
+- **`createReactMicroApp`** - React コンポーネントを `bootstrap`、`mount`、`unmount`、`update` フックを持つ Tuvix.js 互換モジュールにラップします。
+- **Props の受け渡し** - シェルは `{ theme, user }` props を `home` アプリに渡します。
+- **ライフサイクル** - 各アプリはルートがアクティブな場合にのみマウントされます。

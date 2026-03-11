@@ -32,11 +32,11 @@ if (process.env.NODE_ENV === 'development') {
 
 ## What You Can Inspect
 
-- **Registered Apps** — names, entry URLs, sandbox config
-- **Active Apps** — currently mounted micro apps
-- **Event Bus** — live event stream, emitted events and their payloads
-- **Loader** — cache entries, fetch status and timings
-- **Performance** — mount/unmount durations for each app
+- **Registered Apps** - names, entry URLs, sandbox config
+- **Active Apps** - currently mounted micro apps
+- **Event Bus** - live event stream, emitted events and their payloads
+- **Loader** - cache entries, fetch status and timings
+- **Performance** - mount/unmount durations for each app
 
 ## Keyboard Shortcut
 

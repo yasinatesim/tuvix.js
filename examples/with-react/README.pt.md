@@ -47,6 +47,6 @@ Abra [http://localhost:5173/home](http://localhost:5173/home).
 
 ## Conceitos principais
 
-- **`createReactMicroApp`** — Envolve um componente React em um módulo compatível com Tuvix.js com hooks `bootstrap`, `mount`, `unmount` e `update`.
-- **Passagem de props** — O shell passa props `{ theme, user }` para o app `home`.
-- **Ciclo de vida** — Cada app só é montada quando sua rota está ativa.
+- **`createReactMicroApp`** - Envolve um componente React em um módulo compatível com Tuvix.js com hooks `bootstrap`, `mount`, `unmount` e `update`.
+- **Passagem de props** - O shell passa props `{ theme, user }` para o app `home`.
+- **Ciclo de vida** - Cada app só é montada quando sua rota está ativa.

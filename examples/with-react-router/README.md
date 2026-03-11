@@ -13,7 +13,7 @@
 
 # with-react-router
 
-Demonstrates **URL-based micro app routing** powered by `@tuvix.js/router`. Three independent React micro apps — Dashboard, Profile, and Settings — are registered to specific routes and mounted/unmounted automatically as the user navigates.
+Demonstrates **URL-based micro app routing** powered by `@tuvix.js/router`. Three independent React micro apps - Dashboard, Profile, and Settings - are registered to specific routes and mounted/unmounted automatically as the user navigates.
 
 ## Packages used
 
@@ -61,6 +61,6 @@ Open [http://localhost:5173/dashboard](http://localhost:5173/dashboard) and use 
 
 ## Key concepts
 
-- **Route matching** — each `activeWhen` pattern is matched against `window.location.pathname`. Glob patterns (`/dashboard/*`) let micro apps control their own sub-routes.
-- **History mode** — uses the HTML5 History API for clean URLs without `#`.
-- **Zero bundle duplication** — only the active micro app's code runs at any given time.
+- **Route matching** - each `activeWhen` pattern is matched against `window.location.pathname`. Glob patterns (`/dashboard/*`) let micro apps control their own sub-routes.
+- **History mode** - uses the HTML5 History API for clean URLs without `#`.
+- **Zero bundle duplication** - only the active micro app's code runs at any given time.

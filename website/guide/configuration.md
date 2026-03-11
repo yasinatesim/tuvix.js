@@ -87,7 +87,7 @@ const router = createRouter({
       path: '/admin',
       app: 'admin',
       /**
-       * Guard function — return false to block navigation.
+       * Guard function - return false to block navigation.
        */
       guard: () => checkAuth(),
     },

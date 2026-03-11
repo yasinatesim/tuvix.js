@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Tuvix.js
   text: マイクロフロントエンドフレームワーク
-  tagline: 軽量でフレームワーク非依存のオーケストレーター。React、Vue、Svelte、Angular、Vanilla JSでスケーラブルかつ独立してデプロイ可能なフロントエンドアプリを構築しましょう。
+  tagline: Lightweightでフレームワーク非依存のオーケストレーター。React、Vue、Svelte、Angular、Vanilla JSでスケーラブルかつ独立してデプロイ可能なフロントエンドアプリを構築しましょう。
   image:
     src: /logo.svg
     alt: Tuvix.js
@@ -25,7 +25,7 @@ features:
     details: React、Vue、Svelte、Angular、Vanilla JSのマイクロアプリを1つのシェルで混在させられます。
   - icon: 📦
     title: ランタイム依存ゼロ
-    details: 全パッケージのランタイム依存関係はゼロ。Tree-shakeableで軽量です。
+    details: 全パッケージのランタイム依存関係はゼロ。Tree-shakeableでLightweightです。
   - icon: 🔀
     title: ビルトインルーティング
     details: URLベースのマイクロアプリ起動。ルート変更で自動マウント・アンマウント。

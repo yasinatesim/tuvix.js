@@ -4,7 +4,7 @@
 
 ## CSS Isolation (Shadow DOM)
 
-When CSS sandboxing is enabled, the micro app's container is upgraded to a Shadow DOM host. Styles defined inside are scoped to that shadow root — they cannot leak out to the shell or other micro apps.
+When CSS sandboxing is enabled, the micro app's container is upgraded to a Shadow DOM host. Styles defined inside are scoped to that shadow root - they cannot leak out to the shell or other micro apps.
 
 ### Enable per app
 

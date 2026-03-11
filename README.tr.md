@@ -5,8 +5,8 @@
 <h1 align="center">Tuvix.js</h1>
 
 <p align="center">
-  Ölçeklenebilir ve bağımsız olarak dağıtılabilen frontend uygulamaları oluşturmak için hafif ve esnek bir <strong>mikro frontend çatısı</strong>.<br/>
-  Tuvix.js, birden fazla frontend uygulamasını kusursuz ve bütünleşik bir kullanıcı deneyiminde birleştirir — tıpkı adının ima ettiği gibi.
+  Ölçeklenebilir ve bağımsız olarak dağıtılabilen frontend uygulamaları oluşturmak için hafif ve esnek bir <strong>mikro frontend framework'ü</strong>.<br/>
+  Tuvix.js, birden fazla frontend uygulamasını kusursuz ve bütünleşik bir kullanıcı deneyiminde birleştirir - tıpkı adının ima ettiği gibi.
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ Özellikler
 
-- 🧩 **Çatı Bağımsız** — React, Vue, Svelte, Angular veya saf JS kullanın
-- 📦 **Bağımsız Dağıtım** — Her mikro uygulamayı ayrı ayrı dağıtın
-- 🔗 **Dinamik Modül Yükleme** — Mikro frontendleri talep üzerine yükleyin
-- 🛣️ **Yerleşik Yönlendirme** — Mikro uygulamalar arası kesintisiz yönlendirme
-- 📡 **Uygulamalar Arası İletişim** — Çapraz uygulama mesajlaşması için olay yolu
-- ⚡ **Hafif** — Sıfır çalışma zamanı bağımlılığı, minimal çekirdek
-- 🔄 **Yaşam Döngüsü Yönetimi** — Bağlama, ayırma, güncelleme kancaları
-- 🔒 **Tür Güvenli** — Katı türlerle tam TypeScript desteği
+- 🧩 **Framework Bağımsız** - React, Vue, Svelte, Angular veya saf JS kullanın
+- 📦 **Bağımsız Deployment** - Her mikro uygulamayı ayrı ayrı dağıtın
+- 🔗 **Dinamik Modül Yükleme** - Mikro frontendleri talep üzerine yükleyin
+- 🛣️ **Yerleşik Yönlendirme** - Mikro uygulamalar arası kesintisiz yönlendirme
+- 📡 **Uygulamalar Arası İletişim** - Çapraz uygulama mesajlaşması için olay yolu
+- ⚡ **Lightweight** - Sıfır çalışma zamanı bağımlılığı, minimal çekirdek
+- 🔄 **Lifecycle Yönetimi** - Bağlama, ayırma, güncelleme kancaları
+- 🔒 **Type-Safe** - Katı türlerle tam TypeScript desteği
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// Uygulama A — olay gönder
+// Uygulama A - olay gönder
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// Uygulama B — olayı dinle
+// Uygulama B - olayı dinle
 bus.on('user:login', (data) => {
   console.log(`${data.name} giriş yaptı!`);
 });
@@ -172,7 +172,7 @@ const router = createRouter({
 | Paket | Açıklama |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Hepsi bir arada şemsiye paket |
-| [`@tuvix.js/core`](./packages/core) | Yaşam döngüsü yönetimli çekirdek orkestratör |
+| [`@tuvix.js/core`](./packages/core) | Lifecycle yönetimli çekirdek orkestratör |
 | [`@tuvix.js/router`](./packages/router) | URL tabanlı mikro uygulama yönlendirmesi |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Uygulamalar arası iletişim olay yolu |
 | [`@tuvix.js/loader`](./packages/loader) | Dinamik modül yükleyici |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ Tamamlandı
 
 - [x] Çekirdek orkestratör
-- [x] Yaşam döngüsü yönetimi
+- [x] Lifecycle yönetimi
 - [x] Dinamik modül yükleme
 - [x] Olay yolu
 - [x] History/hash modlarıyla URL yönlendirmesi
@@ -237,7 +237,7 @@ tuvix.js/
 - [x] DevTools tarayıcı eklentisi
 - [x] Sunucu taraflı bileşim
 - [x] Module federation desteği
-- [x] Çatı bağlamaları (React, Vue, Svelte, Angular)
+- [x] Framework bağlamaları (React, Vue, Svelte, Angular)
 - [x] Çoklu dil dokümantasyonu (10 dil)
 
 ### 🔜 Yakında
@@ -257,15 +257,15 @@ tuvix.js/
 
 ## 🧪 Örnekler
 
-Desteklenen her çatı için çalıştırmaya hazır örnekler [`examples/`](./examples) dizininde mevcuttur:
+Desteklenen her framework için çalıştırmaya hazır örnekler [`examples/`](./examples) dizininde mevcuttur:
 
-| Örnek | Çatı | Yol |
+| Örnek | Framework | Yol |
 | --- | --- | --- |
 | [React Örneği](./examples/react) | React 18+ | `examples/react/` |
 | [Vue Örneği](./examples/vue) | Vue 3 | `examples/vue/` |
 | [Svelte Örneği](./examples/svelte) | Svelte 5 | `examples/svelte/` |
 | [Angular Örneği](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Saf JS Örneği](./examples/vanilla) | Çatısız | `examples/vanilla/` |
+| [Saf JS Örneği](./examples/vanilla) | Framework'süz | `examples/vanilla/` |
 
 Her örnek şunları gösterir:
 - Orkestratörü başlatan bir **kabuk (ana)** uygulama

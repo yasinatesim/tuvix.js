@@ -6,7 +6,7 @@
 
 <p align="center">
   スケーラブルで独立デプロイ可能なフロントエンドアプリケーションを構築するための、軽量で柔軟な<strong>マイクロフロントエンドフレームワーク</strong>。<br/>
-  Tuvix.jsは複数のフロントエンドアプリケーションをシームレスで統一されたユーザー体験に融合します — その名前が示すとおりに。
+  Tuvix.jsは複数のフロントエンドアプリケーションをシームレスで統一されたユーザー体験に融合します - その名前が示すとおりに。
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ 特徴
 
-- 🧩 **フレームワーク非依存** — React、Vue、Svelte、Angular、またはVanilla JSが使用可能
-- 📦 **独立デプロイ** — 各マイクロアプリを個別にデプロイ
-- 🔗 **動的モジュールローディング** — マイクロフロントエンドをオンデマンドで読み込み
-- 🛣️ **組み込みルーティング** — マイクロアプリ間のシームレスなルーティング
-- 📡 **アプリ間通信** — アプリ間メッセージングのためのイベントバス
-- ⚡ **軽量** — ランタイム依存ゼロ、最小限のコア
-- 🔄 **ライフサイクル管理** — マウント、アンマウント、アップデートフック
-- 🔒 **型安全** — 厳密な型によるTypeScriptの完全サポート
+- 🧩 **フレームワーク非依存** - React、Vue、Svelte、Angular、またはVanilla JSが使用可能
+- 📦 **独立Deployment** - 各マイクロアプリを個別にデプロイ
+- 🔗 **動的モジュールローディング** - マイクロフロントエンドをオンデマンドで読み込み
+- 🛣️ **組み込みルーティング** - マイクロアプリ間のシームレスなルーティング
+- 📡 **アプリ間通信** - アプリ間メッセージングのためのイベントバス
+- ⚡ **Lightweight** - ランタイム依存ゼロ、最小限のコア
+- 🔄 **Lifecycle管理** - マウント、アンマウント、アップデートフック
+- 🔒 **Type-Safe** - 厳密な型によるTypeScriptの完全サポート
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — イベントを発行
+// App A - イベントを発行
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — イベントをリッスン
+// App B - イベントをリッスン
 bus.on('user:login', (data) => {
   console.log(`${data.name}がログインしました！`);
 });
@@ -172,7 +172,7 @@ const router = createRouter({
 | パッケージ | 説明 |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | オールインワンパッケージ |
-| [`@tuvix.js/core`](./packages/core) | ライフサイクル管理を備えたコアオーケストレーター |
+| [`@tuvix.js/core`](./packages/core) | Lifecycle管理を備えたコアオーケストレーター |
 | [`@tuvix.js/router`](./packages/router) | URLベースのマイクロアプリルーティング |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | アプリ間通信イベントバス |
 | [`@tuvix.js/loader`](./packages/loader) | 動的モジュールローダー |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ 完了済み
 
 - [x] コアオーケストレーター
-- [x] ライフサイクル管理
+- [x] Lifecycle管理
 - [x] 動的モジュールローディング
 - [x] イベントバス
 - [x] history/hashモード対応のURLルーティング

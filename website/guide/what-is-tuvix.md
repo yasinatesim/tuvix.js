@@ -7,7 +7,7 @@ Tuvix.js is a **lightweight, framework-agnostic microfrontend orchestrator** for
 As frontends grow, monolithic single-page applications become:
 
 - Hard to scale across multiple teams
-- Slow to build and deploy — one change rebuilds everything
+- Slow to build and deploy - one change rebuilds everything
 - Locked into a single framework or version
 - Difficult to test and reason about in isolation
 
@@ -15,11 +15,11 @@ As frontends grow, monolithic single-page applications become:
 
 Microfrontends apply microservice principles to the frontend. Each **micro app** is:
 
-- **Independently developed** — separate codebase, separate team
-- **Independently deployed** — its own CI/CD pipeline
-- **Framework-agnostic** — one team uses React, another Vue, another Svelte
+- **Independently developed** - separate codebase, separate team
+- **Independently deployed** - its own CI/CD pipeline
+- **Framework-agnostic** - one team uses React, another Vue, another Svelte
 
-Tuvix.js provides the **shell** — the thin orchestration layer that loads, mounts and coordinates all micro apps at runtime.
+Tuvix.js provides the **shell** - the thin orchestration layer that loads, mounts and coordinates all micro apps at runtime.
 
 ## Architecture
 
@@ -43,7 +43,7 @@ Tuvix.js provides the **shell** — the thin orchestration layer that loads, mou
 
 | Concept | Description |
 |---------|-------------|
-| **Shell** | The host application — loads and coordinates micro apps |
+| **Shell** | The host application - loads and coordinates micro apps |
 | **Orchestrator** | Core engine that manages micro app registration and lifecycle |
 | **Micro App** | An independently deployed frontend application |
 | **Entry** | The JavaScript bundle URL of a micro app |

@@ -61,6 +61,6 @@ npm run dev
 
 ## Temel kavramlar
 
-- **Rota eşleştirme** — her `activeWhen` deseni `window.location.pathname` ile karşılaştırılır. Glob desenleri (`/dashboard/*`) mikro uygulamaların kendi alt rotalarını kontrol etmesine olanak tanır.
-- **History modu** — `#` olmadan temiz URL'ler için HTML5 History API'sini kullanır.
-- **Sıfır paket tekrarı** — herhangi bir anda yalnızca aktif mikro uygulamanın kodu çalışır.
+- **Rota eşleştirme** - her `activeWhen` deseni `window.location.pathname` ile karşılaştırılır. Glob desenleri (`/dashboard/*`) mikro uygulamaların kendi alt rotalarını kontrol etmesine olanak tanır.
+- **History modu** - `#` olmadan temiz URL'ler için HTML5 History API'sini kullanır.
+- **Sıfır paket tekrarı** - herhangi bir anda yalnızca aktif mikro uygulamanın kodu çalışır.

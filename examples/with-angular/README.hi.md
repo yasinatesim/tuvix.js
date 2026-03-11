@@ -48,5 +48,5 @@ Open [http://localhost:4200](http://localhost:4200).
 
 ## Key concepts
 
-- **`createAngularMicroApp(config)`** — Bootstraps an Angular standalone component or NgModules dynamically into a container.
-- **Props mapping** — `@tuvix.js/angular` automatically maps `props` passed from the shell into the Angular component's `@Input()` decorators. Whenever the shell updates a prop, the Angular component receives those changes via the standard lifecycle hooks (e.g., `ngOnChanges`).
+- **`createAngularMicroApp(config)`** - Bootstraps an Angular standalone component or NgModules dynamically into a container.
+- **Props mapping** - `@tuvix.js/angular` automatically maps `props` passed from the shell into the Angular component's `@Input()` decorators. Whenever the shell updates a prop, the Angular component receives those changes via the standard lifecycle hooks (e.g., `ngOnChanges`).

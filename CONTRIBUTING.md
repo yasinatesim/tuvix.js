@@ -33,20 +33,20 @@ pnpm test
 ```
 tuvix.js/
 ├── packages/
-│   ├── core/           @tuvix.js/core — Orchestrator
-│   ├── router/         @tuvix.js/router — URL routing
-│   ├── event-bus/      @tuvix.js/event-bus — Inter-app communication
-│   ├── loader/         @tuvix.js/loader — Dynamic module loading
-│   ├── sandbox/        @tuvix.js/sandbox — CSS/JS isolation
-│   ├── react/          @tuvix.js/react — React bindings
-│   ├── vue/            @tuvix.js/vue — Vue bindings
-│   ├── svelte/         @tuvix.js/svelte — Svelte bindings
-│   ├── angular/        @tuvix.js/angular — Angular bindings
-│   ├── devtools/       @tuvix.js/devtools — Debug panel
-│   ├── server/         @tuvix.js/server — SSR composition
+│   ├── core/           @tuvix.js/core - Orchestrator
+│   ├── router/         @tuvix.js/router - URL routing
+│   ├── event-bus/      @tuvix.js/event-bus - Inter-app communication
+│   ├── loader/         @tuvix.js/loader - Dynamic module loading
+│   ├── sandbox/        @tuvix.js/sandbox - CSS/JS isolation
+│   ├── react/          @tuvix.js/react - React bindings
+│   ├── vue/            @tuvix.js/vue - Vue bindings
+│   ├── svelte/         @tuvix.js/svelte - Svelte bindings
+│   ├── angular/        @tuvix.js/angular - Angular bindings
+│   ├── devtools/       @tuvix.js/devtools - Debug panel
+│   ├── server/         @tuvix.js/server - SSR composition
 │   ├── module-federation/  @tuvix.js/module-federation
 │   ├── create-tuvix-app/   CLI scaffolding tool
-│   └── tuvix/          tuvix.js — Umbrella package
+│   └── tuvix/          tuvix.js - Umbrella package
 └── website/
     ├── .vitepress/     VitePress config and theme
     ├── guide/          English documentation (Markdown)
@@ -79,7 +79,7 @@ pnpm lint           # Lint Vue/JS files
 Each language has its own directory under `website/`. To add or improve a translation:
 
 1. Copy the relevant `.md` file from `website/guide/` (English) to `website/<lang>/guide/`
-2. Translate the content — **keep all code blocks in English**
+2. Translate the content - **keep all code blocks in English**
 3. If the language isn't yet in the sidebar, update `website/.vitepress/config/<lang>.ts`
 4. Run `pnpm dev` inside `website/` to preview
 
@@ -87,11 +87,11 @@ Supported languages: `en`, `tr`, `es`, `de`, `fr`, `ja`, `zh`, `it`, `pt`, `hi`
 
 ## Code Style
 
-- **TypeScript** — All code must be written in TypeScript with strict mode enabled
-- **Formatting** — We use Prettier. Run `pnpm format` to format code
-- **No runtime dependencies** — All packages must have zero runtime dependencies (except workspace deps)
-- **Named exports** — Use named exports, avoid default exports
-- **Error messages** — All errors must start with `[Tuvix ...]` prefix and describe WHAT failed and WHY
+- **TypeScript** - All code must be written in TypeScript with strict mode enabled
+- **Formatting** - We use Prettier. Run `pnpm format` to format code
+- **No runtime dependencies** - All packages must have zero runtime dependencies (except workspace deps)
+- **Named exports** - Use named exports, avoid default exports
+- **Error messages** - All errors must start with `[Tuvix ...]` prefix and describe WHAT failed and WHY
 
 ## Commit Messages
 

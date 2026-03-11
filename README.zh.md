@@ -6,7 +6,7 @@
 
 <p align="center">
   一个轻量且灵活的<strong>微前端框架</strong>，用于构建可扩展、可独立部署的前端应用。<br/>
-  Tuvix.js 将多个前端应用融合为无缝统一的用户体验 — 正如其名所示。
+  Tuvix.js 将多个前端应用融合为无缝统一的用户体验 - 正如其名所示。
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ 特性
 
-- 🧩 **框架无关** — 支持 React、Vue、Svelte、Angular 或原生 JS
-- 📦 **独立部署** — 每个微应用可单独部署
-- 🔗 **动态模块加载** — 按需加载微前端
-- 🛣️ **内置路由** — 微应用间的无缝路由
-- 📡 **应用间通信** — 用于跨应用消息传递的事件总线
-- ⚡ **轻量** — 零运行时依赖，核心极简
-- 🔄 **生命周期管理** — 挂载、卸载、更新钩子
-- 🔒 **类型安全** — 完整的 TypeScript 支持与严格类型
+- 🧩 **框架无关** - 支持 React、Vue、Svelte、Angular 或原生 JS
+- 📦 **独立Deployment** - 每个微应用可单独部署
+- 🔗 **动态模块加载** - 按需加载微前端
+- 🛣️ **内置路由** - 微应用间的无缝路由
+- 📡 **应用间通信** - 用于跨应用消息传递的事件总线
+- ⚡ **Lightweight** - 零运行时依赖，核心极简
+- 🔄 **Lifecycle管理** - 挂载、卸载、更新钩子
+- 🔒 **Type-Safe** - 完整的 TypeScript 支持与严格类型
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// 应用 A — 发送事件
+// 应用 A - 发送事件
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// 应用 B — 监听事件
+// 应用 B - 监听事件
 bus.on('user:login', (data) => {
   console.log(`${data.name} 已登录！`);
 });
@@ -172,7 +172,7 @@ const router = createRouter({
 | 包名 | 描述 |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | 全家桶包 |
-| [`@tuvix.js/core`](./packages/core) | 带生命周期管理的核心编排器 |
+| [`@tuvix.js/core`](./packages/core) | 带Lifecycle管理的核心编排器 |
 | [`@tuvix.js/router`](./packages/router) | 基于 URL 的微应用路由 |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | 应用间通信事件总线 |
 | [`@tuvix.js/loader`](./packages/loader) | 动态模块加载器 |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ 已完成
 
 - [x] 核心编排器
-- [x] 生命周期管理
+- [x] Lifecycle管理
 - [x] 动态模块加载
 - [x] 事件总线
 - [x] 支持 history/hash 模式的 URL 路由

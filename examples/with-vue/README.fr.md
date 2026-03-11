@@ -48,5 +48,5 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Key concepts
 
-- **`createVueMicroApp(App, config)`** — Wraps a root Vue component automatically hooking into the Tuvix mount/unmount lifecycle.
-- **`useTuvixProps()`** — A Vue composable that makes shell-provided properties available as reactivity wrapped Vue refs inside your component setup.
+- **`createVueMicroApp(App, config)`** - Wraps a root Vue component automatically hooking into the Tuvix mount/unmount lifecycle.
+- **`useTuvixProps()`** - A Vue composable that makes shell-provided properties available as reactivity wrapped Vue refs inside your component setup.

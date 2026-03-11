@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Tuvix.js
   text: 微前端框架
-  tagline: 轻量、框架无关的微前端编排器。使用 React、Vue、Svelte、Angular 或 Vanilla JS 构建可扩展、独立部署的前端应用。
+  tagline: Lightweight、框架无关的微前端编排器。使用 React、Vue、Svelte、Angular 或 Vanilla JS 构建可扩展、独立部署的前端应用。
   image:
     src: /logo.svg
     alt: Tuvix.js
@@ -25,7 +25,7 @@ features:
     details: 在同一个 Shell 中混合使用 React、Vue、Svelte、Angular 和 Vanilla JS 微应用，同时运行。
   - icon: 📦
     title: 零运行时依赖
-    details: 每个包均无运行时依赖，支持 Tree-shaking，体积轻巧。
+    details: 每个包均无运行时依赖，支持 Tree-shaking，Lightweight。
   - icon: 🔀
     title: 内置路由
     details: 基于 URL 的微应用激活，路由切换时自动挂载/卸载。

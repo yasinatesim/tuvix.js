@@ -6,7 +6,7 @@
 
 <p align="center">
   Um framework <strong>microfrontend</strong> leve e flexível para construir aplicações frontend escaláveis e implantáveis de forma independente.<br/>
-  O Tuvix.js une múltiplas aplicações frontend em uma experiência de usuário fluida e unificada — assim como o seu nome sugere.
+  O Tuvix.js une múltiplas aplicações frontend em uma experiência de usuário fluida e unificada - assim como o seu nome sugere.
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ Funcionalidades
 
-- 🧩 **Agnóstico de Framework** — Use React, Vue, Svelte, Angular ou Vanilla JS
-- 📦 **Deploy Independente** — Implante cada micro app separadamente
-- 🔗 **Carregamento Dinâmico de Módulos** — Carregue microfrontends sob demanda
-- 🛣️ **Roteamento Integrado** — Roteamento transparente entre micro apps
-- 📡 **Comunicação entre Apps** — Event bus para mensagens cross-app
-- ⚡ **Leve** — Zero dependências em runtime, core mínimo
-- 🔄 **Gerenciamento de Ciclo de Vida** — Hooks de mount, unmount e update
-- 🔒 **Type-Safe** — Suporte completo a TypeScript com tipos rigorosos
+- 🧩 **Agnóstico de Framework** - Use React, Vue, Svelte, Angular ou Vanilla JS
+- 📦 **Deployment independente** - Implante cada micro app separadamente
+- 🔗 **Carregamento Dinâmico de Módulos** - Carregue microfrontends sob demanda
+- 🛣️ **Roteamento Integrado** - Roteamento transparente entre micro apps
+- 📡 **Comunicação entre Apps** - Event bus para mensagens cross-app
+- ⚡ **Lightweight** - Zero dependências em runtime, core mínimo
+- 🔄 **Gerenciamento de Lifecycle** - Hooks de mount, unmount e update
+- 🔒 **Type-Safe** - Suporte completo a TypeScript com tipos rigorosos
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — emitir evento
+// App A - emitir evento
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — escutar evento
+// App B - escutar evento
 bus.on('user:login', (data) => {
   console.log(`${data.name} logged in!`);
 });
@@ -172,7 +172,7 @@ const router = createRouter({
 | Pacote | Descrição |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Pacote guarda-chuva tudo-em-um |
-| [`@tuvix.js/core`](./packages/core) | Orquestrador core com gerenciamento de ciclo de vida |
+| [`@tuvix.js/core`](./packages/core) | Orquestrador core com gerenciamento de Lifecycle |
 | [`@tuvix.js/router`](./packages/router) | Roteamento de micro apps baseado em URL |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Event bus para comunicação entre apps |
 | [`@tuvix.js/loader`](./packages/loader) | Carregador dinâmico de módulos |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ Concluídos
 
 - [x] Orquestrador core
-- [x] Gerenciamento de ciclo de vida
+- [x] Gerenciamento de Lifecycle
 - [x] Carregamento dinâmico de módulos
 - [x] Event bus
 - [x] Roteamento URL com modos history/hash

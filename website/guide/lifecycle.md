@@ -17,8 +17,8 @@ async mount(container: HTMLElement, props?: Record<string, unknown>): Promise<vo
 ```
 
 **Arguments:**
-- `container` — The root DOM element to render into
-- `props` — Optional key-value props from the shell
+- `container` - The root DOM element to render into
+- `props` - Optional key-value props from the shell
 
 **Example:**
 ```ts
@@ -41,7 +41,7 @@ Called when navigating away from the micro app's route (or when it's manually de
 async unmount(container: HTMLElement): Promise<void>
 ```
 
-This is where you **clean up** — unsubscribe from events, destroy framework instances, remove DOM nodes.
+This is where you **clean up** - unsubscribe from events, destroy framework instances, remove DOM nodes.
 
 **Example:**
 ```ts

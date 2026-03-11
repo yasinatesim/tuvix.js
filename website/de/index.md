@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Tuvix.js
   text: Microfrontend-Framework
-  tagline: Ein leichter, framework-agnostischer Orchestrator. Erstelle skalierbare, unabhängig deploybare Frontend-Anwendungen mit React, Vue, Svelte, Angular oder Vanilla JS.
+  tagline: Ein Lightweight, framework-agnostischer Orchestrator. Erstelle skalierbare, unabhängig deploybare Frontend-Anwendungen mit React, Vue, Svelte, Angular oder Vanilla JS.
   image:
     src: /logo.svg
     alt: Tuvix.js
@@ -22,10 +22,10 @@ hero:
 features:
   - icon: 🔧
     title: Framework-agnostisch
-    details: Mische React-, Vue-, Svelte-, Angular- und Vanilla-JS-Micro-Apps in einer einzigen Shell — alle gleichzeitig.
+    details: Mische React-, Vue-, Svelte-, Angular- und Vanilla-JS-Micro-Apps in einer einzigen Shell - alle gleichzeitig.
   - icon: 📦
     title: Keine Laufzeit-Abhängigkeiten
-    details: Jedes Paket enthält null Laufzeit-Abhängigkeiten. Tree-shakeable und schlank.
+    details: Jedes Paket enthält null Laufzeit-Abhängigkeiten. Tree-shakeable und Lightweight.
   - icon: 🔀
     title: Eingebautes Routing
     details: URL-basierte Micro-App-Aktivierung. Apps werden automatisch ein- und ausgehängt, wenn sich die Route ändert.

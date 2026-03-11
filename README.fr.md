@@ -6,7 +6,7 @@
 
 <p align="center">
   Un framework <strong>microfrontend</strong> léger et flexible pour construire des applications frontend évolutives et déployables indépendamment.<br/>
-  Tuvix.js fusionne plusieurs applications frontend en une expérience utilisateur fluide et unifiée — comme son nom le suggère.
+  Tuvix.js fusionne plusieurs applications frontend en une expérience utilisateur fluide et unifiée - comme son nom le suggère.
 </p>
 
 <p align="center">
@@ -26,14 +26,14 @@
 
 ## ✨ Fonctionnalités
 
-- 🧩 **Agnostique au framework** — Utilisez React, Vue, Svelte, Angular ou Vanilla JS
-- 📦 **Déploiement indépendant** — Déployez chaque micro-application séparément
-- 🔗 **Chargement dynamique de modules** — Chargez les microfrontends à la demande
-- 🛣️ **Routage intégré** — Routage transparent entre les micro-applications
-- 📡 **Communication inter-applications** — Bus d'événements pour la messagerie entre applications
-- ⚡ **Léger** — Zéro dépendance d'exécution, noyau minimal
-- 🔄 **Gestion du cycle de vie** — Hooks de montage, démontage et mise à jour
-- 🔒 **Typage sûr** — Support complet de TypeScript avec des types stricts
+- 🧩 **Agnostique au framework** - Utilisez React, Vue, Svelte, Angular ou Vanilla JS
+- 📦 **Deployment indépendant** - Déployez chaque micro-application séparément
+- 🔗 **Chargement dynamique de modules** - Chargez les microfrontends à la demande
+- 🛣️ **Routage intégré** - Routage transparent entre les micro-applications
+- 📡 **Communication inter-applications** - Bus d'événements pour la messagerie entre applications
+- ⚡ **Lightweight** - Zéro dépendance d'exécution, noyau minimal
+- 🔄 **Gestion du Lifecycle** - Hooks de montage, démontage et mise à jour
+- 🔒 **Type-Safe** - Support complet de TypeScript avec des types stricts
 
 ---
 
@@ -118,10 +118,10 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A — émettre un événement
+// App A - émettre un événement
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B — écouter un événement
+// App B - écouter un événement
 bus.on('user:login', (data) => {
   console.log(`${data.name} s'est connecté !`);
 });
@@ -172,7 +172,7 @@ const router = createRouter({
 | Package | Description |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Package tout-en-un |
-| [`@tuvix.js/core`](./packages/core) | Orchestrateur principal avec gestion du cycle de vie |
+| [`@tuvix.js/core`](./packages/core) | Orchestrateur principal avec gestion du Lifecycle |
 | [`@tuvix.js/router`](./packages/router) | Routage de micro-applications basé sur les URL |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Bus d'événements pour la communication inter-applications |
 | [`@tuvix.js/loader`](./packages/loader) | Chargeur dynamique de modules |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ Terminé
 
 - [x] Orchestrateur principal
-- [x] Gestion du cycle de vie
+- [x] Gestion du Lifecycle
 - [x] Chargement dynamique de modules
 - [x] Bus d'événements
 - [x] Routage URL avec modes history/hash

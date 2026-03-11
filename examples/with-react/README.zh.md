@@ -47,6 +47,6 @@ npm run dev
 
 ## 核心概念
 
-- **`createReactMicroApp`** — 将 React 组件包装成具有 `bootstrap`、`mount`、`unmount` 和 `update` 钩子的 Tuvix.js 兼容模块。
-- **Props 传递** — Shell 将 `{ theme, user }` props 传递给 `home` 应用。
-- **生命周期** — 每个应用仅在其路由激活时挂载，导航离开时干净卸载。
+- **`createReactMicroApp`** - 将 React 组件包装成具有 `bootstrap`、`mount`、`unmount` 和 `update` 钩子的 Tuvix.js 兼容模块。
+- **Props 传递** - Shell 将 `{ theme, user }` props 传递给 `home` 应用。
+- **生命周期** - 每个应用仅在其路由激活时挂载，导航离开时干净卸载。

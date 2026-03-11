@@ -49,5 +49,5 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Key concepts
 
-- **Framework Agnostic Shell** — The `@tuvix.js/core` orchestrator doesn't know or care about React or Vue. It only deals with standard lifecycle functions (`bootstrap`, `mount`, `unmount`, `update`).
-- **Adapter Packages** — The framework-specific Tuvix packages (`@tuvix.js/react`, `@tuvix.js/vue`, etc.) handle the heavy lifting of translating standard Tuvix lifecycle events into framework-native render trees.
+- **Framework Agnostic Shell** - The `@tuvix.js/core` orchestrator doesn't know or care about React or Vue. It only deals with standard lifecycle functions (`bootstrap`, `mount`, `unmount`, `update`).
+- **Adapter Packages** - The framework-specific Tuvix packages (`@tuvix.js/react`, `@tuvix.js/vue`, etc.) handle the heavy lifting of translating standard Tuvix lifecycle events into framework-native render trees.

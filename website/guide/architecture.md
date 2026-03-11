@@ -56,9 +56,9 @@ interface MicroApp {
 
 The orchestrator calls these hooks at the right time:
 
-1. **`mount`** — called when the app's route becomes active
-2. **`unmount`** — called when navigating away from the app's route
-3. **`update`** — called when props change without a full remount
+1. **`mount`** - called when the app's route becomes active
+2. **`unmount`** - called when navigating away from the app's route
+3. **`update`** - called when props change without a full remount
 
 ## Isolation Model
 
@@ -99,4 +99,4 @@ eventBus.on('user:login', ({ userId }) => {
 });
 ```
 
-Events are typed — TypeScript will enforce the event payload shape.
+Events are typed - TypeScript will enforce the event payload shape.

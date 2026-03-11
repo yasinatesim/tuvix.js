@@ -13,7 +13,7 @@
 
 # with-react
 
-A complete micro-frontend shell built with **React 18** and **Vite**, demonstrating how the Tuvix.js orchestrator loads, mounts, and unmounts independent React micro apps — each with their own lifecycle and prop passing.
+A complete micro-frontend shell built with **React 18** and **Vite**, demonstrating how the Tuvix.js orchestrator loads, mounts, and unmounts independent React micro apps - each with their own lifecycle and prop passing.
 
 ## Packages used
 
@@ -60,6 +60,6 @@ Open [http://localhost:5173/home](http://localhost:5173/home)
 
 ## Key concepts
 
-- **`createReactMicroApp`** — wraps a React component into a Tuvix.js-compatible module with `bootstrap`, `mount`, `unmount`, and `update` hooks.
-- **Prop passing** — the shell passes `{ theme, user }` props to the `home` app; the component receives them as standard React props.
-- **Lifecycle** — each app is only mounted when its route is active and cleanly unmounted when navigating away.
+- **`createReactMicroApp`** - wraps a React component into a Tuvix.js-compatible module with `bootstrap`, `mount`, `unmount`, and `update` hooks.
+- **Prop passing** - the shell passes `{ theme, user }` props to the `home` app; the component receives them as standard React props.
+- **Lifecycle** - each app is only mounted when its route is active and cleanly unmounted when navigating away.

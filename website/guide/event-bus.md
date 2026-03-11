@@ -1,6 +1,6 @@
 # Event Bus
 
-`@tuvix.js/event-bus` provides a typed publish/subscribe channel for cross-app communication — without shared globals or coupling between micro apps.
+`@tuvix.js/event-bus` provides a typed publish/subscribe channel for cross-app communication - without shared globals or coupling between micro apps.
 
 ## Import
 
@@ -50,13 +50,13 @@ eventBus.on('cart:updated', ({ itemCount, total }) => {
   updateCartBadge(itemCount);
 });
 
-// ❌ TypeScript error — wrong payload
+// ❌ TypeScript error - wrong payload
 eventBus.emit('user:login', { wrong: 'payload' });
 ```
 
 ## Once
 
-Subscribe to an event only once — handler is automatically removed after the first call:
+Subscribe to an event only once - handler is automatically removed after the first call:
 
 ```ts
 eventBus.once('user:login', (payload) => {

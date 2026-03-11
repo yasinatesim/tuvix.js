@@ -66,7 +66,7 @@ orchestrator.start();
 
 ### 2. Mikro Uygulama Oluşturun
 
-Her mikro uygulama standart bir yaşam döngüsü nesnesi dışa aktarır:
+Her mikro uygulama standart bir lifecycle nesnesi dışa aktarır:
 
 ```ts
 // panel/main.ts
@@ -90,7 +90,7 @@ export const app: MicroApp = {
 
 ## Sonraki Adımlar
 
-- [Mimari Genel Bakış](/tr/guide/architecture) — Tuvix.js'in nasıl çalıştığını anlayın
-- [Yaşam Döngüsü Kancaları](/tr/guide/lifecycle) — İnce taneli kontrol
-- [Olay Yolu](/tr/guide/event-bus) — Uygulamalar arası iletişim
-- [Sandbox](/tr/guide/sandbox) — Stil ve betik izolasyonu
+- [Mimari Genel Bakış](/tr/guide/architecture) - Tuvix.js'in nasıl çalıştığını anlayın
+- [Lifecycle Kancaları](/tr/guide/lifecycle) - İnce taneli kontrol
+- [Olay Yolu](/tr/guide/event-bus) - Uygulamalar arası iletişim
+- [Sandbox](/tr/guide/sandbox) - Stil ve betik izolasyonu

@@ -13,7 +13,7 @@
 
 # with-react-router
 
-演示由 `@tuvix.js/router` 驱动的**基于 URL 的微应用路由**。三个独立的 React 微应用 — Dashboard、Profile 和 Settings — 被注册到特定路由，并在用户导航时自动挂载/卸载。
+演示由 `@tuvix.js/router` 驱动的**基于 URL 的微应用路由**。三个独立的 React 微应用 - Dashboard、Profile 和 Settings - 被注册到特定路由，并在用户导航时自动挂载/卸载。
 
 ## 使用的包
 
@@ -61,6 +61,6 @@ npm run dev
 
 ## 核心概念
 
-- **路由匹配** — 每个 `activeWhen` 模式与 `window.location.pathname` 进行匹配。Glob 模式（`/dashboard/*`）允许微应用控制自己的子路由。
-- **History 模式** — 使用 HTML5 History API 实现不含 `#` 的干净 URL。
-- **零包重复** — 任何时刻只有活动微应用的代码在运行。
+- **路由匹配** - 每个 `activeWhen` 模式与 `window.location.pathname` 进行匹配。Glob 模式（`/dashboard/*`）允许微应用控制自己的子路由。
+- **History 模式** - 使用 HTML5 History API 实现不含 `#` 的干净 URL。
+- **零包重复** - 任何时刻只有活动微应用的代码在运行。

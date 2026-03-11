@@ -1,14 +1,14 @@
 # Tuvix.js'e Katkı Sağlama
 
-Katkı sağlamak istediğiniz için teşekkürler! İster hata düzeltme, ister yeni özellik, ister belge iyileştirmesi, ister çeviri olsun — tüm katkılar memnuniyetle karşılanır.
+Katkı sağlamak istediğiniz için teşekkürler! İster hata düzeltme, ister yeni özellik, ister belge iyileştirmesi, ister çeviri olsun - tüm katkılar memnuniyetle karşılanır.
 
 ## Katkı Yolları
 
-- **Hata raporları** — [Sorun açın](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **Özellik istekleri** — [Tartışma başlatın](https://github.com/yasinatesim/tuvix.js/discussions)
-- **Kod** — Hata düzeltin, özellik ekleyin, testleri geliştirin
-- **Belgeleme** — Yazım hatalarını düzeltin, örnek ekleyin
-- **Çeviriler** — Diğer dillerde belgeleme ekleyin veya geliştirin
+- **Hata raporları** - [Sorun açın](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
+- **Özellik istekleri** - [Tartışma başlatın](https://github.com/yasinatesim/tuvix.js/discussions)
+- **Kod** - Hata düzeltin, özellik ekleyin, testleri geliştirin
+- **Belgeleme** - Yazım hatalarını düzeltin, örnek ekleyin
+- **Çeviriler** - Diğer dillerde belgeleme ekleyin veya geliştirin
 
 ## Başlarken
 

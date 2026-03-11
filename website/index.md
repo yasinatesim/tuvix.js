@@ -22,7 +22,7 @@ hero:
 features:
   - icon: 🔧
     title: Framework Agnostic
-    details: Mix React, Vue, Svelte, Angular, and Vanilla JS micro apps in a single shell — all at the same time.
+    details: Mix React, Vue, Svelte, Angular, and Vanilla JS micro apps in a single shell - all at the same time.
   - icon: 📦
     title: Zero Runtime Dependencies
     details: Every package ships with zero runtime dependencies. Tree-shakeable and tiny on the wire.
@@ -43,7 +43,7 @@ features:
     details: In-browser debug panel to inspect registered apps, active routes and event bus traffic.
   - icon: 🖥️
     title: SSR Ready
-    details: Server-side composition with @tuvix.js/server — pre-render and stitch HTML on the server.
+    details: Server-side composition with @tuvix.js/server - pre-render and stitch HTML on the server.
 ---
 
 ## Quick Install

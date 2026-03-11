@@ -61,7 +61,7 @@ Subscribe to an event. Returns an unsubscribe function.
 
 ### `eventBus.once(event, handler)`
 
-Subscribe once — handler is removed after first call.
+Subscribe once - handler is removed after first call.
 
 ### `eventBus.off(event, handler)`
 

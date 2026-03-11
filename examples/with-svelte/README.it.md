@@ -48,5 +48,5 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Key concepts
 
-- **`createSvelteMicroApp(App, config)`** — Wraps a Svelte component into the Tuvix lifecycle.
-- **Props injection** — `@tuvix.js/svelte` utilizes the Svelte Context API to inject `props` passed from the shell. Inside the component, use `getContext('propName')` to retrieve them.
+- **`createSvelteMicroApp(App, config)`** - Wraps a Svelte component into the Tuvix lifecycle.
+- **Props injection** - `@tuvix.js/svelte` utilizes the Svelte Context API to inject `props` passed from the shell. Inside the component, use `getContext('propName')` to retrieve them.
