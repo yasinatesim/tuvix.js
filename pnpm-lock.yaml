@@ -251,14 +251,14 @@ importers:
   examples/with-react:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/event-bus':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/event-bus
       '@tuvix.js/react':
-        specifier: ^0.1.0
-        version: 0.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/react
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -461,11 +461,11 @@ importers:
   examples/with-svelte:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/svelte':
-        specifier: ^0.1.0
-        version: 0.1.2(svelte@4.2.20)
+        specifier: workspace:*
+        version: link:../../packages/svelte
       svelte:
         specifier: ^4.2.0
         version: 4.2.20
@@ -2902,11 +2902,6 @@ packages:
 
   '@tuvix.js/server@0.1.2':
     resolution: {integrity: sha512-bp1jrUOzaJigT74jTIWuhMGf9r+f6srzsAvPYyKzuc+yIWda0yuH6FsGT3KrOVsAh8JvpGMkNeNSnub6UJ7u2Q==}
-
-  '@tuvix.js/svelte@0.1.2':
-    resolution: {integrity: sha512-8koBn+tkWmziyT5pn5Vmh/qJzGQKP/4DpqChYI8dnR5g+KcPSY+KfWlhCo14EreuG/SzM9Oou4hw8ve7C0oMjA==}
-    peerDependencies:
-      svelte: '>=3.0.0 || >=4.0.0 || >=5.0.0'
 
   '@tuvix.js/vue@0.1.2':
     resolution: {integrity: sha512-KfQK1Jg0+E692DBx4Y6YNonnG/0+d23ExpKXPdOaASJug1X0Vn2wdg8UIhRUGeLJgwGc6H39yMG2SJw3+B+InQ==}
@@ -10040,11 +10035,6 @@ snapshots:
   '@tuvix.js/sandbox@0.1.2': {}
 
   '@tuvix.js/server@0.1.2': {}
-
-  '@tuvix.js/svelte@0.1.2(svelte@4.2.20)':
-    dependencies:
-      '@tuvix.js/loader': 0.1.2
-      svelte: 4.2.20
 
   '@tuvix.js/vue@0.1.2(vue@3.5.30(typescript@5.9.3))':
     dependencies:

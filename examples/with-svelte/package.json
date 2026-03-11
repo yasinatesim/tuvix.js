@@ -10,8 +10,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tuvix.js/core": "^0.1.0",
-    "@tuvix.js/svelte": "^0.1.0",
+    "@tuvix.js/core": "workspace:*",
+    "@tuvix.js/svelte": "workspace:*",
     "svelte": "^4.2.0"
   },
   "devDependencies": {

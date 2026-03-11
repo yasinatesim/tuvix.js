@@ -12,7 +12,14 @@ export function loadScript(url: string, integrity?: string): Promise<void> {
     }
 
     const script = document.createElement('script');
-    script.type = 'text/javascript';
+    // Unambiguous ES module extensions must be loaded as type="module".
+    // Plain .js is intentionally excluded — it is assumed to be a UMD/IIFE bundle
+    // that relies on the window global-key detection fallback in resolveModule.
+    // NOTE: type="module" scripts run in strict module scope, so the UMD var-based
+    // global fallback will NOT work for them. Consumers must register via
+    // window.__TUVIX_MODULES__[name] when loading ES module format files.
+    const isEsModule = /\.(tsx?|mts|mjs|jsx)(\?.*)?$/.test(url);
+    script.type = isEsModule ? 'module' : 'text/javascript';
     script.src = url;
     script.crossOrigin = 'anonymous';
     if (integrity) {
