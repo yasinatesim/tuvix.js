@@ -217,15 +217,28 @@ export class Router implements IRouter {
 
     const from = this._currentPath;
     const fromRoute = this._currentRoute;
+    const toRoute = matchRoute(newPath, this.routes);
 
-    this._currentPath = newPath;
-    this._currentRoute = matchRoute(newPath, this.routes);
+    const event: NavigationEvent = { from, to: newPath, fromRoute, toRoute };
 
-    this.notifyChange({
-      from,
-      to: newPath,
-      fromRoute,
-      toRoute: this._currentRoute,
+    // Run guards for browser-initiated navigation (back/forward buttons).
+    // If a guard cancels, restore the previous URL without firing popstate.
+    this.runGuards(event).then((canNavigate) => {
+      if (!canNavigate) {
+        // replaceState does not trigger popstate, so this won't recurse.
+        if (this.mode === 'history') {
+          window.history.replaceState(null, '', from);
+        } else {
+          window.history.replaceState(null, '', '#' + from);
+        }
+        return;
+      }
+
+      this._currentPath = newPath;
+      this._currentRoute = toRoute;
+      this.notifyChange(event);
+    }).catch((error) => {
+      console.error('[Tuvix Router] Guard error during browser navigation:', error);
     });
   }
 

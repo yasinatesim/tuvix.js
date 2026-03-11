@@ -15,6 +15,13 @@ import {
   prefetchResource,
 } from './script-loader';
 
+// Module-level lock that serializes the (snapshot → load scripts → resolve globals)
+// critical section. Prevents concurrent loads from cross-contaminating their
+// window property snapshots when both fall back to UMD global detection.
+// Apps that self-register via window.__TUVIX_MODULES__ are unaffected in practice
+// since resolveModule checks that registry first, but we still serialize to be safe.
+let _globalDetectionLock: Promise<void> = Promise.resolve();
+
 const DEFAULT_OPTIONS: Required<LoaderOptions> = {
   timeout: 10000,
   retries: 2,
@@ -176,14 +183,27 @@ export class ModuleLoader {
           await Promise.all(config.styles.map(loadStyle));
         }
 
-        const globalKeys = Object.keys(window);
+        // Serialize the global-key snapshot + script load + resolve sequence so that
+        // two concurrently-loading apps cannot cross-contaminate their UMD global detection.
+        let release!: () => void;
+        const prevLock = _globalDetectionLock;
+        _globalDetectionLock = new Promise<void>((r) => {
+          release = r;
+        });
 
-        for (const scriptUrl of config.scripts) {
-          await loadScript(scriptUrl);
+        try {
+          await prevLock;
+
+          const globalKeys = Object.keys(window);
+
+          for (const scriptUrl of config.scripts) {
+            await loadScript(scriptUrl);
+          }
+
+          return this.resolveModule(name, globalKeys);
+        } finally {
+          release();
         }
-
-        const module = this.resolveModule(name, globalKeys);
-        return module;
       };
 
       const module = await withRetry(

@@ -151,15 +151,25 @@ export function createMetricsCollector(): TuvixMetrics {
       lines.push(
         `# HELP tuvix_fragment_fetches_total{${lbl}} Total fetches for fragment`
       );
+      lines.push(`# TYPE tuvix_fragment_fetches_total counter`);
       lines.push(`tuvix_fragment_fetches_total{${lbl}} ${s.count}`);
       lines.push(
         `# HELP tuvix_fragment_errors_total{${lbl}} Total fetch errors for fragment`
       );
+      lines.push(`# TYPE tuvix_fragment_errors_total counter`);
       lines.push(`tuvix_fragment_errors_total{${lbl}} ${s.errors}`);
       if (s.count > 0) {
         lines.push(
+          `# HELP tuvix_fragment_avg_duration_ms{${lbl}} Average fetch duration (ms)`
+        );
+        lines.push(`# TYPE tuvix_fragment_avg_duration_ms gauge`);
+        lines.push(
           `tuvix_fragment_avg_duration_ms{${lbl}} ${(s.totalMs / s.count).toFixed(2)}`
         );
+        lines.push(
+          `# HELP tuvix_fragment_max_duration_ms{${lbl}} Peak fetch duration (ms)`
+        );
+        lines.push(`# TYPE tuvix_fragment_max_duration_ms gauge`);
         lines.push(`tuvix_fragment_max_duration_ms{${lbl}} ${s.maxMs}`);
       }
     }
@@ -229,10 +239,10 @@ async function fetchFragment(
   app: ServerAppConfig,
   path: string,
   defaultTimeout: number
-): Promise<string> {
+): Promise<{ html: string; isError: boolean }> {
   if (path.includes('://') || path.startsWith('//')) {
     console.warn(`[Tuvix Server] Rejected suspicious path: ${path}`);
-    return `<!-- SSR error: invalid path -->`;
+    return { html: `<!-- SSR error: invalid path -->`, isError: true };
   }
 
   const safePath = path.replace(/\.{2,}/g, '').replace(/\/+/g, '/');
@@ -251,14 +261,20 @@ async function fetchFragment(
       console.warn(
         `[Tuvix Server] SSR failed for "${app.name}" (${response.status})`
       );
-      return `<!-- SSR error: ${app.name} (${response.status}) -->`;
+      return {
+        html: `<!-- SSR error: ${app.name} (${response.status}) -->`,
+        isError: true,
+      };
     }
 
-    return await response.text();
+    return { html: await response.text(), isError: false };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown';
     console.warn(`[Tuvix Server] SSR failed for "${app.name}": ${message}`);
-    return `<!-- SSR error: ${app.name} (${message}) -->`;
+    return {
+      html: `<!-- SSR error: ${app.name} (${message}) -->`,
+      isError: true,
+    };
   } finally {
     clearTimeout(timer);
   }
@@ -401,7 +417,8 @@ export function createServerRenderer(config: ServerRendererConfig) {
     app: ServerAppConfig,
     path: string
   ): Promise<string> {
-    return fetchFragment(app, path, defaultTimeout);
+    const { html } = await fetchFragment(app, path, defaultTimeout);
+    return html;
   }
 
   async function render(path: string): Promise<RenderResult> {
@@ -411,13 +428,7 @@ export function createServerRenderer(config: ServerRendererConfig) {
     const fragments = await Promise.all(
       activeApps.map(async (app) => {
         const fragStart = Date.now();
-        let isError = false;
-        const html = await fetchFragment(app, path, defaultTimeout).catch(
-          (err) => {
-            isError = true;
-            return `<!-- SSR error: ${app.name} (${err instanceof Error ? err.message : err}) -->`;
-          }
-        );
+        const { html, isError } = await fetchFragment(app, path, defaultTimeout);
         metrics?.recordFragment(app.name, Date.now() - fragStart, isError);
         return { name: app.name, html };
       })
@@ -520,22 +531,16 @@ export function createStreamingRenderer(config: ServerRendererConfig) {
     await Promise.all(
       activeApps.map(async (app) => {
         const fragStart = Date.now();
-        let isError = false;
-        try {
-          const html = await fetchFragment(app, path, defaultTimeout);
-          // JSON.stringify handles all special characters (quotes, newlines, etc.)
-          // safely inside the inline script.
-          res.write(
-            `<script>(function(){` +
-              `var el=document.getElementById(${JSON.stringify('tvx-slot-' + app.name)});` +
-              `if(el){el.outerHTML=${JSON.stringify(html)};}` +
-              `})();</script>`
-          );
-        } catch {
-          isError = true;
-        } finally {
-          metrics?.recordFragment(app.name, Date.now() - fragStart, isError);
-        }
+        const { html, isError } = await fetchFragment(app, path, defaultTimeout);
+        // JSON.stringify handles all special characters (quotes, newlines, etc.)
+        // safely inside the inline script.
+        res.write(
+          `<script>(function(){` +
+            `var el=document.getElementById(${JSON.stringify('tvx-slot-' + app.name)});` +
+            `if(el){el.outerHTML=${JSON.stringify(html)};}` +
+            `})();</script>`
+        );
+        metrics?.recordFragment(app.name, Date.now() - fragStart, isError);
       })
     );
 

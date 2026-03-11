@@ -30,7 +30,7 @@ export function loadScript(url: string, integrity?: string): Promise<void> {
 /**
  * Load a CSS file by appending a <link> tag.
  */
-export function loadStyle(url: string): Promise<void> {
+export function loadStyle(url: string, timeoutMs = 10000): Promise<void> {
   return new Promise((resolve, reject) => {
     const links = document.querySelectorAll('link[href]');
     for (const l of Array.from(links)) {
@@ -46,9 +46,19 @@ export function loadStyle(url: string): Promise<void> {
     link.href = url;
     link.crossOrigin = 'anonymous';
 
-    link.onload = () => resolve();
-    link.onerror = () =>
+    const timer = setTimeout(() => {
+      link.remove();
+      reject(new Error(`[Tuvix Loader] Style load timed out: ${url}`));
+    }, timeoutMs);
+
+    link.onload = () => {
+      clearTimeout(timer);
+      resolve();
+    };
+    link.onerror = () => {
+      clearTimeout(timer);
       reject(new Error(`[Tuvix Loader] Failed to load style: ${url}`));
+    };
 
     document.head.appendChild(link);
   });

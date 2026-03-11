@@ -68,14 +68,14 @@ export class Orchestrator {
   register(appConfig: MicroAppConfig): void {
     this.ensureAlive();
 
+    if (!appConfig.name || appConfig.name.trim().length === 0) {
+      throw new Error('[Tuvix] App name is required.');
+    }
+
     if (this.apps.has(appConfig.name)) {
       throw new Error(
         `[Tuvix] App "${appConfig.name}" is already registered.`
       );
-    }
-
-    if (!appConfig.name || appConfig.name.trim().length === 0) {
-      throw new Error('[Tuvix] App name is required.');
     }
 
     if (!appConfig.entry) {
@@ -266,12 +266,16 @@ export class Orchestrator {
       throw new Error(`[Tuvix] App "${name}" is not registered.`);
     }
 
-    app.config.props = { ...app.config.props, ...props };
+    const mergedProps = { ...app.config.props, ...props };
 
     if (app.status === 'mounted' && app.module?.update) {
       this.setAppStatus(app, 'updating');
-      await app.module.update({ props: app.config.props });
+      // Apply props to config only after a successful update to keep state consistent.
+      await app.module.update({ props: mergedProps });
+      app.config.props = mergedProps;
       this.setAppStatus(app, 'mounted');
+    } else {
+      app.config.props = mergedProps;
     }
   }
 
@@ -481,9 +485,18 @@ export class Orchestrator {
         }
         break;
 
-      case 'hover':
-        setTimeout(prefetchAll, 2000);
+      case 'hover': {
+        // Prefetch on the user's first hover anywhere on the page.
+        const onHover = () => {
+          prefetchAll();
+          document.removeEventListener('mouseover', onHover, { capture: true });
+        };
+        document.addEventListener('mouseover', onHover, {
+          once: true,
+          capture: true,
+        });
         break;
+      }
     }
   }
 
