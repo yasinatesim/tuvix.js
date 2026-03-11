@@ -10,5 +10,8 @@ function App1() {
   );
 }
 
-// Export the Tuvix.js compatible module
+// Named export for standalone rendering (e.g. index.js)
+export { App1 };
+
+// Default export: Tuvix.js compatible module for MF consumption
 export default createReactMicroApp({ name: 'remote1', App: App1 });

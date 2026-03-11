@@ -1,6 +1,6 @@
 # Claude Instructions for Tuvix.js
 
-## Step 1: Enhance the Prompt First
+## Step 1: Enhance the Prompt
 
 **Before doing anything else**, run the `/prompt-enhancer` skill on the user's request.
 
@@ -10,22 +10,48 @@
 
 ---
 
-## Step 2: Code Review After Every Implementation
+## Step 2: Implementation
 
-After completing any implementation task (new features, bug fixes, refactoring, multi-file changes), **always run the `/wtf-code-reviewer` skill** to validate the work before considering it done.
+Build the feature or fix based on the enhanced prompt from Step 1.
 
-### When to Run
+---
 
-- After completing all todos in a plan
-- After finishing a feature implementation
-- After fixing a bug
-- After any multi-file changes
+## Step 3: Write Tests with TDD Skill
+
+After implementation, **run the `/test-driven-development` skill** to write proper tests.
+
+### Tests Must Pass the CI Pipeline
+
+Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate locally by running:
+```bash
+pnpm install --frozen-lockfile
+pnpm build
+pnpm test
+pnpm check-types
+pnpm format --check || true
+```
+
+Tests must pass on **Node.js 18, 20, and 22** (matching the CI matrix).
+
+### What to Cover
+
+- Unit tests for individual functions and modules
+- Integration tests for cross-module interactions
+- Edge cases and error handling paths
+
+**Do NOT skip test writing even if the implementation seems trivial.**
+
+---
+
+## Step 4: Code Review
+
+Once tests pass, **run the `/wtf-code-reviewer` skill** to validate the implementation.
 
 ### Iterative Verification Loop
 
-1. Run `/wtf-code-reviewer` after implementation
-2. If **REJECTED** or **NEEDS_FIXES**: fix the reported issues
-3. Run `/wtf-code-reviewer` again to validate fixes
+1. Run `/wtf-code-reviewer`
+2. If **REJECTED** or **NEEDS_FIXES**: fix the reported issues, then **go back to Step 3** (re-run tests)
+3. Run `/wtf-code-reviewer` again after fixes
 4. Repeat until status is **VERIFIED** or **APPROVED**
 5. **Maximum 3 iterations** — if still failing after 3 runs, stop and report to user
 
@@ -35,28 +61,9 @@ Even if linter shows no errors, run the reviewer — it checks for security vuln
 
 ---
 
-## Step 3: Test Writing After Code Review Passes
+## Step 5: Commit Message
 
-Once `/wtf-code-reviewer` returns **VERIFIED** or **APPROVED**, **always run the `/test-driven-development` skill** to write proper tests for the implementation.
-
-### When to Run
-
-- Immediately after the code review passes
-- For every new feature, bug fix, or refactored logic
-
-### What to Cover
-
-- Unit tests for individual functions and modules
-- Integration tests for cross-module interactions
-- Edge cases and error handling paths identified during code review
-
-**Do NOT skip test writing even if the implementation seems trivial.**
-
----
-
-## Step 4: Commit Message
-
-After both the code review and tests pass, **provide a commit message** following this format:
+After both tests and code review pass, **provide a commit message** in this format:
 ```
 <type>(<scope>): <short summary>
 

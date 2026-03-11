@@ -9,7 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tuvix.js/server": "^0.1.0",
+    "@tuvix.js/server": "workspace:*",
     "express": "^4.18.2",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
