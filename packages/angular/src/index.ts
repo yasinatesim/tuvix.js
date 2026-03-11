@@ -14,6 +14,25 @@ export interface AngularMicroAppConfig {
   module: any;
 
   /**
+   * The `platformBrowserDynamic` function from `@angular/platform-browser-dynamic`.
+   * Must be passed by the consumer to ensure the correct Angular version is used.
+   *
+   * @example
+   * ```ts
+   * import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+   * createAngularMicroApp({ ..., platform: platformBrowserDynamic });
+   * ```
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  platform: () => any;
+
+  /**
+   * CSS selector of the bootstrap component (default: 'app-root').
+   * Must match the selector in the @Component decorator.
+   */
+  selector?: string;
+
+  /**
    * Optional Angular compiler options.
    */
   compilerOptions?: Record<string, unknown>;
@@ -35,9 +54,12 @@ export interface AngularMicroAppConfig {
  * import { createAngularMicroApp } from '@tuvix.js/angular';
  * import { AppModule } from './app.module';
  *
+ * import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+ *
  * export default createAngularMicroApp({
  *   name: 'admin',
  *   module: AppModule,
+ *   platform: platformBrowserDynamic,
  * });
  * ```
  */
@@ -56,15 +78,11 @@ export function createAngularMicroApp(config: AngularMicroAppConfig): MicroAppMo
 
     async mount({ container }: MountContext) {
       // Create a root element for Angular to bootstrap into
-      const appRoot = document.createElement('app-root');
+      const selector = config.selector ?? 'app-root';
+      const appRoot = document.createElement(selector);
       container.appendChild(appRoot);
 
-      // Dynamic import to avoid requiring Angular at definition time
-      const { platformBrowserDynamic } = await import(
-        '@angular/platform-browser-dynamic'
-      );
-
-      platformRef = platformBrowserDynamic();
+      platformRef = config.platform();
       appRef = await platformRef.bootstrapModule(
         config.module,
         config.compilerOptions

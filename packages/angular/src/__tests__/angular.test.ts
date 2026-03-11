@@ -3,17 +3,12 @@ import { createAngularMicroApp } from '../index';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
-const { mockAppRef, mockPlatformRef } = vi.hoisted(() => ({
-  mockAppRef: { destroy: vi.fn() },
-  mockPlatformRef: {
-    bootstrapModule: vi.fn(),
-    destroy: vi.fn(),
-  },
-}));
-
-vi.mock('@angular/platform-browser-dynamic', () => ({
-  platformBrowserDynamic: vi.fn(() => mockPlatformRef),
-}));
+const mockAppRef = { destroy: vi.fn() };
+const mockPlatformRef = {
+  bootstrapModule: vi.fn(),
+  destroy: vi.fn(),
+};
+const mockPlatformBrowserDynamic = vi.fn(() => mockPlatformRef);
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -31,6 +26,7 @@ describe('createAngularMicroApp', () => {
     const module = createAngularMicroApp({
       name: 'test-angular-app',
       module: class AppModule {},
+      platform: mockPlatformBrowserDynamic,
     });
 
     expect(module).toBeDefined();
@@ -44,6 +40,7 @@ describe('createAngularMicroApp', () => {
     createAngularMicroApp({
       name: 'test-registry-app',
       module: class AppModule {},
+      platform: mockPlatformBrowserDynamic,
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,6 +54,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'bootstrap-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
         bootstrap: onBootstrap,
       });
 
@@ -69,6 +67,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'bootstrap-no-hook',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await expect(module.bootstrap!()).resolves.toBeUndefined();
@@ -76,11 +75,12 @@ describe('createAngularMicroApp', () => {
   });
 
   describe('mount()', () => {
-    it('should append an app-root element to the container', async () => {
+    it('should append an app-root element to the container by default', async () => {
       const container = document.createElement('div');
       const module = createAngularMicroApp({
         name: 'mount-root-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.mount({ container, props: {} });
@@ -89,16 +89,33 @@ describe('createAngularMicroApp', () => {
       expect(appRoot).not.toBeNull();
     });
 
-    it('should call bootstrapModule with the given NgModule', async () => {
+    it('should append element with custom selector', async () => {
+      const container = document.createElement('div');
+      const module = createAngularMicroApp({
+        name: 'mount-selector-test',
+        module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
+        selector: 'app-custom',
+      });
+
+      await module.mount({ container, props: {} });
+
+      const appRoot = container.querySelector('app-custom');
+      expect(appRoot).not.toBeNull();
+    });
+
+    it('should call platformBrowserDynamic and bootstrapModule', async () => {
       const container = document.createElement('div');
       const FakeModule = class AppModule {};
       const module = createAngularMicroApp({
         name: 'mount-platform-test',
         module: FakeModule,
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.mount({ container, props: {} });
 
+      expect(mockPlatformBrowserDynamic).toHaveBeenCalledOnce();
       expect(mockPlatformRef.bootstrapModule).toHaveBeenCalledWith(
         FakeModule,
         undefined
@@ -111,6 +128,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'mount-options-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
         compilerOptions,
       });
 
@@ -129,6 +147,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'unmount-destroy-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.mount({ container, props: {} });
@@ -143,6 +162,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'unmount-clear-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.mount({ container, props: {} });
@@ -156,6 +176,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'unmount-noop-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await expect(module.unmount({ container })).resolves.toBeUndefined();
@@ -172,6 +193,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'update-props-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.mount({ container, props: {} });
@@ -188,6 +210,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'update-no-registry-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.mount({ container, props: {} });
@@ -200,6 +223,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'update-before-mount-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await expect(
@@ -213,6 +237,7 @@ describe('createAngularMicroApp', () => {
       const module = createAngularMicroApp({
         name: 'update-null-appref-test',
         module: class AppModule {},
+        platform: mockPlatformBrowserDynamic,
       });
 
       await module.update({ props: { x: 1 } });

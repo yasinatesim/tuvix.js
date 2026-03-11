@@ -1,11 +1,12 @@
 import { createAngularMicroApp } from '@tuvix.js/angular';
-import { HomeApp } from './app/home.component';
-import { ProfileApp } from './app/profile.component';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { HomeAppModule } from './app/home.module';
+import { ProfileAppModule } from './app/profile.module';
 import { createOrchestrator } from '@tuvix.js/core';
 
-// 1. Create the Angular Micro Apps
-const homeApp = createAngularMicroApp({ name: 'home', module: HomeApp });
-const profileApp = createAngularMicroApp({ name: 'profile', module: ProfileApp });
+// 1. Create the Angular Micro Apps (pass NgModule + platform from consumer's Angular)
+const homeApp = createAngularMicroApp({ name: 'home', module: HomeAppModule, platform: platformBrowserDynamic, selector: 'app-home' });
+const profileApp = createAngularMicroApp({ name: 'profile', module: ProfileAppModule, platform: platformBrowserDynamic, selector: 'app-profile' });
 
 // 2. We expose the micro apps to the global scope since Angular CLI build outputs a single bundle for this example
 (window as any).__TUVIX_HOME_APP__ = homeApp;
