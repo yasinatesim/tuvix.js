@@ -164,7 +164,7 @@ export class Router implements IRouter {
       if (replace) {
         window.history.replaceState(null, '', hashPath);
       } else {
-        window.location.hash = to;
+        window.history.pushState(null, '', hashPath);
       }
     }
 
