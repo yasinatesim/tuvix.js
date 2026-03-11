@@ -66,11 +66,11 @@ importers:
         specifier: ^16.2.0
         version: 16.2.12(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(@angular/platform-browser@16.2.12(@angular/animations@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(rxjs@7.8.2)
       '@tuvix.js/angular':
-        specifier: ^0.1.0
-        version: 0.1.2(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(@angular/platform-browser-dynamic@16.2.12(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/compiler@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(@angular/platform-browser@16.2.12(@angular/animations@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))))
+        specifier: workspace:*
+        version: link:../../packages/angular
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -208,14 +208,14 @@ importers:
   examples/with-multiple-frameworks:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/react':
-        specifier: ^0.1.0
-        version: 0.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/react
       '@tuvix.js/vue':
-        specifier: ^0.1.0
-        version: 0.1.2(vue@3.5.30(typescript@5.9.3))
+        specifier: workspace:*
+        version: link:../../packages/vue
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -297,17 +297,17 @@ importers:
   examples/with-react-devtools:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/devtools':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/devtools
       '@tuvix.js/event-bus':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/event-bus
       '@tuvix.js/react':
-        specifier: ^0.1.0
-        version: 0.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/react
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -334,14 +334,14 @@ importers:
   examples/with-react-event-bus:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/event-bus':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/event-bus
       '@tuvix.js/react':
-        specifier: ^0.1.0
-        version: 0.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/react
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -368,17 +368,17 @@ importers:
   examples/with-react-router:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/event-bus':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/event-bus
       '@tuvix.js/react':
-        specifier: ^0.1.0
-        version: 0.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/react
       '@tuvix.js/router':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/router
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -405,14 +405,14 @@ importers:
   examples/with-react-sandbox:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/react':
-        specifier: ^0.1.0
-        version: 0.1.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../../packages/react
       '@tuvix.js/sandbox':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/sandbox
       react:
         specifier: ^18.3.0
         version: 18.3.1
@@ -498,11 +498,11 @@ importers:
   examples/with-vue:
     dependencies:
       '@tuvix.js/core':
-        specifier: ^0.1.0
-        version: 0.1.2
+        specifier: workspace:*
+        version: link:../../packages/core
       '@tuvix.js/vue':
-        specifier: ^0.1.0
-        version: 0.1.2(vue@3.5.30(typescript@5.9.3))
+        specifier: workspace:*
+        version: link:../../packages/vue
       vue:
         specifier: ^3.4.0
         version: 3.5.30(typescript@5.9.3)
@@ -2867,17 +2867,8 @@ packages:
     resolution: {integrity: sha512-qaGV9ltJP0EO25YfFUPhxRVK0evXFIAGicsVXuRim4Ed9cjPxYhNnNJ49SFmbeLgtxpslIkX317IgpfcHPVj/A==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  '@tuvix.js/angular@0.1.2':
-    resolution: {integrity: sha512-KopVd9mD2wGrD9ra68LWstHdJt3/QHOCCZjZImT9lu74PnPqppAm+WxMYgGGLAISAV14eIhqXihVtfZJtbfClw==}
-    peerDependencies:
-      '@angular/core': '>=15.0.0'
-      '@angular/platform-browser-dynamic': '>=15.0.0'
-
   '@tuvix.js/core@0.1.2':
     resolution: {integrity: sha512-0xnlEZLiDMHanj56TiVrnE6e0Gw2VzPn86HOx27naqtX4OEZPQh5dzlkgI2r3j7wWte1nHPtkRDmq8okgoVPTw==}
-
-  '@tuvix.js/devtools@0.1.2':
-    resolution: {integrity: sha512-UQR1A6YiivI9T146uSNrY3c84Z5gGYS/PrGVgA2cQK1QUOz0I+XFjkN9GJpacxMpNf4fwQjf5d9oOOj4eVYrDg==}
 
   '@tuvix.js/event-bus@0.1.2':
     resolution: {integrity: sha512-7wk0sImTu5RsjUlp4H4/hiVmElCThuD9nJkWOu+ccpIgjfZTntndG5GS0S8fOhChFxsR4XY6iulo1Z9TWavVpg==}
@@ -2897,16 +2888,8 @@ packages:
   '@tuvix.js/router@0.1.2':
     resolution: {integrity: sha512-z3QOIFoTZXmKaZ+KfqoPeF+JnEGqJN5yulpHVT9O5yWzDy2+mdj1+iBsd5HRWpU1bQXSCA0ZGHxyMDx3Lky0YQ==}
 
-  '@tuvix.js/sandbox@0.1.2':
-    resolution: {integrity: sha512-EZjkErb09m52xMFZ6/IpVAw9zxJk8gLmNemOnrVu9/cN5UasHBmFT7fNkkX1Rr+Dv3hafLo9/p085ySd2EO9gw==}
-
   '@tuvix.js/server@0.1.2':
     resolution: {integrity: sha512-bp1jrUOzaJigT74jTIWuhMGf9r+f6srzsAvPYyKzuc+yIWda0yuH6FsGT3KrOVsAh8JvpGMkNeNSnub6UJ7u2Q==}
-
-  '@tuvix.js/vue@0.1.2':
-    resolution: {integrity: sha512-KfQK1Jg0+E692DBx4Y6YNonnG/0+d23ExpKXPdOaASJug1X0Vn2wdg8UIhRUGeLJgwGc6H39yMG2SJw3+B+InQ==}
-    peerDependencies:
-      vue: '>=3.0.0'
 
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
@@ -9999,21 +9982,11 @@ snapshots:
       '@tufjs/canonical-json': 1.0.0
       minimatch: 9.0.9
 
-  '@tuvix.js/angular@0.1.2(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(@angular/platform-browser-dynamic@16.2.12(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/compiler@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(@angular/platform-browser@16.2.12(@angular/animations@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))))':
-    dependencies:
-      '@angular/core': 16.2.12(rxjs@7.8.2)(zone.js@0.13.3)
-      '@angular/platform-browser-dynamic': 16.2.12(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/compiler@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(@angular/platform-browser@16.2.12(@angular/animations@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))(@angular/common@16.2.12(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3))(rxjs@7.8.2))(@angular/core@16.2.12(rxjs@7.8.2)(zone.js@0.13.3)))
-      '@tuvix.js/loader': 0.1.2
-
   '@tuvix.js/core@0.1.2':
     dependencies:
       '@tuvix.js/event-bus': 0.1.2
       '@tuvix.js/loader': 0.1.2
       '@tuvix.js/router': 0.1.2
-
-  '@tuvix.js/devtools@0.1.2':
-    dependencies:
-      '@tuvix.js/event-bus': 0.1.2
 
   '@tuvix.js/event-bus@0.1.2': {}
 
@@ -10032,15 +10005,7 @@ snapshots:
 
   '@tuvix.js/router@0.1.2': {}
 
-  '@tuvix.js/sandbox@0.1.2': {}
-
   '@tuvix.js/server@0.1.2': {}
-
-  '@tuvix.js/vue@0.1.2(vue@3.5.30(typescript@5.9.3))':
-    dependencies:
-      '@tuvix.js/event-bus': 0.1.2
-      '@tuvix.js/loader': 0.1.2
-      vue: 3.5.30(typescript@5.9.3)
 
   '@types/aria-query@5.0.4': {}
 

@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tuvix.js/core": "^0.1.0",
-    "@tuvix.js/react": "^0.1.0",
-    "@tuvix.js/vue": "^0.1.0",
+    "@tuvix.js/core": "workspace:*",
+    "@tuvix.js/react": "workspace:*",
+    "@tuvix.js/vue": "workspace:*",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "vue": "^3.4.0"

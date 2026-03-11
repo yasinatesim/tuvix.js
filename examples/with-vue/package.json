@@ -10,8 +10,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tuvix.js/core": "^0.1.0",
-    "@tuvix.js/vue": "^0.1.0",
+    "@tuvix.js/core": "workspace:*",
+    "@tuvix.js/vue": "workspace:*",
     "vue": "^3.4.0"
   },
   "devDependencies": {

@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tuvix.js/core": "^0.1.0",
-    "@tuvix.js/event-bus": "^0.1.0",
-    "@tuvix.js/react": "^0.1.0",
-    "@tuvix.js/router": "^0.1.0",
+    "@tuvix.js/core": "workspace:*",
+    "@tuvix.js/event-bus": "workspace:*",
+    "@tuvix.js/react": "workspace:*",
+    "@tuvix.js/router": "workspace:*",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },
