@@ -33,8 +33,7 @@ npm-debug.log*
 pnpm-debug.log*
 
 # Changeset
-.changeset/*.md
-!.changeset/config.json
+!.changeset/
 
 # VitePress (website)
 website/.vitepress/dist
