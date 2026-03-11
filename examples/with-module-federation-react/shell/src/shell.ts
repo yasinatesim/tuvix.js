@@ -1,47 +1,51 @@
 import { createOrchestrator } from '@tuvix.js/core';
 import { createFederatedLoader } from '@tuvix.js/module-federation';
 
-// 1. Initialize the Module Federation loader with remote configurations
-const mfLoader = createFederatedLoader({
-  remotes: [
-    { name: 'remote1', url: 'http://localhost:3001/remoteEntry.js' },
-    { name: 'remote2', url: 'http://localhost:3002/remoteEntry.js' }
-  ]
-});
+async function main() {
+  const mfLoader = createFederatedLoader({
+    remotes: [
+      { name: 'remote1', url: 'http://localhost:3001/remoteEntry.js' },
+      { name: 'remote2', url: 'http://localhost:3002/remoteEntry.js' },
+    ],
+  });
 
-const orchestrator = createOrchestrator({
-  onError(error: Error, appName: string) {
-    console.error(`[Shell] App "${appName}" failed:`, error);
-  },
-});
+  // Pre-initialize MF apps: loads remoteEntry.js, inits shared scope,
+  // executes the App factory, and registers each app in window.__TUVIX_MODULES__.
+  // allSettled so one failing remote doesn't prevent the other from loading.
+  const results = await Promise.allSettled([
+    mfLoader.createFederatedApp('remote1', './App'),
+    mfLoader.createFederatedApp('remote2', './App'),
+  ]);
+  results.forEach((result, i) => {
+    if (result.status === 'rejected') {
+      console.error(`[Shell] Failed to pre-initialize remote${i + 1}:`, result.reason);
+    }
+  });
 
-// 2. Register the apps. 
-// We provide a custom `load` hook that fetches the remote via the MF loader.
-orchestrator.register({
-  name: 'remote1',
-  container: '#remote1-container',
-  activeWhen: () => true,
-  // The 'entry' field is technically ignored when a custom 'load' hook is provided, 
-  // but it's good practice to provide it for metadata.
-  entry: { type: 'module', url: 'remote1/App' },
-  load: async () => {
-    console.log('[Shell] Loading remote1...');
-    // Fetches http://localhost:3001/remoteEntry.js, initializes shared scope,
-    // and returns the Tuvix module exported from './App'
-    return mfLoader.createFederatedApp('remote1', './App');
-  }
-});
+  const orchestrator = createOrchestrator({
+    onError(error: Error, appName: string) {
+      console.error(`[Shell] App "${appName}" failed:`, error);
+    },
+  });
 
-orchestrator.register({
-  name: 'remote2',
-  container: '#remote2-container',
-  activeWhen: () => true,
-  entry: { type: 'module', url: 'remote2/App' },
-  load: async () => {
-    console.log('[Shell] Loading remote2...');
-    return mfLoader.createFederatedApp('remote2', './App');
-  }
-});
+  // Modules are already in window.__TUVIX_MODULES__ — use empty scripts so
+  // the Tuvix loader skips script injection and resolves from the registry.
+  orchestrator.register({
+    name: 'remote1',
+    container: '#remote1-container',
+    activeWhen: () => true,
+    entry: { scripts: [] },
+  });
 
-orchestrator.start();
-console.log('🚀 Tuvix.js shell started (Module Federation Example)');
+  orchestrator.register({
+    name: 'remote2',
+    container: '#remote2-container',
+    activeWhen: () => true,
+    entry: { scripts: [] },
+  });
+
+  orchestrator.start();
+  console.log('🚀 Tuvix.js shell started (Module Federation Example)');
+}
+
+main().catch(console.error);

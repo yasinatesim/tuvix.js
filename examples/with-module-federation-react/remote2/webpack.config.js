@@ -31,10 +31,10 @@ module.exports = {
       exposes: {
         './App': './src/App',
       },
-      shared: {
-        react: { singleton: true, requiredVersion: '^18.3.0' },
-        'react-dom': { singleton: true, requiredVersion: '^18.3.0' },
-      },
+      // No shared modules: the Vite shell has no webpack share scope,
+      // so remotes bundle their own React rather than consuming from
+      // a scope that never gets populated.
+
     }),
     new HtmlWebpackPlugin({ template: './public/index.html' }),
   ],
