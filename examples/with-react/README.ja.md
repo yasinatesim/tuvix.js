@@ -13,13 +13,13 @@
 
 # with-react
 
-**React 18** と **Vite** で構築されたマイクロフロントエンドシェルの完全な例。Tuvix.js オーケストレーターが独立した React マイクロアプリをどのようにロード、マウント、アンマウントするかを示します。
+**React 18** と **Vite** で構築されたマイクロフロントエンドシェルの完全な例。Tuvix.js Orchestratorが独立したReactマイクロアプリをどのようにload、mount、unmountするかを示します。
 
 ## 使用パッケージ
 
 | パッケージ | 役割 |
 |---|---|
-| `@tuvix.js/core` | シェルオーケストレーター |
+| `@tuvix.js/core` | Shell Orchestrator |
 | `@tuvix.js/react` | `createReactMicroApp` ファクトリ |
 | `@tuvix.js/event-bus` | 共有イベントバス |
 
@@ -49,4 +49,4 @@ npm run dev
 
 - **`createReactMicroApp`** - React コンポーネントを `bootstrap`、`mount`、`unmount`、`update` フックを持つ Tuvix.js 互換モジュールにラップします。
 - **Props の受け渡し** - シェルは `{ theme, user }` props を `home` アプリに渡します。
-- **ライフサイクル** - 各アプリはルートがアクティブな場合にのみマウントされます。
+- **Lifecycle** - 各アプリはルートがアクティブな場合にのみマウントされます。

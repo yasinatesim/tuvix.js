@@ -1,4 +1,4 @@
-# Olay Yolu (Event Bus)
+# Event Bus
 
 `@tuvix.js/event-bus` uygulamalar arası iletişim için yazılı yayın/abone kanalı sağlar.
 
@@ -17,4 +17,4 @@ const abonelikten_cik = eventBus.on('kullanici:giris', ({ kullaniciId }) => {
 abonelikten_cik();
 ```
 
-İngilizce belgelerin tamamı için → [Event Bus (EN)](/guide/event-bus)
+İngilizce belgeler için → [Event Bus](/guide/event-bus)

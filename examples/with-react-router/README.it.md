@@ -19,7 +19,7 @@ Dimostra il **routing di micro app basato su URL** alimentato da `@tuvix.js/rout
 
 | Pacchetto | Ruolo |
 |---|---|
-| `@tuvix.js/core` | Orchestratore shell (include il motore di routing) |
+| `@tuvix.js/core` | Shell Orchestrator (include il motore di routing) |
 | `@tuvix.js/router` | Routing in modalità history/hash |
 | `@tuvix.js/react` | Factory `createReactMicroApp` |
 

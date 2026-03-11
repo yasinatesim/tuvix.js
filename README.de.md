@@ -32,7 +32,7 @@
 - 🛣️ **Integriertes Routing** - Nahtloses Routing zwischen Micro-Apps
 - 📡 **Inter-App-Kommunikation** - Event-Bus für App-übergreifende Nachrichtenübermittlung
 - ⚡ **Lightweight** - Keine Laufzeitabhängigkeiten, minimaler Kern
-- 🔄 **Lifecycle-Management** - Hooks für Mounten, Unmounten und Aktualisieren
+- 🔄 **Lifecycle Management** - Hooks für Mounten, Unmounten und Aktualisieren
 - 🔒 **Type-Safe** - Vollständige TypeScript-Unterstützung mit strikten Typen
 
 ---
@@ -172,7 +172,7 @@ const router = createRouter({
 | Paket | Beschreibung |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Alles-in-einem-Dachpaket |
-| [`@tuvix.js/core`](./packages/core) | Kern-Orchestrator mit Lifecycle-Management |
+| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
 | [`@tuvix.js/router`](./packages/router) | URL-basiertes Micro-App-Routing |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Event-Bus für Inter-App-Kommunikation |
 | [`@tuvix.js/loader`](./packages/loader) | Dynamischer Modullader |
@@ -228,7 +228,7 @@ tuvix.js/
 ### ✅ Abgeschlossen
 
 - [x] Kern-Orchestrator
-- [x] Lifecycle-Management
+- [x] Lifecycle management
 - [x] Dynamisches Modulladen
 - [x] Event-Bus
 - [x] URL-Routing mit History/Hash-Modi

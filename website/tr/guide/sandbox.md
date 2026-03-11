@@ -12,4 +12,4 @@ orchestrator.register('uygulamam', {
 });
 ```
 
-İngilizce belgelerin tamamı için → [Sandboxing (EN)](/guide/sandbox)
+İngilizce belgeler için → [Sandboxing](/guide/sandbox)

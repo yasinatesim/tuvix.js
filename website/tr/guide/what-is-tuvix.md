@@ -1,6 +1,6 @@
 # Tuvix.js Nedir?
 
-Tuvix.js, bağımsız olarak dağıtılabilir parçalardan oluşan ölçeklenebilir frontend uygulamaları oluşturmak için **hafif, framework'ten bağımsız bir mikro frontend orkestratörüdür**.
+Tuvix.js, bağımsız olarak dağıtılabilir parçalardan oluşan ölçeklenebilir frontend uygulamaları oluşturmak için **Lightweight, framework'ten bağımsız bir mikro frontend Orchestrator'üdür**.
 
 ## Sorun
 
@@ -28,7 +28,7 @@ Tuvix.js, tüm mikro uygulamaları çalışma zamanında yükleyen, bağlayan ve
 │              Tuvix.js Shell                 │
 │                                             │
 │  ┌────────────┐  ┌──────────┐  ┌────────┐  │
-│  │ Orkestratör│  │  Router  │  │ Loader │  │
+│  │Orchestrator│  │  Router  │  │ Loader │  │
 │  └────────────┘  └──────────┘  └────────┘  │
 │                                             │
 │  ┌─────────┐  ┌────────┐  ┌──────────────┐ │

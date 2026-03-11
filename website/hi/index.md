@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Tuvix.js
   text: माइक्रोफ्रंटेंड फ्रेमवर्क
-  tagline: एक Lightweight, फ्रेमवर्क-स्वतंत्र ऑर्केस्ट्रेटर। React, Vue, Svelte, Angular या Vanilla JS के साथ स्केलेबल, स्वतंत्र रूप से डिप्लॉय करने योग्य फ्रंटेंड एप्लिकेशन बनाएं।
+  tagline: एक Lightweight, फ्रेमवर्क-स्वतंत्र Orchestrator। React, Vue, Svelte, Angular या Vanilla JS के साथ स्केलेबल, स्वतंत्र रूप से डिप्लॉय करने योग्य फ्रंटेंड एप्लिकेशन बनाएं।
   image:
     src: /logo.svg
     alt: Tuvix.js

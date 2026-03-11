@@ -19,7 +19,7 @@ React 18 ve Vite ile oluşturulmuş, Tuvix.js orkestratörünün bağımsız Rea
 
 | Paket | Rol |
 |---|---|
-| `@tuvix.js/core` | Kabuk orkestratörü |
+| `@tuvix.js/core` | Shell Orchestrator |
 | `@tuvix.js/react` | `createReactMicroApp` fabrikası |
 | `@tuvix.js/event-bus` | Paylaşılan olay veri yolu |
 
@@ -48,5 +48,5 @@ npm run dev
 ## Temel kavramlar
 
 - **`createReactMicroApp`** - Bir React bileşenini `bootstrap`, `mount`, `unmount` ve `update` kancalarına sahip Tuvix.js uyumlu bir modüle sarar.
-- **Prop aktarımı** - Kabuk, `home` uygulamasına `{ theme, user }` proplarını iletir; bileşen bunları standart React propları olarak alır.
+- **Prop aktarımı** - Shell, `home` uygulamasına `{ theme, user }` proplarını iletir; bileşen bunları standart React propları olarak alır.
 - **Yaşam döngüsü** - Her uygulama yalnızca rotası aktif olduğunda monte edilir ve navigasyondan ayrılırken temiz şekilde sökülür.

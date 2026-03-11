@@ -27,9 +27,9 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           text: 'Temel Kavramlar',
           items: [
             { text: 'Mikro Uygulamalar', link: '/tr/guide/micro-apps' },
-            { text: 'Yaşam Döngüsü', link: '/tr/guide/lifecycle' },
+            { text: 'Lifecycle Hooks', link: '/tr/guide/lifecycle' },
             { text: 'Yönlendirme', link: '/tr/guide/routing' },
-            { text: 'Olay Yolu', link: '/tr/guide/event-bus' },
+            { text: 'Event Bus', link: '/tr/guide/event-bus' },
             { text: 'Sandbox', link: '/tr/guide/sandbox' },
           ],
         },

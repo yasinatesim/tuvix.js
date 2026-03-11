@@ -19,7 +19,7 @@ Démontre le **routage de micro apps basé sur l'URL** propulsé par `@tuvix.js/
 
 | Paquet | Rôle |
 |---|---|
-| `@tuvix.js/core` | Orchestrateur shell (intègre le moteur de routage) |
+| `@tuvix.js/core` | Shell Orchestrator (intègre le moteur de routage) |
 | `@tuvix.js/router` | Routage en mode history/hash |
 | `@tuvix.js/react` | Fabrique `createReactMicroApp` |
 

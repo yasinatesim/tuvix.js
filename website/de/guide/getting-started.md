@@ -32,4 +32,4 @@ const router = createRouter({
 orchestrator.start();
 ```
 
-Vollständige Dokumentation → [Getting Started (EN)](/guide/getting-started)
+Vollständige Dokumentation → [Getting Started](/guide/getting-started)

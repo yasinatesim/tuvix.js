@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Tuvix.js
   text: マイクロフロントエンドフレームワーク
-  tagline: Lightweightでフレームワーク非依存のオーケストレーター。React、Vue、Svelte、Angular、Vanilla JSでスケーラブルかつ独立してデプロイ可能なフロントエンドアプリを構築しましょう。
+  tagline: LightweightでフレームワークAgnosticなOrchestrator。React、Vue、Svelte、Angular、Vanilla JSでスケーラブルかつ独立してデプロイ可能なフロントエンドアプリを構築しましょう。
   image:
     src: /logo.svg
     alt: Tuvix.js

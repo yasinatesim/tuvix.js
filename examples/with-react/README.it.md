@@ -19,7 +19,7 @@ Una shell micro-frontend completa costruita con **React 18** e **Vite**, che dim
 
 | Pacchetto | Ruolo |
 |---|---|
-| `@tuvix.js/core` | Orchestratore shell |
+| `@tuvix.js/core` | Shell Orchestrator |
 | `@tuvix.js/react` | Factory `createReactMicroApp` |
 | `@tuvix.js/event-bus` | Event bus condiviso |
 
@@ -49,4 +49,4 @@ Apri [http://localhost:5173/home](http://localhost:5173/home).
 
 - **`createReactMicroApp`** - Incapsula un componente React in un modulo compatibile con Tuvix.js con hook `bootstrap`, `mount`, `unmount` e `update`.
 - **Passaggio di props** - La shell passa props `{ theme, user }` all'app `home`.
-- **Ciclo di vita** - Ogni app viene montata solo quando il suo percorso è attivo.
+- **Lifecycle** - Ogni app viene montata solo quando il suo percorso è attivo.

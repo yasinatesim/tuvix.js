@@ -5,7 +5,7 @@
 Tuvix.js, küçük, birleştirilebilir paketlerden oluşan bir monorepo olarak yapılandırılmıştır. Yalnızca kullandığınız şeyleri içe aktarırsınız.
 
 ```
-@tuvix.js/core          ← Orkestratör, lifecycle, kayıt
+@tuvix.js/core          ← Orchestrator, lifecycle, registration
 @tuvix.js/router        ← URL tabanlı yönlendirme
 @tuvix.js/event-bus     ← Uygulamalar arası yayın/abone
 @tuvix.js/loader        ← Dinamik paket yükleme
@@ -30,7 +30,7 @@ URL değişikliği
 @tuvix.js/router         ← Yolu mikro uygulama adına eşler
     │
     ▼
-@tuvix.js/core           ← Orkestratör bağlama/bağ kesme kararı alır
+@tuvix.js/core           ← Orchestrator bağlama/bağ kesme kararı alır
     │
     ▼
 @tuvix.js/loader         ← Mikro uygulama paketini getirir ve çalıştırır

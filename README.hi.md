@@ -172,7 +172,7 @@ const router = createRouter({
 | पैकेज | विवरण |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | ऑल-इन-वन अम्ब्रेला पैकेज |
-| [`@tuvix.js/core`](./packages/core) | Lifecycle मैनेजमेंट के साथ कोर ऑर्केस्ट्रेटर |
+| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
 | [`@tuvix.js/router`](./packages/router) | URL-आधारित माइक्रो ऐप राउटिंग |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | इंटर-ऐप कम्युनिकेशन इवेंट बस |
 | [`@tuvix.js/loader`](./packages/loader) | डायनेमिक मॉड्यूल लोडर |
@@ -227,7 +227,7 @@ tuvix.js/
 
 ### ✅ पूर्ण
 
-- [x] कोर ऑर्केस्ट्रेटर
+- [x] Core Orchestrator
 - [x] Lifecycle मैनेजमेंट
 - [x] डायनेमिक मॉड्यूल लोडिंग
 - [x] इवेंट बस
@@ -247,7 +247,7 @@ tuvix.js/
 - [ ] प्रीलोडिंग और प्रीफेचिंग रणनीतियां
 - [ ] प्लगइन सिस्टम और मिडलवेयर API
 - [ ] DevTools में विज़ुअल डिपेंडेंसी ग्राफ़
-- [ ] टेस्टिंग यूटिलिटीज़ और मॉक ऑर्केस्ट्रेटर
+- [ ] Testing utilities & mock Orchestrator
 - [ ] नेटिव ESM / importmap सपोर्ट
 - [ ] Edge/CDN-अवेयर सर्वर कम्पोज़िशन
 - [ ] DevTools इंटीग्रेशन के लिए VS Code एक्सटेंशन
@@ -268,7 +268,7 @@ tuvix.js/
 | [Vanilla JS उदाहरण](./examples/vanilla) | कोई फ्रेमवर्क नहीं | `examples/vanilla/` |
 
 प्रत्येक उदाहरण में दिखाया गया है:
-- एक **शेल (होस्ट)** एप्लिकेशन जो ऑर्केस्ट्रेटर को बूट करता है
+- एक **Shell (Host)** एप्लिकेशन जो Orchestrator को बूट करता है
 - दो **माइक्रो फ्रंटएंड ऐप्स** जो डायनेमिक रूप से रजिस्टर और लोड होते हैं
 - इवेंट बस के माध्यम से इंटर-ऐप कम्युनिकेशन
 

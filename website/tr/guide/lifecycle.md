@@ -1,4 +1,4 @@
-# Lifecycle Kancaları
+# Lifecycle Hooks
 
 Her mikro uygulama öngörülebilir bir lifecycle takip eder.
 
@@ -26,4 +26,4 @@ Shell yeni props geçirdiğinde çağrılır (isteğe bağlı).
 async update(container: HTMLElement, props?: Record<string, unknown>): Promise<void>
 ```
 
-İngilizce belgelerin tamamı için → [Lifecycle Hooks (EN)](/guide/lifecycle)
+İngilizce belgeler için → [Lifecycle Hooks](/guide/lifecycle)

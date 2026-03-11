@@ -19,7 +19,7 @@ Demonstra o **roteamento de micro apps baseado em URL** com `@tuvix.js/router`. 
 
 | Pacote | Papel |
 |---|---|
-| `@tuvix.js/core` | Orquestrador shell (inclui motor de roteamento) |
+| `@tuvix.js/core` | Shell Orchestrator (inclui motor de roteamento) |
 | `@tuvix.js/router` | Roteamento em modo history/hash |
 | `@tuvix.js/react` | Fábrica `createReactMicroApp` |
 

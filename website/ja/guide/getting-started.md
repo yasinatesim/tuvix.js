@@ -32,4 +32,4 @@ const router = createRouter({
 orchestrator.start();
 ```
 
-完全なドキュメント → [Getting Started (EN)](/guide/getting-started)
+完全なドキュメント → [Getting Started](/guide/getting-started)

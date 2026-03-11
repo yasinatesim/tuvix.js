@@ -172,7 +172,7 @@ const router = createRouter({
 | パッケージ | 説明 |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | オールインワンパッケージ |
-| [`@tuvix.js/core`](./packages/core) | Lifecycle管理を備えたコアオーケストレーター |
+| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
 | [`@tuvix.js/router`](./packages/router) | URLベースのマイクロアプリルーティング |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | アプリ間通信イベントバス |
 | [`@tuvix.js/loader`](./packages/loader) | 動的モジュールローダー |
@@ -227,7 +227,7 @@ tuvix.js/
 
 ### ✅ 完了済み
 
-- [x] コアオーケストレーター
+- [x] Core Orchestrator
 - [x] Lifecycle管理
 - [x] 動的モジュールローディング
 - [x] イベントバス
@@ -247,7 +247,7 @@ tuvix.js/
 - [ ] プリロード＆プリフェッチ戦略
 - [ ] プラグインシステム＆ミドルウェアAPI
 - [ ] DevToolsでのビジュアル依存関係グラフ
-- [ ] テストユーティリティ＆モックオーケストレーター
+- [ ] Testing utilities & mock Orchestrator
 - [ ] ネイティブESM / importmapサポート
 - [ ] Edge/CDN対応サーバーコンポジション
 - [ ] DevTools統合用VS Code拡張機能
@@ -268,7 +268,7 @@ tuvix.js/
 | [Vanilla JSサンプル](./examples/vanilla) | フレームワークなし | `examples/vanilla/` |
 
 各サンプルでは以下を実演します：
-- オーケストレーターを起動する**ホスト（シェル）**アプリケーション
+- Orchestratorを起動する**Host (Shell)**アプリケーション
 - 動的に登録・読み込みされる2つの**マイクロフロントエンドアプリ**
 - イベントバスによるアプリ間通信
 

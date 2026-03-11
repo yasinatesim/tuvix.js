@@ -172,7 +172,7 @@ const router = createRouter({
 | 包名 | 描述 |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | 全家桶包 |
-| [`@tuvix.js/core`](./packages/core) | 带Lifecycle管理的核心编排器 |
+| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
 | [`@tuvix.js/router`](./packages/router) | 基于 URL 的微应用路由 |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | 应用间通信事件总线 |
 | [`@tuvix.js/loader`](./packages/loader) | 动态模块加载器 |
@@ -227,7 +227,7 @@ tuvix.js/
 
 ### ✅ 已完成
 
-- [x] 核心编排器
+- [x] Core Orchestrator
 - [x] Lifecycle管理
 - [x] 动态模块加载
 - [x] 事件总线
@@ -247,7 +247,7 @@ tuvix.js/
 - [ ] 预加载与预取策略
 - [ ] 插件系统与中间件 API
 - [ ] DevTools 中的可视化依赖图
-- [ ] 测试工具与模拟编排器
+- [ ] Testing utilities & mock Orchestrator
 - [ ] 原生 ESM / importmap 支持
 - [ ] Edge/CDN 感知的服务端组合
 - [ ] 用于 DevTools 集成的 VS Code 扩展
@@ -268,7 +268,7 @@ tuvix.js/
 | [原生 JS 示例](./examples/vanilla) | 无框架 | `examples/vanilla/` |
 
 每个示例演示了：
-- 启动编排器的**宿主（Shell）**应用
+- 启动Orchestrator的**Shell (Host)**应用
 - 动态注册和加载的两个**微前端应用**
 - 通过事件总线进行的应用间通信
 

@@ -172,7 +172,7 @@ const router = createRouter({
 | Pacote | Descrição |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Pacote guarda-chuva tudo-em-um |
-| [`@tuvix.js/core`](./packages/core) | Orquestrador core com gerenciamento de Lifecycle |
+| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
 | [`@tuvix.js/router`](./packages/router) | Roteamento de micro apps baseado em URL |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Event bus para comunicação entre apps |
 | [`@tuvix.js/loader`](./packages/loader) | Carregador dinâmico de módulos |
@@ -227,7 +227,7 @@ tuvix.js/
 
 ### ✅ Concluídos
 
-- [x] Orquestrador core
+- [x] Core Orchestrator
 - [x] Gerenciamento de Lifecycle
 - [x] Carregamento dinâmico de módulos
 - [x] Event bus

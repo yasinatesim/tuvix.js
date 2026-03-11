@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/yasinatesim/tuvix.js/main/packages/core/tuvix-logo.png" width="150" alt="Tuvix.js">
+  <img src="../website/public/logo.svg" alt="Tuvix.js Logo" width="80" height="80" />
 </p>
 
 # Tuvix.js Examples

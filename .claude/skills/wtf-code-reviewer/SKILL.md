@@ -1,5 +1,5 @@
 ---
-name: code-reviewer
+name: wtf-code-reviewer
 description: Review completed work for functionality, architecture, complexity, and maintainability
 ---
 

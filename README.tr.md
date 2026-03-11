@@ -5,7 +5,7 @@
 <h1 align="center">Tuvix.js</h1>
 
 <p align="center">
-  Ölçeklenebilir ve bağımsız olarak dağıtılabilen frontend uygulamaları oluşturmak için hafif ve esnek bir <strong>mikro frontend framework'ü</strong>.<br/>
+  Ölçeklenebilir ve bağımsız olarak dağıtılabilen frontend uygulamaları oluşturmak için Lightweight ve esnek bir <strong>mikro frontend framework'ü</strong>.<br/>
   Tuvix.js, birden fazla frontend uygulamasını kusursuz ve bütünleşik bir kullanıcı deneyiminde birleştirir - tıpkı adının ima ettiği gibi.
 </p>
 
@@ -51,7 +51,7 @@ npm install @tuvix.js/core @tuvix.js/router
 
 ## 🚀 Hızlı Başlangıç
 
-### Ana (Kabuk) Uygulama
+### Host (Shell) Uygulaması
 
 ```ts
 import { createOrchestrator } from 'tuvix.js';
@@ -152,7 +152,7 @@ const router = createRouter({
 ┌─────────────────────────────────────────────┐
 │              Tuvix.js Kabuğu                │
 │  ┌─────────────────────────────────────────┐│
-│  │           Orkestratör                   ││
+│  │          Orchestrator                   ││
 │  │  ┌──────────┐ ┌──────────┐ ┌─────────┐ ││
 │  │  │ Router   │ │Event Bus │ │ Loader  │ ││
 │  │  └──────────┘ └──────────┘ └─────────┘ ││
@@ -227,10 +227,10 @@ tuvix.js/
 
 ### ✅ Tamamlandı
 
-- [x] Çekirdek orkestratör
+- [x] Çekirdek Orchestrator
 - [x] Lifecycle yönetimi
 - [x] Dinamik modül yükleme
-- [x] Olay yolu
+- [x] Event Bus
 - [x] History/hash modlarıyla URL yönlendirmesi
 - [x] CSS/JS sandbox izolasyonu
 - [x] CLI iskele aracı (`npx create-tuvix-app`)
@@ -268,9 +268,9 @@ Desteklenen her framework için çalıştırmaya hazır örnekler [`examples/`](
 | [Saf JS Örneği](./examples/vanilla) | Framework'süz | `examples/vanilla/` |
 
 Her örnek şunları gösterir:
-- Orkestratörü başlatan bir **kabuk (ana)** uygulama
+- Orchestrator'ü başlatan bir **Shell (Host)** uygulaması
 - Dinamik olarak kaydedilen ve yüklenen iki **mikro frontend uygulaması**
-- Olay yolu üzerinden uygulamalar arası iletişim
+- Event Bus üzerinden uygulamalar arası iletişim
 
 ---
 

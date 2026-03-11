@@ -152,7 +152,7 @@ const router = createRouter({
 ┌─────────────────────────────────────────────┐
 │              Shell de Tuvix.js              │
 │  ┌─────────────────────────────────────────┐│
-│  │           Orquestador                   ││
+│  │          Orchestrator                   ││
 │  │  ┌──────────┐ ┌──────────┐ ┌─────────┐ ││
 │  │  │ Router   │ │Event Bus │ │ Loader  │ ││
 │  │  └──────────┘ └──────────┘ └─────────┘ ││
@@ -172,7 +172,7 @@ const router = createRouter({
 | Paquete | Descripción |
 | --- | --- |
 | [`tuvix.js`](./packages/tuvix) | Paquete paraguas todo en uno |
-| [`@tuvix.js/core`](./packages/core) | Orquestador central con gestión del Lifecycle |
+| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
 | [`@tuvix.js/router`](./packages/router) | Enrutamiento de micro apps basado en URL |
 | [`@tuvix.js/event-bus`](./packages/event-bus) | Bus de eventos para comunicación entre apps |
 | [`@tuvix.js/loader`](./packages/loader) | Cargador dinámico de módulos |
@@ -227,7 +227,7 @@ tuvix.js/
 
 ### ✅ Completado
 
-- [x] Orquestador central
+- [x] Core Orchestrator
 - [x] Gestión del Lifecycle
 - [x] Carga dinámica de módulos
 - [x] Bus de eventos

@@ -19,7 +19,7 @@
 
 | Paket | Rol |
 |---|---|
-| `@tuvix.js/core` | Kabuk orkestratörü (router motorunu içerir) |
+| `@tuvix.js/core` | Shell Orchestrator (router motorunu içerir) |
 | `@tuvix.js/router` | History/hash modu yönlendirme |
 | `@tuvix.js/react` | `createReactMicroApp` fabrikası |
 

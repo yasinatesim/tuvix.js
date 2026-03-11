@@ -19,7 +19,7 @@
 
 | パッケージ | 役割 |
 |---|---|
-| `@tuvix.js/core` | シェルオーケストレーター（ルーターエンジンを内蔵） |
+| `@tuvix.js/core` | Shell Orchestrator（ルーターエンジンを内蔵） |
 | `@tuvix.js/router` | History/Hash モードルーティング |
 | `@tuvix.js/react` | `createReactMicroApp` ファクトリ |
 

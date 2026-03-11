@@ -76,4 +76,4 @@ docs: Angular rehber örneği eklendi
 
 5. `master`'a karşı PR açın
 
-İngilizce katkı rehberinin tamamı için: [Contributing (EN)](/contributing)
+İngilizce katkı rehberi için: [Contributing](/contributing)

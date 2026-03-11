@@ -19,7 +19,7 @@
 
 | पैकेज | भूमिका |
 |---|---|
-| `@tuvix.js/core` | Shell ऑर्केस्ट्रेटर (राउटर इंजन एम्बेड करता है) |
+| `@tuvix.js/core` | Shell Orchestrator (राउटर इंजन एम्बेड करता है) |
 | `@tuvix.js/router` | History/Hash मोड रूटिंग |
 | `@tuvix.js/react` | `createReactMicroApp` फ़ैक्टरी |
 

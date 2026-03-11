@@ -19,7 +19,7 @@ Demuestra el **enrutamiento de micro apps basado en URL** impulsado por `@tuvix.
 
 | Paquete | Rol |
 |---|---|
-| `@tuvix.js/core` | Orquestador shell (incluye motor de enrutamiento) |
+| `@tuvix.js/core` | Shell Orchestrator (incluye motor de enrutamiento) |
 | `@tuvix.js/router` | Enrutamiento en modo history/hash |
 | `@tuvix.js/react` | Fábrica `createReactMicroApp` |
 

@@ -1,6 +1,6 @@
 # Yapılandırma
 
-## Orkestratör Seçenekleri
+## Orchestrator Seçenekleri
 
 ```ts
 import { createOrchestrator } from '@tuvix.js/core';

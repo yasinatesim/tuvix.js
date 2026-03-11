@@ -91,6 +91,6 @@ export const app: MicroApp = {
 ## Sonraki Adımlar
 
 - [Mimari Genel Bakış](/tr/guide/architecture) - Tuvix.js'in nasıl çalıştığını anlayın
-- [Lifecycle Kancaları](/tr/guide/lifecycle) - İnce taneli kontrol
-- [Olay Yolu](/tr/guide/event-bus) - Uygulamalar arası iletişim
+- [Lifecycle Hooks](/tr/guide/lifecycle) - İnce taneli kontrol
+- [Event Bus](/tr/guide/event-bus) - Uygulamalar arası iletişim
 - [Sandbox](/tr/guide/sandbox) - Stil ve betik izolasyonu

@@ -13,13 +13,13 @@
 
 # with-react
 
-**React 18** और **Vite** के साथ निर्मित एक पूर्ण माइक्रो-फ्रंटेंड शेल, जो दर्शाता है कि Tuvix.js ऑर्केस्ट्रेटर स्वतंत्र React माइक्रो ऐप्स को कैसे लोड, माउंट और अनमाउंट करता है।
+**React 18** और **Vite** के साथ निर्मित एक पूर्ण माइक्रो-फ्रंटेंड शेल, जो दर्शाता है कि Tuvix.js Orchestrator स्वतंत्र React माइक्रो ऐप्स को कैसे load, mount और unmount करता है।
 
 ## उपयोग किए गए पैकेज
 
 | पैकेज | भूमिका |
 |---|---|
-| `@tuvix.js/core` | शेल ऑर्केस्ट्रेटर |
+| `@tuvix.js/core` | Shell Orchestrator |
 | `@tuvix.js/react` | `createReactMicroApp` फ़ैक्टरी |
 | `@tuvix.js/event-bus` | साझा इवेंट बस |
 

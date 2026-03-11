@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Tuvix.js
   text: 微前端框架
-  tagline: Lightweight、框架无关的微前端编排器。使用 React、Vue、Svelte、Angular 或 Vanilla JS 构建可扩展、独立部署的前端应用。
+  tagline: Lightweight、框架无关的微前端Orchestrator。使用 React、Vue、Svelte、Angular 或 Vanilla JS 构建可扩展、独立部署的前端应用。
   image:
     src: /logo.svg
     alt: Tuvix.js
