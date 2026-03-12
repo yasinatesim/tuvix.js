@@ -40,6 +40,19 @@ export const ptConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '@tuvix.js/angular', link: '/pt/packages/angular' },
           ],
         },
+        {
+          text: 'Ferramentas',
+          items: [
+            { text: '@tuvix.js/devtools', link: '/pt/packages/devtools' },
+            { text: '@tuvix.js/server', link: '/pt/packages/server' },
+            {
+              text: '@tuvix.js/module-federation',
+              link: '/pt/packages/module-federation',
+            },
+            { text: 'create-tuvix-app', link: '/pt/packages/create-tuvix-app' },
+            { text: 'tuvix.js (pacote completo)', link: '/pt/packages/tuvix' },
+          ],
+        },
       ],
     },
     editLink: {

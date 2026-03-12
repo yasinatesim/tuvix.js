@@ -40,6 +40,19 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '@tuvix.js/angular', link: '/zh/packages/angular' },
           ],
         },
+        {
+          text: '工具',
+          items: [
+            { text: '@tuvix.js/devtools', link: '/zh/packages/devtools' },
+            { text: '@tuvix.js/server', link: '/zh/packages/server' },
+            {
+              text: '@tuvix.js/module-federation',
+              link: '/zh/packages/module-federation',
+            },
+            { text: 'create-tuvix-app', link: '/zh/packages/create-tuvix-app' },
+            { text: 'tuvix.js (整合包)', link: '/zh/packages/tuvix' },
+          ],
+        },
       ],
     },
     editLink: {

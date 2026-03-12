@@ -40,6 +40,19 @@ export const frConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '@tuvix.js/angular', link: '/fr/packages/angular' },
           ],
         },
+        {
+          text: 'Outils',
+          items: [
+            { text: '@tuvix.js/devtools', link: '/fr/packages/devtools' },
+            { text: '@tuvix.js/server', link: '/fr/packages/server' },
+            {
+              text: '@tuvix.js/module-federation',
+              link: '/fr/packages/module-federation',
+            },
+            { text: 'create-tuvix-app', link: '/fr/packages/create-tuvix-app' },
+            { text: 'tuvix.js (tout-en-un)', link: '/fr/packages/tuvix' },
+          ],
+        },
       ],
     },
     editLink: {

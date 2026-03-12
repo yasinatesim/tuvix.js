@@ -40,6 +40,19 @@ export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '@tuvix.js/angular', link: '/hi/packages/angular' },
           ],
         },
+        {
+          text: 'उपकरण',
+          items: [
+            { text: '@tuvix.js/devtools', link: '/hi/packages/devtools' },
+            { text: '@tuvix.js/server', link: '/hi/packages/server' },
+            {
+              text: '@tuvix.js/module-federation',
+              link: '/hi/packages/module-federation',
+            },
+            { text: 'create-tuvix-app', link: '/hi/packages/create-tuvix-app' },
+            { text: 'tuvix.js (संपूर्ण पैकेज)', link: '/hi/packages/tuvix' },
+          ],
+        },
       ],
     },
     editLink: {

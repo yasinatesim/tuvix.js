@@ -27,17 +27,18 @@ import { AppComponent } from './app.component';
 export class AppModule {}
 ```
 
-## createMicroApp
+## createAngularMicroApp
 
 ```ts
 // src/main.ts
-import { createMicroApp } from '@tuvix.js/angular';
+import { createAngularMicroApp } from '@tuvix.js/angular';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
-import { AppComponent } from './app.component';
 
-export const app = createMicroApp({
+export const app = createAngularMicroApp({
+  name: 'angular-app',
   module: AppModule,
-  component: AppComponent,
+  platform: platformBrowserDynamic,
 });
 ```
 

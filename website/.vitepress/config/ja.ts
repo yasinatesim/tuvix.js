@@ -40,6 +40,19 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '@tuvix.js/angular', link: '/ja/packages/angular' },
           ],
         },
+        {
+          text: 'ツール',
+          items: [
+            { text: '@tuvix.js/devtools', link: '/ja/packages/devtools' },
+            { text: '@tuvix.js/server', link: '/ja/packages/server' },
+            {
+              text: '@tuvix.js/module-federation',
+              link: '/ja/packages/module-federation',
+            },
+            { text: 'create-tuvix-app', link: '/ja/packages/create-tuvix-app' },
+            { text: 'tuvix.js (統合パッケージ)', link: '/ja/packages/tuvix' },
+          ],
+        },
       ],
     },
     editLink: {

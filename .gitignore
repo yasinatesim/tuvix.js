@@ -39,6 +39,12 @@ pnpm-debug.log*
 website/.vitepress/dist
 website/.vitepress/cache
 
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # Temp
 *.tmp
 tmp/
