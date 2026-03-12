@@ -44,20 +44,44 @@ Done! 🎉
 
 ## Plantillas
 
-| Template | Description |
-|----------|-------------|
-| `shell-react` | Shell app with React host |
-| `shell-vue` | Shell app with Vue host |
-| `micro-react` | React micro app |
-| `micro-vue` | Vue micro app |
-| `micro-svelte` | Svelte micro app |
-| `micro-angular` | Angular micro app |
-| `micro-vanilla` | Vanilla JS/TS micro app |
-| `monorepo` | Full monorepo with shell + 2 micro apps |
+| Plantilla | Descripción |
+|-----------|-------------|
+| `shell` | Orquestador shell para microfrontends |
+| `react-app` | Aplicación micro React |
+| `vue-app` | Aplicación micro Vue |
+| `vanilla-app` | Aplicación micro Vanilla JS/TS |
 
 ## Especificar Plantilla Directamente
 
 ```bash
-npx create-tuvix-app my-app --template monorepo
-npx create-tuvix-app my-micro --template micro-react
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-react --template react-app
+npx create-tuvix-app my-vue --template vue-app
+npx create-tuvix-app my-vanilla --template vanilla-app
+```
+
+## Ejemplos
+
+Las aplicaciones de ejemplo preconstruidas se pueden crear usando la bandera `--example`:
+
+| Ejemplo | Descripción |
+|---------|-------------|
+| `with-react` | Ejemplo de microfrontend React |
+| `with-vue` | Ejemplo de microfrontend Vue |
+| `with-svelte` | Ejemplo de microfrontend Svelte |
+| `with-angular` | Ejemplo de microfrontend Angular |
+| `with-ssr-react` | Renderizado del lado del servidor con React |
+| `with-react-devtools` | Integración de React con DevTools |
+| `with-react-event-bus` | Ejemplo de integración Event-Bus |
+| `with-react-router` | Ejemplo de integración Router |
+| `with-react-sandbox` | Ejemplo de aislamiento Sandbox/CSS |
+| `with-module-federation-react` | Module Federation con React |
+| `with-multiple-frameworks` | Integración de múltiples frameworks |
+
+## Crear un Ejemplo
+
+```bash
+npx create-tuvix-app my-app --example with-react
+npx create-tuvix-app my-app --example with-vue
+npx create-tuvix-app my-app --example with-multiple-frameworks
 ```

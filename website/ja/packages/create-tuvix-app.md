@@ -44,20 +44,44 @@ Done! 🎉
 
 ## テンプレート
 
-| Template | Description |
+| テンプレート | 説明 |
 |----------|-------------|
-| `shell-react` | Shell app with React host |
-| `shell-vue` | Shell app with Vue host |
-| `micro-react` | React micro app |
-| `micro-vue` | Vue micro app |
-| `micro-svelte` | Svelte micro app |
-| `micro-angular` | Angular micro app |
-| `micro-vanilla` | Vanilla JS/TS micro app |
-| `monorepo` | Full monorepo with shell + 2 micro apps |
+| `shell` | マイクロフロントエンド用シェルオーケストレーター |
+| `react-app` | React マイクロアプリ |
+| `vue-app` | Vue マイクロアプリ |
+| `vanilla-app` | Vanilla JS/TS マイクロアプリ |
 
 ## テンプレートを直接指定
 
 ```bash
-npx create-tuvix-app my-app --template monorepo
-npx create-tuvix-app my-micro --template micro-react
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-react --template react-app
+npx create-tuvix-app my-vue --template vue-app
+npx create-tuvix-app my-vanilla --template vanilla-app
+```
+
+## 例
+
+事前構築されたサンプルアプリケーションは `--example` フラグを使用してスキャフォールドできます:
+
+| 例 | 説明 |
+|-------------|-------------|
+| `with-react` | React マイクロフロントエンド例 |
+| `with-vue` | Vue マイクロフロントエンド例 |
+| `with-svelte` | Svelte マイクロフロントエンド例 |
+| `with-angular` | Angular マイクロフロントエンド例 |
+| `with-ssr-react` | React を使用したサーバーサイドレンダリング |
+| `with-react-devtools` | DevTools との React 統合 |
+| `with-react-event-bus` | Event-Bus 統合例 |
+| `with-react-router` | Router 統合例 |
+| `with-react-sandbox` | Sandbox/CSS 分離例 |
+| `with-module-federation-react` | React による Module Federation |
+| `with-multiple-frameworks` | 複数フレームワーク統合 |
+
+## サンプルをスキャフォールド
+
+```bash
+npx create-tuvix-app my-app --example with-react
+npx create-tuvix-app my-app --example with-vue
+npx create-tuvix-app my-app --example with-multiple-frameworks
 ```

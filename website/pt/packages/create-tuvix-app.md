@@ -44,20 +44,44 @@ Done! 🎉
 
 ## Modelos
 
-| Template | Description |
-|----------|-------------|
-| `shell-react` | Shell app with React host |
-| `shell-vue` | Shell app with Vue host |
-| `micro-react` | React micro app |
-| `micro-vue` | Vue micro app |
-| `micro-svelte` | Svelte micro app |
-| `micro-angular` | Angular micro app |
-| `micro-vanilla` | Vanilla JS/TS micro app |
-| `monorepo` | Full monorepo with shell + 2 micro apps |
+| Modelo | Descrição |
+|--------|-------------|
+| `shell` | Orquestrador shell para microfrontends |
+| `react-app` | Aplicativo micro React |
+| `vue-app` | Aplicativo micro Vue |
+| `vanilla-app` | Aplicativo micro Vanilla JS/TS |
 
 ## Especificar modelo diretamente
 
 ```bash
-npx create-tuvix-app my-app --template monorepo
-npx create-tuvix-app my-micro --template micro-react
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-react --template react-app
+npx create-tuvix-app my-vue --template vue-app
+npx create-tuvix-app my-vanilla --template vanilla-app
+```
+
+## Exemplos
+
+Aplicações de exemplo pré-construídas podem ser criadas usando a flag `--example`:
+
+| Exemplo | Descrição |
+|---------|-------------|
+| `with-react` | Exemplo de microfrontend React |
+| `with-vue` | Exemplo de microfrontend Vue |
+| `with-svelte` | Exemplo de microfrontend Svelte |
+| `with-angular` | Exemplo de microfrontend Angular |
+| `with-ssr-react` | Renderização do lado do servidor com React |
+| `with-react-devtools` | Integração React com DevTools |
+| `with-react-event-bus` | Exemplo de integração Event-Bus |
+| `with-react-router` | Exemplo de integração Router |
+| `with-react-sandbox` | Exemplo de isolamento Sandbox/CSS |
+| `with-module-federation-react` | Module Federation com React |
+| `with-multiple-frameworks` | Integração de múltiplos frameworks |
+
+## Criar um exemplo
+
+```bash
+npx create-tuvix-app my-app --example with-react
+npx create-tuvix-app my-app --example with-vue
+npx create-tuvix-app my-app --example with-multiple-frameworks
 ```

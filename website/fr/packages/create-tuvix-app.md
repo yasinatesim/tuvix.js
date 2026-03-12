@@ -44,20 +44,44 @@ Done! 🎉
 
 ## Modèles
 
-| Template | Description |
-|----------|-------------|
-| `shell-react` | Shell app with React host |
-| `shell-vue` | Shell app with Vue host |
-| `micro-react` | React micro app |
-| `micro-vue` | Vue micro app |
-| `micro-svelte` | Svelte micro app |
-| `micro-angular` | Angular micro app |
-| `micro-vanilla` | Vanilla JS/TS micro app |
-| `monorepo` | Full monorepo with shell + 2 micro apps |
+| Modèle | Description |
+|--------|-------------|
+| `shell` | Orchestrateur shell pour les microfrontends |
+| `react-app` | Application micro React |
+| `vue-app` | Application micro Vue |
+| `vanilla-app` | Application micro Vanilla JS/TS |
 
 ## Spécifier le modèle directement
 
 ```bash
-npx create-tuvix-app my-app --template monorepo
-npx create-tuvix-app my-micro --template micro-react
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-react --template react-app
+npx create-tuvix-app my-vue --template vue-app
+npx create-tuvix-app my-vanilla --template vanilla-app
+```
+
+## Exemples
+
+Les applications d'exemple prédéfinies peuvent être créées en utilisant le flag `--example`:
+
+| Exemple | Description |
+|---------|-------------|
+| `with-react` | Exemple de microfrontend React |
+| `with-vue` | Exemple de microfrontend Vue |
+| `with-svelte` | Exemple de microfrontend Svelte |
+| `with-angular` | Exemple de microfrontend Angular |
+| `with-ssr-react` | Rendu côté serveur avec React |
+| `with-react-devtools` | Intégration React avec DevTools |
+| `with-react-event-bus` | Exemple d'intégration Event-Bus |
+| `with-react-router` | Exemple d'intégration Router |
+| `with-react-sandbox` | Exemple d'isolation Sandbox/CSS |
+| `with-module-federation-react` | Module Federation avec React |
+| `with-multiple-frameworks` | Intégration de plusieurs frameworks |
+
+## Créer un exemple
+
+```bash
+npx create-tuvix-app my-app --example with-react
+npx create-tuvix-app my-app --example with-vue
+npx create-tuvix-app my-app --example with-multiple-frameworks
 ```

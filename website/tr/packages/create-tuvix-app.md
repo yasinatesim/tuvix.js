@@ -31,17 +31,42 @@ CLI, proje kurulumu boyunca size rehberlik eder.
 
 | Şablon | Açıklama |
 |--------|----------|
-| `shell-react` | React host ile shell uygulama |
-| `shell-vue` | Vue host ile shell uygulama |
-| `micro-react` | React mikro uygulama |
-| `micro-vue` | Vue mikro uygulama |
-| `micro-svelte` | Svelte mikro uygulama |
-| `micro-angular` | Angular mikro uygulama |
-| `micro-vanilla` | Vanilla JS/TS mikro uygulama |
-| `monorepo` | Shell + 2 mikro uygulama ile tam monorepo |
+| `shell` | Mikrofrontend'ler için shell orkestratörü |
+| `react-app` | React mikro uygulama |
+| `vue-app` | Vue mikro uygulama |
+| `vanilla-app` | Vanilla JS/TS mikro uygulama |
 
-## Doğrudan Şablon Belirtme
+## Şablonu Doğrudan Belirtme
 
 ```bash
-npx create-tuvix-app my-app --template monorepo
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-react --template react-app
+npx create-tuvix-app my-vue --template vue-app
+npx create-tuvix-app my-vanilla --template vanilla-app
+```
+
+## Örnekler
+
+Önceden oluşturulmuş örnek uygulamalar `--example` bayrağı kullanılarak oluşturulabilir:
+
+| Örnek | Açıklama |
+|-------|----------|
+| `with-react` | React mikrofrontend örneği |
+| `with-vue` | Vue mikrofrontend örneği |
+| `with-svelte` | Svelte mikrofrontend örneği |
+| `with-angular` | Angular mikrofrontend örneği |
+| `with-ssr-react` | React ile sunucu tarafı oluşturma |
+| `with-react-devtools` | DevTools ile React entegrasyonu |
+| `with-react-event-bus` | Event-Bus entegrasyonu örneği |
+| `with-react-router` | Router entegrasyonu örneği |
+| `with-react-sandbox` | Sandbox/CSS izolasyonu örneği |
+| `with-module-federation-react` | React ile Module Federation |
+| `with-multiple-frameworks` | Çoklu framework entegrasyonu |
+
+## Örnek Oluşturma
+
+```bash
+npx create-tuvix-app my-app --example with-react
+npx create-tuvix-app my-app --example with-vue
+npx create-tuvix-app my-app --example with-multiple-frameworks
 ```

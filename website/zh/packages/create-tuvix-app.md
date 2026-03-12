@@ -44,20 +44,44 @@ Done! 🎉
 
 ## 模板
 
-| Template | Description |
-|----------|-------------|
-| `shell-react` | Shell app with React host |
-| `shell-vue` | Shell app with Vue host |
-| `micro-react` | React micro app |
-| `micro-vue` | Vue micro app |
-| `micro-svelte` | Svelte micro app |
-| `micro-angular` | Angular micro app |
-| `micro-vanilla` | Vanilla JS/TS micro app |
-| `monorepo` | Full monorepo with shell + 2 micro apps |
+| 模板 | 描述 |
+|-------|-------------|
+| `shell` | 微前端的 Shell 编排器 |
+| `react-app` | React 微应用 |
+| `vue-app` | Vue 微应用 |
+| `vanilla-app` | Vanilla JS/TS 微应用 |
 
 ## 直接指定模板
 
 ```bash
-npx create-tuvix-app my-app --template monorepo
-npx create-tuvix-app my-micro --template micro-react
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-react --template react-app
+npx create-tuvix-app my-vue --template vue-app
+npx create-tuvix-app my-vanilla --template vanilla-app
+```
+
+## 示例
+
+预构建的示例应用程序可以使用 `--example` 标志来构建:
+
+| 示例 | 描述 |
+|---------|-------------|
+| `with-react` | React 微前端示例 |
+| `with-vue` | Vue 微前端示例 |
+| `with-svelte` | Svelte 微前端示例 |
+| `with-angular` | Angular 微前端示例 |
+| `with-ssr-react` | React 服务器端渲染 |
+| `with-react-devtools` | React 与 DevTools 集成 |
+| `with-react-event-bus` | Event-Bus 集成示例 |
+| `with-react-router` | Router 集成示例 |
+| `with-react-sandbox` | Sandbox/CSS 隔离示例 |
+| `with-module-federation-react` | React 的 Module Federation |
+| `with-multiple-frameworks` | 多框架集成 |
+
+## 构建示例
+
+```bash
+npx create-tuvix-app my-app --example with-react
+npx create-tuvix-app my-app --example with-vue
+npx create-tuvix-app my-app --example with-multiple-frameworks
 ```
