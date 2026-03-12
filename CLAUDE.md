@@ -85,4 +85,8 @@ feat(parser): add support for async token resolution
 Closes #42
 ```
 
-Provide the commit message at the very end of every implementation session, after reviewer and tests both pass.
+The message NOT include "Co-Authored-By: Claude <model>  <noreply@anthropic.com>"
+
+Provide the commit message at the very end of every implementation session, after reviewer and tests both pass..
+
+DO NOT commit or push. Just provide message
