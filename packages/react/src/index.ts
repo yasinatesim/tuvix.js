@@ -1,5 +1,5 @@
-import type { ComponentType } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import { createElement, useEffect, useRef, useState } from 'react';
 import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
 import type { IEventBus, EventHandler, Unsubscribe } from '@tuvix.js/event-bus';
 
@@ -14,6 +14,18 @@ export interface ReactMicroAppConfig {
 
   /** Optional one-time setup */
   bootstrap?: () => void | Promise<void>;
+
+  /**
+   * Enable SSR hydration mode.
+   *
+   * When `true`, the `mount()` lifecycle uses `hydrateRoot()` instead of
+   * `createRoot()` if the container already contains server-rendered HTML.
+   * Use this when the micro app is pre-rendered by a framework like
+   * TanStack Start, Next.js, or Remix.
+   *
+   * @default false
+   */
+  ssr?: boolean;
 }
 
 // ─── createReactMicroApp ────────────────────────────
@@ -21,18 +33,17 @@ export interface ReactMicroAppConfig {
 /**
  * Create a Tuvix.js micro app module from a React component.
  *
- * Handles `createRoot` / `root.render` / `root.unmount` lifecycle
- * automatically. Props from the orchestrator are passed as component props.
+ * Handles `createRoot` / `hydrateRoot` / `root.render` / `root.unmount`
+ * lifecycle automatically. Props from the orchestrator are passed as
+ * component props.
  *
  * @example
  * ```tsx
- * import { createReactMicroApp } from '@tuvix.js/react';
- * import App from './App';
+ * // Client-side only (default)
+ * export default createReactMicroApp({ name: 'dashboard', App });
  *
- * export default createReactMicroApp({
- *   name: 'dashboard',
- *   App,
- * });
+ * // With SSR hydration support
+ * export default createReactMicroApp({ name: 'dashboard', App, ssr: true });
  * ```
  */
 export function createReactMicroApp(config: ReactMicroAppConfig): MicroAppModule {
@@ -46,11 +57,18 @@ export function createReactMicroApp(config: ReactMicroAppConfig): MicroAppModule
     },
 
     async mount({ container, props }: MountContext) {
-      const { createRoot } = await import('react-dom/client');
-      const { createElement } = await import('react');
+      const { createRoot, hydrateRoot } = await import('react-dom/client');
 
-      root = createRoot(container);
-      root.render(createElement(config.App, { ...props }));
+      const element = createElement(config.App, { ...props });
+      const hasSSRContent = config.ssr === true && container.hasChildNodes();
+
+      if (hasSSRContent) {
+        // Hydrate server-rendered HTML — preserves SEO content
+        root = hydrateRoot(container, element);
+      } else {
+        root = createRoot(container);
+        root.render(element);
+      }
     },
 
     async unmount({ container }: UnmountContext) {
@@ -61,7 +79,6 @@ export function createReactMicroApp(config: ReactMicroAppConfig): MicroAppModule
 
     async update({ props }: UpdateContext) {
       if (root) {
-        const { createElement } = await import('react');
         root.render(createElement(config.App, { ...props }));
       }
     },
@@ -76,6 +93,63 @@ export function createReactMicroApp(config: ReactMicroAppConfig): MicroAppModule
   }
 
   return module;
+}
+
+/**
+ * Convenience wrapper for `createReactMicroApp` with `ssr: true`.
+ *
+ * Use this when the micro app's container will have server-rendered HTML
+ * that React should hydrate instead of replacing.
+ *
+ * @example
+ * ```tsx
+ * // src/micro-apps/github/index.ts
+ * export default createSsrReactMicroApp({ name: 'github-app', App });
+ * ```
+ */
+export function createSsrReactMicroApp(config: Omit<ReactMicroAppConfig, 'ssr'>): MicroAppModule {
+  return createReactMicroApp({ ...config, ssr: true });
+}
+
+// ─── TuvixApp ────────────────────────────────────────
+
+/**
+ * A React component wrapper that renders a micro app inline.
+ *
+ * **Use this in SSR frameworks** (TanStack Start, Next.js, Remix) so that
+ * micro app content is server-rendered and SEO-indexed. The orchestrator
+ * can later take over via `hydrateRoot` when the IIFE bundle is loaded.
+ *
+ * The rendered `<div>` carries a `data-tuvix-app` attribute so the
+ * orchestrator knows which container belongs to which micro app.
+ *
+ * @example
+ * ```tsx
+ * // TanStack Start route file
+ * import { TuvixApp } from '@tuvix.js/react';
+ * import { GithubPage } from '~/components/GithubPage';
+ *
+ * export const Route = createFileRoute('/github')({
+ *   head: () => ({ meta: [...seo({ title: 'GitHub' })] }),
+ *   component: () => <TuvixApp name="github-app" App={GithubPage} />,
+ * });
+ * ```
+ */
+export function TuvixApp<P extends Record<string, unknown>>({
+  name,
+  App,
+  ...props
+}: {
+  /** Micro app name — must match the name in createReactMicroApp */
+  name: string;
+  /** React component to render */
+  App: ComponentType<P>;
+} & P): ReactNode {
+  return createElement(
+    'div',
+    { 'data-tuvix-app': name },
+    createElement(App, props as unknown as P),
+  );
 }
 
 // ─── Hooks ──────────────────────────────────────────
@@ -149,4 +223,3 @@ export function useTuvixProps<T extends Record<string, unknown>>(
 
   return props;
 }
-
