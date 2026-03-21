@@ -1,5 +1,12 @@
 # with-react-devtools
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [8cf0482]
+  - @tuvix.js/react@0.4.0
+
 ## 0.1.3
 
 ### Patch Changes
