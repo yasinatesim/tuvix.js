@@ -1,5 +1,54 @@
 # @tuvix.js/react
 
+## 0.4.0
+
+### Minor Changes
+
+- 8cf0482: ## SSR Multi-Framework Support + TuvixReactApp Rename
+
+  ### `@tuvix.js/react`
+  - **Renamed** `TuvixApp` → `TuvixReactApp` for naming consistency
+  - `TuvixApp` kept as `@deprecated` alias — backward compatible, removed in next major
+  - **New** `TuvixSvelteApp` — React host wrapper for Svelte micro apps. Renders `ssrHtml` into a `data-tuvix-app` container; orchestrator hydrates via `createSsrSvelteMicroApp`
+  - **New** `TuvixVueApp` — React host wrapper for Vue 3 micro apps
+  - **New** `TuvixAngularApp` — React host wrapper for Angular micro apps
+
+  ### `@tuvix.js/svelte` — SSR Support
+  - **New** `renderSvelteToString(App, props?)` — server-side render a Svelte component to HTML string. Supports Svelte 5 (`svelte/server`) and Svelte 3/4 (`App.render()`)
+  - **New** `createSsrSvelteMicroApp(config)` — orchestrator lifecycle module with hydration support. Uses `hydrate: true` when SSR content is already in the container
+
+  ### `@tuvix.js/vue` — SSR Support
+  - **New** `renderVueToString(App, props?, plugins?)` — server-side render a Vue 3 component using `@vue/server-renderer`
+  - **New** `createSsrVueMicroApp(config)` — orchestrator lifecycle using `createSSRApp` for automatic Vue hydration
+
+  ### `@tuvix.js/angular` — SSR Support (Angular 17+ Standalone)
+  - **New** `renderAngularToString(component, options?)` — server-side render a standalone Angular component via `@angular/platform-server`
+  - **New** `createSsrAngularMicroApp(config)` — orchestrator lifecycle with `provideClientHydration()` support
+  - `createAngularMicroApp` (NgModule) kept as legacy, not removed
+
+  ### Architecture
+
+  Each framework package (`@tuvix.js/svelte`, `@tuvix.js/vue`, `@tuvix.js/angular`) has zero React dependency.
+  React host wrappers (`TuvixSvelteApp`, `TuvixVueApp`, `TuvixAngularApp`) live in `@tuvix.js/react`.
+  Angular/Vue/Svelte host wrappers will be added to their respective packages in a future release.
+
+  ### Usage Pattern (React host — TanStack Start, Next.js, Remix)
+
+  ```tsx
+  // routes/iletisim.tsx
+  export const Route = createFileRoute('/iletisim')({
+    loader: async () => {
+      const { renderVueToString } = await import('@tuvix.js/vue');
+      const { default: App } = await import('~/micro-apps/contact/App.vue');
+      return { ssrHtml: await renderVueToString(App) };
+    },
+    component: function () {
+      const { ssrHtml } = Route.useLoaderData();
+      return <TuvixVueApp name="contact-app" ssrHtml={ssrHtml} />;
+    },
+  });
+  ```
+
 ## 0.3.1
 
 ### Patch Changes
