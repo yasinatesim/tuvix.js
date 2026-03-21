@@ -31,11 +31,16 @@ export async function renderSvelteToString(
   }
 
   // Svelte 5: uses `svelte/server` render()
+  // Use new Function to load the specifier — prevents Rollup/Vite's CJS static
+  // scanner from detecting "svelte/server" as a hard dependency. The try/catch
+  // alone is not enough: the scanner resolves literal import() strings at build time
+  // regardless of control flow. new Function is opaque to static analysis.
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const svelteServer = await import('svelte/server' as any);
+    // eslint-disable-next-line no-new-func
+    const load = new Function('m', 'return import(m)') as (m: string) => Promise<{ render?: unknown }>;
+    const svelteServer = await load('svelte/server');
     if (typeof svelteServer.render === 'function') {
-      const result: { html: string } = svelteServer.render(App, { props: props ?? {} });
+      const result = (svelteServer.render as (app: unknown, opts: { props: Record<string, unknown> }) => { html: string })(App, { props: props ?? {} });
       return result.html;
     }
   } catch {
