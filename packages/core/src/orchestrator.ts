@@ -361,13 +361,35 @@ export class Orchestrator {
     this.destroyed = true;
   }
 
+  /**
+   * Manually trigger app reconciliation for the given path (or the current
+   * browser URL if omitted). Call this when an external router (e.g. TanStack
+   * Router, Next.js App Router) handles navigation instead of tuvix.js's
+   * built-in router so that micro apps are mounted / unmounted correctly.
+   *
+   * @example
+   * ```ts
+   * // Bridge TanStack Router → tuvix.js after every navigation
+   * tanstackRouter.subscribe('onLoad', () => {
+   *   orchestrator.reconcile(window.location.pathname);
+   * });
+   * ```
+   */
+  async reconcile(path?: string): Promise<void> {
+    this.ensureAlive();
+    await this.reconcileApps(path);
+  }
+
   private async handleRouteChange(event: NavigationEvent): Promise<void> {
     this.emitEvent(OrchestratorEvent.ROUTE_CHANGE, event);
     await this.reconcileApps();
   }
 
-  private async reconcileApps(): Promise<void> {
-    const currentPath = this.router?.currentPath ?? '/';
+  private async reconcileApps(overridePath?: string): Promise<void> {
+    const currentPath =
+      overridePath ??
+      this.router?.currentPath ??
+      (typeof window !== 'undefined' ? window.location.pathname : '/');
     const mountPromises: Promise<void>[] = [];
     const unmountPromises: Promise<void>[] = [];
 
