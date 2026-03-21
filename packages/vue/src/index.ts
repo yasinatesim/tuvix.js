@@ -171,50 +171,6 @@ export function createSsrVueMicroApp(config: VueMicroAppConfig): MicroAppModule 
   return module;
 }
 
-// ─── renderVueToString ───────────────────────────────
-
-/**
- * Render a Vue component to an HTML string on the server.
- *
- * Returns an empty string when called in a browser environment so it is safe
- * to import in isomorphic route loaders.
- *
- * Requires `@vue/server-renderer` to be installed as an optional peer dependency.
- *
- * @example
- * ```ts
- * // routes/iletisim.tsx
- * export const Route = createFileRoute('/iletisim')({
- *   loader: async () => {
- *     const { renderVueToString } = await import('@tuvix.js/vue');
- *     const { default: ContactApp } = await import('~/micro-apps/contact/App.vue');
- *     return { ssrHtml: await renderVueToString(ContactApp) };
- *   },
- * });
- * ```
- */
-export async function renderVueToString(
-  App: Component,
-  props?: Record<string, unknown>,
-  plugins?: Plugin[]
-): Promise<string> {
-  // Guard: only runs on the server
-  if (typeof window !== 'undefined') return '';
-
-  const { createSSRApp } = await import('vue');
-  const { renderToString } = await import('@vue/server-renderer');
-
-  const app = createSSRApp(App, props ?? {});
-
-  if (plugins) {
-    for (const plugin of plugins) {
-      app.use(plugin);
-    }
-  }
-
-  return await renderToString(app);
-}
-
 // ─── Composables ────────────────────────────────────
 
 /**

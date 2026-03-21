@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createAngularMicroApp, createSsrAngularMicroApp, renderAngularToString, TuvixAngularApp } from '../index';
+import { createAngularMicroApp, createSsrAngularMicroApp } from '../index';
+import { renderAngularToString } from '../server';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -307,10 +308,3 @@ describe('renderAngularToString', () => {
   });
 });
 
-// ─── TuvixAngularApp ─────────────────────────────────────────────────────────
-
-describe('TuvixAngularApp', () => {
-  it('is exported as a function', () => {
-    expect(typeof TuvixAngularApp).toBe('function');
-  });
-});

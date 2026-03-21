@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createSvelteMicroApp, createSsrSvelteMicroApp, renderSvelteToString, TuvixSvelteApp } from '../index';
+import { createSvelteMicroApp, createSsrSvelteMicroApp } from '../index';
+import { renderSvelteToString } from '../server';
 
 describe('createSvelteMicroApp', () => {
   it('should return a valid MicroAppModule', () => {
@@ -67,8 +68,3 @@ describe('renderSvelteToString', () => {
   });
 });
 
-describe('TuvixSvelteApp', () => {
-  it('is exported as a function', () => {
-    expect(typeof TuvixSvelteApp).toBe('function');
-  });
-});

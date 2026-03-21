@@ -15,6 +15,16 @@
 				"types": "./dist/index.d.ts",
 				"default": "./dist/index.js"
 			}
+		},
+		"./server": {
+			"import": {
+				"types": "./dist/server.d.mts",
+				"default": "./dist/server.mjs"
+			},
+			"require": {
+				"types": "./dist/server.d.ts",
+				"default": "./dist/server.js"
+			}
 		}
 	},
 	"files": [

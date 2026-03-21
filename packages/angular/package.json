@@ -15,6 +15,16 @@
 				"types": "./dist/index.d.ts",
 				"default": "./dist/index.js"
 			}
+		},
+		"./server": {
+			"import": {
+				"types": "./dist/server.d.mts",
+				"default": "./dist/server.mjs"
+			},
+			"require": {
+				"types": "./dist/server.d.ts",
+				"default": "./dist/server.js"
+			}
 		}
 	},
 	"files": [
@@ -30,21 +40,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {
-		"@angular/core": ">=15.0.0",
-		"@angular/platform-browser-dynamic": ">=15.0.0",
-		"@angular/platform-browser": ">=15.0.0",
-		"@angular/platform-server": ">=15.0.0"
-	},
-	"peerDependenciesMeta": {
-		"@angular/platform-browser-dynamic": {
-			"optional": true
-		},
-		"@angular/platform-browser": {
-			"optional": true
-		},
-		"@angular/platform-server": {
-			"optional": true
-		}
+		"@angular/core": ">=15.0.0"
 	},
 	"keywords": [
 		"microfrontend",
@@ -53,6 +49,12 @@
 	],
 	"license": "MIT",
 	"sideEffects": false,
+	"devDependencies": {
+		"@angular/core": "^16.2.0",
+		"@angular/platform-browser": "^16.2.0",
+		"@angular/platform-browser-dynamic": "^16.2.0",
+		"@angular/platform-server": "^16.2.0"
+	},
 	"dependencies": {
 		"@tuvix.js/loader": "workspace:^"
 	}

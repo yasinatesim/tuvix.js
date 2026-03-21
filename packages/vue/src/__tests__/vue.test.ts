@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Component } from 'vue';
-import { createVueMicroApp, createSsrVueMicroApp, renderVueToString, TuvixVueApp } from '../index';
+import { createVueMicroApp, createSsrVueMicroApp } from '../index';
+import { renderVueToString } from '../server';
 
 describe('createVueMicroApp', () => {
   it('should return a valid MicroAppModule', () => {
@@ -60,8 +61,3 @@ describe('renderVueToString', () => {
   });
 });
 
-describe('TuvixVueApp', () => {
-  it('is exported as a function', () => {
-    expect(typeof TuvixVueApp).toBe('function');
-  });
-});

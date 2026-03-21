@@ -123,8 +123,9 @@ export function createSsrReactMicroApp(config: Omit<ReactMicroAppConfig, 'ssr'>)
  * The rendered `<div>` carries a `data-tuvix-app` attribute so the
  * orchestrator knows which container belongs to which micro app.
  *
- * For Svelte, Vue, and Angular micro apps use `TuvixSvelteApp`,
- * `TuvixVueApp`, and `TuvixAngularApp` from their respective packages.
+ * For Svelte, Vue, and Angular micro apps, render to a string on the server
+ * using `renderSvelteToString`, `renderVueToString`, or `renderAngularToString`
+ * and inject the HTML into a `data-tuvix-app` container div.
  *
  * @example
  * ```tsx
