@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   minify: false,
-  external: ['svelte'],
+  external: ['svelte', 'svelte/server', 'react', 'react-dom'],
 });

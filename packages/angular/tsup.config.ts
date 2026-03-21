@@ -9,5 +9,12 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   minify: false,
-  external: ['@angular/core', '@angular/platform-browser-dynamic', '@angular/platform-browser'],
+  external: [
+    '@angular/core',
+    '@angular/platform-browser-dynamic',
+    '@angular/platform-browser',
+    '@angular/platform-server',
+    'react',
+    'react-dom',
+  ],
 });

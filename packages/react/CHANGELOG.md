@@ -4,16 +4,16 @@
 
 ### Patch Changes
 
-- 53189df: Fix `TuvixApp` return type for React 19 JSX strict mode compatibility
+- 53189df: Fix `TuvixReactApp` return type for React 19 JSX strict mode compatibility
 
-  Changed return type from `ReactNode` to `ReactElement<any>` so `TuvixApp`
+  Changed return type from `ReactNode` to `ReactElement<any>` so `TuvixReactApp`
   can be used as a JSX component in projects with React 19 strict TypeScript
   settings (e.g. TanStack Start, Next.js 15+).
 
-  Previously, using `<TuvixApp ... />` in these projects caused:
+  Previously, using `<TuvixReactApp ... />` in these projects caused:
 
   ```
-  error TS2786: 'TuvixApp' cannot be used as a JSX component.
+  error TS2786: 'TuvixReactApp' cannot be used as a JSX component.
     Type '...ReactNode' is not assignable to type 'ReactNode | Promise<ReactNode>'.
   ```
 
@@ -21,10 +21,10 @@
 
 ### Minor Changes
 
-- e46a26e: Add SSR hydration support and `TuvixApp` component
+- e46a26e: Add SSR hydration support and `TuvixReactApp` component
 
   **New exports:**
-  - `TuvixApp` — A React component that renders a micro app inline. Use this in SSR frameworks (TanStack Start, Next.js, Remix) so micro app content is server-rendered and SEO-indexed. The orchestrator can later hydrate the rendered HTML when the IIFE bundle loads.
+  - `TuvixReactApp` — A React component that renders a React micro app inline. Use this in SSR frameworks (TanStack Start, Next.js, Remix) so micro app content is server-rendered and SEO-indexed. The orchestrator can later hydrate the rendered HTML when the IIFE bundle loads.
   - `createSsrReactMicroApp` — Convenience wrapper around `createReactMicroApp` with `ssr: true`. Uses `hydrateRoot()` instead of `createRoot()` when the container already contains server-rendered HTML.
 
   **Updated API:**
@@ -34,12 +34,12 @@
 
   ```tsx
   // src/routes/github.tsx
-  import { TuvixApp } from '@tuvix.js/react';
-  import { GithubPage } from '~/components/GithubPage';
+  import { TuvixReactApp } from '@tuvix.js/react';
+  import { GithubPage } from '~/micro-apps/github/App';
 
   export const Route = createFileRoute('/github')({
     head: () => ({ meta: [...seo({ title: 'GitHub' })] }),
-    component: () => <TuvixApp name="github-app" App={GithubPage} />,
+    component: () => <TuvixReactApp name="github-app" App={GithubPage} />,
   });
   ```
 

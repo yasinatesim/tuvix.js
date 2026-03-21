@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/angular",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Angular bindings for Tuvix.js microfrontend framework",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -32,7 +32,24 @@
 	},
 	"peerDependencies": {
 		"@angular/core": ">=15.0.0",
-		"@angular/platform-browser-dynamic": ">=15.0.0"
+		"@angular/platform-browser-dynamic": ">=15.0.0",
+		"@angular/platform-browser": ">=15.0.0",
+		"@angular/platform-server": ">=15.0.0",
+		"react": ">=18.0.0"
+	},
+	"peerDependenciesMeta": {
+		"@angular/platform-browser-dynamic": {
+			"optional": true
+		},
+		"@angular/platform-browser": {
+			"optional": true
+		},
+		"@angular/platform-server": {
+			"optional": true
+		},
+		"react": {
+			"optional": true
+		}
 	},
 	"keywords": [
 		"microfrontend",
@@ -43,5 +60,9 @@
 	"sideEffects": false,
 	"dependencies": {
 		"@tuvix.js/loader": "workspace:^"
+	},
+	"devDependencies": {
+		"@types/react": "^19.0.0",
+		"react": "^19.0.0"
 	}
 }

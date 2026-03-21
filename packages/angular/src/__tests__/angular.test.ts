@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createAngularMicroApp } from '../index';
+import { createAngularMicroApp, createSsrAngularMicroApp, renderAngularToString, TuvixAngularApp } from '../index';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
@@ -245,5 +245,72 @@ describe('createAngularMicroApp', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((window as any).__TUVIX_ANGULAR_PROPS__['update-null-appref-test']).toBeUndefined();
     });
+  });
+});
+
+// ─── createSsrAngularMicroApp ────────────────────────────────────────────────
+
+describe('createSsrAngularMicroApp', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (window as any).__TUVIX_MODULES__;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (window as any).__TUVIX_ANGULAR_PROPS__;
+  });
+
+  it('should return a valid MicroAppModule', () => {
+    const module = createSsrAngularMicroApp({
+      name: 'ssr-angular-app',
+      component: class StandaloneComponent {},
+    });
+
+    expect(module).toBeDefined();
+    expect(typeof module.bootstrap).toBe('function');
+    expect(typeof module.mount).toBe('function');
+    expect(typeof module.unmount).toBe('function');
+    expect(typeof module.update).toBe('function');
+  });
+
+  it('should register in global module registry', () => {
+    createSsrAngularMicroApp({
+      name: 'ssr-registry-test',
+      component: class StandaloneComponent {},
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const registry = (window as any).__TUVIX_MODULES__;
+    expect(registry['ssr-registry-test']).toBeDefined();
+  });
+
+  it('should call config.bootstrap if provided', async () => {
+    const onBootstrap = vi.fn().mockResolvedValue(undefined);
+    const module = createSsrAngularMicroApp({
+      name: 'ssr-bootstrap-test',
+      component: class StandaloneComponent {},
+      bootstrap: onBootstrap,
+    });
+
+    await module.bootstrap!();
+
+    expect(onBootstrap).toHaveBeenCalledOnce();
+  });
+});
+
+// ─── renderAngularToString ───────────────────────────────────────────────────
+
+describe('renderAngularToString', () => {
+  it('returns empty string in browser environment', async () => {
+    // jsdom sets window, so this test exercises the browser guard
+    const result = await renderAngularToString({});
+    expect(result).toBe('');
+  });
+});
+
+// ─── TuvixAngularApp ─────────────────────────────────────────────────────────
+
+describe('TuvixAngularApp', () => {
+  it('is exported as a function', () => {
+    expect(typeof TuvixAngularApp).toBe('function');
   });
 });

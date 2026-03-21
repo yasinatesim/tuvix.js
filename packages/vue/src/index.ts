@@ -2,6 +2,8 @@ import type { Component, App, Plugin, ShallowRef } from 'vue';
 import { onMounted, onUnmounted, shallowRef } from 'vue';
 import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
 import type { IEventBus, EventHandler, Unsubscribe } from '@tuvix.js/event-bus';
+import { createElement, useEffect, useRef } from 'react';
+import type { ReactElement } from 'react';
 
 // ─── Types ──────────────────────────────────────────
 
@@ -18,6 +20,9 @@ export interface VueMicroAppConfig {
   /** Optional one-time setup */
   bootstrap?: () => void | Promise<void>;
 }
+
+/** Extended config for SSR-enabled Vue micro apps (same shape, alias for clarity) */
+export type VueSsrMicroAppConfig = VueMicroAppConfig;
 
 // ─── createVueMicroApp ──────────────────────────────
 
@@ -91,6 +96,201 @@ export function createVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
   }
 
   return module;
+}
+
+// ─── createSsrVueMicroApp ────────────────────────────
+
+/**
+ * Create a Tuvix.js micro app module from a Vue 3 component with SSR hydration support.
+ *
+ * Uses `createSSRApp` instead of `createApp` so Vue hydrates existing server-rendered
+ * HTML rather than re-rendering from scratch. Drop-in replacement for `createVueMicroApp`
+ * when the container already contains SSR markup.
+ *
+ * @example
+ * ```ts
+ * import { createSsrVueMicroApp } from '@tuvix.js/vue';
+ * import App from './App.vue';
+ *
+ * export default createSsrVueMicroApp({
+ *   name: 'contact',
+ *   App,
+ * });
+ * ```
+ */
+export function createSsrVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
+  let app: App | null = null;
+
+  const module: MicroAppModule = {
+    async bootstrap() {
+      if (config.bootstrap) {
+        await config.bootstrap();
+      }
+    },
+
+    async mount({ container, props }: MountContext) {
+      const { createSSRApp } = await import('vue');
+
+      app = createSSRApp(config.App, { ...props });
+
+      if (config.plugins) {
+        for (const plugin of config.plugins) {
+          app.use(plugin);
+        }
+      }
+
+      // Provide orchestrator props globally
+      if (props) {
+        app.provide('tuvixProps', props);
+      }
+
+      // Vue SSR mode: automatically hydrates if SSR content already exists in container
+      app.mount(container);
+    },
+
+    async unmount({ container }: UnmountContext) {
+      app?.unmount();
+      app = null;
+      container.innerHTML = '';
+    },
+
+    async update({ props }: UpdateContext) {
+      if (app) {
+        // Update global properties for reactive access
+        app.config.globalProperties.$tuvixProps = props;
+      }
+    },
+  };
+
+  // Register in global module registry
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+    win.__TUVIX_MODULES__ = win.__TUVIX_MODULES__ ?? {};
+    win.__TUVIX_MODULES__[config.name] = module;
+  }
+
+  return module;
+}
+
+// ─── renderVueToString ───────────────────────────────
+
+/**
+ * Render a Vue component to an HTML string on the server.
+ *
+ * Returns an empty string when called in a browser environment so it is safe
+ * to import in isomorphic route loaders.
+ *
+ * Requires `@vue/server-renderer` to be installed as an optional peer dependency.
+ *
+ * @example
+ * ```ts
+ * // routes/iletisim.tsx
+ * export const Route = createFileRoute('/iletisim')({
+ *   loader: async () => {
+ *     const { renderVueToString } = await import('@tuvix.js/vue');
+ *     const { default: ContactApp } = await import('~/micro-apps/contact/App.vue');
+ *     return { ssrHtml: await renderVueToString(ContactApp) };
+ *   },
+ * });
+ * ```
+ */
+export async function renderVueToString(
+  App: Component,
+  props?: Record<string, unknown>,
+  plugins?: Plugin[]
+): Promise<string> {
+  // Guard: only runs on the server
+  if (typeof window !== 'undefined') return '';
+
+  const { createSSRApp } = await import('vue');
+  const { renderToString } = await import('@vue/server-renderer');
+
+  const app = createSSRApp(App, props ?? {});
+
+  if (plugins) {
+    for (const plugin of plugins) {
+      app.use(plugin);
+    }
+  }
+
+  return await renderToString(app);
+}
+
+// ─── TuvixVueApp ─────────────────────────────────────
+
+/**
+ * React wrapper component that embeds a Vue micro app inside a TanStack Start
+ * (or any React SSR) route with full hydration support.
+ *
+ * On the server the component renders the `ssrHtml` string directly so React's
+ * SSR output matches the client. On the client a `useEffect` mounts Vue via
+ * `createSSRApp`, which hydrates the existing markup without a flash.
+ *
+ * @example
+ * ```tsx
+ * // routes/iletisim.tsx
+ * export const Route = createFileRoute('/iletisim')({
+ *   loader: async () => {
+ *     const { renderVueToString } = await import('@tuvix.js/vue');
+ *     const { default: ContactApp } = await import('~/micro-apps/contact/App.vue');
+ *     return { ssrHtml: await renderVueToString(ContactApp) };
+ *   },
+ *   component: function() {
+ *     const { ssrHtml } = Route.useLoaderData();
+ *     return <TuvixVueApp name="contact-app" App={ContactApp} ssrHtml={ssrHtml} />;
+ *   },
+ * });
+ * ```
+ */
+export function TuvixVueApp({
+  name,
+  App,
+  ssrHtml = '',
+  plugins,
+  ...props
+}: {
+  name: string;
+  App: Component;
+  ssrHtml?: string;
+  plugins?: Plugin[];
+  [key: string]: unknown;
+}): ReactElement {
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
+
+    let vueApp: App | null = null;
+
+    void (async () => {
+      const { createSSRApp } = await import('vue');
+
+      vueApp = createSSRApp(App, props as Record<string, unknown>);
+
+      if (plugins) {
+        for (const plugin of plugins) {
+          vueApp.use(plugin);
+        }
+      }
+
+      vueApp.mount(container);
+    })();
+
+    return () => {
+      vueApp?.unmount();
+    };
+    // Props object identity changes every render; stringify for stable comparison
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name]);
+
+  return createElement('div', {
+    'data-tuvix-app': name,
+    ref,
+    suppressHydrationWarning: true,
+    ...(ssrHtml ? { dangerouslySetInnerHTML: { __html: ssrHtml } } : {}),
+  });
 }
 
 // ─── Composables ────────────────────────────────────

@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/svelte",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"description": "Svelte bindings for Tuvix.js microfrontend framework",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
@@ -30,7 +30,13 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {
+		"react": ">=18.0.0",
 		"svelte": ">=3.0.0 || >=4.0.0 || >=5.0.0"
+	},
+	"peerDependenciesMeta": {
+		"react": {
+			"optional": true
+		}
 	},
 	"keywords": [
 		"microfrontend",
@@ -41,5 +47,9 @@
 	"sideEffects": false,
 	"dependencies": {
 		"@tuvix.js/loader": "workspace:^"
+	},
+	"devDependencies": {
+		"@types/react": "^19.2.14",
+		"react": "^19.0.0"
 	}
 }

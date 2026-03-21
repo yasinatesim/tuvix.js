@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createVueMicroApp } from '../index';
+import type { Component } from 'vue';
+import { createVueMicroApp, createSsrVueMicroApp, renderVueToString, TuvixVueApp } from '../index';
 
 describe('createVueMicroApp', () => {
   it('should return a valid MicroAppModule', () => {
@@ -23,5 +24,44 @@ describe('createVueMicroApp', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const registry = (window as any).__TUVIX_MODULES__;
     expect(registry['test-global-vue']).toBeDefined();
+  });
+});
+
+describe('createSsrVueMicroApp', () => {
+  it('should return a valid MicroAppModule', () => {
+    const module = createSsrVueMicroApp({
+      name: 'test-ssr-vue-app',
+      App: { template: '<div>SSR Test</div>' },
+    });
+
+    expect(module).toBeDefined();
+    expect(typeof module.mount).toBe('function');
+    expect(typeof module.unmount).toBe('function');
+    expect(typeof module.bootstrap).toBe('function');
+  });
+
+  it('should register in global module registry', () => {
+    createSsrVueMicroApp({
+      name: 'test-global-ssr-vue',
+      App: { template: '<div>SSR Test</div>' },
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const registry = (window as any).__TUVIX_MODULES__;
+    expect(registry['test-global-ssr-vue']).toBeDefined();
+  });
+});
+
+describe('renderVueToString', () => {
+  it('returns empty string in browser environment', async () => {
+    // jsdom sets window, so this test exercises the browser guard
+    const result = await renderVueToString({} as Component);
+    expect(result).toBe('');
+  });
+});
+
+describe('TuvixVueApp', () => {
+  it('is exported as a function', () => {
+    expect(typeof TuvixVueApp).toBe('function');
   });
 });

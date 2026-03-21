@@ -111,10 +111,10 @@ export function createSsrReactMicroApp(config: Omit<ReactMicroAppConfig, 'ssr'>)
   return createReactMicroApp({ ...config, ssr: true });
 }
 
-// ─── TuvixApp ────────────────────────────────────────
+// ─── TuvixReactApp ───────────────────────────────────
 
 /**
- * A React component wrapper that renders a micro app inline.
+ * A React component wrapper that renders a React micro app inline.
  *
  * **Use this in SSR frameworks** (TanStack Start, Next.js, Remix) so that
  * micro app content is server-rendered and SEO-indexed. The orchestrator
@@ -123,19 +123,22 @@ export function createSsrReactMicroApp(config: Omit<ReactMicroAppConfig, 'ssr'>)
  * The rendered `<div>` carries a `data-tuvix-app` attribute so the
  * orchestrator knows which container belongs to which micro app.
  *
+ * For Svelte, Vue, and Angular micro apps use `TuvixSvelteApp`,
+ * `TuvixVueApp`, and `TuvixAngularApp` from their respective packages.
+ *
  * @example
  * ```tsx
  * // TanStack Start route file
- * import { TuvixApp } from '@tuvix.js/react';
- * import { GithubPage } from '~/components/GithubPage';
+ * import { TuvixReactApp } from '@tuvix.js/react';
+ * import { GithubPage } from '~/micro-apps/github/App';
  *
  * export const Route = createFileRoute('/github')({
  *   head: () => ({ meta: [...seo({ title: 'GitHub' })] }),
- *   component: () => <TuvixApp name="github-app" App={GithubPage} />,
+ *   component: () => <TuvixReactApp name="github-app" App={GithubPage} />,
  * });
  * ```
  */
-export function TuvixApp<P extends Record<string, unknown>>({
+export function TuvixReactApp<P extends Record<string, unknown>>({
   name,
   App,
   ...props
@@ -152,6 +155,12 @@ export function TuvixApp<P extends Record<string, unknown>>({
     createElement(App, props as unknown as P),
   );
 }
+
+/**
+ * @deprecated Use `TuvixReactApp` instead.
+ * Kept for backward compatibility — will be removed in the next major version.
+ */
+export const TuvixApp = TuvixReactApp;
 
 // ─── Hooks ──────────────────────────────────────────
 
