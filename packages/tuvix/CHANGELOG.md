@@ -1,5 +1,12 @@
 # tuvix.js
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [6826b4d]
+  - @tuvix.js/core@0.3.2
+
 ## 0.1.3
 
 ### Patch Changes
