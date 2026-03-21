@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactElement } from 'react';
 import { createElement, useEffect, useRef, useState } from 'react';
 import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
 import type { IEventBus, EventHandler, Unsubscribe } from '@tuvix.js/event-bus';
@@ -144,7 +144,8 @@ export function TuvixApp<P extends Record<string, unknown>>({
   name: string;
   /** React component to render */
   App: ComponentType<P>;
-} & P): ReactNode {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+} & P): ReactElement<any> {
   return createElement(
     'div',
     { 'data-tuvix-app': name },
