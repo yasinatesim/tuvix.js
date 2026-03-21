@@ -1,5 +1,12 @@
 # with-svelte
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [5e47175]
+  - @tuvix.js/svelte@0.4.1
+
 ## 0.1.2
 
 ### Patch Changes
