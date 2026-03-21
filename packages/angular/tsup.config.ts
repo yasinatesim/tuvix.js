@@ -14,7 +14,5 @@ export default defineConfig({
     '@angular/platform-browser-dynamic',
     '@angular/platform-browser',
     '@angular/platform-server',
-    'react',
-    'react-dom',
   ],
 });

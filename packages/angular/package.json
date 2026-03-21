@@ -27,15 +27,13 @@
 		"build": "tsup",
 		"dev": "tsup --watch",
 		"test": "vitest run",
-		"test:watch": "vitest",
 		"typecheck": "tsc --noEmit"
 	},
 	"peerDependencies": {
 		"@angular/core": ">=15.0.0",
 		"@angular/platform-browser-dynamic": ">=15.0.0",
 		"@angular/platform-browser": ">=15.0.0",
-		"@angular/platform-server": ">=15.0.0",
-		"react": ">=18.0.0"
+		"@angular/platform-server": ">=15.0.0"
 	},
 	"peerDependenciesMeta": {
 		"@angular/platform-browser-dynamic": {
@@ -45,9 +43,6 @@
 			"optional": true
 		},
 		"@angular/platform-server": {
-			"optional": true
-		},
-		"react": {
 			"optional": true
 		}
 	},
@@ -60,9 +55,5 @@
 	"sideEffects": false,
 	"dependencies": {
 		"@tuvix.js/loader": "workspace:^"
-	},
-	"devDependencies": {
-		"@types/react": "^19.0.0",
-		"react": "^19.0.0"
 	}
 }

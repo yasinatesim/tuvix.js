@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   minify: false,
-  external: ['vue', '@vue/server-renderer', 'react', 'react-dom'],
+  external: ['vue', '@vue/server-renderer'],
 });

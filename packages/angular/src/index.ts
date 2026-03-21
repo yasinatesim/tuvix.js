@@ -1,6 +1,4 @@
 import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
-import { createElement, useEffect, useRef } from 'react';
-import type { ReactElement } from 'react';
 
 // ─── Types ──────────────────────────────────────────
 
@@ -175,7 +173,7 @@ export function createAngularMicroApp(config: AngularMicroAppConfig): MicroAppMo
  * import { renderAngularToString } from '@tuvix.js/angular';
  * import { AboutComponent } from '~/micro-apps/about/about.component';
  *
- * export const Route = createFileRoute('/hakkimda')({
+ * export const Route = createFileRoute('/hakkimda')(({
  *   loader: async () => ({
  *     ssrHtml: await renderAngularToString(AboutComponent),
  *   }),
@@ -221,7 +219,7 @@ export async function renderAngularToString(
  *
  * Supports SSR via `@angular/platform-server` and client hydration via
  * `provideClientHydration`. Intended for use alongside `renderAngularToString`
- * and `TuvixAngularApp`.
+ * and `TuvixAngularApp` (from `@tuvix.js/react`).
  *
  * @example
  * ```ts
@@ -295,101 +293,4 @@ export function createSsrAngularMicroApp(config: AngularSsrMicroAppConfig): Micr
   }
 
   return module;
-}
-
-// ─── TuvixAngularApp ────────────────────────────────
-
-/**
- * React wrapper component that mounts a standalone Angular component with
- * client-side hydration. Designed for use in TanStack Start route files
- * alongside `renderAngularToString`.
- *
- * Pass `ssrHtml` from the route loader to enable seamless SSR hydration.
- * The component uses `suppressHydrationWarning` to avoid React/Angular
- * innerHTML mismatch warnings.
- *
- * @example
- * ```tsx
- * // routes/hakkimda.tsx
- * export const Route = createFileRoute('/hakkimda')({
- *   loader: async () => {
- *     const { renderAngularToString } = await import('@tuvix.js/angular');
- *     const { AboutComponent } = await import('~/micro-apps/about-angular/about.component');
- *     return { ssrHtml: await renderAngularToString(AboutComponent) };
- *   },
- *   component: function HakkimdaPage() {
- *     const { ssrHtml } = Route.useLoaderData();
- *     return (
- *       <TuvixAngularApp
- *         name="about-angular-app"
- *         component={AboutComponent}
- *         ssrHtml={ssrHtml}
- *       />
- *     );
- *   },
- * });
- * ```
- */
-export function TuvixAngularApp({
-  name,
-  component,
-  ssrHtml = '',
-  providers,
-  selector = 'app-root',
-  ...props
-}: {
-  name: string;
-  component: unknown;
-  ssrHtml?: string;
-  providers?: unknown[];
-  selector?: string;
-  [key: string]: unknown;
-}): ReactElement {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const container = ref.current;
-    if (!container) return;
-
-    let destroyed = false;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let appRef: any = null;
-
-    void (async () => {
-      const { bootstrapApplication } = await import('@angular/platform-browser');
-      const { provideClientHydration } = await import('@angular/platform-browser');
-
-      if (destroyed) return;
-
-      // Reuse SSR-rendered element if present, otherwise create a fresh one
-      let appRoot = container.querySelector(selector);
-      if (!appRoot) {
-        appRoot = document.createElement(selector);
-        container.appendChild(appRoot);
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      appRef = await bootstrapApplication(component as any, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        providers: [provideClientHydration(), ...((providers ?? []) as any[])],
-      });
-    })();
-
-    return () => {
-      destroyed = true;
-      if (appRef) {
-        appRef.destroy();
-      }
-    };
-  // Intentionally omit providers/component from deps — stable references expected
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selector]);
-
-  return createElement('div', {
-    'data-tuvix-app': name,
-    ref,
-    suppressHydrationWarning: true,
-    ...(ssrHtml ? { dangerouslySetInnerHTML: { __html: ssrHtml } } : {}),
-    ...props,
-  });
 }

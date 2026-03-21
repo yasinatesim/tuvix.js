@@ -156,12 +156,6 @@ export function TuvixReactApp<P extends Record<string, unknown>>({
   );
 }
 
-/**
- * @deprecated Use `TuvixReactApp` instead.
- * Kept for backward compatibility — will be removed in the next major version.
- */
-export const TuvixApp = TuvixReactApp;
-
 // ─── Hooks ──────────────────────────────────────────
 
 /**
