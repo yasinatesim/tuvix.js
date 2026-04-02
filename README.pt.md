@@ -261,11 +261,12 @@ Exemplos prontos para execução para cada framework suportado estão disponíve
 
 | Exemplo | Framework | Caminho |
 | --- | --- | --- |
-| [Exemplo React](./examples/react) | React 18+ | `examples/react/` |
-| [Exemplo Vue](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Exemplo Svelte](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Exemplo Angular](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Exemplo Vanilla JS](./examples/vanilla) | Sem framework | `examples/vanilla/` |
+| [Exemplo React](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Exemplo Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Exemplo Svelte](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Exemplo Angular](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Exemplo Vanilla JS](./examples/with-vanilla) | Sem framework | `examples/with-vanilla/` |
+| [Exemplo Vanilla JS + SSR](./examples/with-ssr-vanilla) | Sem framework | `examples/with-ssr-vanilla/` |
 
 Cada exemplo demonstra:
 - Uma aplicação **shell (host)** que inicializa o orquestrador

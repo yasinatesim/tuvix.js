@@ -279,11 +279,12 @@ Ready-to-run examples for each supported framework are available in the [`exampl
 
 | Example | Framework | Path |
 | --- | --- | --- |
-| [React Example](./examples/react) | React 18+ | `examples/react/` |
-| [Vue Example](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelte Example](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angular Example](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Vanilla JS Example](./examples/vanilla) | No framework | `examples/vanilla/` |
+| [React Example](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Vue Example](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Svelte Example](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Angular Example](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Vanilla JS Example](./examples/with-vanilla) | No framework | `examples/with-vanilla/` |
+| [Vanilla JS + SSR Example](./examples/with-ssr-vanilla) | No framework | `examples/with-ssr-vanilla/` |
 
 Each example demonstrates:
 - A **shell (host)** application that boots the orchestrator

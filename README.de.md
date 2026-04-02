@@ -261,11 +261,12 @@ Sofort ausführbare Beispiele für jedes unterstützte Framework sind im Verzeic
 
 | Beispiel | Framework | Pfad |
 | --- | --- | --- |
-| [React-Beispiel](./examples/react) | React 18+ | `examples/react/` |
-| [Vue-Beispiel](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelte-Beispiel](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angular-Beispiel](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Vanilla JS-Beispiel](./examples/vanilla) | Kein Framework | `examples/vanilla/` |
+| [React-Beispiel](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Vue-Beispiel](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Svelte-Beispiel](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Angular-Beispiel](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Vanilla JS-Beispiel](./examples/with-vanilla) | Kein Framework | `examples/with-vanilla/` |
+| [Vanilla JS + SSR-Beispiel](./examples/with-ssr-vanilla) | Kein Framework | `examples/with-ssr-vanilla/` |
 
 Jedes Beispiel zeigt:
 - Eine **Shell-(Host-)Anwendung**, die den Orchestrator startet

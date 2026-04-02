@@ -261,11 +261,12 @@ tuvix.js/
 
 | 示例 | 框架 | 路径 |
 | --- | --- | --- |
-| [React 示例](./examples/react) | React 18+ | `examples/react/` |
-| [Vue 示例](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelte 示例](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angular 示例](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [原生 JS 示例](./examples/vanilla) | 无框架 | `examples/vanilla/` |
+| [React 示例](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Vue 示例](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Svelte 示例](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Angular 示例](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [原生 JS 示例](./examples/with-vanilla) | 无框架 | `examples/with-vanilla/` |
+| [原生 JS + SSR 示例](./examples/with-ssr-vanilla) | 无框架 | `examples/with-ssr-vanilla/` |
 
 每个示例演示了：
 - 启动Orchestrator的**Shell (Host)**应用

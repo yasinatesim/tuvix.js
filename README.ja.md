@@ -261,11 +261,12 @@ tuvix.js/
 
 | サンプル | フレームワーク | パス |
 | --- | --- | --- |
-| [Reactサンプル](./examples/react) | React 18+ | `examples/react/` |
-| [Vueサンプル](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelteサンプル](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angularサンプル](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Vanilla JSサンプル](./examples/vanilla) | フレームワークなし | `examples/vanilla/` |
+| [Reactサンプル](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Vueサンプル](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Svelteサンプル](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Angularサンプル](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Vanilla JSサンプル](./examples/with-vanilla) | フレームワークなし | `examples/with-vanilla/` |
+| [Vanilla JS + SSRサンプル](./examples/with-ssr-vanilla) | フレームワークなし | `examples/with-ssr-vanilla/` |
 
 各サンプルでは以下を実演します：
 - Orchestratorを起動する**Host (Shell)**アプリケーション

@@ -261,11 +261,12 @@ Desteklenen her framework için çalıştırmaya hazır örnekler [`examples/`](
 
 | Örnek | Framework | Yol |
 | --- | --- | --- |
-| [React Örneği](./examples/react) | React 18+ | `examples/react/` |
-| [Vue Örneği](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelte Örneği](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angular Örneği](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Saf JS Örneği](./examples/vanilla) | Framework'süz | `examples/vanilla/` |
+| [React Örneği](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Vue Örneği](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Svelte Örneği](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Angular Örneği](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Saf JS Örneği](./examples/with-vanilla) | Framework'süz | `examples/with-vanilla/` |
+| [Saf JS + SSR Örneği](./examples/with-ssr-vanilla) | Framework'süz | `examples/with-ssr-vanilla/` |
 
 Her örnek şunları gösterir:
 - Orchestrator'ü başlatan bir **Shell (Host)** uygulaması

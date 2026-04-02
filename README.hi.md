@@ -261,11 +261,12 @@ tuvix.js/
 
 | उदाहरण | फ्रेमवर्क | पथ |
 | --- | --- | --- |
-| [React उदाहरण](./examples/react) | React 18+ | `examples/react/` |
-| [Vue उदाहरण](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Svelte उदाहरण](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Angular उदाहरण](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Vanilla JS उदाहरण](./examples/vanilla) | कोई फ्रेमवर्क नहीं | `examples/vanilla/` |
+| [React उदाहरण](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Vue उदाहरण](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Svelte उदाहरण](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Angular उदाहरण](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Vanilla JS उदाहरण](./examples/with-vanilla) | कोई फ्रेमवर्क नहीं | `examples/with-vanilla/` |
+| [Vanilla JS + SSR उदाहरण](./examples/with-ssr-vanilla) | कोई फ्रेमवर्क नहीं | `examples/with-ssr-vanilla/` |
 
 प्रत्येक उदाहरण में दिखाया गया है:
 - एक **Shell (Host)** एप्लिकेशन जो Orchestrator को बूट करता है

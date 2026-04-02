@@ -261,11 +261,12 @@ Ejemplos listos para ejecutar de cada framework soportado están disponibles en 
 
 | Ejemplo | Framework | Ruta |
 | --- | --- | --- |
-| [Ejemplo React](./examples/react) | React 18+ | `examples/react/` |
-| [Ejemplo Vue](./examples/vue) | Vue 3 | `examples/vue/` |
-| [Ejemplo Svelte](./examples/svelte) | Svelte 5 | `examples/svelte/` |
-| [Ejemplo Angular](./examples/angular) | Angular 15+ | `examples/angular/` |
-| [Ejemplo Vanilla JS](./examples/vanilla) | Sin framework | `examples/vanilla/` |
+| [Ejemplo React](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Ejemplo Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+| [Ejemplo Svelte](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
+| [Ejemplo Angular](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Ejemplo Vanilla JS](./examples/with-vanilla) | Sin framework | `examples/with-vanilla/` |
+| [Ejemplo Vanilla JS + SSR](./examples/with-ssr-vanilla) | Sin framework | `examples/with-ssr-vanilla/` |
 
 Cada ejemplo demuestra:
 - Una aplicación **shell (anfitriona)** que inicia el orquestador
