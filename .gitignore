@@ -6,7 +6,6 @@ node_modules/
 dist/
 *.tsbuildinfo
 .superpowers/
-docs/
 # IDE
 .vscode/
 .idea/
