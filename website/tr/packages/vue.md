@@ -35,4 +35,4 @@ Mevcut mikro uygulama bağlamına erişir.
 
 Reaktif olarak abone olur. Bileşen unmount olduğunda otomatik olarak temizlenir.
 
-[Vue Rehberi](/guide/vue) sayfasına bakın.
+[Vue Rehberi](/tr/guide/vue) sayfasına bakın.

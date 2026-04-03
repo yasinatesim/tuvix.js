@@ -84,4 +84,4 @@ function handleAction() {
 </template>
 ```
 
-See the [Vue Guide](/guide/vue) for more details.
+See the [Vue Guide](/es/guide/vue) for more details.

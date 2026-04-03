@@ -76,6 +76,8 @@ npx create-tuvix-app my-vanilla --template vanilla-app
 | `with-react-router` | Router 統合例 |
 | `with-react-sandbox` | Sandbox/CSS 分離例 |
 | `with-module-federation-react` | React による Module Federation |
+| `with-vanilla` | Vanilla JS マイクロフロントエンド例 |
+| `with-ssr-vanilla` | Vanilla JS を使用したサーバーサイドレンダリング |
 | `with-multiple-frameworks` | 複数フレームワーク統合 |
 
 ## サンプルをスキャフォールド

@@ -54,4 +54,4 @@ const router = createRouter({
 });
 ```
 
-İngilizce belgelerin tamamı için bakınız → [Configuration](/guide/configuration)
+İngilizce belgelerin tamamı için bakınız → [Configuration](/tr/guide/configuration)

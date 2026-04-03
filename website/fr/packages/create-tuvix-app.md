@@ -76,6 +76,8 @@ Les applications d'exemple prédéfinies peuvent être créées en utilisant le 
 | `with-react-router` | Exemple d'intégration Router |
 | `with-react-sandbox` | Exemple d'isolation Sandbox/CSS |
 | `with-module-federation-react` | Module Federation avec React |
+| `with-vanilla` | Exemple de microfrontend Vanilla JS |
+| `with-ssr-vanilla` | Rendu côté serveur avec Vanilla JS |
 | `with-multiple-frameworks` | Intégration de plusieurs frameworks |
 
 ## Créer un exemple

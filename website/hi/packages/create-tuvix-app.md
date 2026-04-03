@@ -76,6 +76,8 @@ npx create-tuvix-app my-vanilla --template vanilla-app
 | `with-react-router` | Router एकीकरण उदाहरण |
 | `with-react-sandbox` | Sandbox/CSS अलगाव उदाहरण |
 | `with-module-federation-react` | React के साथ Module Federation |
+| `with-vanilla` | Vanilla JS माइक्रोफ्रंटेंड उदाहरण |
+| `with-ssr-vanilla` | Vanilla JS के साथ सर्वर-साइड रेंडरिंग |
 | `with-multiple-frameworks` | एकाधिक फ्रेमवर्क एकीकरण |
 
 ## एक उदाहरण स्कैफोल्ड करें

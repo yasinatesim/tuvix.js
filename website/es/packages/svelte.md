@@ -62,4 +62,4 @@ export const app = createMicroApp(App);
 </div>
 ```
 
-See the [Svelte Guide](/guide/svelte) for more details.
+See the [Svelte Guide](/es/guide/svelte) for more details.

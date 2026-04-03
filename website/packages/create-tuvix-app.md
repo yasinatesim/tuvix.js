@@ -76,6 +76,8 @@ Pre-built example applications can be scaffolded using the `--example` flag:
 | `with-react-router` | Router integration example |
 | `with-react-sandbox` | Sandbox/CSS isolation example |
 | `with-module-federation-react` | Module Federation with React |
+| `with-vanilla` | Vanilla JS microfrontend example |
+| `with-ssr-vanilla` | Server-side rendering with Vanilla JS |
 | `with-multiple-frameworks` | Multiple frameworks integration |
 
 ## Scaffold an Example

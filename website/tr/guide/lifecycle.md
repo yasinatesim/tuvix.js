@@ -26,4 +26,4 @@ Shell yeni props geçirdiğinde çağrılır (isteğe bağlı).
 async update(container: HTMLElement, props?: Record<string, unknown>): Promise<void>
 ```
 
-İngilizce belgeler için → [Lifecycle Hooks](/guide/lifecycle)
+İngilizce belgeler için → [Lifecycle Hooks](/tr/guide/lifecycle)

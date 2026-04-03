@@ -76,6 +76,8 @@ Le applicazioni di esempio precostruite possono essere create utilizzando il fla
 | `with-react-router` | Esempio di integrazione Router |
 | `with-react-sandbox` | Esempio di isolamento Sandbox/CSS |
 | `with-module-federation-react` | Module Federation con React |
+| `with-vanilla` | Esempio di microfrontend Vanilla JS |
+| `with-ssr-vanilla` | Rendering lato server con Vanilla JS |
 | `with-multiple-frameworks` | Integrazione di più framework |
 
 ## Crea un esempio

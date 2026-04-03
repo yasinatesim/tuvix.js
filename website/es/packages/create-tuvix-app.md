@@ -76,6 +76,8 @@ Las aplicaciones de ejemplo preconstruidas se pueden crear usando la bandera `--
 | `with-react-router` | Ejemplo de integración Router |
 | `with-react-sandbox` | Ejemplo de aislamiento Sandbox/CSS |
 | `with-module-federation-react` | Module Federation con React |
+| `with-vanilla` | Ejemplo de microfrontend Vanilla JS |
+| `with-ssr-vanilla` | Renderizado del lado del servidor con Vanilla JS |
 | `with-multiple-frameworks` | Integración de múltiples frameworks |
 
 ## Crear un Ejemplo

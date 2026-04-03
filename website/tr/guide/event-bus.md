@@ -17,4 +17,4 @@ const abonelikten_cik = eventBus.on('kullanici:giris', ({ kullaniciId }) => {
 abonelikten_cik();
 ```
 
-İngilizce belgeler için → [Event Bus](/guide/event-bus)
+İngilizce belgeler için → [Event Bus](/tr/guide/event-bus)

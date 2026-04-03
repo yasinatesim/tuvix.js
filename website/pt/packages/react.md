@@ -113,4 +113,4 @@ import { App } from './App';
 export const app = createMicroApp(App);
 ```
 
-See the [React Guide](/guide/react) for more details.
+See the [React Guide](/pt/guide/react) for more details.

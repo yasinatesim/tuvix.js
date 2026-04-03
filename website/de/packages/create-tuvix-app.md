@@ -76,6 +76,8 @@ Vordefinierte Beispielanwendungen können mit der Flag `--example` erstellt werd
 | `with-react-router` | Router-Integrationsbeispiel |
 | `with-react-sandbox` | Sandbox/CSS-Isolationsbeispiel |
 | `with-module-federation-react` | Module Federation mit React |
+| `with-vanilla` | Vanilla JS-Mikro-Frontend-Beispiel |
+| `with-ssr-vanilla` | Server-seitiges Rendering mit Vanilla JS |
 | `with-multiple-frameworks` | Integration mehrerer Frameworks |
 
 ## Ein Beispiel erstellen

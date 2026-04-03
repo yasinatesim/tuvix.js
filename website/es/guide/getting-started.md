@@ -59,4 +59,4 @@ export const app: MicroApp = {
 };
 ```
 
-Para documentación completa → [Getting Started](/guide/getting-started)
+Para documentación completa → [Getting Started](/es/guide/getting-started)

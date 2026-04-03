@@ -76,6 +76,8 @@ npx create-tuvix-app my-vanilla --template vanilla-app
 | `with-react-router` | Router 集成示例 |
 | `with-react-sandbox` | Sandbox/CSS 隔离示例 |
 | `with-module-federation-react` | React 的 Module Federation |
+| `with-vanilla` | Vanilla JS 微前端示例 |
+| `with-ssr-vanilla` | Vanilla JS 服务器端渲染 |
 | `with-multiple-frameworks` | 多框架集成 |
 
 ## 构建示例

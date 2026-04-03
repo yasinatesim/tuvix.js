@@ -76,6 +76,8 @@ Aplicações de exemplo pré-construídas podem ser criadas usando a flag `--exa
 | `with-react-router` | Exemplo de integração Router |
 | `with-react-sandbox` | Exemplo de isolamento Sandbox/CSS |
 | `with-module-federation-react` | Module Federation com React |
+| `with-vanilla` | Exemplo de microfrontend Vanilla JS |
+| `with-ssr-vanilla` | Renderização do lado do servidor com Vanilla JS |
 | `with-multiple-frameworks` | Integração de múltiplos frameworks |
 
 ## Criar um exemplo

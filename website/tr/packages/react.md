@@ -37,4 +37,4 @@ Mevcut mikro uygulama bağlamına erişir.
 
 Event bus olaylarına otomatik temizleme ile abone olur.
 
-[React Rehberi](/guide/react) sayfasına bakın.
+[React Rehberi](/tr/guide/react) sayfasına bakın.

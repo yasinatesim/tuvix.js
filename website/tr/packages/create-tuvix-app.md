@@ -61,6 +61,8 @@ npx create-tuvix-app my-vanilla --template vanilla-app
 | `with-react-router` | Router entegrasyonu örneği |
 | `with-react-sandbox` | Sandbox/CSS izolasyonu örneği |
 | `with-module-federation-react` | React ile Module Federation |
+| `with-vanilla` | Vanilla JS mikrofrontend örneği |
+| `with-ssr-vanilla` | Vanilla JS ile sunucu tarafı oluşturma |
 | `with-multiple-frameworks` | Çoklu framework entegrasyonu |
 
 ## Örnek Oluşturma
