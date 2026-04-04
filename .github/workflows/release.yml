@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [master]
 
 concurrency:
@@ -9,6 +11,8 @@ concurrency:
 
 jobs:
   release:
+    # Only run if CI passed — never publish broken code
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
