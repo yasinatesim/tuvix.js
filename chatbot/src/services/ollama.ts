@@ -23,7 +23,9 @@ export function createOllamaClient(baseUrl: string, embedModel: string): OllamaC
       }
 
       const data = await res.json();
-      return data.embeddings[0];
+      const embedding = data.embeddings?.[0];
+      if (!embedding) throw new Error('Ollama embed: unexpected response shape');
+      return embedding;
     },
 
     async *chat(model: string, messages: ChatMessage[]): AsyncGenerator<string> {
@@ -37,7 +39,8 @@ export function createOllamaClient(baseUrl: string, embedModel: string): OllamaC
         throw new Error(`Ollama chat failed (${res.status}): ${await res.text()}`);
       }
 
-      const reader = res.body!.getReader();
+      if (!res.body) throw new Error('Ollama chat: response body is null');
+      const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
 
@@ -63,7 +66,6 @@ export function createOllamaClient(baseUrl: string, embedModel: string): OllamaC
     async isModelAvailable(model: string): Promise<boolean> {
       const res = await fetch(`${baseUrl}/api/tags`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
       });
 
       if (!res.ok) return false;
