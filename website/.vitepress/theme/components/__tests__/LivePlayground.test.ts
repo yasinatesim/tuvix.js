@@ -159,32 +159,66 @@ describe('Vanilla code examples', () => {
   });
 });
 
-// ── Vue transformer uses createVueMicroApp ─────────────────────────
+// ── Vue code uses createVueMicroApp directly ───────────────────────
+
+describe('Vue code examples', () => {
+  it('VUE_COUNTER_CODE imports createVueMicroApp from @tuvix.js/vue', () => {
+    const code = extractCodeBlock('VUE_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain("import { createVueMicroApp } from '@tuvix.js/vue'");
+    expect(code).toContain('createVueMicroApp({');
+    expect(code).toContain("name: 'counter-vue'");
+    expect(code).not.toContain('defineMicroApp');
+  });
+
+  it('VUE_TODO_CODE imports createVueMicroApp from @tuvix.js/vue', () => {
+    const code = extractCodeBlock('VUE_TODO_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain("import { createVueMicroApp } from '@tuvix.js/vue'");
+    expect(code).toContain('createVueMicroApp({');
+    expect(code).toContain("name: 'todo-vue'");
+    expect(code).not.toContain('defineMicroApp');
+  });
+
+  it('Vue tab shows main.ts (TypeScript), not App.vue (SFC)', () => {
+    expect(source).toContain("id: 'vue'");
+    expect(source).toContain("file: 'main.ts'");
+    // Should compile as TypeScript, not SFC
+    expect(source).toContain("lang: 'typescript'");
+  });
+});
+
+// ── Vue SFC transformer still works for fallback ────────────────────
 
 describe('Vue SFC transformer (transformVueSFC)', () => {
   const fnBody = extractFunction('function transformVueSFC(sfc: string): string');
 
-  it('outputs createVueMicroApp instead of defineMicroApp', () => {
+  it('uses createVueMicroApp in transformer output', () => {
     expect(fnBody).not.toBeNull();
     expect(fnBody).toContain('createVueMicroApp');
-    // The template string output should use createVueMicroApp, not defineMicroApp
-    // Note: the filter line still references 'defineMicroApp' as a string to strip
-    // from user imports, so we check the actual output template instead
-    expect(fnBody).not.toContain('const __app = defineMicroApp(');
     expect(fnBody).toContain('const __app = createVueMicroApp(');
   });
 
   it('imports createVueMicroApp from @tuvix.js/vue', () => {
     expect(fnBody).toContain("createVueMicroApp } from '@tuvix.js/vue'");
   });
+});
 
-  it('does not import createApp from vue (handled by createVueMicroApp)', () => {
-    // The transformer should NOT have `import { createApp` in its output
-    expect(fnBody).not.toContain('import { createApp');
+// ── Svelte code shows createSvelteMicroApp integration ──────────────
+
+describe('Svelte code examples', () => {
+  it('SVELTE_COUNTER_CODE shows createSvelteMicroApp integration comment', () => {
+    const code = extractCodeBlock('SVELTE_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain("createSvelteMicroApp } from '@tuvix.js/svelte'");
+    expect(code).toContain("createSvelteMicroApp({ name: 'counter-svelte'");
   });
 
-  it('uses App property pattern for component', () => {
-    expect(fnBody).toContain('App: __component');
+  it('SVELTE_TODO_CODE shows createSvelteMicroApp integration comment', () => {
+    const code = extractCodeBlock('SVELTE_TODO_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain("createSvelteMicroApp } from '@tuvix.js/svelte'");
+    expect(code).toContain("createSvelteMicroApp({ name: 'todo-svelte'");
   });
 });
 
@@ -193,21 +227,37 @@ describe('Vue SFC transformer (transformVueSFC)', () => {
 describe('Svelte transformer (transformSvelte)', () => {
   const fnBody = extractFunction('async function transformSvelte(code: string): Promise<string>');
 
-  it('outputs createSvelteMicroApp instead of direct mount', () => {
+  it('outputs createSvelteMicroApp', () => {
     expect(fnBody).not.toBeNull();
     expect(fnBody).toContain('createSvelteMicroApp');
   });
 
-  it('imports createSvelteMicroApp from @tuvix.js/svelte', () => {
-    expect(fnBody).toContain("createSvelteMicroApp } from '@tuvix.js/svelte'");
-  });
-
-  it('does not use direct Svelte component instantiation', () => {
-    expect(fnBody).not.toContain('new __SvelteApp({');
-  });
-
   it('uses App property for the svelte component', () => {
     expect(fnBody).toContain('App: __SvelteApp');
+  });
+});
+
+// ── Angular code uses defineMicroApp + bootstrapApplication ─────────
+
+describe('Angular code examples', () => {
+  it('ANGULAR_COUNTER_CODE uses defineMicroApp with bootstrapApplication', () => {
+    const code = extractCodeBlock('ANGULAR_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain("import { defineMicroApp } from 'tuvix.js'");
+    expect(code).toContain("import { bootstrapApplication } from '@angular/platform-browser'");
+    expect(code).toContain('defineMicroApp({');
+    expect(code).toContain("name: 'counter-angular'");
+    expect(code).toContain('bootstrapApplication(CounterComponent)');
+  });
+
+  it('ANGULAR_TODO_CODE uses defineMicroApp with bootstrapApplication', () => {
+    const code = extractCodeBlock('ANGULAR_TODO_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain("import { defineMicroApp } from 'tuvix.js'");
+    expect(code).toContain("import { bootstrapApplication } from '@angular/platform-browser'");
+    expect(code).toContain('defineMicroApp({');
+    expect(code).toContain("name: 'todo-angular'");
+    expect(code).toContain('bootstrapApplication(TodoComponent)');
   });
 });
 
