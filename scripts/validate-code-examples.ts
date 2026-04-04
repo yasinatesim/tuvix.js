@@ -180,32 +180,35 @@ function collectMarkdownFiles(dir: string, results: string[]): void {
 export function findMarkdownFiles(): string[] {
   const files: string[] = [];
 
-  // Root README.md
-  const rootReadme = path.join(ROOT, 'README.md');
-  if (fs.existsSync(rootReadme)) {
-    files.push(rootReadme);
-  }
-
-  // Package README.md files
-  const packageDirs = fs.readdirSync(PACKAGES_DIR, { withFileTypes: true });
-  for (const entry of packageDirs) {
-    if (!entry.isDirectory()) continue;
-    const readme = path.join(PACKAGES_DIR, entry.name, 'README.md');
-    if (fs.existsSync(readme)) {
-      files.push(readme);
+  // All root-level *.md files (README.md, README.*.md, CONTRIBUTING.md, etc.)
+  const rootEntries = fs.readdirSync(ROOT, { withFileTypes: true });
+  for (const entry of rootEntries) {
+    if (!entry.isDirectory() && entry.name.endsWith('.md')) {
+      files.push(path.join(ROOT, entry.name));
     }
   }
 
-  // Website docs (recursive)
+  // packages/**/*.md (recursive — covers README + any other docs)
+  if (fs.existsSync(PACKAGES_DIR)) {
+    collectMarkdownFiles(PACKAGES_DIR, files);
+  }
+
+  // website/**/*.md (recursive)
   const websiteDir = path.join(ROOT, 'website');
   if (fs.existsSync(websiteDir)) {
     collectMarkdownFiles(websiteDir, files);
   }
 
-  // Docs directory
+  // docs/**/*.md (recursive)
   const docsDir = path.join(ROOT, 'docs');
   if (fs.existsSync(docsDir)) {
     collectMarkdownFiles(docsDir, files);
+  }
+
+  // examples/**/*.md (recursive)
+  const examplesDir = path.join(ROOT, 'examples');
+  if (fs.existsSync(examplesDir)) {
+    collectMarkdownFiles(examplesDir, files);
   }
 
   return files;
