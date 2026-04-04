@@ -1,37 +1,45 @@
 import { createProject } from './create-project';
+import { runPrompts } from './prompts';
+import { detectPackageManager } from './detect-pm';
+import { installDependencies } from './install';
+import * as path from 'path';
 
 const HELP = `
   create-tuvix-app — Scaffold a Tuvix.js project
 
   Usage:
-    npx create-tuvix-app <project-name> [options]
+    npx create-tuvix-app [project-name] [options]
 
   Options:
-    --template <name>    Template to use: shell, react-app, vue-app, vanilla-app (default: shell)
-    --example <name>     Example a fully scaffolded example (e.g., with-react)
-    --typescript         Use TypeScript (default: true)
+    --template <name>    Template: shell, react-app, vue-app, svelte-app, angular-app, vanilla-app
+    --example <name>     Download a fully scaffolded example (e.g., with-react)
+    --typescript         Use TypeScript
+    --no-typescript      Use JavaScript
     --help               Show this help message
     --version            Show version
 
   Examples:
-    npx create-tuvix-app my-shell
-    npx create-tuvix-app my-dashboard --template react-app
+    npx create-tuvix-app
+    npx create-tuvix-app my-app
+    npx create-tuvix-app my-app --template react-app --typescript
     npx create-tuvix-app my-app --example with-react
 `;
 
-function parseArgs(argv: string[]): {
-  projectName: string;
-  template: string;
+interface ParsedArgs {
+  projectName: string | undefined;
+  template: string | undefined;
+  typescript: boolean | undefined;
   example: string | null;
-  typescript: boolean;
   help: boolean;
   version: boolean;
-} {
+}
+
+export function parseArgs(argv: string[]): ParsedArgs {
   const args = argv.slice(2);
-  let projectName = '';
-  let template = 'shell';
+  let projectName: string | undefined;
+  let template: string | undefined;
   let example: string | null = null;
-  let typescript = true;
+  let typescript: boolean | undefined;
   let help = false;
   let version = false;
 
@@ -43,9 +51,11 @@ function parseArgs(argv: string[]): {
     } else if (arg === '--version' || arg === '-v') {
       version = true;
     } else if (arg === '--template' || arg === '-t') {
-      template = args[++i] ?? 'shell';
+      template = args[++i];
     } else if (arg === '--example' || arg === '-e') {
       example = args[++i] ?? null;
+    } else if (arg === '--typescript') {
+      typescript = true;
     } else if (arg === '--no-typescript') {
       typescript = false;
     } else if (!arg.startsWith('-')) {
@@ -53,57 +63,75 @@ function parseArgs(argv: string[]): {
     }
   }
 
-  return { projectName, template, example, typescript, help, version };
+  return { projectName, template, typescript, example, help, version };
 }
 
 async function main(): Promise<void> {
-  const { projectName, template, example, typescript, help, version } =
-    parseArgs(process.argv);
+  const parsed = parseArgs(process.argv);
 
-  if (help) {
+  if (parsed.help) {
     console.log(HELP);
     process.exit(0);
   }
 
-  if (version) {
+  if (parsed.version) {
     console.log('create-tuvix-app v0.1.0');
     process.exit(0);
   }
 
-  if (!projectName) {
-    console.error('Error: Project name is required.\n');
-    console.log(HELP);
-    process.exit(1);
+  // --example skips prompts entirely
+  if (parsed.example) {
+    const projectName = parsed.projectName ?? 'my-app';
+    console.log(`\n  Creating Tuvix.js project: ${projectName}`);
+    console.log(`  Example: ${parsed.example}\n`);
+    try {
+      await createProject({
+        name: projectName,
+        template: 'shell',
+        typescript: true,
+        example: parsed.example,
+      });
+      const pm = detectPackageManager();
+      console.log(`\n  Project "${projectName}" created successfully!\n`);
+      console.log('  Next steps:');
+      console.log(`    cd ${projectName}`);
+      console.log(`    ${pm} install`);
+      console.log(`    ${pm} run dev\n`);
+    } catch (error) {
+      console.error('\n  Error:', error instanceof Error ? error.message : error);
+      process.exit(1);
+    }
+    return;
   }
 
-  console.log(`\n  ⬡ Creating Tuvix.js project: ${projectName}`);
-  if (example) {
-    console.log(`    Example: ${example}\n`);
-  } else {
-    console.log(`    Template: ${template}`);
-    console.log(`    TypeScript: ${typescript}\n`);
-  }
+  // Run interactive prompts for any unspecified values
+  const resolved = await runPrompts({
+    projectName: parsed.projectName,
+    template: parsed.template,
+    typescript: parsed.typescript,
+  });
+
+  const pm = detectPackageManager();
+  const targetDir = path.resolve(process.cwd(), resolved.projectName);
 
   try {
     await createProject({
-      name: projectName,
-      template,
-      example,
-      typescript,
+      name: resolved.projectName,
+      template: resolved.template,
+      typescript: resolved.typescript,
     });
-
-    console.log(`\n  ✅ Project "${projectName}" created successfully!\n`);
-    console.log('  Next steps:');
-    console.log(`    cd ${projectName}`);
-    console.log('    npm install');
-    console.log('    npm run dev\n');
+    await installDependencies(targetDir, pm);
   } catch (error) {
-    console.error(
-      '\n  ❌ Error:',
-      error instanceof Error ? error.message : error
-    );
+    console.error('\n  Error:', error instanceof Error ? error.message : error);
     process.exit(1);
   }
+
+  console.log(`\n  ${resolved.projectName} is ready!\n`);
+  console.log('  Next steps:');
+  console.log(`    cd ${resolved.projectName}`);
+  console.log(`    ${pm} run dev\n`);
 }
 
-main();
+if (!process.env.VITEST) {
+  main();
+}
