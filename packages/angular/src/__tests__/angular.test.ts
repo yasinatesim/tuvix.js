@@ -201,7 +201,9 @@ describe('createAngularMicroApp', () => {
       await module.update({ props: { theme: 'dark' } });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((window as any).__TUVIX_ANGULAR_PROPS__['update-props-test']).toEqual({
+      expect(
+        (window as any).__TUVIX_ANGULAR_PROPS__['update-props-test']
+      ).toEqual({
         theme: 'dark',
       });
     });
@@ -227,9 +229,7 @@ describe('createAngularMicroApp', () => {
         platform: mockPlatformBrowserDynamic,
       });
 
-      await expect(
-        module.update({ props: { x: 1 } })
-      ).resolves.toBeUndefined();
+      await expect(module.update({ props: { x: 1 } })).resolves.toBeUndefined();
     });
 
     it('should not write to __TUVIX_ANGULAR_PROPS__ when appRef is null (before mount)', async () => {
@@ -244,7 +244,9 @@ describe('createAngularMicroApp', () => {
       await module.update({ props: { x: 1 } });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((window as any).__TUVIX_ANGULAR_PROPS__['update-null-appref-test']).toBeUndefined();
+      expect(
+        (window as any).__TUVIX_ANGULAR_PROPS__['update-null-appref-test']
+      ).toBeUndefined();
     });
   });
 });
@@ -307,4 +309,3 @@ describe('renderAngularToString', () => {
     expect(result).toBe('');
   });
 });
-

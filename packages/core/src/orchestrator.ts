@@ -73,9 +73,7 @@ export class Orchestrator {
     }
 
     if (this.apps.has(appConfig.name)) {
-      throw new Error(
-        `[Tuvix] App "${appConfig.name}" is already registered.`
-      );
+      throw new Error(`[Tuvix] App "${appConfig.name}" is already registered.`);
     }
 
     if (!appConfig.entry) {
@@ -83,9 +81,7 @@ export class Orchestrator {
     }
 
     if (!appConfig.container) {
-      throw new Error(
-        `[Tuvix] App "${appConfig.name}" requires a container.`
-      );
+      throw new Error(`[Tuvix] App "${appConfig.name}" requires a container.`);
     }
 
     const registeredApp: RegisteredApp = {
@@ -436,8 +432,7 @@ export class Orchestrator {
 
       const normalizedPattern = activeWhen.replace(/\/\*$/, '');
       return (
-        path === normalizedPattern ||
-        path.startsWith(normalizedPattern + '/')
+        path === normalizedPattern || path.startsWith(normalizedPattern + '/')
       );
     }
 
@@ -452,9 +447,7 @@ export class Orchestrator {
     if (typeof container === 'string') {
       const element = document.querySelector<HTMLElement>(container);
       if (!element) {
-        throw new Error(
-          `[Tuvix] Container "${container}" not found in DOM.`
-        );
+        throw new Error(`[Tuvix] Container "${container}" not found in DOM.`);
       }
       return element;
     }
@@ -573,10 +566,7 @@ export class Orchestrator {
           // Stop observing — we are about to mount.
           this.viewportObserver?.unobserve(entry.target);
           this.mountApp(name).catch((err) => {
-            console.error(
-              `[Tuvix] Viewport mount failed for "${name}":`,
-              err
-            );
+            console.error(`[Tuvix] Viewport mount failed for "${name}":`, err);
           });
           break;
         }

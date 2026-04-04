@@ -19,31 +19,14 @@ npm install @tuvix.js/loader
 ## Quick Start
 
 ```ts
-import { loadMicroApp } from '@tuvix.js/loader';
+import { createLoader } from '@tuvix.js/loader';
 
-const app = await loadMicroApp('https://cdn.example.com/dashboard.js');
-await app.mount(container, props);
+const loader = createLoader();
+const module = await loader.load('https://cdn.example.com/dashboard.js');
+await module.app.mount(container, props);
 ```
 
 ## API
-
-### `loadMicroApp(entry, options?)`
-
-Load a micro app bundle by URL. Returns the exported `MicroApp` object.
-
-```ts
-interface LoadOptions {
-  timeout?: number;         // ms, default: 30000
-  retries?: number;         // default: 2
-  retryDelay?: number;      // ms between retries, default: 1000
-  cache?: boolean;          // default: true
-}
-
-const app = await loadMicroApp('/my-app.js', {
-  timeout: 10000,
-  retries: 3,
-});
-```
 
 ### `createLoader(options?)`
 
@@ -76,9 +59,12 @@ loader.clear('https://cdn.example.com/my-app.js'); // clear one
 ## Error Handling
 
 ```ts
+import { createLoader } from '@tuvix.js/loader';
+const loader = createLoader({ retries: 2 });
+
 try {
-  const app = await loadMicroApp('/my-app.js', { retries: 2 });
-  await app.mount(container);
+  const result = await loader.load('/my-app.js');
+  await result.app.mount(container);
 } catch (error) {
   if (error.code === 'LOAD_TIMEOUT') {
     // Show timeout message

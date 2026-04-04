@@ -59,9 +59,7 @@ export function parseQuery(queryString: string): Record<string, string> {
   for (const pair of pairs) {
     const [key, value] = pair.split('=');
     if (key) {
-      query[decodeURIComponent(key)] = value
-        ? decodeURIComponent(value)
-        : '';
+      query[decodeURIComponent(key)] = value ? decodeURIComponent(value) : '';
     }
   }
 

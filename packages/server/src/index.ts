@@ -403,8 +403,12 @@ export function compileShellTemplate(template: string): CompiledTemplate {
  * ```
  */
 export function createServerRenderer(config: ServerRendererConfig) {
-  const { shellTemplate, apps, timeout: defaultTimeout = 5000, metrics } =
-    config;
+  const {
+    shellTemplate,
+    apps,
+    timeout: defaultTimeout = 5000,
+    metrics,
+  } = config;
 
   // Pre-compile slot patterns once at init time (not per request).
   const compiled = compileShellTemplate(shellTemplate);
@@ -428,7 +432,11 @@ export function createServerRenderer(config: ServerRendererConfig) {
     const fragments = await Promise.all(
       activeApps.map(async (app) => {
         const fragStart = Date.now();
-        const { html, isError } = await fetchFragment(app, path, defaultTimeout);
+        const { html, isError } = await fetchFragment(
+          app,
+          path,
+          defaultTimeout
+        );
         metrics?.recordFragment(app.name, Date.now() - fragStart, isError);
         return { name: app.name, html };
       })
@@ -503,17 +511,13 @@ export function createStreamingRenderer(config: ServerRendererConfig) {
   const bodyCloseIdx = staticShell.lastIndexOf('</body>');
   const shellHead =
     bodyCloseIdx >= 0 ? staticShell.slice(0, bodyCloseIdx) : staticShell;
-  const shellTail =
-    bodyCloseIdx >= 0 ? staticShell.slice(bodyCloseIdx) : '';
+  const shellTail = bodyCloseIdx >= 0 ? staticShell.slice(bodyCloseIdx) : '';
 
   function matchApps(path: string): ServerAppConfig[] {
     return matchAppsByPath(apps, path);
   }
 
-  async function stream(
-    path: string,
-    res: StreamingResponse
-  ): Promise<void> {
+  async function stream(path: string, res: StreamingResponse): Promise<void> {
     const startTime = Date.now();
     const activeApps = matchApps(path);
 
@@ -531,7 +535,11 @@ export function createStreamingRenderer(config: ServerRendererConfig) {
     await Promise.all(
       activeApps.map(async (app) => {
         const fragStart = Date.now();
-        const { html, isError } = await fetchFragment(app, path, defaultTimeout);
+        const { html, isError } = await fetchFragment(
+          app,
+          path,
+          defaultTimeout
+        );
         // JSON.stringify handles all special characters (quotes, newlines, etc.)
         // safely inside the inline script.
         res.write(

@@ -39,10 +39,6 @@ app.listen(3000);
 - **`compileShellTemplate(template)`** — Pre-compile slot patterns for performance
 - **`createMetricsCollector()`** — Prometheus-compatible metrics collector
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/server)
-
 ## License
 
 MIT

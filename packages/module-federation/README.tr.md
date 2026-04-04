@@ -35,10 +35,6 @@ const app = await loader.loadModule('app1');
 - **`loadRemoteContainer(url)`** — Load a remote container
 - **`createFederatedApp(config)`** — Create a federated micro app
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/module-federation)
-
 ## License
 
 MIT

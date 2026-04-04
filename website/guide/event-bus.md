@@ -5,7 +5,9 @@
 ## Import
 
 ```ts
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
+
+const eventBus = getGlobalBus();
 ```
 
 ## Basic Usage
@@ -42,6 +44,9 @@ declare module '@tuvix.js/event-bus' {
 Now TypeScript will enforce the event name and payload:
 
 ```ts
+import { getGlobalBus } from '@tuvix.js/event-bus';
+const eventBus = getGlobalBus();
+
 // ✅ Correct
 eventBus.emit('user:login', { userId: '42', name: 'Alice' });
 
@@ -59,6 +64,9 @@ eventBus.emit('user:login', { wrong: 'payload' });
 Subscribe to an event only once - handler is automatically removed after the first call:
 
 ```ts
+import { getGlobalBus } from '@tuvix.js/event-bus';
+const eventBus = getGlobalBus();
+
 eventBus.once('user:login', (payload) => {
   // Called once, then removed
   initUserSession(payload.userId);
@@ -70,10 +78,13 @@ eventBus.once('user:login', (payload) => {
 Always unsubscribe in `unmount` to prevent memory leaks:
 
 ```ts
+import { getGlobalBus } from '@tuvix.js/event-bus';
+
 export const app: MicroApp = {
   _subscriptions: [] as (() => void)[],
 
   async mount(container, props) {
+    const eventBus = getGlobalBus();
     this._subscriptions.push(
       eventBus.on('theme:changed', ({ theme }) => applyTheme(theme))
     );

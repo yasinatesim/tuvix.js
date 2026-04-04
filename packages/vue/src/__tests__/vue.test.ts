@@ -60,4 +60,3 @@ describe('renderVueToString', () => {
     expect(result).toBe('');
   });
 });
-

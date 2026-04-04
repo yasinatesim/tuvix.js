@@ -28,10 +28,6 @@ Options:
 - **vue-app** — Vue micro app
 - **vanilla-app** — Vanilla JS micro app
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/create-tuvix-app)
-
 ## License
 
 MIT

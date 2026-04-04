@@ -28,10 +28,6 @@ export const app = createVueMicroApp({
 - **`useTuvixBus(event, handler)`** — Composable for event bus with auto-cleanup on unmount
 - **`useTuvixProps()`** — Composable for reactive orchestrator props (ShallowRef)
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/vue)
-
 ## License
 
 MIT

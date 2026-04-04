@@ -1,4 +1,9 @@
-import type { SandboxOptions, ISandbox, ICssSandbox, IJsSandbox } from './types';
+import type {
+  SandboxOptions,
+  ISandbox,
+  ICssSandbox,
+  IJsSandbox,
+} from './types';
 import { CssSandbox } from './css-sandbox';
 import { JsSandbox } from './js-sandbox';
 

@@ -133,9 +133,7 @@ export class EventBus implements IEventBus {
     const handlers = this.handlers.get(event);
     if (handlers) {
       handlers.delete(handler as EventHandler);
-      this.log(
-        `Listener removed for "${event}" (remaining: ${handlers.size})`
-      );
+      this.log(`Listener removed for "${event}" (remaining: ${handlers.size})`);
 
       if (handlers.size === 0) {
         this.handlers.delete(event);

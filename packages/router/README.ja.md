@@ -38,10 +38,6 @@ router.start();
 - **`parseQuery(queryString)`** — Parse URL query parameters
 - **`normalizePath(path)`** — Normalize a URL path
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/router)
-
 ## License
 
 MIT

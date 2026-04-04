@@ -1,6 +1,11 @@
 import type { ComponentType, ReactElement } from 'react';
 import { createElement, useEffect, useRef, useState } from 'react';
-import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
+import type {
+  MicroAppModule,
+  MountContext,
+  UnmountContext,
+  UpdateContext,
+} from '@tuvix.js/loader';
 import type { IEventBus, EventHandler, Unsubscribe } from '@tuvix.js/event-bus';
 
 // ─── Types ──────────────────────────────────────────
@@ -46,8 +51,11 @@ export interface ReactMicroAppConfig {
  * export default createReactMicroApp({ name: 'dashboard', App, ssr: true });
  * ```
  */
-export function createReactMicroApp(config: ReactMicroAppConfig): MicroAppModule {
-  let root: ReturnType<typeof import('react-dom/client').createRoot> | null = null;
+export function createReactMicroApp(
+  config: ReactMicroAppConfig
+): MicroAppModule {
+  let root: ReturnType<typeof import('react-dom/client').createRoot> | null =
+    null;
 
   const module: MicroAppModule = {
     async bootstrap() {
@@ -107,7 +115,9 @@ export function createReactMicroApp(config: ReactMicroAppConfig): MicroAppModule
  * export default createSsrReactMicroApp({ name: 'github-app', App });
  * ```
  */
-export function createSsrReactMicroApp(config: Omit<ReactMicroAppConfig, 'ssr'>): MicroAppModule {
+export function createSsrReactMicroApp(
+  config: Omit<ReactMicroAppConfig, 'ssr'>
+): MicroAppModule {
   return createReactMicroApp({ ...config, ssr: true });
 }
 
@@ -148,12 +158,12 @@ export function TuvixReactApp<P extends Record<string, unknown>>({
   name: string;
   /** React component to render */
   App: ComponentType<P>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } & P): ReactElement<any> {
   return createElement(
     'div',
     { 'data-tuvix-app': name },
-    createElement(App, props as unknown as P),
+    createElement(App, props as unknown as P)
   );
 }
 

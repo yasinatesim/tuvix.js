@@ -108,10 +108,7 @@ export class JsSandbox implements IJsSandbox {
     this.strict = strict;
     this.addedProperties = new Set();
 
-    this.allowedGlobals = new Set([
-      ...ALWAYS_ALLOWED,
-      ...allowedGlobals,
-    ]);
+    this.allowedGlobals = new Set([...ALWAYS_ALLOWED, ...allowedGlobals]);
 
     this._proxyWindow = this.createProxy();
   }
@@ -209,15 +206,10 @@ export class JsSandbox implements IJsSandbox {
       },
 
       has(_target: Window, prop: PropertyKey): boolean {
-        return (
-          sandbox.fakeWindow.has(prop) || Reflect.has(rawWindow, prop)
-        );
+        return sandbox.fakeWindow.has(prop) || Reflect.has(rawWindow, prop);
       },
 
-      deleteProperty(
-        _target: Window,
-        prop: PropertyKey
-      ): boolean {
+      deleteProperty(_target: Window, prop: PropertyKey): boolean {
         if (sandbox.fakeWindow.has(prop)) {
           sandbox.fakeWindow.delete(prop);
           sandbox.addedProperties.delete(prop);

@@ -43,10 +43,6 @@ Creates a Tuvix micro app module from an Angular NgModule.
 
 > **Note:** The `platform` parameter is required to ensure the correct Angular version is used. Always pass the `platformBrowserDynamic` function from your application's `@angular/platform-browser-dynamic` package.
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/angular)
-
 ## License
 
 MIT

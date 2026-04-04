@@ -8,17 +8,17 @@
 npm install @tuvix.js/vue vue
 ```
 
-## createMicroApp
+## createVueMicroApp
 
 ```ts
 // src/main.ts
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import App from './App.vue';
 
-export const app = createMicroApp(App);
+export const app = createVueMicroApp(App);
 ```
 
-`createMicroApp` creates a Vue app instance, passes shell props as component props, and destroys the instance on unmount.
+`createVueMicroApp` creates a Vue app instance, passes shell props as component props, and destroys the instance on unmount.
 
 ## Props
 
@@ -36,28 +36,20 @@ defineProps<{
 </template>
 ```
 
-## useMicroApp Composable
-
-```vue
-<script setup lang="ts">
-import { useMicroApp } from '@tuvix.js/vue';
-
-const { props, name } = useMicroApp();
-</script>
-```
-
-## useTuvixEvent Composable
+## useTuvixBus Composable
 
 Subscribe to event bus events with automatic cleanup on component unmount:
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTuvixEvent } from '@tuvix.js/vue';
+import { useTuvixBus } from '@tuvix.js/vue';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 const count = ref(0);
+const bus = getGlobalBus();
 
-useTuvixEvent('cart:updated', ({ itemCount }) => {
+useTuvixBus(bus, 'cart:updated', ({ itemCount }) => {
   count.value = itemCount;
 });
 </script>
@@ -73,12 +65,14 @@ useTuvixEvent('cart:updated', ({ itemCount }) => {
 <!-- src/App.vue -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTuvixEvent } from '@tuvix.js/vue';
+import { useTuvixBus } from '@tuvix.js/vue';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 const props = defineProps<{ apiUrl: string }>();
 const theme = ref<'light' | 'dark'>('dark');
+const bus = getGlobalBus();
 
-useTuvixEvent('theme:changed', ({ theme: t }) => {
+useTuvixBus(bus, 'theme:changed', ({ theme: t }) => {
   theme.value = t;
 });
 </script>
@@ -93,7 +87,7 @@ useTuvixEvent('theme:changed', ({ theme: t }) => {
 
 ```ts
 // src/main.ts
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import App from './App.vue';
-export const app = createMicroApp(App);
+export const app = createVueMicroApp(App);
 ```

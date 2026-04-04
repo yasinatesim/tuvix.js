@@ -31,10 +31,6 @@ sandbox.attach(container);
 - **`JsSandbox`** — JavaScript isolation via Proxy scope
 - **`Sandbox`** — Combined sandbox managing both CSS and JS isolation
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/sandbox)
-
 ## License
 
 MIT

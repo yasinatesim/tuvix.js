@@ -33,10 +33,6 @@ orchestrator.start();
 - **`defineMicroApp(config)`** — Define a micro app configuration
 - **`Orchestrator`** — Core class managing micro app lifecycle (register, mount, unmount, update, start, stop)
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/core)
-
 ## License
 
 MIT

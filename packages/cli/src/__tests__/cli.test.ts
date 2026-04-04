@@ -18,7 +18,11 @@ describe('createProject', () => {
 
   it('should throw for unknown template', async () => {
     await expect(
-      createProject({ name: `.tmp/tuvix-test-unknown`, template: 'invalid', typescript: true })
+      createProject({
+        name: `.tmp/tuvix-test-unknown`,
+        template: 'invalid',
+        typescript: true,
+      })
     ).rejects.toThrow('Unknown template');
   });
 
@@ -39,12 +43,18 @@ describe('createProject', () => {
     const tmpName = `.tmp/tuvix-react-${Date.now()}`;
     const tmpDir = path.resolve(process.cwd(), tmpName);
 
-    await createProject({ name: tmpName, template: 'react-app', typescript: true });
+    await createProject({
+      name: tmpName,
+      template: 'react-app',
+      typescript: true,
+    });
 
     expect(fs.existsSync(path.join(tmpDir, 'src/App.tsx'))).toBe(true);
     expect(fs.existsSync(path.join(tmpDir, 'src/main.tsx'))).toBe(true);
 
-    const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
+    const pkg = JSON.parse(
+      fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
+    );
     expect(pkg.dependencies.react).toBeDefined();
     expect(pkg.dependencies['@tuvix.js/react']).toBeDefined();
 

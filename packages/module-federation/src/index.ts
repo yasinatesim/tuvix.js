@@ -56,7 +56,9 @@ export function createFederatedLoader(config: FederatedLoaderConfig) {
   /**
    * Load a remote container via script tag.
    */
-  async function loadRemoteContainer(remote: RemoteConfig): Promise<WebpackContainer> {
+  async function loadRemoteContainer(
+    remote: RemoteConfig
+  ): Promise<WebpackContainer> {
     const existing = containers.get(remote.name);
     if (existing) return existing;
 
@@ -72,7 +74,9 @@ export function createFederatedLoader(config: FederatedLoaderConfig) {
         }
         script.onload = () => resolve();
         script.onerror = () =>
-          reject(new Error(`[Tuvix MF] Failed to load remote entry: ${remote.url}`));
+          reject(
+            new Error(`[Tuvix MF] Failed to load remote entry: ${remote.url}`)
+          );
         document.head.appendChild(script);
       });
       loadedScripts.add(remote.url);
@@ -106,7 +110,10 @@ export function createFederatedLoader(config: FederatedLoaderConfig) {
   /**
    * Load a specific module from a remote container.
    */
-  async function loadModule(remoteName: string, modulePath: string): Promise<unknown> {
+  async function loadModule(
+    remoteName: string,
+    modulePath: string
+  ): Promise<unknown> {
     const remote = config.remotes.find((r) => r.name === remoteName);
     if (!remote) {
       throw new Error(
@@ -151,7 +158,10 @@ export function createFederatedLoader(config: FederatedLoaderConfig) {
     remoteName: string,
     modulePath = './App'
   ): Promise<MicroAppModule> {
-    const appModule = (await loadModule(remoteName, modulePath)) as MicroAppModule;
+    const appModule = (await loadModule(
+      remoteName,
+      modulePath
+    )) as MicroAppModule;
 
     if (!appModule || typeof appModule.mount !== 'function') {
       throw new Error(

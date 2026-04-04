@@ -31,13 +31,10 @@ describe('composeHTML', () => {
   });
 
   it('should leave unmatched slots unchanged', () => {
-    const template =
-      '<div><tuvix-slot name="missing"></tuvix-slot></div>';
+    const template = '<div><tuvix-slot name="missing"></tuvix-slot></div>';
     const result = composeHTML(template, {});
 
-    expect(result).toBe(
-      '<div><tuvix-slot name="missing"></tuvix-slot></div>'
-    );
+    expect(result).toBe('<div><tuvix-slot name="missing"></tuvix-slot></div>');
   });
 });
 
@@ -47,7 +44,10 @@ describe('compileShellTemplate', () => {
   it('returns the same output as composeHTML', () => {
     const template =
       '<html><body><tuvix-slot name="header"></tuvix-slot><tuvix-slot name="main"></tuvix-slot></body></html>';
-    const slots = { header: '<nav>Nav</nav>', main: '<article>Content</article>' };
+    const slots = {
+      header: '<nav>Nav</nav>',
+      main: '<article>Content</article>',
+    };
 
     const compiled = compileShellTemplate(template);
     expect(compiled.render(slots)).toBe(composeHTML(template, slots));
@@ -99,7 +99,7 @@ describe('createServerRenderer', () => {
       shellTemplate: shell,
       apps: [
         { name: 'header', ssrUrl: 'http://header/render', routes: ['/*'] },
-        { name: 'main',   ssrUrl: 'http://main/render',   routes: ['/*'] },
+        { name: 'main', ssrUrl: 'http://main/render', routes: ['/*'] },
       ],
     });
 
@@ -115,12 +115,17 @@ describe('createServerRenderer', () => {
   it('records metrics when a metrics collector is provided', async () => {
     global.fetch = vi
       .fn()
-      .mockResolvedValue({ ok: true, text: async () => '<nav>Nav</nav>' }) as unknown as typeof fetch;
+      .mockResolvedValue({
+        ok: true,
+        text: async () => '<nav>Nav</nav>',
+      }) as unknown as typeof fetch;
 
     const metrics = createMetricsCollector();
     const renderer = createServerRenderer({
       shellTemplate: shell,
-      apps: [{ name: 'header', ssrUrl: 'http://header/render', routes: ['/*'] }],
+      apps: [
+        { name: 'header', ssrUrl: 'http://header/render', routes: ['/*'] },
+      ],
       metrics,
     });
 
@@ -137,8 +142,12 @@ describe('createServerRenderer', () => {
     const renderer = createServerRenderer({
       shellTemplate: shell,
       apps: [
-        { name: 'dashboard', ssrUrl: 'http://dash/render', routes: ['/dashboard/*'] },
-        { name: 'home',      ssrUrl: 'http://home/render', routes: ['/home/*'] },
+        {
+          name: 'dashboard',
+          ssrUrl: 'http://dash/render',
+          routes: ['/dashboard/*'],
+        },
+        { name: 'home', ssrUrl: 'http://home/render', routes: ['/home/*'] },
       ],
     });
 
@@ -159,17 +168,32 @@ describe('createStreamingRenderer', () => {
     let ended = false;
     const headers: Record<string, string> = {};
     return {
-      write: vi.fn((chunk: string) => { chunks.push(chunk); }),
-      end: vi.fn(() => { ended = true; }),
-      setHeader: vi.fn((name: string, value: string) => { headers[name] = value; }),
-      get chunks() { return chunks; },
-      get ended() { return ended; },
-      get headers() { return headers; },
+      write: vi.fn((chunk: string) => {
+        chunks.push(chunk);
+      }),
+      end: vi.fn(() => {
+        ended = true;
+      }),
+      setHeader: vi.fn((name: string, value: string) => {
+        headers[name] = value;
+      }),
+      get chunks() {
+        return chunks;
+      },
+      get ended() {
+        return ended;
+      },
+      get headers() {
+        return headers;
+      },
     };
   }
 
   it('sends the shell immediately before fragment scripts', async () => {
-    const renderer = createStreamingRenderer({ shellTemplate: shell, apps: [] });
+    const renderer = createStreamingRenderer({
+      shellTemplate: shell,
+      apps: [],
+    });
     const res = makeRes();
 
     await renderer.stream('/', res);
@@ -181,7 +205,10 @@ describe('createStreamingRenderer', () => {
   });
 
   it('sets chunked transfer encoding header', async () => {
-    const renderer = createStreamingRenderer({ shellTemplate: shell, apps: [] });
+    const renderer = createStreamingRenderer({
+      shellTemplate: shell,
+      apps: [],
+    });
     const res = makeRes();
 
     await renderer.stream('/', res);
@@ -200,7 +227,7 @@ describe('createStreamingRenderer', () => {
     const renderer = createStreamingRenderer({
       shellTemplate: shell,
       apps: [
-        { name: 'left',  ssrUrl: 'http://left/render',  routes: ['/*'] },
+        { name: 'left', ssrUrl: 'http://left/render', routes: ['/*'] },
         { name: 'right', ssrUrl: 'http://right/render', routes: ['/*'] },
       ],
     });
@@ -222,7 +249,10 @@ describe('createStreamingRenderer', () => {
   });
 
   it('includes fallback content in placeholder divs', async () => {
-    const renderer = createStreamingRenderer({ shellTemplate: shell, apps: [] });
+    const renderer = createStreamingRenderer({
+      shellTemplate: shell,
+      apps: [],
+    });
     const res = makeRes();
 
     await renderer.stream('/', res);

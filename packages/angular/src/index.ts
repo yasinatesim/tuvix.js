@@ -1,4 +1,9 @@
-import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
+import type {
+  MicroAppModule,
+  MountContext,
+  UnmountContext,
+  UpdateContext,
+} from '@tuvix.js/loader';
 
 // ─── Types ──────────────────────────────────────────
 
@@ -93,7 +98,9 @@ export interface AngularSsrMicroAppConfig {
  * });
  * ```
  */
-export function createAngularMicroApp(config: AngularMicroAppConfig): MicroAppModule {
+export function createAngularMicroApp(
+  config: AngularMicroAppConfig
+): MicroAppModule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let appRef: any = null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -175,7 +182,9 @@ export function createAngularMicroApp(config: AngularMicroAppConfig): MicroAppMo
  * });
  * ```
  */
-export function createSsrAngularMicroApp(config: AngularSsrMicroAppConfig): MicroAppModule {
+export function createSsrAngularMicroApp(
+  config: AngularSsrMicroAppConfig
+): MicroAppModule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let appRef: any = null;
 
@@ -187,8 +196,10 @@ export function createSsrAngularMicroApp(config: AngularSsrMicroAppConfig): Micr
     },
 
     async mount({ container }: MountContext) {
-      const { bootstrapApplication } = await import('@angular/platform-browser');
-      const { provideClientHydration } = await import('@angular/platform-browser');
+      const { bootstrapApplication } =
+        await import('@angular/platform-browser');
+      const { provideClientHydration } =
+        await import('@angular/platform-browser');
 
       const selector = config.selector ?? 'app-root';
 
@@ -199,13 +210,12 @@ export function createSsrAngularMicroApp(config: AngularSsrMicroAppConfig): Micr
         container.appendChild(appRoot);
       }
 
-      const providers = [
-        provideClientHydration(),
-        ...(config.providers ?? []),
-      ];
+      const providers = [provideClientHydration(), ...(config.providers ?? [])];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      appRef = await bootstrapApplication(config.component as any, { providers });
+      appRef = await bootstrapApplication(config.component as any, {
+        providers,
+      });
     },
 
     async unmount({ container }: UnmountContext) {

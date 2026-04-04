@@ -26,10 +26,6 @@ export const app = createSvelteMicroApp({
 
 - **`createSvelteMicroApp(config)`** — Wrap a Svelte component as a Tuvix micro app with reactive lifecycle integration
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/svelte)
-
 ## License
 
 MIT
