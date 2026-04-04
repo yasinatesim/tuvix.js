@@ -11,6 +11,6 @@ test.describe('with-react example', () => {
   test('displays navigation links', async ({ page, consoleErrors }) => {
     await page.goto('/');
 
-    await expect(page.locator('nav a')).toHaveCount(2);
+    await expect(page.locator('[data-testid="shell-nav"] a')).toHaveCount(2);
   });
 });
