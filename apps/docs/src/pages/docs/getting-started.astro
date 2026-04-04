@@ -1,0 +1,33 @@
+---
+import Playground from '../../components/Playground/index.tsx';
+
+const EXAMPLE_CODE = `import { defineMicroApp } from 'tuvix.js';
+
+const app = defineMicroApp({
+  name: 'hello',
+  mount({ container }) {
+    container.innerHTML = '<h1 style="font-family:sans-serif">Hello Tuvix!</h1>';
+  },
+  unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+// Mount manually for the playground
+const container = document.getElementById('app');
+if (container) {
+  app.mount({ container });
+}
+`;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting Started — tuvix.js</title>
+  </head>
+  <body style="margin:0;padding:24px;font-family:sans-serif;background:#f6f8fa">
+    <h1>Getting Started</h1>
+    <p>Edit the code below and see live output on the right:</p>
+    <Playground client:only="react" code={EXAMPLE_CODE} height={450} />
+  </body>
+</html>
