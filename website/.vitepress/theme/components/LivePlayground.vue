@@ -420,7 +420,7 @@ __app.mount({ container: document.getElementById('app')! });
 async function transformSvelte(code: string): Promise<string> {
   // Load Svelte compiler from CDN (lazy, cached after first load)
   const svelte = await import(/* @vite-ignore */ 'https://esm.sh/svelte@4/compiler');
-  const { js } = (svelte as any).compile(code, {
+  const { js } = (svelte as { compile: (code: string, opts: Record<string, unknown>) => { js: { code: string } } }).compile(code, {
     filename: 'App.svelte',
     format: 'esm',
     generate: 'client',
@@ -523,7 +523,7 @@ onMounted(async () => {
   esbuild = eb;
 
   // Setup Monaco environment for workers
-  (window as any).MonacoEnvironment = {
+  (window as Window & { MonacoEnvironment: { getWorkerUrl: (_: string, label: string) => string } }).MonacoEnvironment = {
     getWorkerUrl(_: string, label: string) {
       const base = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/esm/vs/';
       if (label === 'html' || label === 'handlebars') return base + 'language/html/html.worker.js';
@@ -576,10 +576,10 @@ onMounted(async () => {
         [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
         [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
         [/[;,]/, 'delimiter'],
-        [/[{}()\[\]]/, 'delimiter'],
+        [/[{}()[\]]/, 'delimiter'],
         [/[<>](?!.*=>)/, 'delimiter'],
         [/[=!<>]=?/, 'keyword.operator'],
-        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/[+\-*/%&|^~?:]/, 'keyword.operator'],
       ],
       htmlTpl: [
         [/`/, { token: 'string.tpl', bracket: '@close', next: '@pop', nextEmbedded: '@pop' }],
@@ -605,7 +605,7 @@ onMounted(async () => {
         [/./, 'comment'],
       ],
     },
-  } as any);
+  } as import('monaco-editor').languages.IMonarchLanguage);
 
   // Register react-ts: TypeScript + JSX syntax highlighting via Monarch
   monaco.languages.register({ id: 'react-ts' });
@@ -652,9 +652,9 @@ onMounted(async () => {
         [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
         [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
         [/[;,]/, 'delimiter'],
-        [/[{}()\[\]]/, 'delimiter'],
+        [/[{}()[\]]/, 'delimiter'],
         [/[=!<>]=?/, 'keyword.operator'],
-        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/[+\-*/%&|^~?:]/, 'keyword.operator'],
       ],
       // Inside a JSX opening tag: collect attributes then pop back
       jsxAttr: [
@@ -682,10 +682,10 @@ onMounted(async () => {
         [/\d+\.\d+/, 'number.float'],
         [/\d+/, 'number'],
         [/[=!<>]=?/, 'keyword.operator'],
-        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/[+\-*/%&|^~?:]/, 'keyword.operator'],
         [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
         [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
-        [/[;,.()\[\]]/, 'delimiter'],
+        [/[;,.()[\]]/, 'delimiter'],
         [/\s+/, ''],
       ],
       dblString: [
@@ -709,7 +709,7 @@ onMounted(async () => {
         [/./, 'comment'],
       ],
     },
-  } as any);
+  } as import('monaco-editor').languages.IMonarchLanguage);
 
   // Register vanilla-ts: TypeScript + embedded HTML inside = ` template literals
   monaco.languages.register({ id: 'vanilla-ts' });
@@ -748,9 +748,9 @@ onMounted(async () => {
         [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
         [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
         [/[;,]/, 'delimiter'],
-        [/[{}()\[\]]/, 'delimiter'],
+        [/[{}()[\]]/, 'delimiter'],
         [/[=!<>]=?/, 'keyword.operator'],
-        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/[+\-*/%&|^~?:]/, 'keyword.operator'],
       ],
       // Embedded HTML template — exit on ` or temporarily exit on ${
       htmlTpl: [
@@ -772,10 +772,10 @@ onMounted(async () => {
         [/\d+\.\d+/, 'number.float'],
         [/\d+/, 'number'],
         [/[=!<>]=?/, 'keyword.operator'],
-        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/[+\-*/%&|^~?:]/, 'keyword.operator'],
         [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
         [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
-        [/[;,.()\[\]]/, 'delimiter'],
+        [/[;,.()[\]]/, 'delimiter'],
         [/\s+/, ''],
       ],
       dblString: [
@@ -804,10 +804,10 @@ onMounted(async () => {
         [/'([^'\\]|\\.)*'/, 'string'],
         [/\d+/, 'number'],
         [/[=!<>]=?/, 'keyword.operator'],
-        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/[+\-*/%&|^~?:]/, 'keyword.operator'],
         [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
         [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
-        [/[;,.()\[\]]/, 'delimiter'],
+        [/[;,.()[\]]/, 'delimiter'],
         [/\s+/, ''],
       ],
       blockComment: [
@@ -815,7 +815,7 @@ onMounted(async () => {
         [/./, 'comment'],
       ],
     },
-  } as any);
+  } as import('monaco-editor').languages.IMonarchLanguage);
 
   // Apply same TS diagnostics to angular-ts
   monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({ noSemanticValidation: true, noSyntaxValidation: false });

@@ -25,11 +25,14 @@ After implementation, **run the `/test-driven-development` skill** to write prop
 Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate locally by running:
 ```bash
 pnpm install --frozen-lockfile
+pnpm lint          # MUST pass with 0 errors — fix all errors before proceeding
 pnpm build
 pnpm test
 pnpm check-types
 pnpm format --check || true
 ```
+
+**`pnpm lint` must exit with 0 errors before any commit.** ESLint errors (`@typescript-eslint/no-explicit-any`, `no-useless-escape`, etc.) break the CI pipeline and must be fixed in the same commit as the implementation — never left for a follow-up.
 
 Tests must pass on **Node.js 18, 20, and 22** (matching the CI matrix).
 
