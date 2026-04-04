@@ -53,7 +53,7 @@ pnpm format --check || true
 pnpm exec playwright install --with-deps chromium && pnpm exec playwright test  # E2E tests
 ```
 
-**Every command above maps to a CI job. If any command fails locally, it will fail in CI.** Fix all failures before proceeding — never leave a failing check for a follow-up commit.
+**Every command above maps to a CI job. If any command fails locally, it will fail in CI. Run ALL commands — especially `playwright test` — before every commit. Never commit after only running unit tests.** Fix all failures before proceeding — never leave a failing check for a follow-up commit.
 
 **`pnpm lint` must exit with 0 errors before any commit.** ESLint errors (`@typescript-eslint/no-explicit-any`, `no-useless-escape`, etc.) break the CI pipeline and must be fixed in the same commit as the implementation — never left for a follow-up.
 
