@@ -39,21 +39,41 @@ Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate loca
 
 > **LOCKFILE RULE:** After modifying ANY `package.json` in any workspace package, run `pnpm install` from the monorepo root **before** any other command. CI uses `--frozen-lockfile` and will fail if `pnpm-lock.yaml` is out of sync. Agents must commit the updated lockfile in the same commit as the `package.json` change.
 
+These commands mirror the exact jobs in `ci.yml`. Run them in order — skip none:
+
 ```bash
-pnpm install              # REQUIRED after any package.json change — keeps lockfile in sync
+# 1. Lockfile (if any package.json changed)
+pnpm install
+
+# 2. build job (Node matrix — run on Node 20 locally)
 pnpm install --frozen-lockfile
-pnpm lint                        # MUST pass with 0 errors — fix all errors before proceeding
-pnpm build                       # Root monorepo build
-pnpm test                        # Unit tests + validate-docs (chained)
+pnpm build
+
+# 3. unit-test job
+pnpm test
 pnpm check-types
-pnpm check-links                 # All markdown links must resolve
-pnpm --filter @tuvix.js/website lint   # Website-specific lint (separate CI job)
-pnpm --filter @tuvix.js/website build  # Website build must succeed (separate CI job)
+
+# 4. lint job
 pnpm format --check || true
-pnpm exec playwright install --with-deps chromium && pnpm exec playwright test  # E2E tests
+
+# 5. website-lint job
+pnpm --filter @tuvix.js/website lint
+
+# 6. website-build job
+pnpm --filter @tuvix.js/website build
+
+# 7. docs-validation job
+pnpm check-links
+pnpm validate-docs
+pnpm validate-i18n
+
+# 8. e2e-test job — MANDATORY before every commit, no exceptions
+pnpm exec playwright install --with-deps chromium && pnpm exec playwright test
 ```
 
-**Every command above maps to a CI job. If any command fails locally, it will fail in CI. Run ALL commands — especially `playwright test` — before every commit. Never commit after only running unit tests.** Fix all failures before proceeding — never leave a failing check for a follow-up commit.
+**If any command fails, fix it before committing. Never commit after skipping E2E.**
+
+**Subagent constraint:** When dispatching subagents that will commit code, their prompt must include: *"Before committing, run the full CI checklist from CLAUDE.md including `pnpm exec playwright test`. Do not commit if E2E fails."*
 
 **`pnpm lint` must exit with 0 errors before any commit.** ESLint errors (`@typescript-eslint/no-explicit-any`, `no-useless-escape`, etc.) break the CI pipeline and must be fixed in the same commit as the implementation — never left for a follow-up.
 
