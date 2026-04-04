@@ -37,4 +37,39 @@ Mevcut mikro uygulama bağlamına erişir.
 
 Event bus olaylarına otomatik temizleme ile abone olur.
 
-[React Rehberi](/tr/guide/react) sayfasına bakın.
+## Tam Çalışma Örneği
+
+```tsx
+// src/App.tsx
+import React, { useState, useEffect } from 'react';
+import { useTuvixBus } from '@tuvix.js/react';
+import { getGlobalBus } from '@tuvix.js/event-bus';
+
+interface AppProps {
+  apiUrl: string;
+  userId: string;
+}
+
+export function App({ apiUrl, userId }: AppProps) {
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const bus = getGlobalBus();
+
+  useTuvixBus(bus, 'theme:changed', ({ theme: t }) => setTheme(t));
+
+  return (
+    <div className={`app theme-${theme}`}>
+      <h1>Dashboard</h1>
+    </div>
+  );
+}
+```
+
+```tsx
+// src/main.tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+import { App } from './App';
+
+export const app = createReactMicroApp(App);
+```
+
+Daha fazla bilgi için [React Rehberi](/tr/guide/react) sayfasına bakın.

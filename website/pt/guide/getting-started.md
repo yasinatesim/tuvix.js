@@ -32,4 +32,27 @@ const router = createRouter({
 orchestrator.start();
 ```
 
-Documentação completa → [Getting Started](/pt/guide/getting-started)
+## Com React
+
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+import Dashboard from './Dashboard';
+
+export const app = createReactMicroApp(Dashboard);
+```
+
+## Com Vue
+
+```ts
+import { createVueMicroApp } from '@tuvix.js/vue';
+import Dashboard from './Dashboard.vue';
+
+export const app = createVueMicroApp(Dashboard);
+```
+
+## Próximos Passos
+
+- Leia a [Visão Geral da Arquitetura](/pt/guide/architecture)
+- Explore os [Lifecycle Hooks](/pt/guide/lifecycle)
+- Configure o [Event Bus](/pt/guide/event-bus)
+- Aprenda sobre [Sandboxing](/pt/guide/sandbox)

@@ -54,4 +54,26 @@ const router = createRouter({
 });
 ```
 
-İngilizce belgelerin tamamı için bakınız → [Configuration](/tr/guide/configuration)
+## Sandbox Seçenekleri
+
+```ts
+import { createSandbox } from '@tuvix.js/sandbox';
+
+const sandbox = createSandbox({
+  css: true,
+  js: true,
+});
+```
+
+## Ortam Değişkenleri
+
+Tuvix.js'in zorunlu ortam değişkeni yoktur. Tüm yapılandırma kodda yapılır.
+
+```ts
+// vite.config.ts
+export default {
+  define: {
+    __TUVIX_DEBUG__: JSON.stringify(process.env.NODE_ENV !== 'production'),
+  },
+};
+```

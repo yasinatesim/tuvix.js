@@ -36,16 +36,7 @@ defineProps<{
 </template>
 ```
 
-## Composable useMicroApp
-
-```vue
-<script setup lang="ts">
-
-const { props, name } = useMicroApp();
-</script>
-```
-
-## Composable useTuvixEvent
+## Composable useTuvixBus
 
 Iscriviti agli eventi dell'event bus con pulizia automatica allo smontaggio del componente:
 

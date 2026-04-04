@@ -20,6 +20,25 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '架构', link: '/zh/guide/architecture' },
           ],
         },
+        {
+          text: '核心概念',
+          items: [
+            { text: '微应用', link: '/zh/guide/micro-apps' },
+            { text: '生命周期钩子', link: '/zh/guide/lifecycle' },
+            { text: '路由', link: '/zh/guide/routing' },
+            { text: '事件总线', link: '/zh/guide/event-bus' },
+            { text: '沙箱', link: '/zh/guide/sandbox' },
+          ],
+        },
+        {
+          text: '框架指南',
+          items: [
+            { text: '使用 React', link: '/zh/guide/react' },
+            { text: '使用 Vue', link: '/zh/guide/vue' },
+            { text: '使用 Svelte', link: '/zh/guide/svelte' },
+            { text: '使用 Angular', link: '/zh/guide/angular' },
+          ],
+        },
       ],
       '/zh/packages/': [
         {

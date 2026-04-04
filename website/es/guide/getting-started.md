@@ -43,20 +43,27 @@ orchestrator.register('inicio', {
 orchestrator.start();
 ```
 
-## Crear una Micro App
+## Con React
 
-```ts
-// panel/main.ts
-import type { MicroAppDefinition } from '@tuvix.js/core';
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+import Dashboard from './Dashboard';
 
-export const app: MicroApp = {
-  async mount(container, props) {
-    container.innerHTML = `<h1>Panel</h1>`;
-  },
-  async unmount(container) {
-    container.innerHTML = '';
-  },
-};
+export const app = createReactMicroApp(Dashboard);
 ```
 
-Para documentación completa → [Getting Started](/es/guide/getting-started)
+## Con Vue
+
+```ts
+import { createVueMicroApp } from '@tuvix.js/vue';
+import Dashboard from './Dashboard.vue';
+
+export const app = createVueMicroApp(Dashboard);
+```
+
+## Próximos Pasos
+
+- Lea la [Descripción de la Arquitectura](/es/guide/architecture)
+- Explore los [Lifecycle Hooks](/es/guide/lifecycle)
+- Configure el [Event Bus](/es/guide/event-bus)
+- Conozca el [Sandboxing](/es/guide/sandbox)

@@ -47,19 +47,7 @@ function Profile({ userId, theme }: ProfileProps) {
 export const app = createMicroApp(Profile);
 ```
 
-## useMicroApp हुक
-
-किसी भी कंपोनेंट से वर्तमान माइक्रो ऐप संदर्भ (props, नाम, कंटेनर) तक पहुंचें:
-
-```tsx
-
-function Dashboard() {
-  const { props, name } = useMicroApp();
-  return <div>App: {name}, Props: {JSON.stringify(props)}</div>;
-}
-```
-
-## useTuvixEvent हुक
+## useTuvixBus हुक
 
 Event Bus इवेंट्स को रिएक्टिव रूप से सब्सक्राइब करें, अनमाउंट पर स्वचालित क्लीनअप के साथ:
 

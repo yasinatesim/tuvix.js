@@ -53,3 +53,47 @@ interface MicroApp {
   update?(container: HTMLElement, props?: Record<string, unknown>): Promise<void>;
 }
 ```
+
+Orchestrator bu hook'ları doğru zamanda çağırır:
+
+1. **`mount`** - uygulamanın rotası etkin olduğunda çağrılır
+2. **`unmount`** - uygulamanın rotasından ayrılırken çağrılır
+3. **`update`** - tam yeniden bağlama olmadan props değiştiğinde çağrılır
+
+## İzolasyon Modeli
+
+### CSS İzolasyonu (Shadow DOM)
+
+`sandbox.css = true` olduğunda, mikro uygulama konteyneri Shadow DOM ana bilgisayarı olur.
+
+```ts
+orchestrator.register('my-app', {
+  entry: '/my-app.js',
+  sandbox: { css: true },
+});
+```
+
+### JS İzolasyonu (Proxy Kapsamı)
+
+`sandbox.js = true` olduğunda, mikro uygulamanın global kapsamı bir `Proxy` ile sarılır.
+
+```ts
+orchestrator.register('my-app', {
+  entry: '/my-app.js',
+  sandbox: { css: true, js: true },
+});
+```
+
+## Event Bus
+
+Event bus, tüm mikro uygulamalar arasında paylaşılan ayrıştırılmış bir yayın/abone kanalıdır:
+
+```ts
+import { getGlobalBus } from '@tuvix.js/event-bus';
+const eventBus = getGlobalBus();
+eventBus.emit('user:login', { userId: '42' });
+
+eventBus.on('user:login', ({ userId }) => {
+  console.log('Kullanıcı giriş yaptı:', userId);
+});
+```

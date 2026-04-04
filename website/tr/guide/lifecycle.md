@@ -1,6 +1,12 @@
 # Lifecycle Hooks
 
-Her mikro uygulama öngörülebilir bir lifecycle takip eder.
+## Genel Bakış
+
+Tuvix.js'teki her mikro uygulama öngörülebilir bir lifecycle takip eder. Orchestrator, lifecycle hook'larını uygun zamanlarda çağırır.
+
+```
+register()  →  mount()  →  update()  →  unmount()
+```
 
 ## mount
 
@@ -26,4 +32,25 @@ Shell yeni props geçirdiğinde çağrılır (isteğe bağlı).
 async update(container: HTMLElement, props?: Record<string, unknown>): Promise<void>
 ```
 
-İngilizce belgeler için → [Lifecycle Hooks](/tr/guide/lifecycle)
+## Orchestrator Düzeyinde Hook'lar
+
+Shell, lifecycle olaylarını global olarak dinleyebilir:
+
+```ts
+const orchestrator = createOrchestrator({
+  container: '#app',
+
+  onBeforeMount(app) {
+    console.log(`Bağlanıyor: ${app.name}`);
+  },
+
+  onAfterMount(app) {
+    console.log(`Bağlandı: ${app.name}`);
+  },
+
+  onError(error, app) {
+    console.error(`${app.name} hatası:`, error);
+    app.container.innerHTML = '<p>Yüklenemedi. Lütfen yenileyin.</p>';
+  },
+});
+```

@@ -36,16 +36,7 @@ defineProps<{
 </template>
 ```
 
-## useMicroApp コンポーザブル
-
-```vue
-<script setup lang="ts">
-
-const { props, name } = useMicroApp();
-</script>
-```
-
-## useTuvixEvent コンポーザブル
+## useTuvixBus コンポーザブル
 
 コンポーネントのアンマウント時に自動クリーンアップ付きで Event Bus イベントをサブスクライブします：
 

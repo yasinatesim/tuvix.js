@@ -100,6 +100,27 @@ interface MicroApp {
 }
 ```
 
+## Örnek: Hata Sınırları
+
+```ts
+const orchestrator = createOrchestrator({
+  container: '#app',
+
+  onError(error, app) {
+    console.error(`[${app.name}] çöktü:`, error);
+
+    const container = document.querySelector(app.container as string);
+    if (container) {
+      container.innerHTML = `
+        <div class="error-boundary">
+          <p>Yüklenemedi. <button onclick="location.reload()">Yenile</button></p>
+        </div>
+      `;
+    }
+  },
+});
+```
+
 ## TypeScript
 
 ```ts

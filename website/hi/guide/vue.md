@@ -36,16 +36,7 @@ defineProps<{
 </template>
 ```
 
-## useMicroApp कंपोज़ेबल
-
-```vue
-<script setup lang="ts">
-
-const { props, name } = useMicroApp();
-</script>
-```
-
-## useTuvixEvent कंपोज़ेबल
+## useTuvixBus कंपोज़ेबल
 
 कंपोनेंट अनमाउंट पर स्वचालित क्लीनअप के साथ Event Bus इवेंट्स की सदस्यता लें:
 

@@ -47,19 +47,7 @@ function Profile({ userId, theme }: ProfileProps) {
 export const app = createMicroApp(Profile);
 ```
 
-## Hook useMicroApp
-
-Accédez au contexte de la micro app courante (props, nom, conteneur) depuis n'importe quel composant :
-
-```tsx
-
-function Dashboard() {
-  const { props, name } = useMicroApp();
-  return <div>App: {name}, Props: {JSON.stringify(props)}</div>;
-}
-```
-
-## Hook useTuvixEvent
+## Hook useTuvixBus
 
 Abonnez-vous aux événements du bus de manière réactive, avec nettoyage automatique au démontage :
 

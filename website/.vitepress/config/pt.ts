@@ -20,6 +20,25 @@ export const ptConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Arquitetura', link: '/pt/guide/architecture' },
           ],
         },
+        {
+          text: 'Conceitos Principais',
+          items: [
+            { text: 'Micro Apps', link: '/pt/guide/micro-apps' },
+            { text: 'Lifecycle Hooks', link: '/pt/guide/lifecycle' },
+            { text: 'Roteamento', link: '/pt/guide/routing' },
+            { text: 'Event Bus', link: '/pt/guide/event-bus' },
+            { text: 'Sandbox', link: '/pt/guide/sandbox' },
+          ],
+        },
+        {
+          text: 'Guias de Framework',
+          items: [
+            { text: 'Com React', link: '/pt/guide/react' },
+            { text: 'Com Vue', link: '/pt/guide/vue' },
+            { text: 'Com Svelte', link: '/pt/guide/svelte' },
+            { text: 'Com Angular', link: '/pt/guide/angular' },
+          ],
+        },
       ],
       '/pt/packages/': [
         {

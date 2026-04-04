@@ -47,19 +47,7 @@ function Profile({ userId, theme }: ProfileProps) {
 export const app = createMicroApp(Profile);
 ```
 
-## useMicroApp Hook
-
-从任何组件访问当前微应用上下文（props、名称、容器）：
-
-```tsx
-
-function Dashboard() {
-  const { props, name } = useMicroApp();
-  return <div>App: {name}, Props: {JSON.stringify(props)}</div>;
-}
-```
-
-## useTuvixEvent Hook
+## useTuvixBus Hook
 
 响应式订阅 Event Bus 事件，卸载时自动清理：
 

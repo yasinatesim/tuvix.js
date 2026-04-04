@@ -20,6 +20,25 @@ export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'आर्किटेक्चर', link: '/hi/guide/architecture' },
           ],
         },
+        {
+          text: 'मुख्य अवधारणाएं',
+          items: [
+            { text: 'Micro Apps', link: '/hi/guide/micro-apps' },
+            { text: 'Lifecycle Hooks', link: '/hi/guide/lifecycle' },
+            { text: 'रूटिंग', link: '/hi/guide/routing' },
+            { text: 'Event Bus', link: '/hi/guide/event-bus' },
+            { text: 'Sandbox', link: '/hi/guide/sandbox' },
+          ],
+        },
+        {
+          text: 'फ्रेमवर्क गाइड',
+          items: [
+            { text: 'React के साथ', link: '/hi/guide/react' },
+            { text: 'Vue के साथ', link: '/hi/guide/vue' },
+            { text: 'Svelte के साथ', link: '/hi/guide/svelte' },
+            { text: 'Angular के साथ', link: '/hi/guide/angular' },
+          ],
+        },
       ],
       '/hi/packages/': [
         {

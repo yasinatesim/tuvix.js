@@ -39,6 +39,29 @@ Tuvix.js, tüm mikro uygulamaları çalışma zamanında yükleyen, bağlayan ve
 └─────────────────────────────────────────────┘
 ```
 
+## Temel Kavramlar
+
+| Kavram | Açıklama |
+|--------|----------|
+| **Shell** | Ana uygulama - mikro uygulamaları yükler ve koordine eder |
+| **Orchestrator** | Mikro uygulama kaydını ve lifecycle'ı yöneten çekirdek motor |
+| **Mikro Uygulama** | Bağımsız olarak dağıtılan bir frontend uygulaması |
+| **Entry** | Mikro uygulamanın JavaScript paketi URL'si |
+| **Lifecycle** | Her mikro uygulamanın uyguladığı mount, unmount, update hook'ları |
+| **Event Bus** | Mikro uygulamalar arasındaki yazılı yayın/abone köprüsü |
+| **Sandbox** | Çatışmaları önlemek için CSS + JS izolasyonu |
+
+## Karşılaştırma
+
+| Özellik | Tuvix.js | single-spa | Module Federation |
+|---------|----------|------------|-------------------|
+| Sıfır çalışma zamanı bağımlılığı | ✅ | ❌ | ✅ |
+| Yerleşik Event Bus | ✅ | ❌ | ❌ |
+| CSS Sandbox | ✅ | ❌ | ❌ |
+| SSR desteği | ✅ | Kısmi | ✅ |
+| TypeScript-first | ✅ | Kısmi | ✅ |
+| Framework bağlamaları | React, Vue, Svelte, Angular | React, Vue | Herhangi |
+
 ## Sonraki Adım
 
 → [Başlarken](/tr/guide/getting-started)

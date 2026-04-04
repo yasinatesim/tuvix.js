@@ -88,6 +88,24 @@ export const app: MicroApp = {
 };
 ```
 
+## React ile
+
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+import Dashboard from './Dashboard';
+
+export const app = createReactMicroApp(Dashboard);
+```
+
+## Vue ile
+
+```ts
+import { createVueMicroApp } from '@tuvix.js/vue';
+import Dashboard from './Dashboard.vue';
+
+export const app = createVueMicroApp(Dashboard);
+```
+
 ## Sonraki Adımlar
 
 - [Mimari Genel Bakış](/tr/guide/architecture) - Tuvix.js'in nasıl çalıştığını anlayın

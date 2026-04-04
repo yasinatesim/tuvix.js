@@ -23,10 +23,6 @@ pnpm create tuvix-app my-app
 yarn create tuvix-app my-app
 ```
 
-## Etkileşimli İstemler
-
-CLI, proje kurulumu boyunca size rehberlik eder.
-
 ## Şablonlar
 
 | Şablon | Açıklama |

@@ -20,6 +20,25 @@ export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Architektur', link: '/de/guide/architecture' },
           ],
         },
+        {
+          text: 'Kernkonzepte',
+          items: [
+            { text: 'Micro Apps', link: '/de/guide/micro-apps' },
+            { text: 'Lifecycle Hooks', link: '/de/guide/lifecycle' },
+            { text: 'Routing', link: '/de/guide/routing' },
+            { text: 'Event Bus', link: '/de/guide/event-bus' },
+            { text: 'Sandbox', link: '/de/guide/sandbox' },
+          ],
+        },
+        {
+          text: 'Framework-Anleitungen',
+          items: [
+            { text: 'Mit React', link: '/de/guide/react' },
+            { text: 'Mit Vue', link: '/de/guide/vue' },
+            { text: 'Mit Svelte', link: '/de/guide/svelte' },
+            { text: 'Mit Angular', link: '/de/guide/angular' },
+          ],
+        },
       ],
       '/de/packages/': [
         {

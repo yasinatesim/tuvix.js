@@ -47,19 +47,7 @@ function Profile({ userId, theme }: ProfileProps) {
 export const app = createMicroApp(Profile);
 ```
 
-## useMicroApp Hook'u
-
-Herhangi bir bileşenden mevcut mikro uygulama bağlamına (props, isim, konteyner) erişin:
-
-```tsx
-
-function Dashboard() {
-  const { props, name } = useMicroApp();
-  return <div>App: {name}, Props: {JSON.stringify(props)}</div>;
-}
-```
-
-## useTuvixEvent Hook'u
+## useTuvixBus Hook'u
 
 Event bus olaylarına reaktif olarak abone olun, unmount sırasında otomatik temizlik ile:
 

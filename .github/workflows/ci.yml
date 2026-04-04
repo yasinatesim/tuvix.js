@@ -154,3 +154,5 @@ jobs:
         run: pnpm check-links
       - name: Validate code examples
         run: pnpm validate-docs
+      - name: Validate i18n sync
+        run: pnpm validate-i18n

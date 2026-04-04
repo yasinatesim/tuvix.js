@@ -36,16 +36,7 @@ defineProps<{
 </template>
 ```
 
-## useMicroApp 组合式函数
-
-```vue
-<script setup lang="ts">
-
-const { props, name } = useMicroApp();
-</script>
-```
-
-## useTuvixEvent 组合式函数
+## useTuvixBus 组合式函数
 
 订阅 Event Bus 事件，组件卸载时自动清理：
 

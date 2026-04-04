@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test && npx tsx scripts/validate-code-examples.ts",
+    "test": "turbo run test && npx tsx scripts/validate-code-examples.ts && npx tsx scripts/validate-i18n.ts",
     "test:watch": "turbo run test:watch",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
@@ -17,7 +17,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "check-links": "npx tsx scripts/check-links.ts",
-    "validate-docs": "npx tsx scripts/validate-code-examples.ts"
+    "validate-docs": "npx tsx scripts/validate-code-examples.ts",
+    "validate-i18n": "npx tsx scripts/validate-i18n.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.10",

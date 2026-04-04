@@ -23,25 +23,6 @@ pnpm create tuvix-app my-app
 yarn create tuvix-app my-app
 ```
 
-## 対話式プロンプト
-
-The CLI guides you through project setup:
-
-```
-✔ Project name: › my-app
-✔ Template: › shell (React + Vite)
-✔ Add example micro app? › Yes
-✔ Package manager: › pnpm
-✔ Git init? › Yes
-
-Scaffolding project...
-Done! 🎉
-
-  cd my-app
-  pnpm install
-  pnpm dev
-```
-
 ## テンプレート
 
 | テンプレート | 説明 |

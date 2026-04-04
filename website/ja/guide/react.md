@@ -47,19 +47,7 @@ function Profile({ userId, theme }: ProfileProps) {
 export const app = createMicroApp(Profile);
 ```
 
-## useMicroApp フック
-
-任意のコンポーネントから現在のマイクロアプリコンテキスト（props、名前、コンテナ）にアクセスできます：
-
-```tsx
-
-function Dashboard() {
-  const { props, name } = useMicroApp();
-  return <div>App: {name}, Props: {JSON.stringify(props)}</div>;
-}
-```
-
-## useTuvixEvent フック
+## useTuvixBus フック
 
 Event Bus のイベントをリアクティブにサブスクライブし、アンマウント時に自動クリーンアップします：
 

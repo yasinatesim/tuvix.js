@@ -20,6 +20,25 @@ export const frConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Architecture', link: '/fr/guide/architecture' },
           ],
         },
+        {
+          text: 'Concepts Clés',
+          items: [
+            { text: 'Micro Apps', link: '/fr/guide/micro-apps' },
+            { text: 'Lifecycle Hooks', link: '/fr/guide/lifecycle' },
+            { text: 'Routage', link: '/fr/guide/routing' },
+            { text: 'Event Bus', link: '/fr/guide/event-bus' },
+            { text: 'Sandbox', link: '/fr/guide/sandbox' },
+          ],
+        },
+        {
+          text: 'Guides de Framework',
+          items: [
+            { text: 'Avec React', link: '/fr/guide/react' },
+            { text: 'Avec Vue', link: '/fr/guide/vue' },
+            { text: 'Avec Svelte', link: '/fr/guide/svelte' },
+            { text: 'Avec Angular', link: '/fr/guide/angular' },
+          ],
+        },
       ],
       '/fr/packages/': [
         {

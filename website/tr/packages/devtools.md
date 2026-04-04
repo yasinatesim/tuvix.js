@@ -41,6 +41,16 @@ if (process.env.NODE_ENV === 'development') {
 
 DevTools panelini açmak/kapatmak için `Ctrl+Shift+T` (Mac'te `Cmd+Shift+T`) tuşlarına basın.
 
+## Yapılandırma
+
+```ts
+installDevTools(orchestrator, {
+  position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left',
+  height: 300,
+  open: false,
+});
+```
+
 ::: warning Üretim
 Devtools'u asla üretime göndermeyin. Ortam kontrollerini kullanın.
 :::

@@ -20,6 +20,25 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'アーキテクチャ', link: '/ja/guide/architecture' },
           ],
         },
+        {
+          text: 'コアコンセプト',
+          items: [
+            { text: 'マイクロアプリ', link: '/ja/guide/micro-apps' },
+            { text: 'ライフサイクルフック', link: '/ja/guide/lifecycle' },
+            { text: 'ルーティング', link: '/ja/guide/routing' },
+            { text: 'イベントバス', link: '/ja/guide/event-bus' },
+            { text: 'サンドボックス', link: '/ja/guide/sandbox' },
+          ],
+        },
+        {
+          text: 'フレームワークガイド',
+          items: [
+            { text: 'Reactで使う', link: '/ja/guide/react' },
+            { text: 'Vueで使う', link: '/ja/guide/vue' },
+            { text: 'Svelteで使う', link: '/ja/guide/svelte' },
+            { text: 'Angularで使う', link: '/ja/guide/angular' },
+          ],
+        },
       ],
       '/ja/packages/': [
         {

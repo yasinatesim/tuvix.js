@@ -20,6 +20,25 @@ export const esConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Arquitectura', link: '/es/guide/architecture' },
           ],
         },
+        {
+          text: 'Conceptos Principales',
+          items: [
+            { text: 'Micro Apps', link: '/es/guide/micro-apps' },
+            { text: 'Lifecycle Hooks', link: '/es/guide/lifecycle' },
+            { text: 'Enrutamiento', link: '/es/guide/routing' },
+            { text: 'Event Bus', link: '/es/guide/event-bus' },
+            { text: 'Sandbox', link: '/es/guide/sandbox' },
+          ],
+        },
+        {
+          text: 'Guías de Framework',
+          items: [
+            { text: 'Con React', link: '/es/guide/react' },
+            { text: 'Con Vue', link: '/es/guide/vue' },
+            { text: 'Con Svelte', link: '/es/guide/svelte' },
+            { text: 'Con Angular', link: '/es/guide/angular' },
+          ],
+        },
       ],
       '/es/packages/': [
         {
