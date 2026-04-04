@@ -68,6 +68,34 @@ jobs:
       - name: Type check
         run: pnpm check-types
 
+  docs-build:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @tuvix.js/docs build
+
+  docs-e2e:
+    runs-on: ubuntu-latest
+    needs: docs-build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test apps/docs/e2e/
+
+
   e2e-test:
     runs-on: ubuntu-latest
     needs: build
