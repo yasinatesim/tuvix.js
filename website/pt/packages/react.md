@@ -23,7 +23,7 @@ npm install @tuvix.js/react react react-dom
 Wrap a React component as a Tuvix.js micro app. Handles mount/unmount/update automatically.
 
 ```tsx
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import App from './App';
 
 export const app = createMicroApp(App);
@@ -34,7 +34,6 @@ export const app = createMicroApp(App);
 Access the current micro app context:
 
 ```tsx
-import { useMicroApp } from '@tuvix.js/react';
 
 function MyComponent() {
   const { name, props, container } = useMicroApp();
@@ -47,7 +46,7 @@ function MyComponent() {
 Subscribe to event bus events with automatic cleanup:
 
 ```tsx
-import { useTuvixEvent } from '@tuvix.js/react';
+import { useTuvixBus } from '@tuvix.js/react';
 
 function Notifications() {
   const [messages, setMessages] = useState<string[]>([]);
@@ -69,8 +68,8 @@ function Notifications() {
 ```tsx
 // src/App.tsx
 import React, { useState, useEffect } from 'react';
-import { useTuvixEvent } from '@tuvix.js/react';
-import { eventBus } from '@tuvix.js/event-bus';
+import { useTuvixBus } from '@tuvix.js/react';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 interface AppProps {
   apiUrl: string;
@@ -107,7 +106,7 @@ export function App({ apiUrl, userId }: AppProps) {
 
 ```tsx
 // src/main.tsx
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import { App } from './App';
 
 export const app = createMicroApp(App);

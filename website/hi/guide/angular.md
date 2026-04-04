@@ -16,7 +16,6 @@ npm install @tuvix.js/angular @angular/core @angular/platform-browser-dynamic
 // app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { TuvixModule } from '@tuvix.js/angular';
 import { AppComponent } from './app.component';
 
 @NgModule({
@@ -47,7 +46,6 @@ export const app = createAngularMicroApp({
 ```ts
 // app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { TuvixPropsService } from '@tuvix.js/angular';
 
 @Component({
   selector: 'app-root',
@@ -69,7 +67,6 @@ export class AppComponent implements OnInit {
 
 ```ts
 import { Component, OnDestroy } from '@angular/core';
-import { TuvixEventService } from '@tuvix.js/angular';
 import { Subscription } from 'rxjs';
 
 @Component({ template: `<span>{{ count }}</span>` })

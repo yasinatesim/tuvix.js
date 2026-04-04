@@ -50,7 +50,6 @@ export const app = createAngularMicroApp({
 Import into your Angular module to enable prop injection and event service:
 
 ```ts
-import { TuvixModule } from '@tuvix.js/angular';
 
 @NgModule({
   imports: [BrowserModule, TuvixModule],

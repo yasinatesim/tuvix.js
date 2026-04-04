@@ -43,7 +43,7 @@ orchestrator.start();
 Ana orkestratör örneğini oluşturur.
 
 ```ts
-interface OrchestratorOptions {
+interface OrchestratorConfig {
   container: string | HTMLElement;
   onBeforeMount?: (app: RegisteredApp) => void | Promise<void>;
   onAfterMount?: (app: RegisteredApp) => void | Promise<void>;
@@ -103,5 +103,5 @@ interface MicroApp {
 ## TypeScript
 
 ```ts
-import type { MicroApp, RegisteredApp, OrchestratorOptions } from '@tuvix.js/core';
+import type { MicroAppDefinition, RegisteredApp, OrchestratorConfig } from '@tuvix.js/core';
 ```

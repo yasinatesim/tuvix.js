@@ -20,12 +20,12 @@ npm install @tuvix.js/devtools
 
 ```ts
 import { createOrchestrator } from '@tuvix.js/core';
-import { initDevtools } from '@tuvix.js/devtools';
+import { installDevTools } from '@tuvix.js/devtools';
 
 const orchestrator = createOrchestrator({ container: '#app' });
 
 if (process.env.NODE_ENV === 'development') {
-  initDevtools(orchestrator);
+  installDevTools(orchestrator);
 }
 ```
 

@@ -109,12 +109,12 @@ For full control, implement the lifecycle yourself:
 ```tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import type { MicroApp } from '@tuvix.js/core';
+import type { MicroAppDefinition } from '@tuvix.js/core';
 import App from './App';
 
 let root: ReturnType<typeof createRoot> | null = null;
 
-export const app: MicroApp = {
+export const app: MicroAppDefinition = {
   async mount(container, props) {
     const el = document.createElement('div');
     container.appendChild(el);

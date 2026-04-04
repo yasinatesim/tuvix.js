@@ -80,7 +80,7 @@ Always unsubscribe in `unmount` to prevent memory leaks:
 ```ts
 import { getGlobalBus } from '@tuvix.js/event-bus';
 
-export const app: MicroApp = {
+export const app: MicroAppDefinition = {
   _subscriptions: [] as (() => void)[],
 
   async mount(container, props) {

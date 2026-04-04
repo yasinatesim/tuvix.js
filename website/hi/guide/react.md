@@ -15,7 +15,7 @@ React कंपोनेंट को माइक्रो ऐप के रू
 ```tsx
 // src/main.tsx
 import React from 'react';
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import App from './App';
 
 export const app = createMicroApp(App);
@@ -52,7 +52,6 @@ export const app = createMicroApp(Profile);
 किसी भी कंपोनेंट से वर्तमान माइक्रो ऐप संदर्भ (props, नाम, कंटेनर) तक पहुंचें:
 
 ```tsx
-import { useMicroApp } from '@tuvix.js/react';
 
 function Dashboard() {
   const { props, name } = useMicroApp();
@@ -65,7 +64,7 @@ function Dashboard() {
 Event Bus इवेंट्स को रिएक्टिव रूप से सब्सक्राइब करें, अनमाउंट पर स्वचालित क्लीनअप के साथ:
 
 ```tsx
-import { useTuvixEvent } from '@tuvix.js/react';
+import { useTuvixBus } from '@tuvix.js/react';
 
 function CartBadge() {
   const [count, setCount] = useState(0);
@@ -83,7 +82,7 @@ function CartBadge() {
 ```tsx
 // src/App.tsx
 import React, { useState } from 'react';
-import { useTuvixEvent } from '@tuvix.js/react';
+import { useTuvixBus } from '@tuvix.js/react';
 
 interface AppProps {
   apiUrl: string;
@@ -105,7 +104,7 @@ export function App({ apiUrl }: AppProps) {
 }
 
 // src/main.tsx
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import { App } from './App';
 
 export const app = createMicroApp(App);
@@ -118,7 +117,7 @@ export const app = createMicroApp(App);
 ```tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import type { MicroApp } from '@tuvix.js/core';
+import type { MicroAppDefinition } from '@tuvix.js/core';
 import App from './App';
 
 let root: ReturnType<typeof createRoot> | null = null;

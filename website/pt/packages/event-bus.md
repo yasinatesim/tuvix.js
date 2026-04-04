@@ -19,7 +19,7 @@ npm install @tuvix.js/event-bus
 ## Início Rápido
 
 ```ts
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 // Publish
 eventBus.emit('user:login', { userId: '42', name: 'Alice' });

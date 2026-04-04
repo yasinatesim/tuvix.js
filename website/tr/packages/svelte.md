@@ -23,7 +23,7 @@ npm install @tuvix.js/svelte svelte
 Svelte 3, 4 ve 5 ile çalışır:
 
 ```ts
-import { createMicroApp } from '@tuvix.js/svelte';
+import { createSvelteMicroApp } from '@tuvix.js/svelte';
 import App from './App.svelte';
 
 export const app = createMicroApp(App);

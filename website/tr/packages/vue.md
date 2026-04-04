@@ -21,7 +21,7 @@ npm install @tuvix.js/vue vue
 ### `createMicroApp(Component)`
 
 ```ts
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import App from './App.vue';
 
 export const app = createMicroApp(App);

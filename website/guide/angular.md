@@ -8,20 +8,19 @@
 npm install @tuvix.js/angular @angular/core @angular/platform-browser-dynamic
 ```
 
-## TuvixModule
+## Angular Module Setup
 
-Import `TuvixModule` into your Angular module:
+Import the Angular module into your app:
 
 ```ts
 // app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { TuvixModule } from '@tuvix.js/angular';
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, TuvixModule],
+  imports: [BrowserModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
@@ -47,7 +46,7 @@ export const app = createAngularMicroApp({
 ```ts
 // app.component.ts
 import { Component, OnInit } from '@angular/core';
-import { TuvixPropsService } from '@tuvix.js/angular';
+import { createAngularMicroApp } from '@tuvix.js/angular';
 
 @Component({
   selector: 'app-root',
@@ -56,35 +55,33 @@ import { TuvixPropsService } from '@tuvix.js/angular';
 export class AppComponent implements OnInit {
   userId = '';
 
-  constructor(private tuvixProps: TuvixPropsService) {}
-
   ngOnInit() {
-    const props = this.tuvixProps.getProps<{ userId: string }>();
-    this.userId = props.userId;
+    // Props are passed directly from shell at mount time
+    this.userId = (window as any).__tuvixProps?.userId ?? '';
   }
 }
 ```
 
-## TuvixEventService
+## Event Bus Integration
 
 ```ts
 import { Component, OnDestroy } from '@angular/core';
-import { TuvixEventService } from '@tuvix.js/angular';
-import { Subscription } from 'rxjs';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 @Component({ template: `<span>{{ count }}</span>` })
 export class CartBadgeComponent implements OnDestroy {
   count = 0;
-  private sub: Subscription;
+  private unsub: () => void;
 
-  constructor(events: TuvixEventService) {
-    this.sub = events.on('cart:updated').subscribe(({ itemCount }) => {
+  constructor() {
+    const bus = getGlobalBus();
+    this.unsub = bus.on('cart:updated', ({ itemCount }) => {
       this.count = itemCount;
     });
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.unsub();
   }
 }
 ```

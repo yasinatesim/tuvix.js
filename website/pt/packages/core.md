@@ -43,7 +43,7 @@ orchestrator.start();
 Creates the main orchestrator instance.
 
 ```ts
-interface OrchestratorOptions {
+interface OrchestratorConfig {
   container: string | HTMLElement;
   onBeforeMount?: (app: RegisteredApp) => void | Promise<void>;
   onAfterMount?: (app: RegisteredApp) => void | Promise<void>;
@@ -133,5 +133,5 @@ const orchestrator = createOrchestrator({
 ## TypeScript
 
 ```ts
-import type { MicroApp, RegisteredApp, OrchestratorOptions } from '@tuvix.js/core';
+import type { MicroAppDefinition, RegisteredApp, OrchestratorConfig } from '@tuvix.js/core';
 ```

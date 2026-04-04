@@ -20,13 +20,13 @@ npm install @tuvix.js/devtools
 
 ```ts
 import { createOrchestrator } from '@tuvix.js/core';
-import { initDevtools } from '@tuvix.js/devtools';
+import { installDevTools } from '@tuvix.js/devtools';
 
 const orchestrator = createOrchestrator({ container: '#app' });
 
 // Enable devtools in development
 if (process.env.NODE_ENV === 'development') {
-  initDevtools(orchestrator);
+  installDevTools(orchestrator);
 }
 ```
 
@@ -45,7 +45,7 @@ Press `Ctrl+Shift+T` (or `Cmd+Shift+T` on Mac) to toggle the DevTools panel.
 ## 配置
 
 ```ts
-initDevtools(orchestrator, {
+installDevTools(orchestrator, {
   /**
    * Position of the devtools panel.
    * @default 'bottom-right'
@@ -71,8 +71,8 @@ Never ship devtools in production. Use environment checks:
 
 ```ts
 if (import.meta.env.DEV) {
-  const { initDevtools } = await import('@tuvix.js/devtools');
-  initDevtools(orchestrator);
+  const { installDevTools } = await import('@tuvix.js/devtools');
+  installDevTools(orchestrator);
 }
 ```
 :::

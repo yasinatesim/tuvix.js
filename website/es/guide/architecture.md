@@ -90,7 +90,7 @@ El event bus es un canal pub/sub desacoplado compartido entre todas las micro ap
 
 ```ts
 // Publicador (cualquier micro app)
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 eventBus.emit('user:login', { userId: '42' });
 
 // Suscriptor (otra micro app)

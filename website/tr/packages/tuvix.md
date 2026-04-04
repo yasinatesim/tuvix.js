@@ -19,7 +19,7 @@ npm install tuvix.js
 ## Kullanım
 
 ```ts
-import { createOrchestrator, createRouter, eventBus } from 'tuvix.js';
+import { createOrchestrator, createRouter, getGlobalBus } from 'tuvix.js';
 ```
 
 ## Dahil Olanlar

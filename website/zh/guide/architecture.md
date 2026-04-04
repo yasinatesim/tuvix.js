@@ -90,7 +90,7 @@ Event Bus 是所有微应用共享的解耦发布/订阅通道：
 
 ```ts
 // 发布者（任意微应用）
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 eventBus.emit('user:login', { userId: '42' });
 
 // 订阅者（另一个微应用）

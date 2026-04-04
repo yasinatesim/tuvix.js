@@ -19,9 +19,9 @@ npm install @tuvix.js/server
 ## Kullanım
 
 ```ts
-import { createServerOrchestrator } from '@tuvix.js/server';
+import { createServerRenderer } from '@tuvix.js/server';
 
-const orchestrator = createServerOrchestrator();
+const orchestrator = createServerRenderer();
 
 orchestrator.register('header', {
   entry: 'https://cdn.example.com/header.js',
@@ -40,10 +40,10 @@ const { html, scripts } = await orchestrator.render({
 
 ```ts
 import express from 'express';
-import { tuvixMiddleware } from '@tuvix.js/server';
+import { createMiddleware } from '@tuvix.js/server';
 
 const app = express();
-app.use(tuvixMiddleware({ orchestrator, template: './index.html' }));
+app.use(createMiddleware({ orchestrator, template: './index.html' }));
 ```
 
 ## Hidrasyon

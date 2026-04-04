@@ -3,7 +3,7 @@
 `@tuvix.js/event-bus` uygulamalar arası iletişim için yazılı yayın/abone kanalı sağlar.
 
 ```ts
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 // Olay yayınla
 eventBus.emit('kullanici:giris', { kullaniciId: '42', ad: 'Alice' });

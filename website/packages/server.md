@@ -19,20 +19,17 @@ npm install @tuvix.js/server
 ## Usage
 
 ```ts
-import { createServerOrchestrator } from '@tuvix.js/server';
+import { createServerRenderer } from '@tuvix.js/server';
 
-const orchestrator = createServerOrchestrator();
-
-orchestrator.register('header', {
-  entry: 'https://cdn.example.com/header.js',
-});
-
-orchestrator.register('main', {
-  entry: 'https://cdn.example.com/main.js',
+const renderer = createServerRenderer({
+  apps: {
+    header: { entry: 'https://cdn.example.com/header.js' },
+    main: { entry: 'https://cdn.example.com/main.js' },
+  },
 });
 
 // Render all apps to HTML strings
-const { html, scripts } = await orchestrator.render({
+const result = await renderer.render({
   apps: ['header', 'main'],
   props: {
     header: { user: req.user },
@@ -44,9 +41,7 @@ res.send(`
   <!DOCTYPE html>
   <html>
     <body>
-      ${html.header}
-      ${html.main}
-      ${scripts}
+      ${result.html}
     </body>
   </html>
 `);
@@ -56,12 +51,11 @@ res.send(`
 
 ```ts
 import express from 'express';
-import { tuvixMiddleware } from '@tuvix.js/server';
+import { createMiddleware } from '@tuvix.js/server';
 
 const app = express();
 
-app.use(tuvixMiddleware({
-  orchestrator,
+app.use(createMiddleware({
   template: './index.html',
 }));
 ```

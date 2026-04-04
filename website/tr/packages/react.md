@@ -23,7 +23,7 @@ npm install @tuvix.js/react react react-dom
 Bir React bileşenini Tuvix.js mikro uygulaması olarak sarar. Mount/unmount/update'i otomatik olarak yönetir.
 
 ```tsx
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import App from './App';
 
 export const app = createMicroApp(App);

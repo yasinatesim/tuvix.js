@@ -18,7 +18,7 @@ O bundle da sua micro app deve exportar um objeto que satisfaça esta interface.
 
 ```ts
 // my-app/main.ts
-import type { MicroApp } from '@tuvix.js/core';
+import type { MicroAppDefinition } from '@tuvix.js/core';
 
 export const app: MicroApp = {
   async mount(container, props) {

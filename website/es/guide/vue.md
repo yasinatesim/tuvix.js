@@ -12,7 +12,7 @@ npm install @tuvix.js/vue vue
 
 ```ts
 // src/main.ts
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import App from './App.vue';
 
 export const app = createMicroApp(App);
@@ -40,7 +40,6 @@ defineProps<{
 
 ```vue
 <script setup lang="ts">
-import { useMicroApp } from '@tuvix.js/vue';
 
 const { props, name } = useMicroApp();
 </script>
@@ -53,7 +52,7 @@ Suscríbete a eventos del event bus con limpieza automática al desmontar el com
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTuvixEvent } from '@tuvix.js/vue';
+import { useTuvixBus } from '@tuvix.js/vue';
 
 const count = ref(0);
 
@@ -73,7 +72,7 @@ useTuvixEvent('cart:updated', ({ itemCount }) => {
 <!-- src/App.vue -->
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTuvixEvent } from '@tuvix.js/vue';
+import { useTuvixBus } from '@tuvix.js/vue';
 
 const props = defineProps<{ apiUrl: string }>();
 const theme = ref<'light' | 'dark'>('dark');
@@ -93,7 +92,7 @@ useTuvixEvent('theme:changed', ({ theme: t }) => {
 
 ```ts
 // src/main.ts
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import App from './App.vue';
 export const app = createMicroApp(App);
 ```

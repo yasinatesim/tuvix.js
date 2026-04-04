@@ -23,7 +23,7 @@ npm install @tuvix.js/svelte svelte
 Works with Svelte 3, 4, and 5:
 
 ```ts
-import { createMicroApp } from '@tuvix.js/svelte';
+import { createSvelteMicroApp } from '@tuvix.js/svelte';
 import App from './App.svelte';
 
 export const app = createMicroApp(App);
@@ -35,7 +35,7 @@ export const app = createMicroApp(App);
 <!-- App.svelte -->
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { eventBus } from '@tuvix.js/event-bus';
+  import { getGlobalBus } from '@tuvix.js/event-bus';
 
   let { apiUrl, userId } = $props<{ apiUrl: string; userId: string }>();
   let theme = $state<'light' | 'dark'>('dark');

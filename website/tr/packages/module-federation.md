@@ -42,10 +42,10 @@ module.exports = {
 
 ```ts
 import { createOrchestrator } from '@tuvix.js/core';
-import { createFederationLoader } from '@tuvix.js/module-federation';
+import { createFederatedLoader } from '@tuvix.js/module-federation';
 
 const orchestrator = createOrchestrator({ container: '#app' });
-const loader = createFederationLoader();
+const loader = createFederatedLoader();
 
 orchestrator.register('dashboard', {
   entry: loader.remote({

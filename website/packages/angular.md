@@ -45,39 +45,21 @@ export const app = createAngularMicroApp({
 });
 ```
 
-### `TuvixModule`
+### Event Bus Integration
 
-Import into your Angular module to enable prop injection and event service:
-
-```ts
-import { TuvixModule } from '@tuvix.js/angular';
-
-@NgModule({
-  imports: [BrowserModule, TuvixModule],
-})
-export class AppModule {}
-```
-
-### `TuvixPropsService`
-
-Inject shell props into any Angular component or service:
+Use the global event bus for cross-app communication:
 
 ```ts
-constructor(private tuvixProps: TuvixPropsService) {
-  const props = this.tuvixProps.getProps<{ userId: string }>();
-}
-```
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
-### `TuvixEventService`
+// In a component constructor or ngOnInit
+const bus = getGlobalBus();
+const unsub = bus.on('theme:changed', ({ theme }) => {
+  this.currentTheme = theme;
+});
 
-RxJS-based wrapper around the event bus:
-
-```ts
-constructor(private events: TuvixEventService) {
-  this.events.on('theme:changed').subscribe(({ theme }) => {
-    this.currentTheme = theme;
-  });
-}
+// In ngOnDestroy
+unsub();
 ```
 
 See the [Angular Guide](/guide/angular) for the full example.

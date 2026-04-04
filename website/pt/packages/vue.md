@@ -21,7 +21,7 @@ npm install @tuvix.js/vue vue
 ### `createMicroApp(Component)`
 
 ```ts
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import App from './App.vue';
 
 export const app = createMicroApp(App);
@@ -31,7 +31,6 @@ export const app = createMicroApp(App);
 
 ```vue
 <script setup>
-import { useMicroApp } from '@tuvix.js/vue';
 const { name, props } = useMicroApp();
 </script>
 ```
@@ -43,7 +42,7 @@ Subscribes reactively. Automatically cleaned up when the component unmounts.
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTuvixEvent } from '@tuvix.js/vue';
+import { useTuvixBus } from '@tuvix.js/vue';
 
 const theme = ref<'light' | 'dark'>('dark');
 useTuvixEvent('theme:changed', ({ theme: t }) => { theme.value = t; });
@@ -56,8 +55,8 @@ useTuvixEvent('theme:changed', ({ theme: t }) => { theme.value = t; });
 <!-- src/App.vue -->
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useTuvixEvent } from '@tuvix.js/vue';
-import { eventBus } from '@tuvix.js/event-bus';
+import { useTuvixBus } from '@tuvix.js/vue';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 const props = defineProps<{ apiUrl: string; userId: string }>();
 const theme = ref<'light' | 'dark'>('dark');

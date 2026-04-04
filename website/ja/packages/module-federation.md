@@ -44,12 +44,12 @@ module.exports = {
 
 ```ts
 import { createOrchestrator } from '@tuvix.js/core';
-import { createFederationLoader } from '@tuvix.js/module-federation';
+import { createFederatedLoader } from '@tuvix.js/module-federation';
 
 const orchestrator = createOrchestrator({ container: '#app' });
 
 // Use the federation loader instead of a direct URL
-const loader = createFederationLoader();
+const loader = createFederatedLoader();
 
 orchestrator.register('dashboard', {
   entry: loader.remote({
@@ -67,7 +67,7 @@ orchestrator.start();
 Configure sharing to avoid loading multiple copies of the same library:
 
 ```ts
-const loader = createFederationLoader({
+const loader = createFederatedLoader({
   shared: {
     react: { singleton: true, requiredVersion: '^18.0.0' },
     'react-dom': { singleton: true, requiredVersion: '^18.0.0' },

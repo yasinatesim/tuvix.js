@@ -19,7 +19,7 @@ npm install @tuvix.js/loader
 ## त्वरित शुरुआत
 
 ```ts
-import { loadMicroApp } from '@tuvix.js/loader';
+import { createLoader } from '@tuvix.js/loader';
 
 const app = await loadMicroApp('https://cdn.example.com/dashboard.js');
 await app.mount(container, props);

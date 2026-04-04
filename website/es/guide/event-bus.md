@@ -5,7 +5,7 @@
 ## Importar
 
 ```ts
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 ```
 
 ## Uso Básico
