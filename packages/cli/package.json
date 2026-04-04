@@ -1,36 +1,25 @@
 {
-	"name": "create-tuvix-app",
-	"version": "0.1.2",
-	"description": "CLI scaffolding tool for Tuvix.js microfrontend projects",
-	"bin": {
-		"create-tuvix-app": "dist/index.js"
-	},
-	"main": "dist/index.js",
-	"files": [
-		"dist",
-		"templates"
-	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch",
-		"test": "vitest run",
-		"typecheck": "tsc --noEmit"
-	},
-	"keywords": [
-		"cli",
-		"scaffold",
-		"microfrontend",
-		"tuvix",
-		"create-app"
-	],
-	"license": "MIT",
-	"dependencies": {
-		"tar": "^7.5.11"
-	},
-	"devDependencies": {
-		"@types/tar": "^6.1.13"
-	}
+  "name": "@tuvix/cli",
+  "version": "0.0.1",
+  "description": "Tuvix CLI tool",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsup src/index.ts --watch",
+    "build": "tsup src/index.ts",
+    "test": "vitest",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "tar": "^7.5.11"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.0"
+  }
 }
