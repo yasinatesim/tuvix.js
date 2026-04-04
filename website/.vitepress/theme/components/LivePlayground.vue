@@ -278,11 +278,11 @@ bootstrapApplication(AppComponent);
 
 // ── Tab definitions ────────────────────────────────────────────────
 const TABS = [
-  { id: 'vanilla',  label: 'Vanilla JS', file: 'app.ts',      lang: 'typescript',      icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#f7df1e"><rect width="24" height="24" rx="3"/><path d="M6 17.5c.4.7 1 1.2 1.8 1.2.8 0 1.2-.4 1.2-.9 0-.6-.5-.9-1.4-1.3l-.5-.2C5.7 15.7 5 14.9 5 13.6c0-1.4 1.1-2.5 2.7-2.5 1.2 0 2 .4 2.6 1.5l-1.4.9c-.3-.6-.6-.8-1.2-.8s-.9.4-.9.8c0 .6.4.8 1.2 1.2l.5.2c1.5.6 2.2 1.4 2.2 2.8 0 1.6-1.3 2.6-3 2.6-1.7 0-2.8-.8-3.3-1.9l1.6-.9zM13 17.5c.3.5.6.9 1.2.9.5 0 .9-.2.9-1v-5.3h1.8V17.4c0 1.7-1 2.5-2.5 2.5-1.3 0-2.1-.7-2.5-1.5l1.1-.9z" fill="#000"/></svg>', code: VANILLA_CODE },
-  { id: 'react',    label: 'React',      file: 'App.tsx',      lang: 'typescriptreact', icon: '<svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(120 12 12)"/></svg>', code: REACT_CODE },
+  { id: 'vanilla',  label: 'Vanilla JS', file: 'app.ts',      lang: 'vanilla-ts',      icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#f7df1e"><rect width="24" height="24" rx="3"/><path d="M6 17.5c.4.7 1 1.2 1.8 1.2.8 0 1.2-.4 1.2-.9 0-.6-.5-.9-1.4-1.3l-.5-.2C5.7 15.7 5 14.9 5 13.6c0-1.4 1.1-2.5 2.7-2.5 1.2 0 2 .4 2.6 1.5l-1.4.9c-.3-.6-.6-.8-1.2-.8s-.9.4-.9.8c0 .6.4.8 1.2 1.2l.5.2c1.5.6 2.2 1.4 2.2 2.8 0 1.6-1.3 2.6-3 2.6-1.7 0-2.8-.8-3.3-1.9l1.6-.9zM13 17.5c.3.5.6.9 1.2.9.5 0 .9-.2.9-1v-5.3h1.8V17.4c0 1.7-1 2.5-2.5 2.5-1.3 0-2.1-.7-2.5-1.5l1.1-.9z" fill="#000"/></svg>', code: VANILLA_CODE },
+  { id: 'react',    label: 'React',      file: 'App.tsx',      lang: 'react-ts',        icon: '<svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(120 12 12)"/></svg>', code: REACT_CODE },
   { id: 'vue',      label: 'Vue',        file: 'App.vue',      lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M2 3h3.5L12 15 18.5 3H22L12 21z" fill="#42b883"/><path d="M6.5 3h3L12 8.5 14.5 3h3L12 14z" fill="#35495e"/></svg>', code: VUE_CODE },
   { id: 'svelte',   label: 'Svelte',     file: 'App.svelte',   lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#ff3e00"><path d="M20.3 4.3C17.8 1.1 13.2.4 10 2.9L4.2 7.4C2.8 8.5 1.9 10 1.7 11.7c-.2 1.3.1 2.7.9 3.8-.5.8-.8 1.8-.9 2.7-.2 1.8.4 3.5 1.5 4.8 2.5 3.2 7.1 3.9 10.3 1.4l5.8-4.5c1.4-1.1 2.3-2.6 2.5-4.3.2-1.3-.1-2.7-.9-3.8.5-.8.8-1.8.9-2.7.2-1.7-.4-3.5-1.5-4.8z"/><path d="M10.5 18.5c-1.7.5-3.5-.2-4.4-1.7-.6-1-.8-2.2-.5-3.3l.2-.6.5.4c.6.4 1.2.7 1.9.9l.2.1-.1.2c-.2.4-.1.9.2 1.2.5.6 1.3.8 2 .5l5.4-3.4c.3-.2.5-.5.5-.8 0-.3-.1-.6-.4-.8-.5-.4-1.3-.3-1.8.1l-1.9 1.2c-.7.4-1.5.6-2.3.6-1.7 0-3.1-1-3.8-2.5-.6-1.3-.5-2.9.3-4.1.9-1.2 2.3-1.9 3.8-1.8.7 0 1.4.2 2 .5l.5.3-.5-.3 5.5-3.5c.3-.2.7-.3 1-.3 1 0 1.9.5 2.4 1.3.5.8.6 1.8.3 2.7l-.2.6-.5-.4c-.6-.4-1.2-.7-1.9-.9l-.2-.1.1-.2c.2-.4.1-.9-.2-1.2-.5-.6-1.3-.8-2-.5l-5.4 3.4c-.3.2-.5.5-.5.8 0 .3.1.6.4.8.5.4 1.3.3 1.8-.1l1.9-1.2c.7-.4 1.5-.6 2.3-.6 1.7 0 3.1 1 3.8 2.5.6 1.3.5 2.9-.3 4.1-.9 1.2-2.3 1.9-3.8 1.8-.7 0-1.4-.2-2-.5l-5.5 3.5c-.3.2-.6.3-1 .3z" fill="#fff"/></svg>', code: SVELTE_CODE },
-  { id: 'angular',  label: 'Angular',    file: 'app.component.ts', lang: 'typescript',  icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#dd0031"><path d="M12 2L2 6.5l1.6 13.2L12 22l8.4-2.3L22 6.5z"/><path d="M12 4.3l7 2.9-1.3 10.5L12 19.7l-5.7-2-1.3-10.5z" fill="#c3002f"/><path d="M12 6.5L8.5 15h1.3l.7-1.8h3l.7 1.8h1.3L12 6.5zm0 2.4l1.1 2.9h-2.2z" fill="#fff"/></svg>', code: ANGULAR_CODE },
+  { id: 'angular',  label: 'Angular',    file: 'app.component.ts', lang: 'angular-ts',  icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#dd0031"><path d="M12 2L2 6.5l1.6 13.2L12 22l8.4-2.3L22 6.5z"/><path d="M12 4.3l7 2.9-1.3 10.5L12 19.7l-5.7-2-1.3-10.5z" fill="#c3002f"/><path d="M12 6.5L8.5 15h1.3l.7-1.8h3l.7 1.8h1.3L12 6.5zm0 2.4l1.1 2.9h-2.2z" fill="#fff"/></svg>', code: ANGULAR_CODE },
 ];
 
 // ── Importmaps ─────────────────────────────────────────────────────
@@ -489,10 +489,17 @@ function scheduleCompile(code: string) {
 function switchTab(tabId: string) {
   activeTab.value = tabId;
   const tab = TABS.find(t => t.id === tabId)!;
-  editorInst?.setValue(tab.code);
-  // Update Monaco language
-  const model = editorInst?.getModel();
-  if (model && monacoApi) monacoApi.editor.setModelLanguage(model, tab.lang);
+  // Create a fresh model per tab with proper file URI (prevents TS error 8010)
+  if (editorInst && monacoApi) {
+    const oldModel = editorInst.getModel();
+    const uri = monacoApi.Uri.parse(`file:///playground/${tab.file}`);
+    const existing = monacoApi.editor.getModel(uri);
+    if (existing) existing.dispose();
+    const newModel = monacoApi.editor.createModel(tab.code, tab.lang, uri);
+    editorInst.setModel(newModel);
+    oldModel?.dispose();
+    editorInst.onDidChangeModelContent(() => scheduleCompile(editorInst!.getValue()));
+  }
   messages.value = [];
   if (iframeEl.value) iframeEl.value.srcdoc = '';
   scheduleCompile(tab.code);
@@ -520,35 +527,419 @@ onMounted(async () => {
     getWorkerUrl(_: string, label: string) {
       const base = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/esm/vs/';
       if (label === 'html' || label === 'handlebars') return base + 'language/html/html.worker.js';
-      if (label === 'typescript' || label === 'javascript') return base + 'language/typescript/ts.worker.js';
+      if (label === 'typescript' || label === 'javascript' || label === 'typescriptreact') return base + 'language/typescript/ts.worker.js';
       return base + 'editor/editor.worker.js';
     },
   };
 
-  // Init Monaco
+  // Init Monaco — pin version so worker URLs match
   const loader = await import('@monaco-editor/loader');
+  loader.default.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
   const monaco = await loader.default.init();
   monacoApi = monaco;
   if (!editorEl.value) return;
 
+  // Register angular-ts: TypeScript + embedded HTML inside template literals
+  monaco.languages.register({ id: 'angular-ts' });
+  monaco.languages.setMonarchTokensProvider('angular-ts', {
+    defaultToken: '',
+    tokenPostfix: '.ts',
+    keywords: [
+      'abstract','any','as','async','await','boolean','break','case','catch','class',
+      'const','constructor','continue','debugger','declare','default','delete','do',
+      'else','enum','export','extends','false','finally','for','from','function','get',
+      'if','implements','import','in','infer','instanceof','interface','is','keyof',
+      'let','module','namespace','never','new','null','number','object','of','package',
+      'private','protected','public','readonly','require','return','set','static',
+      'string','super','switch','symbol','this','throw','true','try','type','typeof',
+      'undefined','unique','unknown','var','void','while','with','yield',
+    ],
+    tokenizer: {
+      root: [
+        // Angular: template: ` → switch to embedded HTML (no capture groups — nextEmbedded requires simple rule)
+        [/template\s*:\s*`/, { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' }],
+        [/@[a-zA-Z_$][\w$]*/, 'annotation'],
+        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
+        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, { token: 'string.quote', bracket: '@open', next: '@dblString' }],
+        [/'([^'\\]|\\.)*$/, 'string.invalid'],
+        [/'/, { token: 'string.quote', bracket: '@open', next: '@sglString' }],
+        [/`/, { token: 'string.quote', bracket: '@open', next: '@backtick' }],
+        [/\/\/.*$/, 'comment'],
+        [/\/\*/, 'comment', '@blockComment'],
+        [/\d+[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d*[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d+/, 'number.float'],
+        [/0[xX][0-9a-fA-F]+/, 'number.hex'],
+        [/\d+/, 'number'],
+        [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
+        [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
+        [/[;,]/, 'delimiter'],
+        [/[{}()\[\]]/, 'delimiter'],
+        [/[<>](?!.*=>)/, 'delimiter'],
+        [/[=!<>]=?/, 'keyword.operator'],
+        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+      ],
+      htmlTpl: [
+        [/`/, { token: 'string.tpl', bracket: '@close', next: '@pop', nextEmbedded: '@pop' }],
+      ],
+      dblString: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      sglString: [
+        [/[^\\']+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/'/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      backtick: [
+        [/[^\\`$]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/\$\{/, { token: 'delimiter', next: '@root' }],
+        [/`/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      blockComment: [
+        [/\*\//, 'comment', '@pop'],
+        [/./, 'comment'],
+      ],
+    },
+  } as any);
+
+  // Register react-ts: TypeScript + JSX syntax highlighting via Monarch
+  monaco.languages.register({ id: 'react-ts' });
+  monaco.languages.setMonarchTokensProvider('react-ts', {
+    defaultToken: '',
+    tokenPostfix: '.tsx',
+    keywords: [
+      'abstract','any','as','async','await','boolean','break','case','catch','class',
+      'const','constructor','continue','debugger','declare','default','delete','do',
+      'else','enum','export','extends','false','finally','for','from','function','get',
+      'if','implements','import','in','infer','instanceof','interface','is','keyof',
+      'let','module','namespace','never','new','null','number','object','of','package',
+      'private','protected','public','readonly','require','return','set','static',
+      'string','super','switch','symbol','this','throw','true','try','type','typeof',
+      'undefined','unique','unknown','var','void','while','with','yield',
+    ],
+    tokenizer: {
+      root: [
+        // JSX closing tag </div> </Component>
+        [/<\/[A-Za-z][A-Za-z0-9.-]*\s*>/, 'tag'],
+        // JSX fragment close </>
+        [/<\/>/, 'delimiter.html'],
+        // JSX fragment open <>
+        [/<>/, 'delimiter.html'],
+        // JSX opening/self-closing tag: split < from tagName
+        [/(<)([A-Za-z][A-Za-z0-9.-]*)/, ['delimiter.html', { token: 'tag', next: '@jsxAttr' }]],
+        [/@[a-zA-Z_$][\w$]*/, 'annotation'],
+        // Function calls: fn( — keywords stay keyword, rest become function
+        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
+        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, { token: 'string.quote', bracket: '@open', next: '@dblString' }],
+        [/'([^'\\]|\\.)*$/, 'string.invalid'],
+        [/'/, { token: 'string.quote', bracket: '@open', next: '@sglString' }],
+        [/`/, { token: 'string.quote', bracket: '@open', next: '@backtick' }],
+        [/\/\/.*$/, 'comment'],
+        [/\/\*/, 'comment', '@blockComment'],
+        [/\d+[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d*[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d+/, 'number.float'],
+        [/0[xX][0-9a-fA-F]+/, 'number.hex'],
+        [/\d+/, 'number'],
+        // Property access: .method( → function, .prop → variable.predefined
+        [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
+        [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
+        [/[;,]/, 'delimiter'],
+        [/[{}()\[\]]/, 'delimiter'],
+        [/[=!<>]=?/, 'keyword.operator'],
+        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+      ],
+      // Inside a JSX opening tag: collect attributes then pop back
+      jsxAttr: [
+        [/\/>/, { token: 'delimiter.html', next: '@pop' }],
+        [/>/, { token: 'delimiter.html', next: '@pop' }],
+        [/[a-zA-Z_][\w-]*/, 'attribute.name'],
+        [/=/, 'delimiter'],
+        [/"[^"]*"/, 'attribute.value'],
+        [/'[^']*'/, 'attribute.value'],
+        // { expr } — use jsxExpr to handle nesting (style={{ ... }}, multiline)
+        [/\{/, { token: 'delimiter', next: '@jsxExpr' }],
+        [/\s+/, ''],
+      ],
+      // Brace-aware expression inside JSX attribute or children {expr}
+      jsxExpr: [
+        [/\{/, { token: 'delimiter', next: '@jsxExpr' }],
+        [/\}/, { token: 'delimiter', next: '@pop' }],
+        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
+        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/`/, { token: 'string.quote', next: '@backtick' }],
+        [/\/\/.*$/, 'comment'],
+        [/\d+[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d+/, 'number.float'],
+        [/\d+/, 'number'],
+        [/[=!<>]=?/, 'keyword.operator'],
+        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
+        [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
+        [/[;,.()\[\]]/, 'delimiter'],
+        [/\s+/, ''],
+      ],
+      dblString: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      sglString: [
+        [/[^\\']+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/'/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      backtick: [
+        [/[^\\`$]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/\$\{/, { token: 'delimiter', next: '@root' }],
+        [/`/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      blockComment: [
+        [/\*\//, 'comment', '@pop'],
+        [/./, 'comment'],
+      ],
+    },
+  } as any);
+
+  // Register vanilla-ts: TypeScript + embedded HTML inside = ` template literals
+  monaco.languages.register({ id: 'vanilla-ts' });
+  monaco.languages.setMonarchTokensProvider('vanilla-ts', {
+    defaultToken: '',
+    tokenPostfix: '.ts',
+    keywords: [
+      'abstract','any','as','async','await','boolean','break','case','catch','class',
+      'const','constructor','continue','debugger','declare','default','delete','do',
+      'else','enum','export','extends','false','finally','for','from','function','get',
+      'if','implements','import','in','infer','instanceof','interface','is','keyof',
+      'let','module','namespace','never','new','null','number','object','of','package',
+      'private','protected','public','readonly','require','return','set','static',
+      'string','super','switch','symbol','this','throw','true','try','type','typeof',
+      'undefined','unique','unknown','var','void','while','with','yield',
+    ],
+    tokenizer: {
+      root: [
+        // = ` (not =>) → embedded HTML template literal
+        [/=(?!>)\s*`/, { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' }],
+        [/@[a-zA-Z_$][\w$]*/, 'annotation'],
+        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
+        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+        [/"/, { token: 'string.quote', bracket: '@open', next: '@dblString' }],
+        [/'([^'\\]|\\.)*$/, 'string.invalid'],
+        [/'/, { token: 'string.quote', bracket: '@open', next: '@sglString' }],
+        [/`/, { token: 'string.quote', bracket: '@open', next: '@backtick' }],
+        [/\/\/.*$/, 'comment'],
+        [/\/\*/, 'comment', '@blockComment'],
+        [/\d+[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d*[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d+/, 'number.float'],
+        [/0[xX][0-9a-fA-F]+/, 'number.hex'],
+        [/\d+/, 'number'],
+        [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
+        [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
+        [/[;,]/, 'delimiter'],
+        [/[{}()\[\]]/, 'delimiter'],
+        [/[=!<>]=?/, 'keyword.operator'],
+        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+      ],
+      // Embedded HTML template — exit on ` or temporarily exit on ${
+      htmlTpl: [
+        [/`/, { token: 'string.tpl', next: '@pop', nextEmbedded: '@pop' }],
+        [/\$\{/, { token: 'delimiter.ts', next: '@tplExpr', nextEmbedded: '@pop' }],
+      ],
+      // Inside ${ ... } — re-enter HTML on closing }
+      tplExpr: [
+        [/=(?!>)\s*`/, { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' }],
+        [/`/, { token: 'string.quote', next: '@backtick' }],
+        [/\{/, { token: 'delimiter', next: '@tplExpr' }],
+        [/\}/, { token: 'delimiter.ts', next: '@pop', nextEmbedded: 'html' }],
+        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
+        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\/\/.*$/, 'comment'],
+        [/\d+[eE][-+]?\d+/, 'number.float'],
+        [/\d+\.\d+/, 'number.float'],
+        [/\d+/, 'number'],
+        [/[=!<>]=?/, 'keyword.operator'],
+        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
+        [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
+        [/[;,.()\[\]]/, 'delimiter'],
+        [/\s+/, ''],
+      ],
+      dblString: [
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      sglString: [
+        [/[^\\']+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/'/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      backtick: [
+        [/[^\\`$]+/, 'string'],
+        [/\\./, 'string.escape'],
+        [/\$\{/, { token: 'delimiter', next: '@tplExprNoEmbed' }],
+        [/`/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
+      ],
+      // Expression inside non-HTML backtick (no re-embed on })
+      tplExprNoEmbed: [
+        [/\{/, { token: 'delimiter', next: '@tplExprNoEmbed' }],
+        [/\}/, { token: 'delimiter', next: '@pop' }],
+        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
+        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [/"([^"\\]|\\.)*"/, 'string'],
+        [/'([^'\\]|\\.)*'/, 'string'],
+        [/\d+/, 'number'],
+        [/[=!<>]=?/, 'keyword.operator'],
+        [/[+\-*\/%&|^~?:]/, 'keyword.operator'],
+        [/(\.)([a-zA-Z_$][\w$]*)(?=\s*\()/, ['delimiter', 'function']],
+        [/(\.)([a-zA-Z_$][\w$]*)/, ['delimiter', 'variable.predefined']],
+        [/[;,.()\[\]]/, 'delimiter'],
+        [/\s+/, ''],
+      ],
+      blockComment: [
+        [/\*\//, 'comment', '@pop'],
+        [/./, 'comment'],
+      ],
+    },
+  } as any);
+
+  // Apply same TS diagnostics to angular-ts
+  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({ noSemanticValidation: true, noSyntaxValidation: false });
+
+  // Darcula theme (IntelliJ-style)
+  monaco.editor.defineTheme('darcula', {
+    base: 'vs-dark',
+    inherit: true,
+    rules: [
+      { token: '',                    foreground: 'A9B7C6', background: '2B2B2B' },
+      { token: 'comment',             foreground: '808080', fontStyle: 'italic' },
+      { token: 'comment.doc',         foreground: '629755', fontStyle: 'italic' },
+      { token: 'string',              foreground: '6A8759' },
+      { token: 'string.escape',       foreground: 'CC7832' },
+      { token: 'keyword',             foreground: 'CC7832', fontStyle: 'bold' },
+      { token: 'keyword.operator',    foreground: 'CC7832' },
+      { token: 'number',              foreground: '6897BB' },
+      { token: 'delimiter',           foreground: 'CC7832' },
+      { token: 'type',                foreground: 'A9B7C6' },
+      { token: 'type.identifier',     foreground: 'A9B7C6' },
+      { token: 'identifier',          foreground: 'A9B7C6' },
+      { token: 'variable',            foreground: 'A9B7C6' },
+      { token: 'variable.predefined', foreground: '9876AA' },
+      { token: 'function',            foreground: 'FFC66D' },
+      { token: 'tag',                 foreground: 'E8BF6A' },
+      { token: 'attribute.name',      foreground: 'BABABA' },
+      { token: 'attribute.value',     foreground: '6A8759' },
+      { token: 'metatag',             foreground: 'E8BF6A' },
+      { token: 'annotation',          foreground: 'BBB529' },
+      { token: 'regexp',              foreground: '364135' },
+      // JSX / HTML tokens (used by typescriptreact and html language modes)
+      { token: 'tag.html',            foreground: 'E8BF6A' },
+      { token: 'tag.tsx',             foreground: 'E8BF6A' },
+      { token: 'tag.ts',              foreground: 'E8BF6A' },
+      { token: 'delimiter.html',      foreground: 'E8BF6A' },
+      { token: 'delimiter.tsx',       foreground: 'E8BF6A' },
+      { token: 'attribute.name.html', foreground: 'BABABA' },
+      { token: 'attribute.name.tsx',  foreground: 'BABABA' },
+      { token: 'attribute.value.html',foreground: '6A8759' },
+      { token: 'attribute.value.tsx', foreground: '6A8759' },
+      { token: 'string.tpl',          foreground: '6A8759' },
+      // CSS tokens (Monaco embeds CSS inside style="" attributes automatically)
+      { token: 'attribute.name.css',        foreground: '9876AA' },  // property names: font-family, padding
+      { token: 'attribute.value.css',       foreground: 'A9B7C6' },
+      { token: 'keyword.css',               foreground: '6A8759' },  // value keywords: none, flex, bold, sans-serif
+      { token: 'number.css',                foreground: '6897BB' },  // numbers: 24, 0.5
+      { token: 'unit.css',                  foreground: '6897BB' },  // px, em, rem, %
+      { token: 'string.css',                foreground: '6A8759' },
+      { token: 'delimiter.css',             foreground: 'CC7832' },  // : ;
+      { token: 'delimiter.bracket.css',     foreground: 'CC7832' },
+      { token: 'selector.css',              foreground: 'E8BF6A' },
+      { token: 'tag.css',                   foreground: 'E8BF6A' },
+      { token: 'pseudo.css',                foreground: 'A9B7C6' },
+      { token: 'meta.scss',                 foreground: 'BABABA' },
+    ],
+    colors: {
+      'editor.background':               '#2B2B2B',
+      'editor.foreground':               '#A9B7C6',
+      'editor.lineHighlightBackground':  '#323232',
+      'editor.selectionBackground':      '#214283',
+      'editor.inactiveSelectionBackground': '#214283AA',
+      'editorLineNumber.foreground':     '#606366',
+      'editorLineNumber.activeForeground': '#A4A3A3',
+      'editorIndentGuide.background':    '#3B3B3B',
+      'editorCursor.foreground':         '#EFEFEF',
+      'editorWhitespace.foreground':     '#3B3B3B',
+      'editorWidget.background':         '#3C3F41',
+      'editorSuggestWidget.background':  '#3C3F41',
+      'editorSuggestWidget.border':      '#4B4B4B',
+      'editorSuggestWidget.selectedBackground': '#4B6EAF',
+      'scrollbarSlider.background':      '#4C5052AA',
+      'scrollbarSlider.hoverBackground': '#616161AA',
+      'editorBracketHighlight.foreground1': '#FFD700',
+      'editorBracketHighlight.foreground2': '#DA70D6',
+      'editorBracketHighlight.foreground3': '#87CEFA',
+      'editorBracketHighlight.foreground4': '#FFD700',
+      'editorBracketHighlight.foreground5': '#DA70D6',
+      'editorBracketHighlight.foreground6': '#87CEFA',
+    },
+  });
+
+  // Configure TypeScript + TSX language services
+  const tsDefaults = monaco.languages.typescript.typescriptDefaults;
+  tsDefaults.setCompilerOptions({
+    target: monaco.languages.typescript.ScriptTarget.ES2020,
+    allowNonTsExtensions: true,
+    moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+    module: monaco.languages.typescript.ModuleKind.ESNext,
+    jsx: monaco.languages.typescript.JsxEmit.ReactJSX,
+    jsxImportSource: 'react',
+    allowJs: true,
+  });
+  tsDefaults.setDiagnosticsOptions({
+    noSemanticValidation: true,
+    noSyntaxValidation:   false,
+  });
+
+  // Apply same config to TSX (React)
+  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+    noSemanticValidation: true,
+    noSyntaxValidation:   false,
+  });
+
+  // Create initial model with proper file URI so TypeScript service treats it as a .ts file
+  const firstTab = TABS[0];
+  const firstUri = monaco.Uri.parse(`file:///playground/${firstTab.file}`);
+  const firstModel = monaco.editor.createModel(firstTab.code, firstTab.lang, firstUri);
+
   editorInst = monaco.editor.create(editorEl.value, {
-    value:                TABS[0].code,
-    language:             TABS[0].lang,
-    theme:                'vs-dark',
-    fontSize:             13,
-    fontFamily:           "'JetBrains Mono', ui-monospace, monospace",
+    model:                firstModel,
+    theme:                'darcula',
+    fontSize:             14,
+    fontFamily:           "'FiraCode-Retina', 'Fira Code', 'JetBrains Mono', ui-monospace, monospace",
+    fontLigatures:        true,
     minimap:              { enabled: false },
     scrollBeyondLastLine: false,
     lineNumbers:          'on',
     tabSize:              2,
     automaticLayout:      true,
-    padding:              { top: 12 },
+    padding:              { top: 14 },
     wordWrap:             'on',
-  });
-
-  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-    noSemanticValidation: true,
-    noSyntaxValidation:   false,
+    lineHeight:           30,
+    renderWhitespace:     'none',
+    bracketPairColorization: { enabled: true },
   });
 
   editorInst.onDidChangeModelContent(() => scheduleCompile(editorInst!.getValue()));
