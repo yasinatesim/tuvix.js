@@ -7,6 +7,8 @@ describe('CLI templates match documentation', () => {
     'shell',
     'react-app',
     'vue-app',
+    'svelte-app',
+    'angular-app',
     'vanilla-app',
   ];
 
