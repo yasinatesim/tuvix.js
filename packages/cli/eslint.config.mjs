@@ -16,6 +16,9 @@ export default [
         ...globals.node,
       },
     },
+    rules: {
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
   },
   {
     ignores: ['dist/**', 'node_modules/**'],

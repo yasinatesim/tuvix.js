@@ -7,6 +7,7 @@
         :key="tab.id"
         class="tab-btn"
         :class="{ active: activeTab === tab.id }"
+        :data-tab="tab.id"
         @click="switchTab(tab.id)"
       >
         <span class="tab-icon" v-html="tab.icon" />

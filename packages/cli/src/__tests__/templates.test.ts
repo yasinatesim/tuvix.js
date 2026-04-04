@@ -101,3 +101,46 @@ describe('Template content validation', () => {
     });
   }
 });
+
+describe('JavaScript mode (typescript: false)', () => {
+  it('react-app JS produces .jsx files not .tsx', async () => {
+    const tmpName = `.tmp/tuvix-react-js-${Date.now()}`;
+    const tmpDir = path.resolve(process.cwd(), tmpName);
+    await createProject({ name: tmpName, template: 'react-app', typescript: false });
+    try {
+      expect(fs.existsSync(path.join(tmpDir, 'src/main.jsx'))).toBe(true);
+      expect(fs.existsSync(path.join(tmpDir, 'src/App.jsx'))).toBe(true);
+      expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(false);
+      const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
+      expect(pkg.devDependencies.typescript).toBeUndefined();
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('vue-app JS produces main.js and App.vue without lang="ts"', async () => {
+    const tmpName = `.tmp/tuvix-vue-js-${Date.now()}`;
+    const tmpDir = path.resolve(process.cwd(), tmpName);
+    await createProject({ name: tmpName, template: 'vue-app', typescript: false });
+    try {
+      expect(fs.existsSync(path.join(tmpDir, 'src/main.js'))).toBe(true);
+      expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(false);
+      const vue = fs.readFileSync(path.join(tmpDir, 'src/App.vue'), 'utf-8');
+      expect(vue).not.toContain('lang="ts"');
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('vanilla-app JS produces main.js without tsconfig', async () => {
+    const tmpName = `.tmp/tuvix-vanilla-js-${Date.now()}`;
+    const tmpDir = path.resolve(process.cwd(), tmpName);
+    await createProject({ name: tmpName, template: 'vanilla-app', typescript: false });
+    try {
+      expect(fs.existsSync(path.join(tmpDir, 'src/main.js'))).toBe(true);
+      expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(false);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});

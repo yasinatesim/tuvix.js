@@ -13,6 +13,11 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'website',
+      testDir: './website/e2e',
+      use: { baseURL: 'http://localhost:5190' },
+    },
+    {
       name: 'with-react',
       testDir: './examples/with-react/e2e',
       use: { baseURL: 'http://localhost:5173' },
@@ -69,6 +74,12 @@ export default defineConfig({
     },
   ],
   webServer: [
+    {
+      command: 'pnpm --filter @tuvix.js/website exec vitepress dev --port 5190 --strictPort',
+      port: 5190,
+      reuseExistingServer: !process.env.CI,
+      timeout: 60_000,
+    },
     {
       command: 'pnpm exec vite --port 5173 --strictPort',
       port: 5173,
