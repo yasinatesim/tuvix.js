@@ -33,10 +33,6 @@ await app.module.mount({ container: document.getElementById('app')! });
 - **`loadStyle(url)`** — Load a CSS stylesheet
 - **`prefetchResource(url, strategy?)`** — Prefetch resources for faster loading
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/loader)
-
 ## License
 
 MIT

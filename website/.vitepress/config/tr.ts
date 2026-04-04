@@ -9,7 +9,9 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
         activeMatch: '/tr/guide/',
       },
       { text: 'Paketler', link: '/tr/packages/', activeMatch: '/tr/packages/' },
+      { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'Katkı Sağlama', link: '/tr/contributing' },
+      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Katkı Sağlama', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
     ],
 
     sidebar: {

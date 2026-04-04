@@ -23,12 +23,16 @@ const TEMPLATES: Record<string, () => Record<string, string>> = {
 
 // ─── Main ───────────────────────────────────────────
 
-export async function createProject(options: CreateProjectOptions): Promise<void> {
+export async function createProject(
+  options: CreateProjectOptions
+): Promise<void> {
   const { name, template, example } = options;
   const targetDir = path.resolve(process.cwd(), name);
 
   if (!targetDir.startsWith(process.cwd())) {
-    throw new Error('Project directory must be within the current working directory.');
+    throw new Error(
+      'Project directory must be within the current working directory.'
+    );
   }
 
   if (fs.existsSync(targetDir)) {
@@ -38,11 +42,13 @@ export async function createProject(options: CreateProjectOptions): Promise<void
   if (example) {
     fs.mkdirSync(targetDir, { recursive: true });
     await downloadAndExtractExample(example, targetDir);
-    
+
     // Check if the directory is actually empty, meaning the example wasn't found
     const filesInDir = fs.readdirSync(targetDir);
     if (filesInDir.length === 0) {
-      throw new Error(`Example "${example}" was not found or failed to extract.`);
+      throw new Error(
+        `Example "${example}" was not found or failed to extract.`
+      );
     }
 
     console.log(`    Downloaded example: ${example}`);
@@ -74,26 +80,33 @@ export async function createProject(options: CreateProjectOptions): Promise<void
   }
 }
 
-async function downloadAndExtractExample(example: string, targetDir: string): Promise<void> {
+async function downloadAndExtractExample(
+  example: string,
+  targetDir: string
+): Promise<void> {
   const url = 'https://codeload.github.com/yasinatesim/tuvix.js/tar.gz/main';
 
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      if (res.statusCode !== 200) {
-        reject(new Error(`Failed to download example: ${res.statusCode} ${res.statusMessage}`));
-        return;
-      }
+    https
+      .get(url, (res) => {
+        if (res.statusCode !== 200) {
+          reject(
+            new Error(
+              `Failed to download example: ${res.statusCode} ${res.statusMessage}`
+            )
+          );
+          return;
+        }
 
-      const extract = tar.x({
-        cwd: targetDir,
-        strip: 3, 
-        filter: (p) => p.startsWith(`tuvix.js-main/examples/${example}/`)
-      });
+        const extract = tar.x({
+          cwd: targetDir,
+          strip: 3,
+          filter: (p) => p.startsWith(`tuvix.js-main/examples/${example}/`),
+        });
 
-      res.pipe(extract)
-        .on('finish', resolve)
-        .on('error', reject);
-    }).on('error', reject);
+        res.pipe(extract).on('finish', resolve).on('error', reject);
+      })
+      .on('error', reject);
   });
 }
 

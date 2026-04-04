@@ -31,10 +31,7 @@ describe('delay', () => {
 
 describe('withTimeout', () => {
   it('should resolve if fn completes in time', async () => {
-    const result = await withTimeout(
-      () => Promise.resolve('done'),
-      1000
-    );
+    const result = await withTimeout(() => Promise.resolve('done'), 1000);
     expect(result).toBe('done');
   });
 
@@ -49,10 +46,7 @@ describe('withTimeout', () => {
   });
 
   it('should skip timeout if timeoutMs is 0', async () => {
-    const result = await withTimeout(
-      () => Promise.resolve('instant'),
-      0
-    );
+    const result = await withTimeout(() => Promise.resolve('instant'), 0);
     expect(result).toBe('instant');
   });
 });

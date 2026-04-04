@@ -23,7 +23,7 @@ export async function renderSvelteToString(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   App: any,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props?: Record<string, any>,
+  props?: Record<string, any>
 ): Promise<string> {
   // Guard: only run on the server
   if (typeof window !== 'undefined') {
@@ -37,10 +37,17 @@ export async function renderSvelteToString(
   // regardless of control flow. new Function is opaque to static analysis.
   try {
     // eslint-disable-next-line no-new-func
-    const load = new Function('m', 'return import(m)') as (m: string) => Promise<{ render?: unknown }>;
+    const load = new Function('m', 'return import(m)') as (
+      m: string
+    ) => Promise<{ render?: unknown }>;
     const svelteServer = await load('svelte/server');
     if (typeof svelteServer.render === 'function') {
-      const result = (svelteServer.render as (app: unknown, opts: { props: Record<string, unknown> }) => { html: string })(App, { props: props ?? {} });
+      const result = (
+        svelteServer.render as (
+          app: unknown,
+          opts: { props: Record<string, unknown> }
+        ) => { html: string }
+      )(App, { props: props ?? {} });
       return result.html;
     }
   } catch {

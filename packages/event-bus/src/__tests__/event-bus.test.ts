@@ -76,9 +76,7 @@ describe('EventBus', () => {
     });
 
     it('should catch and log errors in handlers without stopping other handlers', () => {
-      const errorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const handler1 = vi.fn();
       const handler2 = vi.fn(() => {
         throw new Error('boom');

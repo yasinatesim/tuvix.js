@@ -1,4 +1,9 @@
-import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
+import type {
+  MicroAppModule,
+  MountContext,
+  UnmountContext,
+  UpdateContext,
+} from '@tuvix.js/loader';
 
 // ─── Types ──────────────────────────────────────────
 
@@ -36,7 +41,9 @@ export interface SvelteMicroAppConfig {
  * });
  * ```
  */
-export function createSvelteMicroApp(config: SvelteMicroAppConfig): MicroAppModule {
+export function createSvelteMicroApp(
+  config: SvelteMicroAppConfig
+): MicroAppModule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let instance: any = null;
 
@@ -112,7 +119,9 @@ export function createSvelteMicroApp(config: SvelteMicroAppConfig): MicroAppModu
  * });
  * ```
  */
-export function createSsrSvelteMicroApp(config: SvelteMicroAppConfig): MicroAppModule {
+export function createSsrSvelteMicroApp(
+  config: SvelteMicroAppConfig
+): MicroAppModule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let instance: any = null;
 

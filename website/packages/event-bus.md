@@ -19,7 +19,9 @@ npm install @tuvix.js/event-bus
 ## Quick Start
 
 ```ts
-import { eventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
+
+const eventBus = getGlobalBus();
 
 // Publish
 eventBus.emit('user:login', { userId: '42', name: 'Alice' });
@@ -51,23 +53,23 @@ declare module '@tuvix.js/event-bus' {
 
 ## API
 
-### `eventBus.emit(event, payload)`
+### `EventBus#emit(event, payload)`
 
 Publish an event to all subscribers.
 
-### `eventBus.on(event, handler) → unsubscribe`
+### `EventBus#on(event, handler) → unsubscribe`
 
 Subscribe to an event. Returns an unsubscribe function.
 
-### `eventBus.once(event, handler)`
+### `EventBus#once(event, handler)`
 
 Subscribe once - handler is removed after first call.
 
-### `eventBus.off(event, handler)`
+### `EventBus#off(event, handler)`
 
 Remove a specific handler.
 
-### `eventBus.clear(event?)`
+### `EventBus#clear(event?)`
 
 Remove all handlers for an event (or all events if omitted).
 

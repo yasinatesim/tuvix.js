@@ -1,6 +1,11 @@
 import type { Component, App, Plugin, ShallowRef } from 'vue';
 import { onMounted, onUnmounted, shallowRef } from 'vue';
-import type { MicroAppModule, MountContext, UnmountContext, UpdateContext } from '@tuvix.js/loader';
+import type {
+  MicroAppModule,
+  MountContext,
+  UnmountContext,
+  UpdateContext,
+} from '@tuvix.js/loader';
 import type { IEventBus, EventHandler, Unsubscribe } from '@tuvix.js/event-bus';
 
 // ─── Types ──────────────────────────────────────────
@@ -116,7 +121,9 @@ export function createVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
  * });
  * ```
  */
-export function createSsrVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
+export function createSsrVueMicroApp(
+  config: VueMicroAppConfig
+): MicroAppModule {
   let app: App | null = null;
 
   const module: MicroAppModule = {
@@ -193,8 +200,6 @@ export function useTuvixBus<T = unknown>(
   event: string,
   handler: EventHandler<T>
 ): Unsubscribe {
-
-
   let unsub: Unsubscribe | null = null;
 
   onMounted(() => {
@@ -225,7 +230,6 @@ export function useTuvixProps<T extends Record<string, unknown>>(
   bus?: IEventBus,
   updateEvent = 'tuvix:props:update'
 ): ShallowRef<T> {
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const props = shallowRef({ ...initialProps }) as any as ShallowRef<T>;
   let unsub: Unsubscribe | null = null;

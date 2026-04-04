@@ -41,10 +41,7 @@ export async function renderAngularToString(
     options?.document ??
     `<!DOCTYPE html><html><head></head><body><${selector}></${selector}></body></html>`;
 
-  const providers = [
-    provideServerRendering(),
-    ...(options?.providers ?? []),
-  ];
+  const providers = [provideServerRendering(), ...(options?.providers ?? [])];
 
   const html = await renderApplication(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

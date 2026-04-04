@@ -5,7 +5,9 @@ export const esConfig: LocaleConfig<DefaultTheme.Config>[string] = {
     nav: [
       { text: 'Guía', link: '/es/guide/getting-started', activeMatch: '/es/guide/' },
       { text: 'Paquetes', link: '/es/packages/', activeMatch: '/es/packages/' },
+      { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'Contribuir', link: '/es/contributing' },
+      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Contribuir', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
     ],
     sidebar: {
       '/es/guide/': [

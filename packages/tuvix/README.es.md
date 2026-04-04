@@ -39,10 +39,6 @@ This umbrella package re-exports all core Tuvix.js modules:
 - **@tuvix.js/loader** — Dynamic module loading
 - **@tuvix.js/sandbox** — CSS/JS isolation
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/tuvix)
-
 ## License
 
 MIT

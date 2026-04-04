@@ -18,5 +18,9 @@
     "typescript-eslint": "^8.15.0",
     "vitepress": "^1.6.4",
     "vue": "^3.5.13"
+  },
+  "dependencies": {
+    "@monaco-editor/loader": "^1.7.0",
+    "esbuild-wasm": "^0.24.0"
   }
 }

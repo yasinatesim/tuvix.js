@@ -15,7 +15,7 @@ export const sharedConfig: UserConfig<DefaultTheme.Config> = {
       'meta',
       {
         property: 'og:image',
-        content: 'https://tuvixjs.dev/og-image.png',
+        content: 'https://tuvix.js.org/og-image.png',
       },
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],

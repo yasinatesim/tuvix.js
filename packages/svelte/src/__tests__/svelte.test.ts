@@ -67,4 +67,3 @@ describe('renderSvelteToString', () => {
     expect(result).toBe('');
   });
 });
-

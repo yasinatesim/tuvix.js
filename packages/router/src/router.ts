@@ -223,23 +223,28 @@ export class Router implements IRouter {
 
     // Run guards for browser-initiated navigation (back/forward buttons).
     // If a guard cancels, restore the previous URL without firing popstate.
-    this.runGuards(event).then((canNavigate) => {
-      if (!canNavigate) {
-        // replaceState does not trigger popstate, so this won't recurse.
-        if (this.mode === 'history') {
-          window.history.replaceState(null, '', from);
-        } else {
-          window.history.replaceState(null, '', '#' + from);
+    this.runGuards(event)
+      .then((canNavigate) => {
+        if (!canNavigate) {
+          // replaceState does not trigger popstate, so this won't recurse.
+          if (this.mode === 'history') {
+            window.history.replaceState(null, '', from);
+          } else {
+            window.history.replaceState(null, '', '#' + from);
+          }
+          return;
         }
-        return;
-      }
 
-      this._currentPath = newPath;
-      this._currentRoute = toRoute;
-      this.notifyChange(event);
-    }).catch((error) => {
-      console.error('[Tuvix Router] Guard error during browser navigation:', error);
-    });
+        this._currentPath = newPath;
+        this._currentRoute = toRoute;
+        this.notifyChange(event);
+      })
+      .catch((error) => {
+        console.error(
+          '[Tuvix Router] Guard error during browser navigation:',
+          error
+        );
+      });
   }
 
   private teardownListeners(): void {

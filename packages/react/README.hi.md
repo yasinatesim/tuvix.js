@@ -28,10 +28,6 @@ export const app = createReactMicroApp({
 - **`useTuvixBus(event, handler)`** — Subscribe to event bus events with auto-cleanup
 - **`useTuvixProps()`** — Access orchestrator props reactively
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/react)
-
 ## License
 
 MIT

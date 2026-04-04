@@ -28,8 +28,6 @@ import type { OrchestratorConfig } from './types';
  * orchestrator.start();
  * ```
  */
-export function createOrchestrator(
-  config?: OrchestratorConfig
-): Orchestrator {
+export function createOrchestrator(config?: OrchestratorConfig): Orchestrator {
   return new Orchestrator(config);
 }

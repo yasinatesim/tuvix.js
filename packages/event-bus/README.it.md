@@ -31,10 +31,6 @@ bus.emit('user:login', { userId: '123' });
 - **`resetGlobalBus()`** — Reset the global event bus
 - **`EventBus`** — Typed pub/sub with `emit()`, `on()`, `once()`, `off()`, `clear()`
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/event-bus)
-
 ## License
 
 MIT

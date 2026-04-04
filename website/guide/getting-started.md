@@ -111,13 +111,13 @@ npm run build
 // dashboard/main.tsx
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 
 function Dashboard({ user }: { user: string }) {
   return <h1>Welcome, {user}!</h1>;
 }
 
-export const app = createMicroApp(Dashboard);
+export const app = createReactMicroApp(Dashboard);
 ```
 
 ## With Vue
@@ -125,10 +125,10 @@ export const app = createMicroApp(Dashboard);
 ```ts
 // dashboard/main.ts
 import { createApp } from 'vue';
-import { createMicroApp } from '@tuvix.js/vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 import Dashboard from './Dashboard.vue';
 
-export const app = createMicroApp(Dashboard);
+export const app = createVueMicroApp(Dashboard);
 ```
 
 ## Next Steps

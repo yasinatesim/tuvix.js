@@ -84,9 +84,7 @@ describe('JsSandbox', () => {
     const strictSandbox = new JsSandbox([], true);
 
     strictSandbox.activate();
-    (strictSandbox.proxyWindow as Record<string, unknown>)[
-      '__strict_test'
-    ] = 1;
+    (strictSandbox.proxyWindow as Record<string, unknown>)['__strict_test'] = 1;
 
     expect(warnSpy).toHaveBeenCalledWith(
       expect.stringContaining('Blocked write')

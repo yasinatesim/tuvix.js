@@ -9,9 +9,10 @@ export const enConfig: LocaleConfig<DefaultTheme.Config>[string] = {
         link: '/packages/',
         activeMatch: '/packages/',
       },
+      { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'Contributing', link: '/contributing' },
       {
-        text: 'v0.1.2',
+        text: 'v0.1.4',
         items: [
           {
             text: 'Changelog',

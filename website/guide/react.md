@@ -8,20 +8,20 @@
 npm install @tuvix.js/react react react-dom
 ```
 
-## createMicroApp
+## createReactMicroApp
 
 The simplest way to expose a React component as a micro app:
 
 ```tsx
 // src/main.tsx
 import React from 'react';
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import App from './App';
 
-export const app = createMicroApp(App);
+export const app = createReactMicroApp(App);
 ```
 
-`createMicroApp` handles the `mount`, `unmount` and `update` lifecycle automatically - it creates a React root, renders your component with `props`, and tears it down on unmount.
+`createReactMicroApp` handles the `mount`, `unmount` and `update` lifecycle automatically - it creates a React root, renders your component with `props`, and tears it down on unmount.
 
 ## Props
 
@@ -44,33 +44,22 @@ function Profile({ userId, theme }: ProfileProps) {
   return <div className={`profile theme-${theme}`}>User: {userId}</div>;
 }
 
-export const app = createMicroApp(Profile);
+export const app = createReactMicroApp(Profile);
 ```
 
-## useMicroApp Hook
-
-Access the current micro app context (props, name, container) from any component:
-
-```tsx
-import { useMicroApp } from '@tuvix.js/react';
-
-function Dashboard() {
-  const { props, name } = useMicroApp();
-  return <div>App: {name}, Props: {JSON.stringify(props)}</div>;
-}
-```
-
-## useTuvixEvent Hook
+## useTuvixBus Hook
 
 Subscribe to event bus events reactively, with automatic cleanup on unmount:
 
 ```tsx
-import { useTuvixEvent } from '@tuvix.js/react';
+import { useTuvixBus } from '@tuvix.js/react';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 function CartBadge() {
   const [count, setCount] = useState(0);
+  const bus = getGlobalBus();
 
-  useTuvixEvent('cart:updated', ({ itemCount }) => {
+  useTuvixBus(bus, 'cart:updated', ({ itemCount }) => {
     setCount(itemCount);
   });
 
@@ -83,7 +72,8 @@ function CartBadge() {
 ```tsx
 // src/App.tsx
 import React, { useState } from 'react';
-import { useTuvixEvent } from '@tuvix.js/react';
+import { useTuvixBus } from '@tuvix.js/react';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 interface AppProps {
   apiUrl: string;
@@ -91,8 +81,9 @@ interface AppProps {
 
 export function App({ apiUrl }: AppProps) {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const bus = getGlobalBus();
 
-  useTuvixEvent('theme:changed', ({ theme: t }) => {
+  useTuvixBus(bus, 'theme:changed', ({ theme: t }) => {
     setTheme(t);
   });
 
@@ -105,10 +96,10 @@ export function App({ apiUrl }: AppProps) {
 }
 
 // src/main.tsx
-import { createMicroApp } from '@tuvix.js/react';
+import { createReactMicroApp } from '@tuvix.js/react';
 import { App } from './App';
 
-export const app = createMicroApp(App);
+export const app = createReactMicroApp(App);
 ```
 
 ## Manual Lifecycle

@@ -8,14 +8,14 @@
 npm install @tuvix.js/svelte svelte
 ```
 
-## createMicroApp
+## createSvelteMicroApp
 
 ```ts
 // src/main.ts
-import { createMicroApp } from '@tuvix.js/svelte';
+import { createSvelteMicroApp } from '@tuvix.js/svelte';
 import App from './App.svelte';
 
-export const app = createMicroApp(App);
+export const app = createSvelteMicroApp(App);
 ```
 
 ## Props (Svelte 5)
@@ -46,10 +46,11 @@ export const app = createMicroApp(App);
 ```svelte
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { eventBus } from '@tuvix.js/event-bus';
+  import { getGlobalBus } from '@tuvix.js/event-bus';
 
   let count = 0;
-  const unsub = eventBus.on('cart:updated', ({ itemCount }) => {
+  const bus = getGlobalBus();
+  const unsub = bus.on('cart:updated', ({ itemCount }) => {
     count = itemCount;
   });
 

@@ -31,10 +31,6 @@ Toggle the panel with `Ctrl+Shift+T` (or `Cmd+Shift+T` on macOS).
 - **`DevToolsPanel`** — The debug panel UI class
 - **`EventLogger`** — Event logging utility
 
-## Documentation
-
-📖 [Full documentation](https://tuvix.js.org/packages/devtools)
-
 ## License
 
 MIT

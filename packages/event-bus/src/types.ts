@@ -6,10 +6,7 @@ export type EventHandler<T = unknown> = (data: T) => void;
 /**
  * Wildcard event handler that receives event name and data
  */
-export type WildcardHandler<T = unknown> = (
-  eventName: string,
-  data: T
-) => void;
+export type WildcardHandler<T = unknown> = (eventName: string, data: T) => void;
 
 /**
  * Unsubscribe function returned by on/once methods

@@ -21,15 +21,15 @@ npm install tuvix.js
 ```ts
 import { createOrchestrator } from 'tuvix.js/core';
 import { createRouter } from 'tuvix.js/router';
-import { eventBus } from 'tuvix.js/event-bus';
-import { loadMicroApp } from 'tuvix.js/loader';
+import { getGlobalBus, createEventBus } from 'tuvix.js/event-bus';
+import { createLoader } from 'tuvix.js/loader';
 import { createSandbox } from 'tuvix.js/sandbox';
 ```
 
 Or import everything at once:
 
 ```ts
-import { createOrchestrator, createRouter, eventBus } from 'tuvix.js';
+import { createOrchestrator, createRouter, getGlobalBus, createEventBus } from 'tuvix.js';
 ```
 
 ## What's Included
@@ -38,8 +38,8 @@ import { createOrchestrator, createRouter, eventBus } from 'tuvix.js';
 |--------|------|
 | `createOrchestrator` | `@tuvix.js/core` |
 | `createRouter` | `@tuvix.js/router` |
-| `eventBus`, `createEventBus` | `@tuvix.js/event-bus` |
-| `loadMicroApp`, `createLoader` | `@tuvix.js/loader` |
+| `createEventBus`, `getGlobalBus` | `@tuvix.js/event-bus` |
+| `createLoader` | `@tuvix.js/loader` |
 | `createSandbox` | `@tuvix.js/sandbox` |
 
 ## When to Use Individual Packages

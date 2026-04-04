@@ -5,7 +5,9 @@ export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
     nav: [
       { text: 'गाइड', link: '/hi/guide/getting-started', activeMatch: '/hi/guide/' },
       { text: 'पैकेज', link: '/hi/packages/', activeMatch: '/hi/packages/' },
+      { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'योगदान', link: '/hi/contributing' },
+      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'योगदान', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
     ],
     sidebar: {
       '/hi/guide/': [

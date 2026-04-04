@@ -191,7 +191,9 @@ describe('fallback HTML', () => {
     setupDOM();
 
     preRegisterModule('broken-app', {
-      mount: () => { throw new Error('mount failed'); },
+      mount: () => {
+        throw new Error('mount failed');
+      },
       unmount: () => {},
     });
 
@@ -214,7 +216,9 @@ describe('fallback HTML', () => {
     document.querySelector('#main')!.innerHTML = '<p>original</p>';
 
     preRegisterModule('broken-no-fallback', {
-      mount: () => { throw new Error('mount failed'); },
+      mount: () => {
+        throw new Error('mount failed');
+      },
       unmount: () => {},
     });
 
@@ -224,9 +228,7 @@ describe('fallback HTML', () => {
       container: '#main',
     });
 
-    await expect(
-      orchestrator.mountApp('broken-no-fallback')
-    ).rejects.toThrow();
+    await expect(orchestrator.mountApp('broken-no-fallback')).rejects.toThrow();
 
     expect(document.querySelector('#main')!.innerHTML).toBe('<p>original</p>');
   });
@@ -236,7 +238,9 @@ describe('fallback HTML', () => {
     setupDOM();
 
     preRegisterModule('err-app', {
-      mount: () => { throw new Error('boom'); },
+      mount: () => {
+        throw new Error('boom');
+      },
       unmount: () => {},
     });
 
