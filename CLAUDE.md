@@ -22,17 +22,20 @@ After implementation, **run the `/test-driven-development` skill** to write prop
 
 ### Tests Must Pass the CI Pipeline
 
-Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate locally by running:
+Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate locally by running **every command below in order** — do NOT skip any:
 ```bash
 pnpm install --frozen-lockfile
-pnpm lint          # MUST pass with 0 errors — fix all errors before proceeding
-pnpm build
-pnpm test
+pnpm lint                        # MUST pass with 0 errors — fix all errors before proceeding
+pnpm build                       # Root monorepo build
+pnpm test                        # Unit tests + validate-docs (chained)
 pnpm check-types
-pnpm check-links   # All markdown links must resolve
-pnpm validate-docs # Code examples must match package exports
+pnpm check-links                 # All markdown links must resolve
+pnpm --filter @tuvix.js/website lint   # Website-specific lint (separate CI job)
+pnpm --filter @tuvix.js/website build  # Website build must succeed (separate CI job)
 pnpm format --check || true
 ```
+
+**Every command above maps to a CI job. If any command fails locally, it will fail in CI.** Fix all failures before proceeding — never leave a failing check for a follow-up commit.
 
 **`pnpm lint` must exit with 0 errors before any commit.** ESLint errors (`@typescript-eslint/no-explicit-any`, `no-useless-escape`, etc.) break the CI pipeline and must be fixed in the same commit as the implementation — never left for a follow-up.
 
