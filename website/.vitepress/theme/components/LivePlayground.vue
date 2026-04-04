@@ -287,117 +287,119 @@ app.mount({ container: document.getElementById('app') as HTMLElement });
 `;
 
 // ── Vue ─────────────────────────────────────────────────────────────
-const VUE_COUNTER_CODE = `import { createVueMicroApp } from '@tuvix.js/vue';
-import { defineComponent, ref } from 'vue';
+const VUE_COUNTER_CODE = [
+  "import { createVueMicroApp } from '@tuvix.js/vue';",
+  "import { defineComponent, ref } from 'vue';",
+  "",
+  "const CounterApp = defineComponent({",
+  "  setup() {",
+  "    const count = ref(0);",
+  "    return { count };",
+  "  },",
+  "  template: `",
+  '    <div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">',
+  '      <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Vue</h2>',
+  '      <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">{{ count }}</div>',
+  '      <div style="display:flex;gap:12px;justify-content:center">',
+  '        <button @click="count--"',
+  '          style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;',
+  '                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>',
+  '        <button @click="count++"',
+  '          style="padding:10px 24px;background:#00e5a0;color:#000;border:none;',
+  '                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>',
+  "      </div>",
+  "    </div>",
+  "  `,",
+  "});",
+  "",
+  "const app = createVueMicroApp({",
+  "  name: 'counter-vue',",
+  "  App: CounterApp,",
+  "});",
+  "",
+  "app.mount({ container: document.getElementById('app') as HTMLElement });",
+].join('\n');
 
-const CounterApp = defineComponent({
-  setup() {
-    const count = ref(0);
-    return { count };
-  },
-  template: \`
-    <div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">
-      <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Vue</h2>
-      <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">{{ count }}</div>
-      <div style="display:flex;gap:12px;justify-content:center">
-        <button @click="count--"
-          style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;
-                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>
-        <button @click="count++"
-          style="padding:10px 24px;background:#00e5a0;color:#000;border:none;
-                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>
-      </div>
-    </div>
-  \`,
-});
-
-const app = createVueMicroApp({
-  name: 'counter-vue',
-  App: CounterApp,
-});
-
-app.mount({ container: document.getElementById('app') as HTMLElement });
-`;
-
-const VUE_TODO_CODE = `import { createVueMicroApp } from '@tuvix.js/vue';
-import { defineComponent, ref } from 'vue';
-
-const TodoApp = defineComponent({
-  setup() {
-    const todos = ref([
-      { id: 1, title: 'Learn tuvix.js', completed: false },
-      { id: 2, title: 'Build micro-apps', completed: false },
-    ]);
-    const input = ref('');
-    const editingId = ref(null as number | null);
-    const editText = ref('');
-
-    const add = () => {
-      if (input.value.trim()) { todos.value.push({ id: Date.now(), title: input.value.trim(), completed: false }); input.value = ''; }
-    };
-    const remove = (id: number) => { todos.value = todos.value.filter(t => t.id !== id); };
-    const toggle = (id: number) => {
-      const t = todos.value.find(x => x.id === id);
-      if (t) t.completed = !t.completed;
-    };
-    const startEdit = (t: { id: number; title: string }) => { editingId.value = t.id; editText.value = t.title; };
-    const saveEdit = () => {
-      if (editingId.value !== null && editText.value.trim()) {
-        const t = todos.value.find(x => x.id === editingId.value);
-        if (t) t.title = editText.value.trim();
-        editingId.value = null;
-      }
-    };
-
-    return { todos, input, editingId, editText, add, remove, toggle, startEdit, saveEdit };
-  },
-  template: \`
-    <div style="font-family:sans-serif;padding:24px;max-width:420px">
-      <h2 style="color:#00e5a0;margin:0 0 16px;font-size:20px">Todo — Vue</h2>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
-        <input v-model="input" @keydown.enter="add" placeholder="Add todo..."
-          style="flex:1;padding:8px 12px;border:1px solid #2d3748;border-radius:6px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px" />
-        <button @click="add"
-          style="padding:8px 16px;background:#00e5a0;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">Add</button>
-      </div>
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-        <li v-for="t in todos" :key="t.id"
-          style="display:flex;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">
-          <input type="checkbox" :checked="t.completed" @change="toggle(t.id)"
-            style="margin-right:10px;cursor:pointer" />
-          <template v-if="editingId === t.id">
-            <input v-model="editText" @keydown.enter="saveEdit"
-              style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px;margin-right:6px" />
-            <button @click="saveEdit"
-              style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>
-          </template>
-          <template v-else>
-            <span :style="{ flex:1, color:'#e2e8f0', fontSize:'14px', textDecoration: t.completed ? 'line-through' : 'none', opacity: t.completed ? 0.5 : 1 }">{{ t.title }}</span>
-            <button @click="startEdit(t)"
-              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>
-          </template>
-          <button @click="remove(t.id)"
-            style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>
-        </li>
-      </ul>
-    </div>
-  \`,
-});
-
-const app = createVueMicroApp({
-  name: 'todo-vue',
-  App: TodoApp,
-});
-
-app.mount({ container: document.getElementById('app') as HTMLElement });
-`;
+const VUE_TODO_CODE = [
+  "import { createVueMicroApp } from '@tuvix.js/vue';",
+  "import { defineComponent, ref } from 'vue';",
+  "",
+  "const TodoApp = defineComponent({",
+  "  setup() {",
+  "    const todos = ref([",
+  "      { id: 1, title: 'Learn tuvix.js', completed: false },",
+  "      { id: 2, title: 'Build micro-apps', completed: false },",
+  "    ]);",
+  "    const input = ref('');",
+  "    const editingId = ref(null as number | null);",
+  "    const editText = ref('');",
+  "",
+  "    const add = () => {",
+  "      if (input.value.trim()) { todos.value.push({ id: Date.now(), title: input.value.trim(), completed: false }); input.value = ''; }",
+  "    };",
+  "    const remove = (id: number) => { todos.value = todos.value.filter(t => t.id !== id); };",
+  "    const toggle = (id: number) => {",
+  "      const t = todos.value.find(x => x.id === id);",
+  "      if (t) t.completed = !t.completed;",
+  "    };",
+  "    const startEdit = (t: { id: number; title: string }) => { editingId.value = t.id; editText.value = t.title; };",
+  "    const saveEdit = () => {",
+  "      if (editingId.value !== null && editText.value.trim()) {",
+  "        const t = todos.value.find(x => x.id === editingId.value);",
+  "        if (t) t.title = editText.value.trim();",
+  "        editingId.value = null;",
+  "      }",
+  "    };",
+  "",
+  "    return { todos, input, editingId, editText, add, remove, toggle, startEdit, saveEdit };",
+  "  },",
+  "  template: `",
+  '    <div style="font-family:sans-serif;padding:24px;max-width:420px">',
+  '      <h2 style="color:#00e5a0;margin:0 0 16px;font-size:20px">Todo — Vue</h2>',
+  '      <div style="display:flex;gap:8px;margin-bottom:16px">',
+  '        <input v-model="input" @keydown.enter="add" placeholder="Add todo..."',
+  '          style="flex:1;padding:8px 12px;border:1px solid #2d3748;border-radius:6px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px" />',
+  '        <button @click="add"',
+  '          style="padding:8px 16px;background:#00e5a0;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">Add</button>',
+  "      </div>",
+  '      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">',
+  '        <li v-for="t in todos" :key="t.id"',
+  '          style="display:flex;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">',
+  '          <input type="checkbox" :checked="t.completed" @change="toggle(t.id)"',
+  '            style="margin-right:10px;cursor:pointer" />',
+  "          <template v-if=\"editingId === t.id\">",
+  '            <input v-model="editText" @keydown.enter="saveEdit"',
+  '              style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px;margin-right:6px" />',
+  '            <button @click="saveEdit"',
+  '              style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>',
+  "          </template>",
+  "          <template v-else>",
+  "            <span :style=\"{ flex:1, color:'#e2e8f0', fontSize:'14px', textDecoration: t.completed ? 'line-through' : 'none', opacity: t.completed ? 0.5 : 1 }\">{{ t.title }}</span>",
+  '            <button @click="startEdit(t)"',
+  '              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>',
+  "          </template>",
+  '          <button @click="remove(t.id)"',
+  '            style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>',
+  "        </li>",
+  "      </ul>",
+  "    </div>",
+  "  `,",
+  "});",
+  "",
+  "const app = createVueMicroApp({",
+  "  name: 'todo-vue',",
+  "  App: TodoApp,",
+  "});",
+  "",
+  "app.mount({ container: document.getElementById('app') as HTMLElement });",
+].join('\n');
 
 // ── Svelte ──────────────────────────────────────────────────────────
 const SVELTE_COUNTER_CODE = `<!-- Entry file (main.ts):
   import { createSvelteMicroApp } from '@tuvix.js/svelte';
   import App from './Counter.svelte';
   const app = createSvelteMicroApp({ name: 'counter-svelte', App });
-  app.mount({ container: document.getElementById('app') as HTMLElement });
+  app.mount({ container: document.getElementById('app') });
 -->
 
 <script lang="ts">
@@ -422,7 +424,7 @@ const SVELTE_TODO_CODE = `<!-- Entry file (main.ts):
   import { createSvelteMicroApp } from '@tuvix.js/svelte';
   import App from './Todo.svelte';
   const app = createSvelteMicroApp({ name: 'todo-svelte', App });
-  app.mount({ container: document.getElementById('app') as HTMLElement });
+  app.mount({ container: document.getElementById('app') });
 -->
 
 <script lang="ts">
@@ -466,7 +468,9 @@ ${CS}
           <button on:click={saveEdit}
             style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>
         {:else}
-          <span style="flex:1;color:#e2e8f0;font-size:14px;{todo.completed ? 'text-decoration:line-through;opacity:0.5' : ''}">{todo.title}</span>
+          <span style="flex:1;color:#e2e8f0;font-size:14px"
+            style:text-decoration={todo.completed ? 'line-through' : 'none'}
+            style:opacity={todo.completed ? '0.5' : '1'}>{todo.title}</span>
           <button on:click={() => startEdit(todo)}
             style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>
         {/if}
@@ -624,6 +628,7 @@ const TABS = [
 ];
 
 // ── Importmaps ─────────────────────────────────────────────────────
+// tuvix.js core is 0.1.4, but framework bindings have independent versions
 const TUVIX = '0.1.4';
 const BASE: Record<string, string> = {
   'tuvix.js':            `https://esm.sh/tuvix.js@${TUVIX}`,
@@ -635,33 +640,34 @@ const BASE: Record<string, string> = {
 };
 const FRAMEWORK_IMPORTS: Record<string, Record<string, string>> = {
   react: {
-    '@tuvix.js/react':   `https://esm.sh/@tuvix.js/react@${TUVIX}`,
+    '@tuvix.js/react':   'https://esm.sh/@tuvix.js/react?external=react,react-dom,react-dom/client',
     'react':             'https://esm.sh/react@18',
     'react-dom':         'https://esm.sh/react-dom@18',
     'react-dom/client':  'https://esm.sh/react-dom@18/client',
     'react/jsx-runtime': 'https://esm.sh/react@18/jsx-runtime',
   },
   vue: {
-    '@tuvix.js/vue': `https://esm.sh/@tuvix.js/vue@${TUVIX}`,
+    '@tuvix.js/vue': 'https://esm.sh/@tuvix.js/vue?external=vue',
     'vue': 'https://esm.sh/vue@3',
   },
   svelte: {
-    '@tuvix.js/svelte':   `https://esm.sh/@tuvix.js/svelte@${TUVIX}`,
-    'svelte':             'https://esm.sh/svelte@4',
-    'svelte/internal':    'https://esm.sh/svelte@4/internal',
-    'svelte/store':       'https://esm.sh/svelte@4/store',
-    'svelte/transition':  'https://esm.sh/svelte@4/transition',
-    'svelte/animate':     'https://esm.sh/svelte@4/animate',
-    'svelte/easing':      'https://esm.sh/svelte@4/easing',
-    'svelte/motion':      'https://esm.sh/svelte@4/motion',
+    '@tuvix.js/svelte':          'https://esm.sh/@tuvix.js/svelte?external=svelte',
+    'svelte':                    'https://esm.sh/svelte@4',
+    'svelte/internal':           'https://esm.sh/svelte@4/internal',
+    'svelte/internal/disclose-version': 'https://esm.sh/svelte@4/internal/disclose-version',
+    'svelte/store':              'https://esm.sh/svelte@4/store',
+    'svelte/transition':         'https://esm.sh/svelte@4/transition',
+    'svelte/animate':            'https://esm.sh/svelte@4/animate',
+    'svelte/easing':             'https://esm.sh/svelte@4/easing',
+    'svelte/motion':             'https://esm.sh/svelte@4/motion',
   },
   angular: {
     '@angular/core':                    'https://esm.sh/@angular/core@17',
     '@angular/common':                  'https://esm.sh/@angular/common@17',
     '@angular/forms':                   'https://esm.sh/@angular/forms@17',
+    '@angular/compiler':                'https://esm.sh/@angular/compiler@17',
     '@angular/platform-browser':        'https://esm.sh/@angular/platform-browser@17',
     '@angular/platform-browser/animations': 'https://esm.sh/@angular/platform-browser@17/animations',
-    '@angular/compiler':                'https://esm.sh/@angular/compiler@17',
     'rxjs':                             'https://esm.sh/rxjs@7',
     'rxjs/operators':                   'https://esm.sh/rxjs@7/operators',
   },
@@ -692,15 +698,19 @@ function buildSrcdoc(code: string, tabId: string): string {
   const imports = { ...BASE, ...(FRAMEWORK_IMPORTS[tabId] ?? {}) };
   const importmap = JSON.stringify({ imports }, null, 2);
   const safe = code.replaceAll('<' + '/script>', '<\\/' + 'script>');
-  // Angular needs zone.js loaded before anything else
+  // Angular needs zone.js + compiler loaded before anything else
   const zoneTag = tabId === 'angular'
-    ? ['<script src="https://esm.sh/zone.js@0.14/dist/zone.js">', CS].join('')
+    ? ['<script src="https://cdn.jsdelivr.net/npm/zone.js@0.15/bundles/zone.umd.min.js">', CS].join('')
+    : '';
+  const compilerTag = tabId === 'angular'
+    ? ['<script type="module">import "@angular/compiler";', CS].join('')
     : '';
   return [
     '<!DOCTYPE html><html><head><meta charset="utf-8">',
     '<style>*{box-sizing:border-box}body{margin:0;background:#080c10;color:#e2e8f0}</style>',
     zoneTag,
     '<script type="importmap">', importmap, CS,
+    compilerTag,
     '<script>',
     "['log','warn','error'].forEach(m=>{const o=console[m];console[m]=(...a)=>{parent.postMessage({type:'console',level:m,args:a.map(String)},'*');o.apply(console,a)};});",
     "window.onerror=(msg,_,line,col)=>{parent.postMessage({type:'runtime-error',msg,line,col},'*');};",
@@ -757,7 +767,7 @@ const __app = createVueMicroApp({
   name: 'vue-sfc',
   App: __component,
 });
-__app.mount({ container: document.getElementById('app') as HTMLElement });
+__app.mount({ container: document.getElementById('app') });
 `;
 }
 
@@ -767,7 +777,6 @@ async function transformSvelte(code: string): Promise<string> {
   const svelte = await import(/* @vite-ignore */ 'https://esm.sh/svelte@4/compiler');
   const { js } = (svelte as { compile: (code: string, opts: Record<string, unknown>) => { js: { code: string } } }).compile(code, {
     filename: 'App.svelte',
-    format: 'esm',
     generate: 'client',
     enableSourcemap: false,
   });
@@ -776,7 +785,7 @@ async function transformSvelte(code: string): Promise<string> {
   return `import { createSvelteMicroApp } from '@tuvix.js/svelte';
 ${compiled}
 const __app = createSvelteMicroApp({ name: 'svelte-app', App: __SvelteApp });
-__app.mount({ container: document.getElementById('app') as HTMLElement });`;
+__app.mount({ container: document.getElementById('app') });`;
 }
 
 // ── Esbuild compilation ────────────────────────────────────────────

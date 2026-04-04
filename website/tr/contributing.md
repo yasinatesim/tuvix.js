@@ -5,7 +5,7 @@ Katkı sağlamak istediğiniz için teşekkürler! İster hata düzeltme, ister 
 ## Katkı Yolları
 
 - **Hata raporları** - [Sorun açın](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **Özellik istekleri** - [Tartışma başlatın](https://github.com/yasinatesim/tuvix.js/discussions)
+- **Özellik istekleri** - [Tartışma başlatın](https://github.com/yasinatesim/tuvix.js/issues)
 - **Kod** - Hata düzeltin, özellik ekleyin, testleri geliştirin
 - **Belgeleme** - Yazım hatalarını düzeltin, örnek ekleyin
 - **Çeviriler** - Diğer dillerde belgeleme ekleyin veya geliştirin

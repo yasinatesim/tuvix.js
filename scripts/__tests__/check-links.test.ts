@@ -114,6 +114,16 @@ describe("shouldSkipUrl", () => {
   it("does not skip other external URLs", () => {
     expect(shouldSkipUrl("https://github.com/user/repo")).toBe(false);
   });
+
+  it("skips VitePress absolute router paths", () => {
+    expect(shouldSkipUrl("/guide/react")).toBe(true);
+    expect(shouldSkipUrl("/tr/guide/getting-started")).toBe(true);
+    expect(shouldSkipUrl("/packages/")).toBe(true);
+  });
+
+  it("does not skip protocol-relative URLs", () => {
+    expect(shouldSkipUrl("//cdn.example.com/file")).toBe(false);
+  });
 });
 
 // ─── isGitHubRepoUrl ────────────────────────────────────────────────────────
@@ -264,9 +274,9 @@ describe("findMarkdownFiles", () => {
   });
 
   it("finds .md files recursively in subdirectories", () => {
-    fs.mkdirSync(path.join(tmpDir, "docs"));
+    fs.mkdirSync(path.join(tmpDir, "guides"));
     fs.writeFileSync(path.join(tmpDir, "readme.md"), "");
-    fs.writeFileSync(path.join(tmpDir, "docs", "guide.md"), "");
+    fs.writeFileSync(path.join(tmpDir, "guides", "guide.md"), "");
 
     const files = findMarkdownFiles(tmpDir);
 

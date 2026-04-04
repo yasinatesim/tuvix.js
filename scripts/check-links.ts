@@ -15,7 +15,7 @@ export interface ExtractedLink {
   line: number;
 }
 
-export const SKIP_DIRS = new Set(["node_modules", ".git", "dist", ".claude"]);
+export const SKIP_DIRS = new Set(["node_modules", ".git", "dist", ".claude", "docs"]);
 
 export const SKIP_HOSTS = new Set([
   "localhost",
@@ -24,6 +24,7 @@ export const SKIP_HOSTS = new Set([
   "cdn.example.com",
   "fonts.googleapis.com",
 ]);
+
 
 export const GITHUB_REPO_PREFIX =
   "https://github.com/yasinatesim/tuvix.js";
@@ -87,6 +88,12 @@ export function extractLinks(content: string): ExtractedLink[] {
 
 export function shouldSkipUrl(url: string): boolean {
   if (url.startsWith("#")) {
+    return true;
+  }
+
+  // VitePress router paths start with / but are not file paths — they are
+  // resolved at runtime by VitePress.  Skip them entirely.
+  if (url.startsWith("/") && !url.startsWith("//")) {
     return true;
   }
 

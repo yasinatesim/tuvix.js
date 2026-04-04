@@ -5,7 +5,7 @@
 ## 贡献方式
 
 - **Bug 报告** - [创建 Issue](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **功能请求** - [发起讨论](https://github.com/yasinatesim/tuvix.js/discussions)
+- **功能请求** - [发起讨论](https://github.com/yasinatesim/tuvix.js/issues)
 - **代码** - 修复 Bug、添加功能、改进测试
 - **文档** - 修正错别字、添加示例、提升清晰度
 - **翻译** - 添加或改进其他语言的文档

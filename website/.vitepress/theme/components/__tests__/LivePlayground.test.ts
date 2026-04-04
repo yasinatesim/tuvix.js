@@ -1,42 +1,106 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { transform } from 'esbuild';
 
 /**
  * Tests for LivePlayground.vue code examples and transformers.
  *
- * Since all logic lives inside a Vue <script setup> SFC, we test by
- * reading the source and asserting on its string content. This validates
- * that framework-specific imports, demo code variants, and transformer
- * outputs are correct.
+ * Includes real esbuild compile tests to catch syntax errors that
+ * would cause runtime failures in the playground preview.
  */
 
 const SFC_PATH = resolve(__dirname, '..', 'LivePlayground.vue');
 const source = readFileSync(SFC_PATH, 'utf-8');
 
 /**
- * Extract the content between a `const NAME = \`...\`;` block.
- * Handles nested backtick template literals by tracking escape sequences.
+ * Extract code block content. Handles both:
+ * - Template literal: `const NAME = \`...\`;`
+ * - Array join: `const NAME = [...].join('\n');`
  */
 function extractCodeBlock(varName: string): string | null {
-  const marker = `const ${varName} = \``;
-  const start = source.indexOf(marker);
-  if (start === -1) return null;
-  const codeStart = start + marker.length;
-
-  // Walk through, tracking escaped backticks
-  let i = codeStart;
-  while (i < source.length) {
-    if (source[i] === '\\') {
-      i += 2; // skip escaped char
-      continue;
+  // Try template literal first
+  const tplMarker = `const ${varName} = \``;
+  let start = source.indexOf(tplMarker);
+  if (start !== -1) {
+    const codeStart = start + tplMarker.length;
+    let i = codeStart;
+    while (i < source.length) {
+      if (source[i] === '\\') { i += 2; continue; }
+      if (source[i] === '`') {
+        // Unescape: \` → `, \$ → $, \\ → \
+        return source.slice(codeStart, i)
+          .replace(/\\`/g, '`')
+          .replace(/\\\$/g, '$')
+          .replace(/\\\\/g, '\\');
+      }
+      i++;
     }
-    if (source[i] === '`') {
-      return source.slice(codeStart, i);
-    }
-    i++;
   }
+
+  // Try array join pattern
+  const arrMarker = `const ${varName} = [`;
+  start = source.indexOf(arrMarker);
+  if (start !== -1) {
+    const arrStart = start + arrMarker.length - 1; // include the [
+    let depth = 1;
+    let i = arrStart + 1;
+    while (i < source.length && depth > 0) {
+      if (source[i] === '[') depth++;
+      else if (source[i] === ']') depth--;
+      i++;
+    }
+    // Extract the array content, eval it to get the joined string
+    const arrContent = source.slice(arrStart, i);
+    try {
+      // Safe: only string literals in a known file we control
+      const arr = new Function(`return ${arrContent}`)();
+      return arr.join('\n');
+    } catch {
+      return null;
+    }
+  }
+
   return null;
+}
+
+/**
+ * Compile TypeScript/TSX code with esbuild — same as the playground does.
+ * Returns the error message if compilation fails, null if successful.
+ */
+async function compileCode(code: string, loader: 'ts' | 'tsx' = 'ts'): Promise<string | null> {
+  try {
+    await transform(code, {
+      loader,
+      format: 'esm',
+      target: 'es2020',
+      jsx: loader === 'tsx' ? 'automatic' : undefined,
+      jsxImportSource: loader === 'tsx' ? 'react' : undefined,
+    });
+    return null;
+  } catch (err: unknown) {
+    const e = err as { errors?: { text: string }[] };
+    return e.errors?.[0]?.text ?? String(err);
+  }
+}
+
+/**
+ * Compile Angular code with esbuild using decorator support.
+ */
+async function compileAngular(code: string): Promise<string | null> {
+  try {
+    await transform(code, {
+      loader: 'ts',
+      format: 'esm',
+      target: 'es2020',
+      tsconfigRaw: JSON.stringify({ compilerOptions: { experimentalDecorators: true, useDefineForClassFields: false } }),
+    });
+    return null;
+  } catch (err: unknown) {
+    const e = err as { errors?: { text: string }[] };
+    return e.errors?.[0]?.text ?? String(err);
+  }
 }
 
 /**
@@ -63,17 +127,17 @@ function extractFunction(fnSignature: string): string | null {
 describe('FRAMEWORK_IMPORTS', () => {
   it('includes @tuvix.js/react in react imports', () => {
     expect(source).toContain("'@tuvix.js/react':");
-    expect(source).toMatch(/@tuvix\.js\/react@\$\{TUVIX\}/);
+    expect(source).toContain("esm.sh/@tuvix.js/react");
   });
 
   it('includes @tuvix.js/vue in vue imports', () => {
     expect(source).toContain("'@tuvix.js/vue':");
-    expect(source).toMatch(/@tuvix\.js\/vue@\$\{TUVIX\}/);
+    expect(source).toContain("esm.sh/@tuvix.js/vue");
   });
 
   it('includes @tuvix.js/svelte in svelte imports', () => {
     expect(source).toContain("'@tuvix.js/svelte':");
-    expect(source).toMatch(/@tuvix\.js\/svelte@\$\{TUVIX\}/);
+    expect(source).toContain("esm.sh/@tuvix.js/svelte");
   });
 
   it('still includes base tuvix.js package', () => {
@@ -359,5 +423,93 @@ describe('TABS definition', () => {
   it('uses getCode helper instead of static code on tabs', () => {
     expect(source).toContain('function getCode(');
     expect(source).toContain('DEMO_CODES');
+  });
+});
+
+// ── REAL COMPILE TESTS ──────────────────────────────────────────────
+// These actually run esbuild on the code examples to catch syntax errors
+// that would cause runtime failures in the playground preview.
+
+describe('esbuild compile validation', () => {
+  it('VANILLA_COUNTER_CODE compiles with esbuild ts loader', async () => {
+    const code = extractCodeBlock('VANILLA_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileCode(code!);
+    expect(err, `Vanilla counter failed to compile: ${err}`).toBeNull();
+  });
+
+  it('VANILLA_TODO_CODE compiles with esbuild ts loader', async () => {
+    const code = extractCodeBlock('VANILLA_TODO_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileCode(code!);
+    expect(err, `Vanilla todo failed to compile: ${err}`).toBeNull();
+  });
+
+  it('REACT_COUNTER_CODE compiles with esbuild tsx loader', async () => {
+    const code = extractCodeBlock('REACT_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileCode(code!, 'tsx');
+    expect(err, `React counter failed to compile: ${err}`).toBeNull();
+  });
+
+  it('REACT_TODO_CODE compiles with esbuild tsx loader', async () => {
+    const code = extractCodeBlock('REACT_TODO_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileCode(code!, 'tsx');
+    expect(err, `React todo failed to compile: ${err}`).toBeNull();
+  });
+
+  it('VUE_COUNTER_CODE compiles with esbuild ts loader', async () => {
+    const code = extractCodeBlock('VUE_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileCode(code!);
+    expect(err, `Vue counter failed to compile: ${err}`).toBeNull();
+  });
+
+  it('VUE_TODO_CODE compiles with esbuild ts loader', async () => {
+    const code = extractCodeBlock('VUE_TODO_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileCode(code!);
+    expect(err, `Vue todo failed to compile: ${err}`).toBeNull();
+  });
+
+  it('ANGULAR_COUNTER_CODE compiles with esbuild angular config', async () => {
+    const code = extractCodeBlock('ANGULAR_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileAngular(code!);
+    expect(err, `Angular counter failed to compile: ${err}`).toBeNull();
+  });
+
+  it('ANGULAR_TODO_CODE compiles with esbuild angular config', async () => {
+    const code = extractCodeBlock('ANGULAR_TODO_CODE');
+    expect(code).not.toBeNull();
+    const err = await compileAngular(code!);
+    expect(err, `Angular todo failed to compile: ${err}`).toBeNull();
+  });
+
+  // Note: Svelte code is compiled by Svelte compiler (not esbuild), so we
+  // cannot test it with esbuild. Svelte compilation happens at runtime via
+  // dynamic import from esm.sh. We verify the Svelte code is valid by
+  // checking that it doesn't contain syntax that the Svelte compiler rejects
+  // (like nested backtick issues or invalid directives).
+  it('SVELTE_COUNTER_CODE has valid Svelte structure', () => {
+    const code = extractCodeBlock('SVELTE_COUNTER_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain('<script');
+    expect(code).toContain('let count = 0');
+    // No broken template literal escaping
+    expect(code).not.toContain('\\`');
+    expect(code).not.toContain('\\\\`');
+  });
+
+  it('SVELTE_TODO_CODE has valid Svelte structure', () => {
+    const code = extractCodeBlock('SVELTE_TODO_CODE');
+    expect(code).not.toBeNull();
+    expect(code).toContain('<script');
+    expect(code).toContain('{#each todos');
+    // No invalid style interpolation (the old bug)
+    expect(code).not.toContain("style=\"flex:1;color:#e2e8f0;font-size:14px;{todo");
+    // Should use style: directive instead
+    expect(code).toContain('style:text-decoration');
   });
 });

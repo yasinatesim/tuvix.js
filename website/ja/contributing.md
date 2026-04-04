@@ -5,7 +5,7 @@
 ## 貢献の方法
 
 - **バグレポート** - [Issue を作成](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **機能リクエスト** - [ディスカッションを開始](https://github.com/yasinatesim/tuvix.js/discussions)
+- **機能リクエスト** - [ディスカッションを開始](https://github.com/yasinatesim/tuvix.js/issues)
 - **コード** - バグ修正、機能追加、テストの改善
 - **ドキュメント** - 誤字の修正、例の追加、明確さの向上
 - **翻訳** - 他の言語のドキュメントを追加または改善

@@ -5,7 +5,7 @@ Thank you for your interest in contributing! Whether it's a bug fix, new feature
 ## Ways to Contribute
 
 - **Bug reports** - [Open an issue](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **Feature requests** - [Start a discussion](https://github.com/yasinatesim/tuvix.js/discussions)
+- **Feature requests** - [Start a discussion](https://github.com/yasinatesim/tuvix.js/issues)
 - **Code** - Fix bugs, add features, improve tests
 - **Documentation** - Fix typos, add examples, improve clarity
 - **Translations** - Add or improve documentation in other languages

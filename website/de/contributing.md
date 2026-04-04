@@ -5,7 +5,7 @@ Vielen Dank für dein Interesse an einer Mitarbeit! Ob Fehlerbehebung, neues Fea
 ## Möglichkeiten beizutragen
 
 - **Fehlerberichte** - [Issue erstellen](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **Feature-Anfragen** - [Diskussion starten](https://github.com/yasinatesim/tuvix.js/discussions)
+- **Feature-Anfragen** - [Diskussion starten](https://github.com/yasinatesim/tuvix.js/issues)
 - **Code** - Fehler beheben, Features hinzufügen, Tests verbessern
 - **Dokumentation** - Tippfehler korrigieren, Beispiele hinzufügen, Klarheit verbessern
 - **Übersetzungen** - Dokumentation in anderen Sprachen hinzufügen oder verbessern

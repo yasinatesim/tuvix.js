@@ -5,7 +5,7 @@
 ## योगदान के तरीके
 
 - **बग रिपोर्ट** - [Issue बनाएं](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **सुविधा अनुरोध** - [चर्चा शुरू करें](https://github.com/yasinatesim/tuvix.js/discussions)
+- **सुविधा अनुरोध** - [चर्चा शुरू करें](https://github.com/yasinatesim/tuvix.js/issues)
 - **कोड** - बग ठीक करें, सुविधाएं जोड़ें, परीक्षण सुधारें
 - **दस्तावेज़ीकरण** - टाइपो ठीक करें, उदाहरण जोड़ें, स्पष्टता में सुधार करें
 - **अनुवाद** - अन्य भाषाओं में दस्तावेज़ीकरण जोड़ें या सुधारें
