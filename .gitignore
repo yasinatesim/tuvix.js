@@ -50,3 +50,4 @@ website/.vitepress/cache
 # Temp
 *.tmp
 tmp/
+.tmp/

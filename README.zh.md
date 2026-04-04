@@ -208,11 +208,19 @@ tuvix.js/
 │   ├── module-federation/  # @tuvix.js/module-federation
 │   └── tuvix/              # tuvix.js（总包）
 ├── examples/
-│   ├── react/              # React 18+ 示例
-│   ├── vue/                # Vue 3 示例
-│   ├── svelte/             # Svelte 5 示例
-│   ├── angular/            # Angular 15+ 示例
-│   └── vanilla/            # 原生 JS 示例
+│   ├── with-angular/              # Angular 15+ 示例
+│   ├── with-module-federation-react/ # Module Federation + React 示例
+│   ├── with-multiple-frameworks/  # 多框架示例
+│   ├── with-react/                # React 18+ 示例
+│   ├── with-react-devtools/       # React + DevTools 示例
+│   ├── with-react-event-bus/      # React + Event Bus 示例
+│   ├── with-react-router/         # React + Router 示例
+│   ├── with-react-sandbox/        # React + Sandbox 示例
+│   ├── with-ssr-react/            # SSR + React 示例
+│   ├── with-ssr-vanilla/          # SSR + 原生 JS 示例
+│   ├── with-svelte/               # Svelte 5 示例
+│   ├── with-vanilla/              # 原生 JS 示例
+│   └── with-vue/                  # Vue 3 示例
 ├── website/                # 文档站点（VitePress，支持 10 种语言）
 ├── .github/                # CI/CD 工作流
 ├── package.json            # 根工作区配置
@@ -261,12 +269,19 @@ tuvix.js/
 
 | 示例 | 框架 | 路径 |
 | --- | --- | --- |
-| [React 示例](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [Vue 示例](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
-| [Svelte 示例](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Angular 示例](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Module Federation + React 示例](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
+| [多框架示例](./examples/with-multiple-frameworks) | 混合 | `examples/with-multiple-frameworks/` |
+| [React 示例](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [React + DevTools 示例](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
+| [React + Event Bus 示例](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
+| [React + Router 示例](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
+| [React + Sandbox 示例](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
+| [SSR + React 示例](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
+| [SSR + 原生 JS 示例](./examples/with-ssr-vanilla) | 无框架 | `examples/with-ssr-vanilla/` |
+| [Svelte 示例](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [原生 JS 示例](./examples/with-vanilla) | 无框架 | `examples/with-vanilla/` |
-| [原生 JS + SSR 示例](./examples/with-ssr-vanilla) | 无框架 | `examples/with-ssr-vanilla/` |
+| [Vue 示例](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 每个示例演示了：
 - 启动Orchestrator的**Shell (Host)**应用

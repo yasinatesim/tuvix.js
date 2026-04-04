@@ -208,11 +208,19 @@ tuvix.js/
 │   ├── module-federation/  # @tuvix.js/module-federation
 │   └── tuvix/              # tuvix.js (package global)
 ├── examples/
-│   ├── react/              # Exemple React 18+
-│   ├── vue/                # Exemple Vue 3
-│   ├── svelte/             # Exemple Svelte 5
-│   ├── angular/            # Exemple Angular 15+
-│   └── vanilla/            # Exemple Vanilla JS
+│   ├── with-angular/              # Exemple Angular 15+
+│   ├── with-module-federation-react/ # Exemple Module Federation + React
+│   ├── with-multiple-frameworks/  # Exemple plusieurs frameworks
+│   ├── with-react/                # Exemple React 18+
+│   ├── with-react-devtools/       # Exemple React + DevTools
+│   ├── with-react-event-bus/      # Exemple React + Event Bus
+│   ├── with-react-router/         # Exemple React + Router
+│   ├── with-react-sandbox/        # Exemple React + Sandbox
+│   ├── with-ssr-react/            # Exemple SSR + React
+│   ├── with-ssr-vanilla/          # Exemple SSR + Vanilla JS
+│   ├── with-svelte/               # Exemple Svelte 5
+│   ├── with-vanilla/              # Exemple Vanilla JS
+│   └── with-vue/                  # Exemple Vue 3
 ├── website/                # Site de documentation (VitePress, 10 langues)
 ├── .github/                # Workflows CI/CD
 ├── package.json            # Configuration racine du workspace
@@ -261,12 +269,19 @@ Des exemples prêts à l'emploi pour chaque framework supporté sont disponibles
 
 | Exemple | Framework | Chemin |
 | --- | --- | --- |
-| [Exemple React](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [Exemple Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
-| [Exemple Svelte](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Exemple Angular](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Exemple Module Federation + React](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
+| [Exemple Plusieurs Frameworks](./examples/with-multiple-frameworks) | Mixte | `examples/with-multiple-frameworks/` |
+| [Exemple React](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [Exemple React + DevTools](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
+| [Exemple React + Event Bus](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
+| [Exemple React + Router](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
+| [Exemple React + Sandbox](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
+| [Exemple SSR + React](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
+| [Exemple SSR + Vanilla JS](./examples/with-ssr-vanilla) | Sans framework | `examples/with-ssr-vanilla/` |
+| [Exemple Svelte](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Exemple Vanilla JS](./examples/with-vanilla) | Sans framework | `examples/with-vanilla/` |
-| [Exemple Vanilla JS + SSR](./examples/with-ssr-vanilla) | Sans framework | `examples/with-ssr-vanilla/` |
+| [Exemple Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Chaque exemple illustre :
 - Une application **hôte (shell)** qui démarre l'orchestrateur

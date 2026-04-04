@@ -208,11 +208,19 @@ tuvix.js/
 │   ├── module-federation/  # @tuvix.js/module-federation
 │   └── tuvix/              # tuvix.js（アンブレラパッケージ）
 ├── examples/
-│   ├── react/              # React 18+サンプル
-│   ├── vue/                # Vue 3サンプル
-│   ├── svelte/             # Svelte 5サンプル
-│   ├── angular/            # Angular 15+サンプル
-│   └── vanilla/            # Vanilla JSサンプル
+│   ├── with-angular/              # Angular 15+サンプル
+│   ├── with-module-federation-react/ # Module Federation + Reactサンプル
+│   ├── with-multiple-frameworks/  # 複数フレームワークサンプル
+│   ├── with-react/                # React 18+サンプル
+│   ├── with-react-devtools/       # React + DevToolsサンプル
+│   ├── with-react-event-bus/      # React + Event Busサンプル
+│   ├── with-react-router/         # React + Routerサンプル
+│   ├── with-react-sandbox/        # React + Sandboxサンプル
+│   ├── with-ssr-react/            # SSR + Reactサンプル
+│   ├── with-ssr-vanilla/          # SSR + Vanilla JSサンプル
+│   ├── with-svelte/               # Svelte 5サンプル
+│   ├── with-vanilla/              # Vanilla JSサンプル
+│   └── with-vue/                  # Vue 3サンプル
 ├── website/                # ドキュメントサイト（VitePress、10言語対応）
 ├── .github/                # CI/CDワークフロー
 ├── package.json            # ルートワークスペース設定
@@ -261,12 +269,19 @@ tuvix.js/
 
 | サンプル | フレームワーク | パス |
 | --- | --- | --- |
-| [Reactサンプル](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [Vueサンプル](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
-| [Svelteサンプル](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Angularサンプル](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Module Federation + Reactサンプル](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
+| [複数フレームワークサンプル](./examples/with-multiple-frameworks) | 複合 | `examples/with-multiple-frameworks/` |
+| [Reactサンプル](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [React + DevToolsサンプル](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
+| [React + Event Busサンプル](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
+| [React + Routerサンプル](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
+| [React + Sandboxサンプル](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
+| [SSR + Reactサンプル](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
+| [SSR + Vanilla JSサンプル](./examples/with-ssr-vanilla) | フレームワークなし | `examples/with-ssr-vanilla/` |
+| [Svelteサンプル](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Vanilla JSサンプル](./examples/with-vanilla) | フレームワークなし | `examples/with-vanilla/` |
-| [Vanilla JS + SSRサンプル](./examples/with-ssr-vanilla) | フレームワークなし | `examples/with-ssr-vanilla/` |
+| [Vueサンプル](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 各サンプルでは以下を実演します：
 - Orchestratorを起動する**Host (Shell)**アプリケーション

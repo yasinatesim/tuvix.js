@@ -208,11 +208,19 @@ tuvix.js/
 │   ├── module-federation/  # @tuvix.js/module-federation
 │   └── tuvix/              # tuvix.js (şemsiye)
 ├── examples/
-│   ├── react/              # React 18+ örneği
-│   ├── vue/                # Vue 3 örneği
-│   ├── svelte/             # Svelte 5 örneği
-│   ├── angular/            # Angular 15+ örneği
-│   └── vanilla/            # Saf JS örneği
+│   ├── with-angular/              # Angular 15+ örneği
+│   ├── with-module-federation-react/ # Module Federation + React örneği
+│   ├── with-multiple-frameworks/  # Çoklu framework örneği
+│   ├── with-react/                # React 18+ örneği
+│   ├── with-react-devtools/       # React + DevTools örneği
+│   ├── with-react-event-bus/      # React + Event Bus örneği
+│   ├── with-react-router/         # React + Router örneği
+│   ├── with-react-sandbox/        # React + Sandbox örneği
+│   ├── with-ssr-react/            # SSR + React örneği
+│   ├── with-ssr-vanilla/          # SSR + Saf JS örneği
+│   ├── with-svelte/               # Svelte 5 örneği
+│   ├── with-vanilla/              # Saf JS örneği
+│   └── with-vue/                  # Vue 3 örneği
 ├── website/                # Dokümantasyon sitesi (VitePress, 10 dil)
 ├── .github/                # CI/CD iş akışları
 ├── package.json            # Kök çalışma alanı yapılandırması
@@ -261,12 +269,19 @@ Desteklenen her framework için çalıştırmaya hazır örnekler [`examples/`](
 
 | Örnek | Framework | Yol |
 | --- | --- | --- |
-| [React Örneği](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [Vue Örneği](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
-| [Svelte Örneği](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Angular Örneği](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Module Federation + React Örneği](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
+| [Çoklu Framework Örneği](./examples/with-multiple-frameworks) | Karma | `examples/with-multiple-frameworks/` |
+| [React Örneği](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [React + DevTools Örneği](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
+| [React + Event Bus Örneği](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
+| [React + Router Örneği](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
+| [React + Sandbox Örneği](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
+| [SSR + React Örneği](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
+| [SSR + Saf JS Örneği](./examples/with-ssr-vanilla) | Framework'süz | `examples/with-ssr-vanilla/` |
+| [Svelte Örneği](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Saf JS Örneği](./examples/with-vanilla) | Framework'süz | `examples/with-vanilla/` |
-| [Saf JS + SSR Örneği](./examples/with-ssr-vanilla) | Framework'süz | `examples/with-ssr-vanilla/` |
+| [Vue Örneği](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Her örnek şunları gösterir:
 - Orchestrator'ü başlatan bir **Shell (Host)** uygulaması

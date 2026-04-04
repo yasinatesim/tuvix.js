@@ -56,7 +56,7 @@
 }
 
 /* ─── Nav ────────────────────────────────────────────────────────── */
-.VPNav {
+.VPNavBar {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }

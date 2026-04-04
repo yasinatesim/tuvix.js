@@ -60,4 +60,59 @@ describe('createProject', () => {
 
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
+
+  it('should create project with vue-app template', async () => {
+    const tmpName = `.tmp/tuvix-vue-${Date.now()}`;
+    const tmpDir = path.resolve(process.cwd(), tmpName);
+
+    await createProject({
+      name: tmpName,
+      template: 'vue-app',
+      typescript: true,
+    });
+
+    expect(fs.existsSync(path.join(tmpDir, 'src/App.vue'))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, 'src/main.ts'))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, 'package.json'))).toBe(true);
+
+    const pkg = JSON.parse(
+      fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
+    );
+    expect(pkg.dependencies.vue).toBeDefined();
+    expect(pkg.dependencies['@tuvix.js/vue']).toBeDefined();
+
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('should create project with vanilla-app template', async () => {
+    const tmpName = `.tmp/tuvix-vanilla-${Date.now()}`;
+    const tmpDir = path.resolve(process.cwd(), tmpName);
+
+    await createProject({
+      name: tmpName,
+      template: 'vanilla-app',
+      typescript: true,
+    });
+
+    expect(fs.existsSync(path.join(tmpDir, 'src/main.ts'))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, 'index.html'))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, 'package.json'))).toBe(true);
+
+    const pkg = JSON.parse(
+      fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
+    );
+    expect(pkg.dependencies.react).toBeUndefined();
+    expect(pkg.dependencies.vue).toBeUndefined();
+
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  it('should use master branch URL for example download', () => {
+    const source = fs.readFileSync(
+      path.resolve(__dirname, '../create-project.ts'),
+      'utf-8'
+    );
+    expect(source).toContain('tar.gz/master');
+    expect(source).not.toContain('tar.gz/main');
+  });
 });

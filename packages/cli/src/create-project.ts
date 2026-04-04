@@ -84,7 +84,7 @@ async function downloadAndExtractExample(
   example: string,
   targetDir: string
 ): Promise<void> {
-  const url = 'https://codeload.github.com/yasinatesim/tuvix.js/tar.gz/main';
+  const url = 'https://codeload.github.com/yasinatesim/tuvix.js/tar.gz/master';
 
   return new Promise((resolve, reject) => {
     https
@@ -101,7 +101,7 @@ async function downloadAndExtractExample(
         const extract = tar.x({
           cwd: targetDir,
           strip: 3,
-          filter: (p) => p.startsWith(`tuvix.js-main/examples/${example}/`),
+          filter: (p) => p.startsWith(`tuvix.js-master/examples/${example}/`),
         });
 
         res.pipe(extract).on('finish', resolve).on('error', reject);

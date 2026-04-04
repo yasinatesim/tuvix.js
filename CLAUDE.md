@@ -29,6 +29,8 @@ pnpm lint          # MUST pass with 0 errors — fix all errors before proceedin
 pnpm build
 pnpm test
 pnpm check-types
+pnpm check-links   # All markdown links must resolve
+pnpm validate-docs # Code examples must match package exports
 pnpm format --check || true
 ```
 

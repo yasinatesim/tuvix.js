@@ -208,11 +208,19 @@ tuvix.js/
 │   ├── module-federation/  # @tuvix.js/module-federation
 │   └── tuvix/              # tuvix.js (अम्ब्रेला)
 ├── examples/
-│   ├── react/              # React 18+ उदाहरण
-│   ├── vue/                # Vue 3 उदाहरण
-│   ├── svelte/             # Svelte 5 उदाहरण
-│   ├── angular/            # Angular 15+ उदाहरण
-│   └── vanilla/            # Vanilla JS उदाहरण
+│   ├── with-angular/              # Angular 15+ उदाहरण
+│   ├── with-module-federation-react/ # Module Federation + React उदाहरण
+│   ├── with-multiple-frameworks/  # मल्टीपल फ्रेमवर्क उदाहरण
+│   ├── with-react/                # React 18+ उदाहरण
+│   ├── with-react-devtools/       # React + DevTools उदाहरण
+│   ├── with-react-event-bus/      # React + Event Bus उदाहरण
+│   ├── with-react-router/         # React + Router उदाहरण
+│   ├── with-react-sandbox/        # React + Sandbox उदाहरण
+│   ├── with-ssr-react/            # SSR + React उदाहरण
+│   ├── with-ssr-vanilla/          # SSR + Vanilla JS उदाहरण
+│   ├── with-svelte/               # Svelte 5 उदाहरण
+│   ├── with-vanilla/              # Vanilla JS उदाहरण
+│   └── with-vue/                  # Vue 3 उदाहरण
 ├── website/                # डॉक्यूमेंटेशन साइट (VitePress, 10 भाषाएं)
 ├── .github/                # CI/CD वर्कफ़्लो
 ├── package.json            # रूट वर्कस्पेस कॉन्फ़िगरेशन
@@ -261,12 +269,19 @@ tuvix.js/
 
 | उदाहरण | फ्रेमवर्क | पथ |
 | --- | --- | --- |
-| [React उदाहरण](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [Vue उदाहरण](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
-| [Svelte उदाहरण](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Angular उदाहरण](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
+| [Module Federation + React उदाहरण](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
+| [मल्टीपल फ्रेमवर्क उदाहरण](./examples/with-multiple-frameworks) | मिश्रित | `examples/with-multiple-frameworks/` |
+| [React उदाहरण](./examples/with-react) | React 18+ | `examples/with-react/` |
+| [React + DevTools उदाहरण](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
+| [React + Event Bus उदाहरण](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
+| [React + Router उदाहरण](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
+| [React + Sandbox उदाहरण](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
+| [SSR + React उदाहरण](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
+| [SSR + Vanilla JS उदाहरण](./examples/with-ssr-vanilla) | कोई फ्रेमवर्क नहीं | `examples/with-ssr-vanilla/` |
+| [Svelte उदाहरण](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
 | [Vanilla JS उदाहरण](./examples/with-vanilla) | कोई फ्रेमवर्क नहीं | `examples/with-vanilla/` |
-| [Vanilla JS + SSR उदाहरण](./examples/with-ssr-vanilla) | कोई फ्रेमवर्क नहीं | `examples/with-ssr-vanilla/` |
+| [Vue उदाहरण](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 प्रत्येक उदाहरण में दिखाया गया है:
 - एक **Shell (Host)** एप्लिकेशन जो Orchestrator को बूट करता है
