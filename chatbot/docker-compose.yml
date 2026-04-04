@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: chatbot/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - CHROMA_URL=http://chromadb:8000
+      - MODEL_NAME=deepseek-coder-v2:16b
+      - EMBED_MODEL=nomic-embed-text
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
+    depends_on:
+      chromadb:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  chromadb_data:
+  ollama_data:
