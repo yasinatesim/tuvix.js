@@ -14,6 +14,11 @@
       </button>
     </div>
 
+    <div class="demo-bar">
+      <button class="demo-btn" :class="{ active: demoType === 'counter' }" @click="switchDemo('counter')">Counter</button>
+      <button class="demo-btn" :class="{ active: demoType === 'todo' }" @click="switchDemo('todo')">Todo</button>
+    </div>
+
     <div class="playground-body">
       <div class="editor-pane">
         <div class="pane-header">
@@ -60,9 +65,49 @@ const ICONS: Record<string, string> = {
 };
 
 // ── Code examples ──────────────────────────────────────────────────
-const VANILLA_CODE = `import { defineMicroApp } from 'tuvix.js';
 
-let todos = ['Learn tuvix.js', 'Build micro-apps'];
+// ── Vanilla ─────────────────────────────────────────────────────────
+const VANILLA_COUNTER_CODE = `import { defineMicroApp } from 'tuvix.js';
+
+let count = 0;
+
+function render(el: HTMLElement) {
+  el.innerHTML = \`
+    <div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">
+      <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Vanilla JS</h2>
+      <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">\${count}</div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button onclick="__dec()"
+          style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;
+                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>
+        <button onclick="__inc()"
+          style="padding:10px 24px;background:#00e5a0;color:#000;border:none;
+                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>
+      </div>
+    </div>\`;
+}
+
+const app = defineMicroApp({
+  name: 'counter-vanilla',
+  mount({ container }) {
+    window.__dec = () => { count--; render(container); };
+    window.__inc = () => { count++; render(container); };
+    render(container);
+  },
+  unmount({ container }) { container.innerHTML = ''; },
+});
+
+app.mount({ container: document.getElementById('app')! });
+`;
+
+const VANILLA_TODO_CODE = `import { defineMicroApp } from 'tuvix.js';
+
+interface Todo { id: number; title: string; completed: boolean; }
+let todos: Todo[] = [
+  { id: 1, title: 'Learn tuvix.js', completed: false },
+  { id: 2, title: 'Build micro-apps', completed: false },
+];
+let editingId: number | null = null;
 
 function render(el: HTMLElement) {
   el.innerHTML = \`
@@ -77,12 +122,22 @@ function render(el: HTMLElement) {
                  border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">Add</button>
       </div>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-        \${todos.map((t, i) => \`
+        \${todos.map(t => \`
           <li style="display:flex;align-items:center;padding:10px 12px;
                      background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">
-            <span style="flex:1;color:#e2e8f0;font-size:14px">\${t}</span>
-            <button onclick="__rm(\${i})"
-              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">×</button>
+            <input type="checkbox" \${t.completed ? 'checked' : ''} onchange="__toggle(\${t.id})"
+              style="margin-right:10px;cursor:pointer">
+            \${editingId === t.id
+              ? \`<input id="edit-\${t.id}" value="\${t.title}" onkeydown="if(event.key==='Enter')__saveEdit(\${t.id})"
+                   style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;
+                          background:#0d1117;color:#e2e8f0;outline:none;font-size:14px">
+                 <button onclick="__saveEdit(\${t.id})"
+                   style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px;margin-left:6px">Save</button>\`
+              : \`<span style="flex:1;color:#e2e8f0;font-size:14px;\${t.completed ? 'text-decoration:line-through;opacity:0.5' : ''}">\${t.title}</span>
+                 <button onclick="__startEdit(\${t.id})"
+                   style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>\`}
+            <button onclick="__rm(\${t.id})"
+              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>
           </li>\`).join('')}
       </ul>
     </div>\`;
@@ -93,9 +148,16 @@ const app = defineMicroApp({
   mount({ container }) {
     window.__add = () => {
       const inp = document.getElementById('inp') as HTMLInputElement;
-      if (inp?.value.trim()) { todos.push(inp.value.trim()); inp.value = ''; render(container); }
+      if (inp?.value.trim()) { todos.push({ id: Date.now(), title: inp.value.trim(), completed: false }); inp.value = ''; render(container); }
     };
-    window.__rm = (i: number) => { todos.splice(i, 1); render(container); };
+    window.__rm = (id: number) => { todos = todos.filter(t => t.id !== id); render(container); };
+    window.__toggle = (id: number) => { const t = todos.find(x => x.id === id); if (t) t.completed = !t.completed; render(container); };
+    window.__startEdit = (id: number) => { editingId = id; render(container); };
+    window.__saveEdit = (id: number) => {
+      const inp = document.getElementById('edit-' + id) as HTMLInputElement;
+      if (inp?.value.trim()) { const t = todos.find(x => x.id === id); if (t) t.title = inp.value.trim(); }
+      editingId = null; render(container);
+    };
     render(container);
   },
   unmount({ container }) { container.innerHTML = ''; },
@@ -104,17 +166,63 @@ const app = defineMicroApp({
 app.mount({ container: document.getElementById('app')! });
 `;
 
-const REACT_CODE = `import { defineMicroApp } from 'tuvix.js';
+// ── React ───────────────────────────────────────────────────────────
+const REACT_COUNTER_CODE = `import { createReactMicroApp } from '@tuvix.js/react';
 import { useState } from 'react';
-import { createRoot } from 'react-dom/client';
+
+function CounterApp() {
+  const [count, setCount] = useState(0);
+
+  const s = {
+    wrap:  { fontFamily:'sans-serif', padding:24, maxWidth:420, textAlign:'center' as const },
+    h2:    { color:'#00e5a0', margin:'0 0 20px', fontSize:20 },
+    count: { fontSize:48, fontWeight:700, color:'#e2e8f0', margin:'0 0 20px' },
+    row:   { display:'flex', gap:12, justifyContent:'center' },
+    dec:   { padding:'10px 24px', background:'#1e2d3d', color:'#e2e8f0', border:'1px solid #2d3748',
+             borderRadius:8, cursor:'pointer', fontSize:20, fontWeight:600 },
+    inc:   { padding:'10px 24px', background:'#00e5a0', color:'#000', border:'none',
+             borderRadius:8, cursor:'pointer', fontSize:20, fontWeight:600 },
+  };
+
+  return (
+    <div style={s.wrap}>
+      <h2 style={s.h2}>Counter — React</h2>
+      <div style={s.count}>{count}</div>
+      <div style={s.row}>
+        <button style={s.dec} onClick={() => setCount(c => c - 1)}>&minus;</button>
+        <button style={s.inc} onClick={() => setCount(c => c + 1)}>+</button>
+      </div>
+    </div>
+  );
+}
+
+const app = createReactMicroApp({
+  name: 'counter-react',
+  App: CounterApp,
+});
+
+app.mount({ container: document.getElementById('app')! });
+`;
+
+const REACT_TODO_CODE = `import { createReactMicroApp } from '@tuvix.js/react';
+import { useState } from 'react';
+
+interface Todo { id: number; title: string; completed: boolean; }
 
 function TodoApp() {
-  const [todos, setTodos] = useState(['Learn tuvix.js', 'Build micro-apps']);
+  const [todos, setTodos] = useState<Todo[]>([
+    { id: 1, title: 'Learn tuvix.js', completed: false },
+    { id: 2, title: 'Build micro-apps', completed: false },
+  ]);
   const [input, setInput] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState('');
 
-  const add = () => {
-    if (input.trim()) { setTodos(p => [...p, input.trim()]); setInput(''); }
-  };
+  const add = () => { if (input.trim()) { setTodos(p => [...p, { id: Date.now(), title: input.trim(), completed: false }]); setInput(''); } };
+  const remove = (id: number) => setTodos(p => p.filter(t => t.id !== id));
+  const toggle = (id: number) => setTodos(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+  const startEdit = (t: Todo) => { setEditingId(t.id); setEditText(t.title); };
+  const saveEdit = () => { if (editingId !== null && editText.trim()) { setTodos(p => p.map(t => t.id === editingId ? { ...t, title: editText.trim() } : t)); setEditingId(null); } };
 
   const s = {
     wrap: { fontFamily:'sans-serif', padding:24, maxWidth:420 },
@@ -125,7 +233,7 @@ function TodoApp() {
     btn:  { padding:'8px 16px', background:'#00e5a0', color:'#000', border:'none',
             borderRadius:6, cursor:'pointer', fontWeight:600, fontSize:14 },
     ul:   { listStyle:'none', padding:0, margin:0, display:'flex', flexDirection:'column' as const, gap:6 },
-    li:   { display:'flex', alignItems:'center', padding:'10px 12px', marginBottom:0,
+    li:   { display:'flex', alignItems:'center', padding:'10px 12px',
             background:'#0d1117', border:'1px solid #1e2d3d', borderRadius:6 },
   };
 
@@ -136,15 +244,33 @@ function TodoApp() {
         <input style={s.inp} value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && add()}
-          placeholder="Add todo…" />
+          placeholder="Add todo..." />
         <button style={s.btn} onClick={add}>Add</button>
       </div>
       <ul style={s.ul}>
-        {todos.map((t, i) => (
-          <li key={i} style={s.li}>
-            <span style={{ flex:1, color:'#e2e8f0', fontSize:14 }}>{t}</span>
-            <button onClick={() => setTodos(todos.filter((_, j) => j !== i))}
-              style={{ background:'none', border:'none', color:'#5c7080', cursor:'pointer', fontSize:18, lineHeight:1 }}>×</button>
+        {todos.map(t => (
+          <li key={t.id} style={s.li}>
+            <input type="checkbox" checked={t.completed} onChange={() => toggle(t.id)}
+              style={{ marginRight:10, cursor:'pointer' }} />
+            {editingId === t.id ? (
+              <>
+                <input style={{ ...s.inp, marginRight:6 }} value={editText}
+                  onChange={e => setEditText(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && saveEdit()} autoFocus />
+                <button onClick={saveEdit}
+                  style={{ background:'none', border:'none', color:'#00e5a0', cursor:'pointer', fontSize:14 }}>Save</button>
+              </>
+            ) : (
+              <>
+                <span style={{ flex:1, color:'#e2e8f0', fontSize:14,
+                  textDecoration: t.completed ? 'line-through' : 'none',
+                  opacity: t.completed ? 0.5 : 1 }}>{t.title}</span>
+                <button onClick={() => startEdit(t)}
+                  style={{ background:'none', border:'none', color:'#5c7080', cursor:'pointer', fontSize:14, marginRight:4 }}>Edit</button>
+              </>
+            )}
+            <button onClick={() => remove(t.id)}
+              style={{ background:'none', border:'none', color:'#5c7080', cursor:'pointer', fontSize:18, lineHeight:1 }}>&times;</button>
           </li>
         ))}
       </ul>
@@ -152,20 +278,42 @@ function TodoApp() {
   );
 }
 
-const app = defineMicroApp({
+const app = createReactMicroApp({
   name: 'todo-react',
-  mount({ container }) { createRoot(container).render(<TodoApp />); },
-  unmount({ container }) { container.innerHTML = ''; },
+  App: TodoApp,
 });
 
 app.mount({ container: document.getElementById('app')! });
 `;
 
-const VUE_CODE = `<template>
+// ── Vue ─────────────────────────────────────────────────────────────
+const VUE_COUNTER_CODE = `<template>
+  <div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">
+    <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Vue</h2>
+    <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">{{ count }}</div>
+    <div style="display:flex;gap:12px;justify-content:center">
+      <button @click="count--"
+        style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;
+               border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>
+      <button @click="count++"
+        style="padding:10px 24px;background:#00e5a0;color:#000;border:none;
+               border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const count = ref(0);
+${CS}
+`;
+
+const VUE_TODO_CODE = `<template>
   <div style="font-family:sans-serif;padding:24px;max-width:420px">
     <h2 style="color:#00e5a0;margin:0 0 16px;font-size:20px">Todo — Vue</h2>
     <div style="display:flex;gap:8px;margin-bottom:16px">
-      <input v-model="input" @keydown.enter="add" placeholder="Add todo…"
+      <input v-model="input" @keydown.enter="add" placeholder="Add todo..."
         style="flex:1;padding:8px 12px;border:1px solid #2d3748;border-radius:6px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px" />
       <button @click="add"
         style="padding:8px 16px;background:#00e5a0;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">
@@ -173,11 +321,25 @@ const VUE_CODE = `<template>
       </button>
     </div>
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-      <li v-for="(t, i) in todos" :key="i"
+      <li v-for="t in todos" :key="t.id"
         style="display:flex;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">
-        <span style="flex:1;color:#e2e8f0;font-size:14px">{{ t }}</span>
-        <button @click="remove(i)"
-          style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">×</button>
+        <input type="checkbox" :checked="t.completed" @change="toggle(t.id)"
+          style="margin-right:10px;cursor:pointer" />
+        <template v-if="editingId === t.id">
+          <input v-model="editText" @keydown.enter="saveEdit"
+            style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px;margin-right:6px" />
+          <button @click="saveEdit"
+            style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>
+        </template>
+        <template v-else>
+          <span :style="{ flex:1, color:'#e2e8f0', fontSize:'14px',
+            textDecoration: t.completed ? 'line-through' : 'none',
+            opacity: t.completed ? 0.5 : 1 }">{{ t.title }}</span>
+          <button @click="startEdit(t)"
+            style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>
+        </template>
+        <button @click="remove(t.id)"
+          style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>
       </li>
     </ul>
   </div>
@@ -186,34 +348,78 @@ const VUE_CODE = `<template>
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const todos = ref(['Learn tuvix.js', 'Build micro-apps']);
+interface Todo { id: number; title: string; completed: boolean; }
+
+const todos = ref<Todo[]>([
+  { id: 1, title: 'Learn tuvix.js', completed: false },
+  { id: 2, title: 'Build micro-apps', completed: false },
+]);
 const input = ref('');
+const editingId = ref<number | null>(null);
+const editText = ref('');
 
 const add = () => {
-  if (input.value.trim()) { todos.value.push(input.value.trim()); input.value = ''; }
+  if (input.value.trim()) { todos.value.push({ id: Date.now(), title: input.value.trim(), completed: false }); input.value = ''; }
 };
-const remove = (i: number) => todos.value.splice(i, 1);
+const remove = (id: number) => { todos.value = todos.value.filter(t => t.id !== id); };
+const toggle = (id: number) => {
+  const t = todos.value.find(x => x.id === id);
+  if (t) t.completed = !t.completed;
+};
+const startEdit = (t: Todo) => { editingId.value = t.id; editText.value = t.title; };
+const saveEdit = () => {
+  if (editingId.value !== null && editText.value.trim()) {
+    const t = todos.value.find(x => x.id === editingId.value);
+    if (t) t.title = editText.value.trim();
+    editingId.value = null;
+  }
+};
 ${CS}
 `;
 
-const SVELTE_CODE = `<script lang="ts">
-  import { defineMicroApp } from 'tuvix.js';
+// ── Svelte ──────────────────────────────────────────────────────────
+const SVELTE_COUNTER_CODE = `<script lang="ts">
+  let count = 0;
+${CS}
 
-  let todos: string[] = ['Learn tuvix.js', 'Build micro-apps'];
+<div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">
+  <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Svelte</h2>
+  <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">{count}</div>
+  <div style="display:flex;gap:12px;justify-content:center">
+    <button on:click={() => count--}
+      style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;
+             border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>
+    <button on:click={() => count++}
+      style="padding:10px 24px;background:#00e5a0;color:#000;border:none;
+             border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>
+  </div>
+</div>
+`;
+
+const SVELTE_TODO_CODE = `<script lang="ts">
+  let todos = [
+    { id: 1, title: 'Learn tuvix.js', completed: false },
+    { id: 2, title: 'Build micro-apps', completed: false },
+  ];
   let input = '';
+  let editingId: number | null = null;
+  let editText = '';
 
   function add() {
-    if (input.trim()) { todos = [...todos, input.trim()]; input = ''; }
+    if (input.trim()) { todos = [...todos, { id: Date.now(), title: input.trim(), completed: false }]; input = ''; }
   }
-  function remove(i: number) {
-    todos = todos.filter((_, j) => j !== i);
+  function remove(id: number) { todos = todos.filter(t => t.id !== id); }
+  function toggle(id: number) { todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t); }
+  function startEdit(t: { id: number; title: string }) { editingId = t.id; editText = t.title; }
+  function saveEdit() {
+    if (editingId !== null && editText.trim()) { todos = todos.map(t => t.id === editingId ? { ...t, title: editText.trim() } : t); editingId = null; }
   }
 ${CS}
 
 <div style="font-family:sans-serif;padding:24px;max-width:420px">
   <h2 style="color:#00e5a0;margin:0 0 16px;font-size:20px">Todo — Svelte</h2>
   <div style="display:flex;gap:8px;margin-bottom:16px">
-    <input bind:value={input} on:keydown={(e) => e.key === 'Enter' && add()} placeholder="Add todo…"
+    <input bind:value={input} on:keydown={(e) => e.key === 'Enter' && add()} placeholder="Add todo..."
       style="flex:1;padding:8px 12px;border:1px solid #2d3748;border-radius:6px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px" />
     <button on:click={add}
       style="padding:8px 16px;background:#00e5a0;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">
@@ -221,20 +427,62 @@ ${CS}
     </button>
   </div>
   <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-    {#each todos as todo, i}
+    {#each todos as todo (todo.id)}
       <li style="display:flex;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">
-        <span style="flex:1;color:#e2e8f0;font-size:14px">{todo}</span>
-        <button on:click={() => remove(i)}
-          style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">×</button>
+        <input type="checkbox" checked={todo.completed} on:change={() => toggle(todo.id)}
+          style="margin-right:10px;cursor:pointer" />
+        {#if editingId === todo.id}
+          <input bind:value={editText} on:keydown={(e) => e.key === 'Enter' && saveEdit()}
+            style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px;margin-right:6px" />
+          <button on:click={saveEdit}
+            style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>
+        {:else}
+          <span style="flex:1;color:#e2e8f0;font-size:14px;{todo.completed ? 'text-decoration:line-through;opacity:0.5' : ''}">{todo.title}</span>
+          <button on:click={() => startEdit(todo)}
+            style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>
+        {/if}
+        <button on:click={() => remove(todo.id)}
+          style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>
       </li>
     {/each}
   </ul>
 </div>
 `;
 
-const ANGULAR_CODE = `import { Component } from '@angular/core';
+// ── Angular ─────────────────────────────────────────────────────────
+const ANGULAR_COUNTER_CODE = `import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+
+@Component({
+  standalone: true,
+  selector: 'app-root',
+  template: \`
+    <div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">
+      <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Angular</h2>
+      <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">{{ count }}</div>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button (click)="count = count - 1"
+          style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;
+                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>
+        <button (click)="count = count + 1"
+          style="padding:10px 24px;background:#00e5a0;color:#000;border:none;
+                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>
+      </div>
+    </div>
+  \`,
+})
+export class AppComponent {
+  count = 0;
+}
+
+bootstrapApplication(AppComponent);
+`;
+
+const ANGULAR_TODO_CODE = `import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { bootstrapApplication } from '@angular/platform-browser';
+
+interface Todo { id: number; title: string; completed: boolean; }
 
 @Component({
   standalone: true,
@@ -244,7 +492,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
     <div style="font-family:sans-serif;padding:24px;max-width:420px">
       <h2 style="color:#00e5a0;margin:0 0 16px;font-size:20px">Todo — Angular</h2>
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <input [(ngModel)]="input" (keydown.enter)="add()" placeholder="Add todo…"
+        <input [(ngModel)]="input" (keydown.enter)="add()" placeholder="Add todo..."
           style="flex:1;padding:8px 12px;border:1px solid #2d3748;border-radius:6px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px" />
         <button (click)="add()"
           style="padding:8px 16px;background:#00e5a0;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">
@@ -252,11 +500,22 @@ import { bootstrapApplication } from '@angular/platform-browser';
         </button>
       </div>
       <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-        @for (todo of todos; track $index; let i = $index) {
+        @for (todo of todos; track todo.id) {
           <li style="display:flex;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">
-            <span style="flex:1;color:#e2e8f0;font-size:14px">{{ todo }}</span>
-            <button (click)="remove(i)"
-              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">×</button>
+            <input type="checkbox" [checked]="todo.completed" (change)="toggle(todo.id)"
+              style="margin-right:10px;cursor:pointer" />
+            @if (editingId === todo.id) {
+              <input [(ngModel)]="editText" (keydown.enter)="saveEdit()"
+                style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px;margin-right:6px" />
+              <button (click)="saveEdit()"
+                style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>
+            } @else {
+              <span [style]="'flex:1;color:#e2e8f0;font-size:14px;' + (todo.completed ? 'text-decoration:line-through;opacity:0.5' : '')">{{ todo.title }}</span>
+              <button (click)="startEdit(todo)"
+                style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>
+            }
+            <button (click)="remove(todo.id)"
+              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>
           </li>
         }
       </ul>
@@ -264,25 +523,47 @@ import { bootstrapApplication } from '@angular/platform-browser';
   \`,
 })
 export class AppComponent {
-  todos = ['Learn tuvix.js', 'Build micro-apps'];
+  todos: Todo[] = [
+    { id: 1, title: 'Learn tuvix.js', completed: false },
+    { id: 2, title: 'Build micro-apps', completed: false },
+  ];
   input = '';
+  editingId: number | null = null;
+  editText = '';
 
   add() {
-    if (this.input.trim()) { this.todos = [...this.todos, this.input.trim()]; this.input = ''; }
+    if (this.input.trim()) { this.todos = [...this.todos, { id: Date.now(), title: this.input.trim(), completed: false }]; this.input = ''; }
   }
-  remove(i: number) { this.todos = this.todos.filter((_, j) => j !== i); }
+  remove(id: number) { this.todos = this.todos.filter(t => t.id !== id); }
+  toggle(id: number) { this.todos = this.todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t); }
+  startEdit(t: Todo) { this.editingId = t.id; this.editText = t.title; }
+  saveEdit() {
+    if (this.editingId !== null && this.editText.trim()) {
+      this.todos = this.todos.map(t => t.id === this.editingId ? { ...t, title: this.editText.trim() } : t);
+      this.editingId = null;
+    }
+  }
 }
 
 bootstrapApplication(AppComponent);
 `;
 
+// ── Demo code map ──────────────────────────────────────────────────
+const DEMO_CODES: Record<string, Record<string, string>> = {
+  vanilla:  { counter: VANILLA_COUNTER_CODE,  todo: VANILLA_TODO_CODE },
+  react:    { counter: REACT_COUNTER_CODE,    todo: REACT_TODO_CODE },
+  vue:      { counter: VUE_COUNTER_CODE,      todo: VUE_TODO_CODE },
+  svelte:   { counter: SVELTE_COUNTER_CODE,   todo: SVELTE_TODO_CODE },
+  angular:  { counter: ANGULAR_COUNTER_CODE,  todo: ANGULAR_TODO_CODE },
+};
+
 // ── Tab definitions ────────────────────────────────────────────────
 const TABS = [
-  { id: 'vanilla',  label: 'Vanilla JS', file: 'app.ts',      lang: 'vanilla-ts',      icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#f7df1e"><rect width="24" height="24" rx="3"/><path d="M6 17.5c.4.7 1 1.2 1.8 1.2.8 0 1.2-.4 1.2-.9 0-.6-.5-.9-1.4-1.3l-.5-.2C5.7 15.7 5 14.9 5 13.6c0-1.4 1.1-2.5 2.7-2.5 1.2 0 2 .4 2.6 1.5l-1.4.9c-.3-.6-.6-.8-1.2-.8s-.9.4-.9.8c0 .6.4.8 1.2 1.2l.5.2c1.5.6 2.2 1.4 2.2 2.8 0 1.6-1.3 2.6-3 2.6-1.7 0-2.8-.8-3.3-1.9l1.6-.9zM13 17.5c.3.5.6.9 1.2.9.5 0 .9-.2.9-1v-5.3h1.8V17.4c0 1.7-1 2.5-2.5 2.5-1.3 0-2.1-.7-2.5-1.5l1.1-.9z" fill="#000"/></svg>', code: VANILLA_CODE },
-  { id: 'react',    label: 'React',      file: 'App.tsx',      lang: 'react-ts',        icon: '<svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(120 12 12)"/></svg>', code: REACT_CODE },
-  { id: 'vue',      label: 'Vue',        file: 'App.vue',      lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M2 3h3.5L12 15 18.5 3H22L12 21z" fill="#42b883"/><path d="M6.5 3h3L12 8.5 14.5 3h3L12 14z" fill="#35495e"/></svg>', code: VUE_CODE },
-  { id: 'svelte',   label: 'Svelte',     file: 'App.svelte',   lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#ff3e00"><path d="M20.3 4.3C17.8 1.1 13.2.4 10 2.9L4.2 7.4C2.8 8.5 1.9 10 1.7 11.7c-.2 1.3.1 2.7.9 3.8-.5.8-.8 1.8-.9 2.7-.2 1.8.4 3.5 1.5 4.8 2.5 3.2 7.1 3.9 10.3 1.4l5.8-4.5c1.4-1.1 2.3-2.6 2.5-4.3.2-1.3-.1-2.7-.9-3.8.5-.8.8-1.8.9-2.7.2-1.7-.4-3.5-1.5-4.8z"/><path d="M10.5 18.5c-1.7.5-3.5-.2-4.4-1.7-.6-1-.8-2.2-.5-3.3l.2-.6.5.4c.6.4 1.2.7 1.9.9l.2.1-.1.2c-.2.4-.1.9.2 1.2.5.6 1.3.8 2 .5l5.4-3.4c.3-.2.5-.5.5-.8 0-.3-.1-.6-.4-.8-.5-.4-1.3-.3-1.8.1l-1.9 1.2c-.7.4-1.5.6-2.3.6-1.7 0-3.1-1-3.8-2.5-.6-1.3-.5-2.9.3-4.1.9-1.2 2.3-1.9 3.8-1.8.7 0 1.4.2 2 .5l.5.3-.5-.3 5.5-3.5c.3-.2.7-.3 1-.3 1 0 1.9.5 2.4 1.3.5.8.6 1.8.3 2.7l-.2.6-.5-.4c-.6-.4-1.2-.7-1.9-.9l-.2-.1.1-.2c.2-.4.1-.9-.2-1.2-.5-.6-1.3-.8-2-.5l-5.4 3.4c-.3.2-.5.5-.5.8 0 .3.1.6.4.8.5.4 1.3.3 1.8-.1l1.9-1.2c.7-.4 1.5-.6 2.3-.6 1.7 0 3.1 1 3.8 2.5.6 1.3.5 2.9-.3 4.1-.9 1.2-2.3 1.9-3.8 1.8-.7 0-1.4-.2-2-.5l-5.5 3.5c-.3.2-.6.3-1 .3z" fill="#fff"/></svg>', code: SVELTE_CODE },
-  { id: 'angular',  label: 'Angular',    file: 'app.component.ts', lang: 'angular-ts',  icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#dd0031"><path d="M12 2L2 6.5l1.6 13.2L12 22l8.4-2.3L22 6.5z"/><path d="M12 4.3l7 2.9-1.3 10.5L12 19.7l-5.7-2-1.3-10.5z" fill="#c3002f"/><path d="M12 6.5L8.5 15h1.3l.7-1.8h3l.7 1.8h1.3L12 6.5zm0 2.4l1.1 2.9h-2.2z" fill="#fff"/></svg>', code: ANGULAR_CODE },
+  { id: 'vanilla',  label: 'Vanilla JS', file: 'app.ts',      lang: 'vanilla-ts',      icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#f7df1e"><rect width="24" height="24" rx="3"/><path d="M6 17.5c.4.7 1 1.2 1.8 1.2.8 0 1.2-.4 1.2-.9 0-.6-.5-.9-1.4-1.3l-.5-.2C5.7 15.7 5 14.9 5 13.6c0-1.4 1.1-2.5 2.7-2.5 1.2 0 2 .4 2.6 1.5l-1.4.9c-.3-.6-.6-.8-1.2-.8s-.9.4-.9.8c0 .6.4.8 1.2 1.2l.5.2c1.5.6 2.2 1.4 2.2 2.8 0 1.6-1.3 2.6-3 2.6-1.7 0-2.8-.8-3.3-1.9l1.6-.9zM13 17.5c.3.5.6.9 1.2.9.5 0 .9-.2.9-1v-5.3h1.8V17.4c0 1.7-1 2.5-2.5 2.5-1.3 0-2.1-.7-2.5-1.5l1.1-.9z" fill="#000"/></svg>' },
+  { id: 'react',    label: 'React',      file: 'App.tsx',      lang: 'react-ts',        icon: '<svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(120 12 12)"/></svg>' },
+  { id: 'vue',      label: 'Vue',        file: 'App.vue',      lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M2 3h3.5L12 15 18.5 3H22L12 21z" fill="#42b883"/><path d="M6.5 3h3L12 8.5 14.5 3h3L12 14z" fill="#35495e"/></svg>' },
+  { id: 'svelte',   label: 'Svelte',     file: 'App.svelte',   lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#ff3e00"><path d="M20.3 4.3C17.8 1.1 13.2.4 10 2.9L4.2 7.4C2.8 8.5 1.9 10 1.7 11.7c-.2 1.3.1 2.7.9 3.8-.5.8-.8 1.8-.9 2.7-.2 1.8.4 3.5 1.5 4.8 2.5 3.2 7.1 3.9 10.3 1.4l5.8-4.5c1.4-1.1 2.3-2.6 2.5-4.3.2-1.3-.1-2.7-.9-3.8.5-.8.8-1.8.9-2.7.2-1.7-.4-3.5-1.5-4.8z"/><path d="M10.5 18.5c-1.7.5-3.5-.2-4.4-1.7-.6-1-.8-2.2-.5-3.3l.2-.6.5.4c.6.4 1.2.7 1.9.9l.2.1-.1.2c-.2.4-.1.9.2 1.2.5.6 1.3.8 2 .5l5.4-3.4c.3-.2.5-.5.5-.8 0-.3-.1-.6-.4-.8-.5-.4-1.3-.3-1.8.1l-1.9 1.2c-.7.4-1.5.6-2.3.6-1.7 0-3.1-1-3.8-2.5-.6-1.3-.5-2.9.3-4.1.9-1.2 2.3-1.9 3.8-1.8.7 0 1.4.2 2 .5l.5.3-.5-.3 5.5-3.5c.3-.2.7-.3 1-.3 1 0 1.9.5 2.4 1.3.5.8.6 1.8.3 2.7l-.2.6-.5-.4c-.6-.4-1.2-.7-1.9-.9l-.2-.1.1-.2c.2-.4.1-.9-.2-1.2-.5-.6-1.3-.8-2-.5l-5.4 3.4c-.3.2-.5.5-.5.8 0 .3.1.6.4.8.5.4 1.3.3 1.8-.1l1.9-1.2c.7-.4 1.5-.6 2.3-.6 1.7 0 3.1 1 3.8 2.5.6 1.3.5 2.9-.3 4.1-.9 1.2-2.3 1.9-3.8 1.8-.7 0-1.4-.2-2-.5l-5.5 3.5c-.3.2-.6.3-1 .3z" fill="#fff"/></svg>' },
+  { id: 'angular',  label: 'Angular',    file: 'app.component.ts', lang: 'angular-ts',  icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#dd0031"><path d="M12 2L2 6.5l1.6 13.2L12 22l8.4-2.3L22 6.5z"/><path d="M12 4.3l7 2.9-1.3 10.5L12 19.7l-5.7-2-1.3-10.5z" fill="#c3002f"/><path d="M12 6.5L8.5 15h1.3l.7-1.8h3l.7 1.8h1.3L12 6.5zm0 2.4l1.1 2.9h-2.2z" fill="#fff"/></svg>' },
 ];
 
 // ── Importmaps ─────────────────────────────────────────────────────
@@ -297,15 +578,18 @@ const BASE: Record<string, string> = {
 };
 const FRAMEWORK_IMPORTS: Record<string, Record<string, string>> = {
   react: {
+    '@tuvix.js/react':   `https://esm.sh/@tuvix.js/react@${TUVIX}`,
     'react':             'https://esm.sh/react@18',
     'react-dom':         'https://esm.sh/react-dom@18',
     'react-dom/client':  'https://esm.sh/react-dom@18/client',
     'react/jsx-runtime': 'https://esm.sh/react@18/jsx-runtime',
   },
   vue: {
+    '@tuvix.js/vue': `https://esm.sh/@tuvix.js/vue@${TUVIX}`,
     'vue': 'https://esm.sh/vue@3',
   },
   svelte: {
+    '@tuvix.js/svelte':   `https://esm.sh/@tuvix.js/svelte@${TUVIX}`,
     'svelte':             'https://esm.sh/svelte@4',
     'svelte/internal':    'https://esm.sh/svelte@4/internal',
     'svelte/store':       'https://esm.sh/svelte@4/store',
@@ -328,12 +612,17 @@ const FRAMEWORK_IMPORTS: Record<string, Record<string, string>> = {
 
 // ── Refs & state ───────────────────────────────────────────────────
 const activeTab  = ref('vanilla');
+const demoType   = ref<'counter' | 'todo'>('counter');
 const editorEl   = ref<HTMLElement>();
 const iframeEl   = ref<HTMLIFrameElement>();
 const messages   = ref<{ kind: string; text: string; line?: number }[]>([]);
 const compiling  = ref(false);
 
 const activeTabObj = computed(() => TABS.find(t => t.id === activeTab.value));
+
+function getCode(tabId: string, demo: string): string {
+  return DEMO_CODES[tabId]?.[demo] ?? '';
+}
 
 let esbuild:       typeof import('esbuild-wasm') | null = null;
 let editorInst:    import('monaco-editor').editor.IStandaloneCodeEditor | null = null;
@@ -395,8 +684,8 @@ function transformVueSFC(sfc: string): string {
     .join('\n');
 
   return `
-import { createApp, defineComponent } from 'vue';
-import { defineMicroApp } from 'tuvix.js';
+import { defineComponent } from 'vue';
+import { createVueMicroApp } from '@tuvix.js/vue';
 ${userImports}
 
 const __component = defineComponent({
@@ -407,10 +696,9 @@ ${bodyLines.join('\n')}
   template: \`${escapedTpl}\`,
 });
 
-const __app = defineMicroApp({
+const __app = createVueMicroApp({
   name: 'vue-sfc',
-  mount({ container }) { createApp(__component).mount(container); },
-  unmount({ container }) { container.innerHTML = ''; },
+  App: __component,
 });
 __app.mount({ container: document.getElementById('app')! });
 `;
@@ -428,7 +716,10 @@ async function transformSvelte(code: string): Promise<string> {
   });
   // Convert `export default App` to a local var so we can mount it
   const compiled = (js.code as string).replace(/export default (\w+)/, 'const __SvelteApp = $1');
-  return compiled + '\nnew __SvelteApp({ target: document.getElementById("app") });';
+  return `import { createSvelteMicroApp } from '@tuvix.js/svelte';
+${compiled}
+const __app = createSvelteMicroApp({ name: 'svelte-app', App: __SvelteApp });
+__app.mount({ container: document.getElementById('app')! });`;
 }
 
 // ── Esbuild compilation ────────────────────────────────────────────
@@ -486,23 +777,32 @@ function scheduleCompile(code: string) {
 }
 
 // ── Tab switching ──────────────────────────────────────────────────
-function switchTab(tabId: string) {
-  activeTab.value = tabId;
+function loadEditor(tabId: string, demo: string) {
   const tab = TABS.find(t => t.id === tabId)!;
-  // Create a fresh model per tab with proper file URI (prevents TS error 8010)
+  const code = getCode(tabId, demo);
   if (editorInst && monacoApi) {
     const oldModel = editorInst.getModel();
     const uri = monacoApi.Uri.parse(`file:///playground/${tab.file}`);
     const existing = monacoApi.editor.getModel(uri);
     if (existing) existing.dispose();
-    const newModel = monacoApi.editor.createModel(tab.code, tab.lang, uri);
+    const newModel = monacoApi.editor.createModel(code, tab.lang, uri);
     editorInst.setModel(newModel);
     oldModel?.dispose();
     editorInst.onDidChangeModelContent(() => scheduleCompile(editorInst!.getValue()));
   }
   messages.value = [];
   if (iframeEl.value) iframeEl.value.srcdoc = '';
-  scheduleCompile(tab.code);
+  scheduleCompile(code);
+}
+
+function switchTab(tabId: string) {
+  activeTab.value = tabId;
+  loadEditor(tabId, demoType.value);
+}
+
+function switchDemo(demo: 'counter' | 'todo') {
+  demoType.value = demo;
+  loadEditor(activeTab.value, demo);
 }
 
 // ── postMessage handler ────────────────────────────────────────────
@@ -921,8 +1221,9 @@ onMounted(async () => {
 
   // Create initial model with proper file URI so TypeScript service treats it as a .ts file
   const firstTab = TABS[0];
+  const firstCode = getCode(firstTab.id, demoType.value);
   const firstUri = monaco.Uri.parse(`file:///playground/${firstTab.file}`);
-  const firstModel = monaco.editor.createModel(firstTab.code, firstTab.lang, firstUri);
+  const firstModel = monaco.editor.createModel(firstCode, firstTab.lang, firstUri);
 
   editorInst = monaco.editor.create(editorEl.value, {
     model:                firstModel,
@@ -943,7 +1244,7 @@ onMounted(async () => {
   });
 
   editorInst.onDidChangeModelContent(() => scheduleCompile(editorInst!.getValue()));
-  scheduleCompile(TABS[0].code);
+  scheduleCompile(firstCode);
 });
 
 onBeforeUnmount(() => {
@@ -991,6 +1292,34 @@ onBeforeUnmount(() => {
 
 .tab-btn:hover { background: var(--vp-c-bg-mute); color: var(--vp-c-text-1); }
 .tab-btn.active { background: var(--vp-c-bg-mute); color: var(--vp-c-brand-1); border-color: var(--vp-c-divider); }
+
+/* ── Demo bar ───────────────────────────────────── */
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: var(--vp-c-bg-soft);
+  border-bottom: 1px solid var(--vp-c-divider);
+  flex-shrink: 0;
+}
+
+.demo-btn {
+  padding: 3px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: none;
+  color: var(--vp-c-text-3);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--vp-font-family-base);
+  line-height: 1.4;
+}
+
+.demo-btn:hover { background: var(--vp-c-bg-mute); color: var(--vp-c-text-1); }
+.demo-btn.active { background: rgba(0, 229, 160, 0.1); color: var(--vp-c-brand-1); border-color: rgba(0, 229, 160, 0.3); }
 
 /* ── Body ────────────────────────────────────────── */
 .playground-body {
