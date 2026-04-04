@@ -1301,8 +1301,11 @@ onMounted(async () => {
     bracketPairColorization: { enabled: true },
   });
 
-  editorInst.onDidChangeModelContent(() => scheduleCompile(editorInst!.getValue()));
-  scheduleCompile(firstCode);
+  // Load whichever tab is currently active — the user may have clicked a tab before
+  // Monaco/esbuild finished initializing (E2E clicks immediately on page load).
+  // If we just compile `firstCode` here, we'd send vanilla code to the Svelte compiler
+  // when the active tab is already 'svelte', causing a compilation failure.
+  loadEditor(activeTab.value, demoType.value);
 });
 
 onBeforeUnmount(() => {
