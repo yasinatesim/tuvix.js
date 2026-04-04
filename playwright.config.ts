@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   timeout: 60_000,
@@ -67,11 +67,6 @@ export default defineConfig({
       testDir: './examples/with-module-federation-react/e2e',
       use: { baseURL: 'http://localhost:3000' },
     },
-    {
-      name: 'docs-chromium',
-      use: { ...devices['Desktop Chrome'] },
-      testDir: './apps/docs/e2e',
-    },
   ],
   webServer: [
     {
@@ -128,12 +123,6 @@ export default defineConfig({
       port: 5180,
       cwd: './examples/with-multiple-frameworks',
       reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter @tuvix.js/docs dev',
-      url: 'http://localhost:4321',
-      reuseExistingServer: !process.env.CI,
-      timeout: 60_000,
     },
   ],
 });

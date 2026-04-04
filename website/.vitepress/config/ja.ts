@@ -5,7 +5,9 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
     nav: [
       { text: 'ガイド', link: '/ja/guide/getting-started', activeMatch: '/ja/guide/' },
       { text: 'パッケージ', link: '/ja/packages/', activeMatch: '/ja/packages/' },
+      { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'コントリビュート', link: '/ja/contributing' },
+      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'コントリビュート', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
     ],
     sidebar: {
       '/ja/guide/': [

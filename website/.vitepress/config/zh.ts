@@ -5,7 +5,9 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
     nav: [
       { text: '指南', link: '/zh/guide/getting-started', activeMatch: '/zh/guide/' },
       { text: '包', link: '/zh/packages/', activeMatch: '/zh/packages/' },
+      { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: '贡献', link: '/zh/contributing' },
+      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: '贡献', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
     ],
     sidebar: {
       '/zh/guide/': [

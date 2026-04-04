@@ -6,8 +6,7 @@
         "^build"
       ],
       "outputs": [
-        "dist/**",
-        ".astro/**"
+        "dist/**"
       ]
     },
     "dev": {
