@@ -33,6 +33,7 @@ pnpm check-links                 # All markdown links must resolve
 pnpm --filter @tuvix.js/website lint   # Website-specific lint (separate CI job)
 pnpm --filter @tuvix.js/website build  # Website build must succeed (separate CI job)
 pnpm format --check || true
+pnpm exec playwright install --with-deps chromium && pnpm exec playwright test  # E2E tests
 ```
 
 **Every command above maps to a CI job. If any command fails locally, it will fail in CI.** Fix all failures before proceeding — never leave a failing check for a follow-up commit.
