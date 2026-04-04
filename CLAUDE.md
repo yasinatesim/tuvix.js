@@ -23,7 +23,11 @@ After implementation, **run the `/test-driven-development` skill** to write prop
 ### Tests Must Pass the CI Pipeline
 
 Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate locally by running **every command below in order** — do NOT skip any:
+
+> **LOCKFILE RULE:** After modifying ANY `package.json` in any workspace package, run `pnpm install` from the monorepo root **before** any other command. CI uses `--frozen-lockfile` and will fail if `pnpm-lock.yaml` is out of sync. Agents must commit the updated lockfile in the same commit as the `package.json` change.
+
 ```bash
+pnpm install              # REQUIRED after any package.json change — keeps lockfile in sync
 pnpm install --frozen-lockfile
 pnpm lint                        # MUST pass with 0 errors — fix all errors before proceeding
 pnpm build                       # Root monorepo build
