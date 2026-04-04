@@ -395,14 +395,7 @@ const VUE_TODO_CODE = [
 ].join('\n');
 
 // ── Svelte ──────────────────────────────────────────────────────────
-const SVELTE_COUNTER_CODE = `<!-- Entry file (main.ts):
-  import { createSvelteMicroApp } from '@tuvix.js/svelte';
-  import App from './Counter.svelte';
-  const app = createSvelteMicroApp({ name: 'counter-svelte', App });
-  app.mount({ container: document.getElementById('app') });
--->
-
-<script lang="ts">
+const SVELTE_COUNTER_CODE = `<script>
   let count = 0;
 ${CS}
 
@@ -420,28 +413,21 @@ ${CS}
 </div>
 `;
 
-const SVELTE_TODO_CODE = `<!-- Entry file (main.ts):
-  import { createSvelteMicroApp } from '@tuvix.js/svelte';
-  import App from './Todo.svelte';
-  const app = createSvelteMicroApp({ name: 'todo-svelte', App });
-  app.mount({ container: document.getElementById('app') });
--->
-
-<script lang="ts">
+const SVELTE_TODO_CODE = `<script>
   let todos = [
     { id: 1, title: 'Learn tuvix.js', completed: false },
     { id: 2, title: 'Build micro-apps', completed: false },
   ];
   let input = '';
-  let editingId: number | null = null;
+  let editingId = null;
   let editText = '';
 
   function add() {
     if (input.trim()) { todos = [...todos, { id: Date.now(), title: input.trim(), completed: false }]; input = ''; }
   }
-  function remove(id: number) { todos = todos.filter(t => t.id !== id); }
-  function toggle(id: number) { todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t); }
-  function startEdit(t: { id: number; title: string }) { editingId = t.id; editText = t.title; }
+  function remove(id) { todos = todos.filter(t => t.id !== id); }
+  function toggle(id) { todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t); }
+  function startEdit(t) { editingId = t.id; editText = t.title; }
   function saveEdit() {
     if (editingId !== null && editText.trim()) { todos = todos.map(t => t.id === editingId ? { ...t, title: editText.trim() } : t); editingId = null; }
   }
@@ -648,7 +634,8 @@ const FRAMEWORK_IMPORTS: Record<string, Record<string, string>> = {
   },
   vue: {
     '@tuvix.js/vue': 'https://esm.sh/@tuvix.js/vue?external=vue',
-    'vue': 'https://esm.sh/vue@3',
+    // Use full browser build so the runtime template compiler is available
+    'vue': 'https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.js',
   },
   svelte: {
     '@tuvix.js/svelte':          'https://esm.sh/@tuvix.js/svelte?external=svelte',

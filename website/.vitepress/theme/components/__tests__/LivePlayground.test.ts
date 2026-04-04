@@ -268,21 +268,29 @@ describe('Vue SFC transformer (transformVueSFC)', () => {
   });
 });
 
-// ── Svelte code shows createSvelteMicroApp integration ──────────────
+// ── Svelte code is a clean .svelte component (no comment headers) ───
 
 describe('Svelte code examples', () => {
-  it('SVELTE_COUNTER_CODE shows createSvelteMicroApp integration comment', () => {
+  it('SVELTE_COUNTER_CODE is a valid Svelte component without comment header', () => {
     const code = extractCodeBlock('SVELTE_COUNTER_CODE');
     expect(code).not.toBeNull();
-    expect(code).toContain("createSvelteMicroApp } from '@tuvix.js/svelte'");
-    expect(code).toContain("createSvelteMicroApp({ name: 'counter-svelte'");
+    // Transformer adds createSvelteMicroApp — code shown to user is clean .svelte
+    expect(code).not.toContain('Entry file');
+    expect(code).not.toContain('createSvelteMicroApp');
+    expect(code).toContain('<script>');
+    expect(code).toContain('let count = 0');
   });
 
-  it('SVELTE_TODO_CODE shows createSvelteMicroApp integration comment', () => {
+  it('SVELTE_TODO_CODE is a valid Svelte component without comment header', () => {
     const code = extractCodeBlock('SVELTE_TODO_CODE');
     expect(code).not.toBeNull();
-    expect(code).toContain("createSvelteMicroApp } from '@tuvix.js/svelte'");
-    expect(code).toContain("createSvelteMicroApp({ name: 'todo-svelte'");
+    expect(code).not.toContain('Entry file');
+    expect(code).not.toContain('createSvelteMicroApp');
+    expect(code).toContain('<script>');
+    expect(code).toContain('{#each todos');
+    // No TypeScript type annotations — Svelte CDN compiler doesn't support TS
+    expect(code).not.toContain(': number | null');
+    expect(code).not.toContain('function remove(id: number)');
   });
 });
 
@@ -495,7 +503,8 @@ describe('esbuild compile validation', () => {
   it('SVELTE_COUNTER_CODE has valid Svelte structure', () => {
     const code = extractCodeBlock('SVELTE_COUNTER_CODE');
     expect(code).not.toBeNull();
-    expect(code).toContain('<script');
+    // Plain <script> — no lang="ts" since CDN Svelte compiler doesn't support TS
+    expect(code).toContain('<script>');
     expect(code).toContain('let count = 0');
     // No broken template literal escaping
     expect(code).not.toContain('\\`');
@@ -505,11 +514,13 @@ describe('esbuild compile validation', () => {
   it('SVELTE_TODO_CODE has valid Svelte structure', () => {
     const code = extractCodeBlock('SVELTE_TODO_CODE');
     expect(code).not.toBeNull();
-    expect(code).toContain('<script');
+    expect(code).toContain('<script>');
     expect(code).toContain('{#each todos');
     // No invalid style interpolation (the old bug)
     expect(code).not.toContain("style=\"flex:1;color:#e2e8f0;font-size:14px;{todo");
     // Should use style: directive instead
     expect(code).toContain('style:text-decoration');
+    // No TypeScript annotations — CDN Svelte compiler doesn't support TS
+    expect(code).not.toContain(': number');
   });
 });
