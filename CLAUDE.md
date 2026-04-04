@@ -14,6 +14,19 @@
 
 Build the feature or fix based on the enhanced prompt from Step 1.
 
+### Monorepo Rules (pnpm workspace — violations break CI)
+
+**Package manager:** This is a pnpm monorepo. Always use `pnpm`, never `npm` or `yarn`. Subagents must also use pnpm.
+
+**Package.json protection:** When modifying any `package.json`, only touch `dependencies` / `devDependencies` sections unless explicitly told otherwise. NEVER change `name`, `version`, `bin`, `files`, `publishConfig`, `scripts`, or `license` unless the user explicitly requests it — subagents have destroyed these fields before.
+
+**Lockfile:** After any `package.json` change, run `pnpm install` from the monorepo root immediately and include `pnpm-lock.yaml` in the same commit. CI runs `--frozen-lockfile` — an out-of-sync lockfile breaks every CI job before any test runs.
+
+**Subagent constraints:** When dispatching subagents via subagent-driven-development, explicitly state these rules in each subagent prompt:
+- Use `pnpm`, not `npm`
+- Preserve all existing `package.json` fields beyond deps
+- Run `pnpm install` from root after any dep change and stage `pnpm-lock.yaml`
+
 ---
 
 ## Step 3: Write Tests with TDD Skill
@@ -53,6 +66,17 @@ Tests must pass on **Node.js 18, 20, and 22** (matching the CI matrix).
 - Edge cases and error handling paths
 
 **Do NOT skip test writing even if the implementation seems trivial.**
+
+### Test Quality Rules
+
+**String-based tests are insufficient for runtime code.** If you are testing code that runs in a different environment (browser, CDN, iframe) or gets compiled/transformed, string assertions will pass while the runtime fails. Use real compilation/execution tests:
+- For playground code examples → compile with esbuild (`transform()`) inside the test, assert no errors
+- For CLI templates → `createProject()` to a temp dir and check actual file contents
+- For transformer functions → run the actual transform and verify output compiles
+
+**Vitest environment:** Code that uses Node.js native modules (like esbuild's native binary) fails in jsdom. Add `// @vitest-environment node` at the top of test files that use esbuild, child_process, or other Node-native APIs.
+
+**Tests must prove the feature works, not just that the code exists.** A test that checks `source.includes('createVueMicroApp')` tells you nothing about whether the code actually runs.
 
 ---
 
