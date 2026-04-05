@@ -101,9 +101,11 @@ describe('parseArgs — --version flag', () => {
 describe('parseArgs — combined flags', () => {
   it('handles project name + template + typescript together', () => {
     const result = parseArgs([
-      'node', 'cli',
+      'node',
+      'cli',
       'my-app',
-      '--template', 'svelte-app',
+      '--template',
+      'svelte-app',
       '--typescript',
     ]);
     expect(result.projectName).toBe('my-app');
@@ -112,7 +114,13 @@ describe('parseArgs — combined flags', () => {
   });
 
   it('handles project name + example together', () => {
-    const result = parseArgs(['node', 'cli', 'my-app', '--example', 'with-react']);
+    const result = parseArgs([
+      'node',
+      'cli',
+      'my-app',
+      '--example',
+      'with-react',
+    ]);
     expect(result.projectName).toBe('my-app');
     expect(result.example).toBe('with-react');
     expect(result.template).toBeUndefined();
@@ -120,9 +128,11 @@ describe('parseArgs — combined flags', () => {
 
   it('handles angular-app with --no-typescript', () => {
     const result = parseArgs([
-      'node', 'cli',
+      'node',
+      'cli',
       'ng-app',
-      '--template', 'angular-app',
+      '--template',
+      'angular-app',
       '--no-typescript',
     ]);
     expect(result.template).toBe('angular-app');

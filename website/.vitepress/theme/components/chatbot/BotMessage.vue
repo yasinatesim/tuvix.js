@@ -1,5 +1,6 @@
 <script lang="ts">
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 export interface CodeBlockData {
   language: string;
@@ -19,7 +20,10 @@ export function extractCodeBlocks(md: string): CodeBlockData[] {
 export function parseMarkdownContent(md: string): string {
   // Remove code blocks before parsing (they'll be rendered by CodeBlock component)
   const withoutCode = md.replace(/```[\s\S]*?```/g, '');
-  return marked.parse(withoutCode, { async: false }) as string;
+  const raw = marked.parse(withoutCode, { async: false }) as string;
+  // DOMPurify only runs in browser; return raw in SSR context
+  if (typeof window === 'undefined') return raw;
+  return DOMPurify.sanitize(raw);
 }
 </script>
 

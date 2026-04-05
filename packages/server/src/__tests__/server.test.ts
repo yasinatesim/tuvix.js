@@ -113,12 +113,10 @@ describe('createServerRenderer', () => {
   });
 
   it('records metrics when a metrics collector is provided', async () => {
-    global.fetch = vi
-      .fn()
-      .mockResolvedValue({
-        ok: true,
-        text: async () => '<nav>Nav</nav>',
-      }) as unknown as typeof fetch;
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => '<nav>Nav</nav>',
+    }) as unknown as typeof fetch;
 
     const metrics = createMetricsCollector();
     const renderer = createServerRenderer({

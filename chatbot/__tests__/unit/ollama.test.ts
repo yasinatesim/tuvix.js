@@ -24,12 +24,29 @@ describe('OllamaClient', () => {
       const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
       const result = await client.embed('react header component');
 
-      expect(fetchSpy).toHaveBeenCalledWith('http://localhost:11434/api/embed', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'nomic-embed-text', input: 'react header component' }),
-      });
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'http://localhost:11434/api/embed',
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'nomic-embed-text', input: 'react header component' }),
+        }),
+      );
       expect(result).toEqual([0.1, 0.2, 0.3]);
+    });
+
+    it('includes an AbortSignal for request timeout', async () => {
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ embeddings: [[0.1]] }),
+      });
+
+      const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
+      await client.embed('test');
+
+      const [, options] = fetchSpy.mock.calls[0];
+      expect(options.signal).toBeInstanceOf(AbortSignal);
+      expect(options.signal.aborted).toBe(false);
     });
 
     it('throws on Ollama error', async () => {
@@ -95,11 +112,14 @@ describe('OllamaClient', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       for await (const _ of client.chat('model', messages)) { /* consume */ }
 
-      expect(fetchSpy).toHaveBeenCalledWith('http://localhost:11434/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'model', messages, stream: true }),
-      });
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'http://localhost:11434/api/chat',
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'model', messages, stream: true }),
+        }),
+      );
     });
   });
 

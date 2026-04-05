@@ -9,10 +9,16 @@ export interface OllamaClient {
   isModelAvailable(model: string): Promise<boolean>;
 }
 
+function fetchWithTimeout(url: string, options: RequestInit, ms = 30_000): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
 export function createOllamaClient(baseUrl: string, embedModel: string): OllamaClient {
   return {
     async embed(text: string): Promise<number[]> {
-      const res = await fetch(`${baseUrl}/api/embed`, {
+      const res = await fetchWithTimeout(`${baseUrl}/api/embed`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: embedModel, input: text }),
@@ -29,7 +35,7 @@ export function createOllamaClient(baseUrl: string, embedModel: string): OllamaC
     },
 
     async *chat(model: string, messages: ChatMessage[]): AsyncGenerator<string> {
-      const res = await fetch(`${baseUrl}/api/chat`, {
+      const res = await fetchWithTimeout(`${baseUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model, messages, stream: true }),
@@ -64,7 +70,7 @@ export function createOllamaClient(baseUrl: string, embedModel: string): OllamaC
     },
 
     async isModelAvailable(model: string): Promise<boolean> {
-      const res = await fetch(`${baseUrl}/api/tags`, {
+      const res = await fetchWithTimeout(`${baseUrl}/api/tags`, {
         method: 'GET',
       });
 

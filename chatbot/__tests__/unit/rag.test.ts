@@ -39,7 +39,7 @@ describe('RAG Pipeline', () => {
     const store = createMockStore();
     const rag = createRagPipeline(ollama, store, 'deepseek-coder-v2:16b');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of rag.generate('react header', 'react')) { /* consume */ }
+    for await (const _ of rag.generate('react header', 'react', () => {})) { /* consume */ }
     expect(ollama.embed).toHaveBeenCalledWith('react header');
   });
 
@@ -48,7 +48,7 @@ describe('RAG Pipeline', () => {
     const store = createMockStore();
     const rag = createRagPipeline(ollama, store, 'deepseek-coder-v2:16b');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of rag.generate('react header', 'react')) { /* consume */ }
+    for await (const _ of rag.generate('react header', 'react', () => {})) { /* consume */ }
     expect(store.query).toHaveBeenCalledWith([0.1, 0.2, 0.3], 5, 'react');
   });
 
@@ -57,7 +57,7 @@ describe('RAG Pipeline', () => {
     const store = createMockStore();
     const rag = createRagPipeline(ollama, store, 'deepseek-coder-v2:16b');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of rag.generate('header', 'react')) { /* consume */ }
+    for await (const _ of rag.generate('header', 'react', () => {})) { /* consume */ }
 
     const chatCall = (ollama.chat as ReturnType<typeof vi.fn>).mock.calls[0];
     expect(chatCall[0]).toBe('deepseek-coder-v2:16b');
@@ -76,18 +76,39 @@ describe('RAG Pipeline', () => {
     const rag = createRagPipeline(ollama, store, 'deepseek-coder-v2:16b');
 
     const tokens: string[] = [];
-    for await (const token of rag.generate('header', 'react')) {
+    for await (const token of rag.generate('header', 'react', () => {})) {
       tokens.push(token);
     }
     expect(tokens).toEqual(['Here is ', 'your component']);
   });
 
-  it('returns sources after generation', async () => {
+  it('calls onSources callback with retrieved sources', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
     const rag = createRagPipeline(ollama, store, 'deepseek-coder-v2:16b');
+    let capturedSources: Array<{ id: string; score: number }> = [];
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for await (const _ of rag.generate('header', 'react')) { /* consume */ }
-    expect(rag.lastSources).toEqual([{ id: 'react-header-001', score: 0.12 }]);
+    for await (const _ of rag.generate('header', 'react', (s) => { capturedSources = s; })) { /* consume */ }
+    expect(capturedSources).toEqual([{ id: 'react-header-001', score: 0.12 }]);
+  });
+
+  it('invokes onSources before yielding any tokens', async () => {
+    const ollama = createMockOllama();
+    const store = createMockStore();
+    const rag = createRagPipeline(ollama, store, 'deepseek-coder-v2:16b');
+    let sourcesReceivedBeforeFirstToken = false;
+    let onSourcesCalled = false;
+
+    const gen = rag.generate('header', 'react', () => { onSourcesCalled = true; });
+    const first = await gen.next();
+    // After consuming the first token, onSources must have already been called
+    sourcesReceivedBeforeFirstToken = onSourcesCalled;
+
+    // Drain remaining tokens
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for await (const _ of gen) { /* drain */ }
+
+    expect(sourcesReceivedBeforeFirstToken).toBe(true);
+    expect(first.done).toBe(false);
   });
 });

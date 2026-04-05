@@ -23,6 +23,23 @@ export function createApp(deps: AppDependencies): Express {
   app.use(cors({ origin: deps.config.corsOrigin }));
   app.use(express.json());
 
+  // Simple rate limiting: 10 requests per minute per IP
+  const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+  app.use('/api/chat', (req, res, next) => {
+    const ip = req.ip ?? 'unknown';
+    const now = Date.now();
+    const limit = rateLimitMap.get(ip);
+    if (!limit || now > limit.resetAt) {
+      rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
+      next();
+    } else if (limit.count >= 10) {
+      res.status(429).json({ error: 'Rate limit exceeded. Please wait before sending more requests.' });
+    } else {
+      limit.count++;
+      next();
+    }
+  });
+
   app.post('/api/chat', createChatRoute(deps.rag));
 
   app.get('/api/health', async (_req, res) => {

@@ -34,14 +34,20 @@ describe('detectPackageManager', () => {
 
   it('returns pnpm when npm_config_user_agent starts with pnpm', async () => {
     vi.stubEnv('npm_execpath', '');
-    vi.stubEnv('npm_config_user_agent', 'pnpm/8.15.0 npm/? node/v20.0.0 linux x64');
+    vi.stubEnv(
+      'npm_config_user_agent',
+      'pnpm/8.15.0 npm/? node/v20.0.0 linux x64'
+    );
     const { detectPackageManager } = await import('../detect-pm');
     expect(detectPackageManager()).toBe('pnpm');
   });
 
   it('returns yarn when npm_config_user_agent starts with yarn', async () => {
     vi.stubEnv('npm_execpath', '');
-    vi.stubEnv('npm_config_user_agent', 'yarn/1.22.0 npm/? node/v20.0.0 linux x64');
+    vi.stubEnv(
+      'npm_config_user_agent',
+      'yarn/1.22.0 npm/? node/v20.0.0 linux x64'
+    );
     const { detectPackageManager } = await import('../detect-pm');
     expect(detectPackageManager()).toBe('yarn');
   });

@@ -13,8 +13,8 @@ function Header() { return <header><nav>Home | About</nav></header>; }
 export default createReactMicroApp({ name: 'header', App: Header });`;
 
   const mockRag = {
-    lastSources: [{ id: 'react-header-001', score: 0.12 }],
-    async *generate() {
+    async *generate(_msg: string, _fw: string, onSources: (s: Array<{ id: string; score: number }>) => void) {
+      onSources([{ id: 'react-header-001', score: 0.12 }]);
       yield '```tsx\n';
       yield componentCode;
       yield '\n```';

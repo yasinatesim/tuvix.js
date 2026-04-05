@@ -1,6 +1,5 @@
 <template>
   <div class="live-playground">
-
     <div class="tab-bar">
       <button
         v-for="tab in TABS"
@@ -10,47 +9,92 @@
         :data-tab="tab.id"
         @click="switchTab(tab.id)"
       >
-        <span class="tab-icon" v-html="tab.icon" />
+        <span
+          class="tab-icon"
+          v-html="tab.icon"
+        />
         {{ tab.label }}
       </button>
     </div>
 
     <div class="demo-bar">
-      <button class="demo-btn" :class="{ active: demoType === 'counter' }" @click="switchDemo('counter')">Counter</button>
-      <button class="demo-btn" :class="{ active: demoType === 'todo' }" @click="switchDemo('todo')">Todo</button>
+      <button
+        class="demo-btn"
+        :class="{ active: demoType === 'counter' }"
+        @click="switchDemo('counter')"
+      >
+        Counter
+      </button>
+      <button
+        class="demo-btn"
+        :class="{ active: demoType === 'todo' }"
+        @click="switchDemo('todo')"
+      >
+        Todo
+      </button>
     </div>
 
     <div class="playground-body">
       <div class="editor-pane">
         <div class="pane-header">
           <span>{{ activeTabObj?.file }}</span>
-          <span v-if="compiling" class="compiling-pill">Compiling…</span>
+          <span
+            v-if="compiling"
+            class="compiling-pill"
+          >Compiling…</span>
         </div>
-        <div ref="editorEl" class="editor-mount" />
+        <div
+          ref="editorEl"
+          class="editor-mount"
+        />
       </div>
 
       <div class="right-pane">
         <div class="preview-pane">
-          <div class="pane-header"><span class="live-dot" />Preview</div>
-          <iframe ref="iframeEl" class="preview-frame" sandbox="allow-scripts" title="Live Preview" />
+          <div class="pane-header">
+            <span class="live-dot" />Preview
+          </div>
+          <iframe
+            ref="iframeEl"
+            class="preview-frame"
+            sandbox="allow-scripts"
+            title="Live Preview"
+          />
         </div>
         <div class="console-pane">
           <div class="pane-header">
             Console
-            <button class="clear-btn" @click="messages = []">Clear</button>
+            <button
+              class="clear-btn"
+              @click="messages = []"
+            >
+              Clear
+            </button>
           </div>
           <div class="console-body">
-            <div v-for="(msg, i) in messages" :key="i" class="console-msg" :class="msg.kind">
+            <div
+              v-for="(msg, i) in messages"
+              :key="i"
+              class="console-msg"
+              :class="msg.kind"
+            >
               <span class="msg-icon">{{ ICONS[msg.kind] }}</span>
               <span class="msg-text">{{ msg.text }}</span>
-              <span v-if="msg.line" class="msg-loc">:{{ msg.line }}</span>
+              <span
+                v-if="msg.line"
+                class="msg-loc"
+              >:{{ msg.line }}</span>
             </div>
-            <div v-if="!messages.length" class="console-empty">No output yet</div>
+            <div
+              v-if="!messages.length"
+              class="console-empty"
+            >
+              No output yet
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 

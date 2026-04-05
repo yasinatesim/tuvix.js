@@ -36,7 +36,7 @@
 
   ```tsx
   // routes/iletisim.tsx
-  export const Route = createFileRoute('/iletisim')({
+  export const Route = createFileRoute('/contact')({
     loader: async () => {
       const { renderVueToString } = await import('@tuvix.js/vue');
       const { default: App } = await import('~/micro-apps/contact/App.vue');

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { RagPipeline } from '../services/rag';
+import type { RagPipeline, SourceReference } from '../services/rag';
 
 export function createChatRoute(rag: RagPipeline) {
   return async (req: Request, res: Response) => {
@@ -28,10 +28,11 @@ export function createChatRoute(rag: RagPipeline) {
     });
 
     try {
-      for await (const token of rag.generate(message, framework)) {
+      let sources: SourceReference[] = [];
+      for await (const token of rag.generate(message, framework, (s) => { sources = s; })) {
         res.write(`data: ${JSON.stringify({ type: 'token', content: token })}\n\n`);
       }
-      res.write(`data: ${JSON.stringify({ type: 'sources', content: rag.lastSources })}\n\n`);
+      res.write(`data: ${JSON.stringify({ type: 'sources', content: sources })}\n\n`);
       res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';

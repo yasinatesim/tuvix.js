@@ -120,13 +120,19 @@ describe('createProject', () => {
     const tmpName = `.tmp/tuvix-svelte-${Date.now()}`;
     const tmpDir = path.resolve(process.cwd(), tmpName);
 
-    await createProject({ name: tmpName, template: 'svelte-app', typescript: true });
+    await createProject({
+      name: tmpName,
+      template: 'svelte-app',
+      typescript: true,
+    });
 
     try {
       expect(fs.existsSync(path.join(tmpDir, 'src/App.svelte'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'src/main.ts'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'vite.config.ts'))).toBe(true);
-      const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
+      const pkg = JSON.parse(
+        fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
+      );
       expect(pkg.dependencies['@tuvix.js/svelte']).toBeDefined();
       expect(pkg.dependencies.svelte).toBeDefined();
       expect(pkg.devDependencies['@sveltejs/vite-plugin-svelte']).toBeDefined();
@@ -139,16 +145,26 @@ describe('createProject', () => {
     const tmpName = `.tmp/tuvix-angular-${Date.now()}`;
     const tmpDir = path.resolve(process.cwd(), tmpName);
 
-    await createProject({ name: tmpName, template: 'angular-app', typescript: false });
+    await createProject({
+      name: tmpName,
+      template: 'angular-app',
+      typescript: false,
+    });
 
     try {
       expect(fs.existsSync(path.join(tmpDir, 'src/main.ts'))).toBe(true);
-      expect(fs.existsSync(path.join(tmpDir, 'src/app/app.component.ts'))).toBe(true);
+      expect(fs.existsSync(path.join(tmpDir, 'src/app/app.component.ts'))).toBe(
+        true
+      );
       expect(fs.existsSync(path.join(tmpDir, 'vite.config.ts'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(true);
-      const tsconfig = JSON.parse(fs.readFileSync(path.join(tmpDir, 'tsconfig.json'), 'utf-8'));
+      const tsconfig = JSON.parse(
+        fs.readFileSync(path.join(tmpDir, 'tsconfig.json'), 'utf-8')
+      );
       expect(tsconfig.compilerOptions.experimentalDecorators).toBe(true);
-      const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
+      const pkg = JSON.parse(
+        fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
+      );
       expect(pkg.dependencies['@angular/core']).toBeDefined();
       expect(pkg.dependencies['zone.js']).toBeDefined();
     } finally {

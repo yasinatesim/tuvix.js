@@ -17,7 +17,7 @@ import type { Component, Plugin } from 'vue';
  * import { renderVueToString } from '@tuvix.js/vue/server';
  * import { default: ContactApp } from '~/micro-apps/contact/App.vue';
  *
- * export const Route = createFileRoute('/iletisim')({
+ * export const Route = createFileRoute('/contact')({
  *   loader: async () => ({
  *     ssrHtml: await renderVueToString(ContactApp),
  *   }),

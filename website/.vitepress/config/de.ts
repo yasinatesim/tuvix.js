@@ -6,6 +6,7 @@ export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
       { text: 'Anleitung', link: '/de/guide/getting-started', activeMatch: '/de/guide/' },
       { text: 'Pakete', link: '/de/packages/', activeMatch: '/de/packages/' },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
+      { text: 'KI-Generator', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Beitragen', link: '/de/contributing' },
       { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Beitragen', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
     ],

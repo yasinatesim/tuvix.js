@@ -440,7 +440,10 @@ export default defineConfig({
   };
 
   if (typescript) {
-    files['tsconfig.json'] = buildTsconfig(undefined, ['src', 'vite.config.ts']);
+    files['tsconfig.json'] = buildTsconfig(undefined, [
+      'src',
+      'vite.config.ts',
+    ]);
   }
 
   return files;

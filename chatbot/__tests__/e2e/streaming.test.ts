@@ -9,8 +9,8 @@ beforeAll(async () => {
   const { createApp } = await import('../../src/server');
 
   const mockRag = {
-    lastSources: [{ id: 'test-001', score: 0.1 }],
-    async *generate() {
+    async *generate(_msg: string, _fw: string, onSources: (s: Array<{ id: string; score: number }>) => void) {
+      onSources([{ id: 'test-001', score: 0.1 }]);
       yield 'Hello ';
       yield 'world';
     },
@@ -98,5 +98,57 @@ describe('Health API', () => {
     expect(res.status).toBe(200);
     expect(body.status).toBe('ok');
     expect(body.chromadb.connected).toBe(true);
+  });
+});
+
+describe('Rate Limiting', () => {
+  let rlServer: import('http').Server;
+  let rlBaseUrl: string;
+
+  beforeAll(async () => {
+    const { createApp } = await import('../../src/server');
+    const mockRag = {
+      async *generate(_m: string, _f: string, onSources: (s: Array<{ id: string; score: number }>) => void) {
+        onSources([]);
+        yield 'ok';
+      },
+    };
+    const app = createApp({
+      rag: mockRag,
+      store: { init: async () => {}, upsert: async () => {}, query: async () => [], count: async () => 0 },
+      ollama: { embed: async () => [0.1], chat: async function* () { yield 'x'; }, isModelAvailable: async () => true },
+      config: { corsOrigin: '*', modelName: 'test', embedModel: 'test' },
+    });
+    await new Promise<void>((resolve) => {
+      rlServer = app.listen(0, () => {
+        const addr = rlServer.address();
+        if (addr && typeof addr === 'object') rlBaseUrl = `http://localhost:${addr.port}`;
+        resolve();
+      });
+    });
+  });
+
+  afterAll(() => { rlServer?.close(); });
+
+  it('returns 429 after 10 requests from the same IP within one minute', async () => {
+    // Send 10 allowed requests
+    for (let i = 0; i < 10; i++) {
+      const res = await fetch(`${rlBaseUrl}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'hello', framework: 'react' }),
+      });
+      expect(res.status).toBe(200);
+    }
+
+    // The 11th request should be rate-limited
+    const limited = await fetch(`${rlBaseUrl}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'hello', framework: 'react' }),
+    });
+    expect(limited.status).toBe(429);
+    const body = await limited.json();
+    expect(body.error).toContain('Rate limit exceeded');
   });
 });
