@@ -1,8 +1,9 @@
 version: "3.8"
 services:
+  # Main chatbot API server
   chatbot:
     build:
-      context: .
+      context: ..
       dockerfile: chatbot/Dockerfile
     ports:
       - "3001:3001"
@@ -11,31 +12,87 @@ services:
       - CHROMA_URL=http://chromadb:8000
       - MODEL_NAME=deepseek-coder-v2:16b
       - EMBED_MODEL=nomic-embed-text
-      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
+      - PORT=3001
+      - OLLAMA_TIMEOUT_MS=120000
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
     depends_on:
       chromadb:
         condition: service_healthy
-      ollama:
-        condition: service_started
-
-  chromadb:
-    image: chromadb/chroma:latest
-    ports:
-      - "8000:8000"
-    volumes:
-      - chromadb_data:/chroma/chroma
+      ollama-setup:
+        condition: service_completed_successfully
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 10s
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
+      interval: 15s
       timeout: 5s
       retries: 3
 
+  # Auto-pulls Ollama models on first boot, then exits
+  ollama-setup:
+    image: ollama/ollama
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ollama_data:/root/.ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "⏳ Pulling embedding model..."
+        OLLAMA_HOST=http://ollama:11434 ollama pull nomic-embed-text
+        echo "⏳ Pulling code generation model (this may take a while)..."
+        OLLAMA_HOST=http://ollama:11434 ollama pull deepseek-coder-v2:16b
+        echo "✅ All models ready!"
+
+  # Seeds dataset into ChromaDB on first boot, then exits
+  chatbot-seed:
+    build:
+      context: ..
+      dockerfile: chatbot/Dockerfile
+    environment:
+      - OLLAMA_URL=http://ollama:11434
+      - CHROMA_URL=http://chromadb:8000
+      - EMBED_MODEL=nomic-embed-text
+    depends_on:
+      chatbot:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "⏳ Seeding dataset into ChromaDB..."
+        cd /app && tsx data/seed.ts
+        echo "✅ Dataset seeded!"
+    restart: "no"
+
+  # Ollama LLM server
   ollama:
     image: ollama/ollama
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ChromaDB vector database
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/api/v2/heartbeat || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   chromadb_data:
