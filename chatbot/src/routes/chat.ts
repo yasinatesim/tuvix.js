@@ -21,6 +21,10 @@ export function createChatRoute(rag: RagPipeline) {
       return;
     }
 
+    // Server-side safety: detect framework from message text (overrides client if explicit mention found)
+    const msgLower = message.toLowerCase();
+    const detectedFramework = validFrameworks.find((fw) => msgLower.includes(fw)) ?? framework;
+
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
@@ -29,7 +33,7 @@ export function createChatRoute(rag: RagPipeline) {
 
     try {
       let sources: SourceReference[] = [];
-      for await (const token of rag.generate(message, framework, (s) => { sources = s; })) {
+      for await (const token of rag.generate(message, detectedFramework, (s) => { sources = s; })) {
         res.write(`data: ${JSON.stringify({ type: 'token', content: token })}\n\n`);
       }
       res.write(`data: ${JSON.stringify({ type: 'sources', content: sources })}\n\n`);

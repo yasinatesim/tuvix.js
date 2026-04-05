@@ -15,14 +15,14 @@ function fetchWithTimeout(url: string, options: RequestInit, ms = 30_000): Promi
   return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
 }
 
-export function createOllamaClient(baseUrl: string, embedModel: string): OllamaClient {
+export function createOllamaClient(baseUrl: string, embedModel: string, timeoutMs = 30_000): OllamaClient {
   return {
     async embed(text: string): Promise<number[]> {
       const res = await fetchWithTimeout(`${baseUrl}/api/embed`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: embedModel, input: text }),
-      });
+      }, timeoutMs);
 
       if (!res.ok) {
         throw new Error(`Ollama embedding failed (${res.status}): ${await res.text()}`);
@@ -39,7 +39,7 @@ export function createOllamaClient(baseUrl: string, embedModel: string): OllamaC
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model, messages, stream: true }),
-      });
+      }, timeoutMs);
 
       if (!res.ok) {
         throw new Error(`Ollama chat failed (${res.status}): ${await res.text()}`);

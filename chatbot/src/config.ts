@@ -6,6 +6,7 @@ export const config = {
   port: parseInt(process.env.PORT ?? '3001', 10),
   corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
   collectionName: 'tuvix_components',
+  ollamaTimeoutMs: parseInt(process.env.OLLAMA_TIMEOUT_MS ?? '120000', 10),
 } as const;
 
 export type Config = typeof config;

@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 // ── Closing script tag via unicode — keeps Vue SFC parser happy ────
 const CS = '<\u002Fscript>';
@@ -1350,6 +1350,43 @@ onMounted(async () => {
   // If we just compile `firstCode` here, we'd send vanilla code to the Svelte compiler
   // when the active tab is already 'svelte', causing a compilation failure.
   loadEditor(activeTab.value, demoType.value);
+
+  // Read query params from URL (e.g. from chatbot "Open in Playground")
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const codeParam = params.get('code');
+    const frameworkParam = params.get('framework');
+
+    if (codeParam) {
+      try {
+        const decoded = atob(codeParam);
+        // Switch to the right framework tab if specified
+        if (frameworkParam) {
+          const tabMap: Record<string, string> = {
+            react: 'react',
+            vue: 'vue',
+            svelte: 'svelte',
+            angular: 'vanilla', // angular not in playground, fall back
+          };
+          const tab = tabMap[frameworkParam] ?? frameworkParam;
+          const validIds = TABS.map(t => t.id);
+          if (validIds.includes(tab)) {
+            activeTab.value = tab;
+          }
+        }
+        // Wait for Vue reactivity (tab switch triggers loadEditor via watch)
+        // then overwrite with the decoded content
+        await nextTick();
+        await nextTick(); // second tick ensures watch callbacks have settled
+        if (editorInst) {
+          editorInst.setValue(decoded);
+          scheduleCompile(decoded);
+        }
+      } catch {
+        // ignore invalid base64
+      }
+    }
+  }
 });
 
 onBeforeUnmount(() => {

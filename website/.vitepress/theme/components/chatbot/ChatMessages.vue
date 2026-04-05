@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, computed } from 'vue';
 import UserMessage from './UserMessage.vue';
 import BotMessage from './BotMessage.vue';
 
@@ -17,13 +17,16 @@ const props = defineProps<{
 
 const bottomRef = ref<HTMLElement | null>(null);
 
-watch(
-  () => props.messages.length,
-  async () => {
-    await nextTick();
-    bottomRef.value?.scrollIntoView({ behavior: 'smooth' });
-  },
-);
+// Track last message content to scroll as tokens stream in
+const lastContent = computed(() => {
+  const last = props.messages[props.messages.length - 1];
+  return last ? `${props.messages.length}:${last.content.length}` : '';
+});
+
+watch(lastContent, async () => {
+  await nextTick();
+  bottomRef.value?.scrollIntoView({ behavior: 'smooth' });
+});
 </script>
 
 <template>
@@ -54,9 +57,9 @@ watch(
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: $chat-spacing-md 0;
+  padding: $sp-4 0;
   display: flex;
   flex-direction: column;
-  gap: $chat-spacing-sm;
+  gap: $sp-2;
 }
 </style>

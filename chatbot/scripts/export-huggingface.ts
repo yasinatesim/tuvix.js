@@ -27,7 +27,7 @@ function exportDataset() {
     frameworks: ['react', 'vue', 'svelte', 'angular'],
     categories: [...new Set(allRecords.map((r) => (r as Record<string, string>).category))],
     license: 'MIT',
-    description: 'Tuvix.js micro-frontend component examples for RAG-based code generation',
+    description: 'Tuvix.js micro-frontend component examples v2 — 600 records, 10 categories, 4 frameworks, correct API patterns',
   };
   writeFileSync(join(OUT_DIR, 'metadata.json'), JSON.stringify(metadata, null, 2));
 

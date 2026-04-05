@@ -4,9 +4,7 @@ defineProps<{ content: string }>();
 
 <template>
   <div :class="$style.container">
-    <div :class="$style.bubble">
-      {{ content }}
-    </div>
+    <p :class="$style.text">{{ content }}</p>
   </div>
 </template>
 
@@ -16,17 +14,19 @@ defineProps<{ content: string }>();
 .container {
   display: flex;
   justify-content: flex-end;
-  padding: $chat-spacing-xs $chat-spacing-md;
+  padding: $sp-2 $sp-4;
 }
 
-.bubble {
+.text {
   max-width: 70%;
-  padding: $chat-spacing-sm $chat-spacing-md;
-  border-radius: $chat-radius-lg $chat-radius-lg $chat-radius-sm $chat-radius-lg;
-  background: $chat-user-bubble;
-  color: $chat-text;
-  font-size: $chat-font-size-md;
+  font-size: $text-md;
   line-height: 1.5;
+  color: $chat-text;
+  background: $chat-surface;
+  border: 1px solid $chat-border;
+  border-radius: $r-lg $r-lg $r-sm $r-lg;
+  padding: $sp-3 $sp-4;
+  margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
 }

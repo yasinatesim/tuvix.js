@@ -6,14 +6,26 @@ const emit = defineEmits<{
 }>();
 
 const message = ref('');
-const framework = ref('react');
 
-const frameworks = ['react', 'vue', 'svelte', 'angular'] as const;
+const FRAMEWORK_KEYWORDS: Record<string, string> = {
+  react: 'react',
+  vue: 'vue',
+  svelte: 'svelte',
+  angular: 'angular',
+};
+
+function detectFramework(text: string): string {
+  const lower = text.toLowerCase();
+  for (const [keyword, fw] of Object.entries(FRAMEWORK_KEYWORDS)) {
+    if (lower.includes(keyword)) return fw;
+  }
+  return 'react'; // default
+}
 
 function handleSend() {
   const trimmed = message.value.trim();
   if (!trimmed) return;
-  emit('send', trimmed, framework.value);
+  emit('send', trimmed, detectFramework(trimmed));
   message.value = '';
 }
 
@@ -27,32 +39,19 @@ function handleKeydown(e: KeyboardEvent) {
 
 <template>
   <div :class="$style.container">
-    <select
-      v-model="framework"
-      :class="$style.select"
-    >
-      <option
-        v-for="fw in frameworks"
-        :key="fw"
-        :value="fw"
-      >
-        {{ fw.charAt(0).toUpperCase() + fw.slice(1) }}
-      </option>
-    </select>
-    <textarea
-      v-model="message"
-      :class="$style.textarea"
-      placeholder="Describe the component you want..."
-      rows="1"
-      @keydown="handleKeydown"
-    />
-    <button
-      :class="$style.send"
-      :disabled="!message.trim()"
-      @click="handleSend"
-    >
-      Send
-    </button>
+    <div :class="$style.wrap">
+      <textarea
+        v-model="message"
+        :class="$style.textarea"
+        placeholder="Describe the component... e.g. 'vue sidebar with icons'"
+        rows="1"
+        @keydown="handleKeydown"
+      />
+      <button :class="$style.send" :disabled="!message.trim()" @click="handleSend">
+        ↵
+      </button>
+    </div>
+    <p :class="$style.hint">mention react · vue · svelte · angular — or omit for react</p>
   </div>
 </template>
 
@@ -60,62 +59,70 @@ function handleKeydown(e: KeyboardEvent) {
 @use './variables' as *;
 
 .container {
-  display: flex;
-  align-items: flex-end;
-  gap: $chat-spacing-sm;
-  padding: $chat-spacing-md;
-  border-top: 1px solid $chat-border;
-  background: $chat-bg;
+  flex-shrink: 0;
+  padding: $sp-3 $sp-4 $sp-2;
+  border-top: 1px solid $chat-border-subtle;
 }
 
-.select {
-  flex-shrink: 0;
-  height: $chat-input-height;
-  padding: 0 $chat-spacing-sm;
+.wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: $sp-2;
+  background: $chat-surface;
   border: 1px solid $chat-border;
-  border-radius: $chat-radius-sm;
-  background: $chat-bg-soft;
-  color: $chat-text;
-  font-size: $chat-font-size-sm;
-  cursor: pointer;
+  border-radius: $r-lg;
+  padding: $sp-2 $sp-2 $sp-2 $sp-4;
+  transition: border-color 0.12s;
+
+  &:focus-within {
+    border-color: $chat-brand;
+  }
 }
 
 .textarea {
   flex: 1;
   resize: none;
-  padding: $chat-spacing-sm $chat-spacing-md;
-  border: 1px solid $chat-border;
-  border-radius: $chat-radius-md;
-  background: $chat-bg-soft;
+  border: none;
+  background: transparent;
   color: $chat-text;
-  font-size: $chat-font-size-md;
-  font-family: $chat-font-body;
+  font-size: $text-md;
+  font-family: $font-body;
   line-height: 1.5;
-  min-height: $chat-input-height;
+  min-height: 24px;
   max-height: 120px;
   overflow-y: auto;
+  padding: 0;
 
-  &:focus {
-    outline: none;
-    border-color: $chat-brand;
-  }
+  &:focus { outline: none; }
+  &::placeholder { color: $chat-text-3; }
 }
 
 .send {
   flex-shrink: 0;
-  height: $chat-input-height;
-  padding: 0 $chat-spacing-md;
+  width: 32px;
+  height: 32px;
   border: none;
-  border-radius: $chat-radius-md;
+  border-radius: $r-md;
   background: $chat-brand;
-  color: white;
-  font-size: $chat-font-size-md;
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
+  &:not(:disabled):hover { opacity: 0.85; }
+}
+
+.hint {
+  margin: $sp-1 0 0;
+  font-size: $text-xs;
+  font-family: $font-mono;
+  color: $chat-text-3;
+  text-align: center;
+  letter-spacing: 0.03em;
 }
 </style>

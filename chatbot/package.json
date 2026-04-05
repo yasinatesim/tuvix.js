@@ -9,7 +9,9 @@
     "test": "vitest run",
     "test:e2e": "vitest run --config vitest.e2e.config.ts",
     "seed": "tsx data/seed.ts",
-    "export-hf": "tsx scripts/export-huggingface.ts"
+    "export-hf": "tsx scripts/export-huggingface.ts",
+    "generate-dataset": "tsx scripts/generate-dataset.ts",
+    "seed:clear": "tsx data/seed-clear.ts"
   },
   "dependencies": {
     "chromadb": "^1.9.2",

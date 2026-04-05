@@ -75,7 +75,7 @@ export function createApp(deps: AppDependencies): Express {
 }
 
 async function main() {
-  const ollama = createOllamaClient(defaultConfig.ollamaUrl, defaultConfig.embedModel);
+  const ollama = createOllamaClient(defaultConfig.ollamaUrl, defaultConfig.embedModel, defaultConfig.ollamaTimeoutMs);
   const store = createVectorStore(defaultConfig.chromaUrl, defaultConfig.collectionName);
 
   await store.init();

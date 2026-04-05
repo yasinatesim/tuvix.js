@@ -12,15 +12,15 @@
 .typing {
   display: flex;
   align-items: center;
-  gap: $chat-spacing-xs;
-  padding: $chat-spacing-sm $chat-spacing-md;
+  gap: $sp-1;
+  padding: $sp-2 $sp-4;
 }
 
 .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: $chat-text-muted;
+  background: $chat-text-3;
   animation: bounce 1.2s infinite;
 
   &:nth-child(2) {

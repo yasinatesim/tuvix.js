@@ -21,7 +21,6 @@ export function parseMarkdownContent(md: string): string {
   // Remove code blocks before parsing (they'll be rendered by CodeBlock component)
   const withoutCode = md.replace(/```[\s\S]*?```/g, '');
   const raw = marked.parse(withoutCode, { async: false }) as string;
-  // DOMPurify only runs in browser; return raw in SSR context
   if (typeof window === 'undefined') return raw;
   return DOMPurify.sanitize(raw);
 }
@@ -39,15 +38,27 @@ const props = defineProps<{
   framework: string;
 }>();
 
-const codeBlocks = computed(() => extractCodeBlocks(props.content));
-const htmlContent = computed(() => parseMarkdownContent(props.content));
+// Only extract/render code blocks after streaming is done — prevents duplicate display
+const codeBlocks = computed(() =>
+  props.streaming ? [] : extractCodeBlocks(props.content),
+);
+
+// During streaming show raw content; after done show parsed markdown without code blocks
+const htmlContent = computed(() => {
+  if (props.streaming) {
+    // Show raw text with minimal escaping during streaming
+    const safe = props.content
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    return `<pre style="white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed">${safe}</pre>`;
+  }
+  return parseMarkdownContent(props.content);
+});
 </script>
 
 <template>
   <div :class="$style.container">
-    <div :class="$style.avatar">
-      🤖
-    </div>
     <div :class="$style.body">
       <TypingIndicator v-if="streaming && !content" />
       <template v-else>
@@ -85,69 +96,56 @@ const htmlContent = computed(() => parseMarkdownContent(props.content));
 @use './variables' as *;
 
 .container {
-  display: flex;
-  align-items: flex-start;
-  gap: $chat-spacing-md;
-  padding: $chat-spacing-xs $chat-spacing-md;
-}
-
-.avatar {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: $chat-bg-soft;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+  padding: $sp-2 $sp-4;
 }
 
 .body {
-  flex: 1;
-  min-width: 0;
+  border-left: 2px solid $chat-brand;
+  padding-left: $sp-4;
+  max-width: 800px;
 }
 
 .markdown {
-  font-size: $chat-font-size-md;
-  line-height: 1.6;
+  font-size: $text-md;
+  line-height: 1.65;
   color: $chat-text;
 
-  :deep(p) {
-    margin: 0 0 $chat-spacing-sm;
-  }
-
-  :deep(strong) {
-    font-weight: 600;
-  }
-
+  :deep(p) { margin: 0 0 $sp-3; &:last-child { margin-bottom: 0; } }
+  :deep(strong) { color: $chat-text; font-weight: 600; }
+  :deep(pre) { margin: 0; font-family: $font-mono; }
   :deep(code) {
-    font-family: $chat-font-mono;
-    font-size: $chat-font-size-sm;
-    background: $chat-bg-soft;
-    padding: 1px 4px;
-    border-radius: $chat-radius-sm;
+    font-family: $font-mono;
+    font-size: $text-xs;
+    background: rgba(0, 229, 160, 0.06);
+    color: $chat-brand;
+    padding: 1px 5px;
+    border-radius: $r-sm;
   }
 }
 
 .sources {
-  margin-top: $chat-spacing-sm;
   display: flex;
   align-items: center;
-  gap: $chat-spacing-xs;
+  gap: $sp-2;
   flex-wrap: wrap;
+  margin-top: $sp-3;
+  padding-top: $sp-3;
+  border-top: 1px solid $chat-border-subtle;
 }
 
 .sourcesLabel {
-  font-size: $chat-font-size-sm;
-  color: $chat-text-muted;
+  font-size: $text-xs;
+  font-family: $font-mono;
+  color: $chat-text-3;
 }
 
 .source {
-  font-size: $chat-font-size-sm;
-  color: $chat-brand;
-  background: $chat-brand-soft;
-  padding: 1px $chat-spacing-xs;
-  border-radius: $chat-radius-sm;
+  font-size: $text-xs;
+  font-family: $font-mono;
+  color: $chat-text-3;
+  background: $chat-surface;
+  border: 1px solid $chat-border;
+  padding: 1px $sp-2;
+  border-radius: $r-sm;
 }
 </style>

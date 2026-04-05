@@ -59,19 +59,13 @@ function openInPlayground() {
 <template>
   <div :class="$style.codeblock">
     <div :class="$style.header">
-      <span :class="$style.lang">{{ language }}</span>
+      <span :class="$style.lang">{{ language || 'code' }}</span>
       <div :class="$style.actions">
-        <button
-          :class="$style.btn"
-          @click="copyCode"
-        >
-          {{ copied ? 'Copied!' : 'Copy' }}
+        <button :class="$style.btn" @click="copyCode">
+          {{ copied ? '✓ copied' : 'copy' }}
         </button>
-        <button
-          :class="$style.btn"
-          @click="openInPlayground"
-        >
-          Open in Playground
+        <button :class="[$style.btn, $style.btnAccent]" @click="openInPlayground">
+          playground →
         </button>
       </div>
     </div>
@@ -84,57 +78,71 @@ function openInPlayground() {
 @use './variables' as *;
 
 .codeblock {
-  border-radius: $chat-radius-md;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $r-md;
   overflow: hidden;
-  border: 1px solid $chat-border;
-  margin: $chat-spacing-md 0;
+  margin: $sp-3 0;
+  font-family: $font-mono;
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $chat-spacing-xs $chat-spacing-md;
-  background: $chat-bg-alt;
-  border-bottom: 1px solid $chat-border;
+  padding: $sp-2 $sp-3;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .lang {
-  font-size: $chat-font-size-sm;
-  font-family: $chat-font-mono;
-  color: $chat-text-muted;
+  font-size: $text-xs;
+  font-family: $font-mono;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $chat-text-3;
 }
 
 .actions {
   display: flex;
-  gap: $chat-spacing-sm;
+  gap: $sp-1;
 }
 
 .btn {
-  font-size: $chat-font-size-sm;
-  padding: 2px $chat-spacing-sm;
-  border: 1px solid $chat-border;
-  border-radius: $chat-radius-sm;
+  font-size: $text-xs;
+  font-family: $font-mono;
+  padding: 2px $sp-3;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $r-sm;
   background: transparent;
-  color: $chat-text-secondary;
+  color: $chat-text-3;
   cursor: pointer;
-  transition:
-    color 0.15s,
-    border-color 0.15s;
+  letter-spacing: 0.02em;
+  transition: all 0.1s;
 
   &:hover {
-    color: $chat-brand;
+    color: $chat-text;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.btnAccent {
+  color: $chat-brand;
+  border-color: rgba(0, 229, 160, 0.2);
+
+  &:hover {
+    background: rgba(0, 229, 160, 0.06);
     border-color: $chat-brand;
   }
 }
 
 .pre {
   margin: 0;
-  padding: $chat-spacing-md;
+  padding: $sp-4;
+  background: $code-bg;
   overflow-x: auto;
-  background: #0d1117;
-  font-family: $chat-font-mono;
-  font-size: $chat-font-size-sm;
+  font-size: $text-sm;
   line-height: 1.6;
+
+  code { font-family: $font-mono; }
 }
 </style>

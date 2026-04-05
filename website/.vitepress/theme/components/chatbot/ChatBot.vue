@@ -11,7 +11,14 @@ const props = defineProps<{
 
 const baseUrl = props.apiUrl ?? 'http://localhost:3001';
 const messages = ref<Message[]>([]);
-const activeFramework = ref('react');
+const activeFramework = ref('react'); // updated per-message by ChatInput's auto-detection
+
+const EXAMPLE_PROMPTS = [
+  'React header with navigation: Home, Gallery, About, Blog, Contact',
+  'Vue sidebar with collapsible menu',
+  'Svelte login form with validation',
+  'Angular dashboard layout',
+];
 
 async function handleSend(userMessage: string, framework: string) {
   activeFramework.value = framework;
@@ -63,6 +70,7 @@ async function handleSend(userMessage: string, framework: string) {
           messages.value[botIndex].sources = event.content;
         } else if (event.type === 'done') {
           messages.value[botIndex].streaming = false;
+          saveConversation();
         }
       }
     }
@@ -73,8 +81,25 @@ async function handleSend(userMessage: string, framework: string) {
   }
 }
 
+function saveConversation() {
+  if (typeof window === 'undefined' || messages.value.length === 0) return;
+  try {
+    const history = JSON.parse(localStorage.getItem('chatbot-history') ?? '[]');
+    const id = Date.now().toString();
+    const title = messages.value[0]?.content.slice(0, 60) ?? 'Chat';
+    history.unshift({ id, title, messages: messages.value });
+    // Keep last 20 conversations
+    localStorage.setItem('chatbot-history', JSON.stringify(history.slice(0, 20)));
+  } catch { /* ignore */ }
+}
+
 function handleNewChat() {
+  saveConversation();
   messages.value = [];
+}
+
+function sendExamplePrompt(prompt: string) {
+  handleSend(prompt, activeFramework.value);
 }
 </script>
 
@@ -85,10 +110,46 @@ function handleNewChat() {
       @select-chat="() => { /* TODO: load selected conversation from localStorage */ }"
     />
     <div :class="$style.main">
-      <ChatMessages
-        :messages="messages"
-        :framework="activeFramework"
-      />
+      <template v-if="messages.length === 0">
+        <div :class="$style.welcome">
+          <div :class="$style.welcomeContent">
+            <h1 :class="$style.welcomeTitle">
+              <span>AI</span> Component Generator
+            </h1>
+            <p :class="$style.welcomeSubtitle">
+              Describe what you want in natural language
+            </p>
+            <div :class="$style.chips">
+              <button
+                v-for="prompt in EXAMPLE_PROMPTS"
+                :key="prompt"
+                :class="$style.chip"
+                @click="sendExamplePrompt(prompt)"
+              >
+                {{ prompt }}
+              </button>
+            </div>
+            <p :class="$style.welcomeFooter">
+              Powered by <a
+                href="https://ollama.com"
+                target="_blank"
+                rel="noopener"
+              >DeepSeek Coder</a> &middot; <a
+                href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
+                target="_blank"
+                rel="noopener"
+              >320 examples</a>
+            </p>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <ChatMessages
+          :messages="messages"
+          :framework="activeFramework"
+        />
+      </template>
+
       <ChatInput @send="handleSend" />
     </div>
   </div>
@@ -99,9 +160,9 @@ function handleNewChat() {
 
 .chatbot {
   display: flex;
-  height: calc(100vh - 64px); // account for VitePress nav
-  overflow: hidden;
+  height: calc(100vh - #{$nav-h});
   background: $chat-bg;
+  border-top: 1px solid $chat-border-subtle;
 }
 
 .main {
@@ -109,8 +170,100 @@ function handleNewChat() {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  max-width: $chat-max-width;
-  margin: 0 auto;
   width: 100%;
+  position: relative;
+}
+
+// Welcome screen with subtle dot grid
+.welcome {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $sp-8 $sp-4;
+  position: relative;
+  overflow: hidden;
+
+  // Subtle dot grid
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, var(--vp-c-divider) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
+
+.welcomeContent {
+  position: relative; // above the grid
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+}
+
+// "AI Component Generator" title — "AI" in brand color
+.welcomeTitle {
+  font-family: $font-mono;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: $chat-text;
+  margin: 0 0 $sp-2;
+  line-height: 1.2;
+
+  // Style the span.accent inside it
+  span { color: $chat-brand; }
+}
+
+.welcomeSubtitle {
+  font-size: $text-sm;
+  color: $chat-text-3;
+  margin: 0 0 $sp-6;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: $font-mono;
+}
+
+// Chips in 2-column grid
+.chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $sp-2;
+  margin-bottom: $sp-5;
+}
+
+.chip {
+  padding: $sp-3 $sp-4;
+  border: 1px solid $chat-border;
+  border-radius: $r-md;
+  background: $chat-surface;
+  color: $chat-text-2;
+  font-size: $text-sm;
+  font-family: $font-body;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  line-height: 1.4;
+
+  &:hover {
+    border-color: $chat-brand;
+    color: $chat-text;
+    background: $chat-brand-soft;
+  }
+}
+
+.welcomeFooter {
+  font-size: $text-xs;
+  color: $chat-text-3;
+  font-family: $font-mono;
+  margin: 0;
+
+  a {
+    color: $chat-brand;
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
 }
 </style>

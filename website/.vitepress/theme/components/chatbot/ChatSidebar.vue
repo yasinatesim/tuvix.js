@@ -34,6 +34,9 @@ onMounted(() => {
     >
       + New Chat
     </button>
+    <p :class="$style.label">
+      HISTORY
+    </p>
     <ul :class="$style.list">
       <li
         v-for="conv in conversations"
@@ -51,29 +54,43 @@ onMounted(() => {
 @use './variables' as *;
 
 .sidebar {
-  width: $chat-sidebar-width;
+  width: $sidebar-w;
   flex-shrink: 0;
-  border-right: 1px solid $chat-border;
-  background: $chat-bg-alt;
+  border-right: 1px solid $chat-border-subtle;
+  background: $chat-bg;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 .newChat {
-  margin: $chat-spacing-md;
-  padding: $chat-spacing-sm $chat-spacing-md;
+  margin: $sp-3 $sp-3 $sp-2;
+  padding: $sp-2 $sp-3;
   border: 1px solid $chat-border;
-  border-radius: $chat-radius-sm;
+  border-radius: $r-md;
   background: transparent;
-  color: $chat-text;
-  font-size: $chat-font-size-sm;
+  color: $chat-text-2;
+  font-size: $text-sm;
+  font-family: $font-mono;
   cursor: pointer;
   text-align: left;
+  letter-spacing: 0.02em;
+  transition: all 0.1s;
 
   &:hover {
-    background: $chat-bg-soft;
+    color: $chat-brand;
+    border-color: $chat-brand;
   }
+}
+
+.label {
+  padding: $sp-2 $sp-3;
+  font-size: $text-xs;
+  font-family: $font-mono;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $chat-text-3;
+  margin: 0;
 }
 
 .list {
@@ -85,17 +102,17 @@ onMounted(() => {
 }
 
 .item {
-  padding: $chat-spacing-sm $chat-spacing-md;
-  font-size: $chat-font-size-sm;
-  color: $chat-text-secondary;
+  padding: $sp-2 $sp-3;
+  font-size: $text-sm;
+  color: $chat-text-2;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-radius: 0;
+  transition: background 0.1s, color 0.1s;
 
-  &:hover {
-    background: $chat-bg-soft;
-  }
+  &:hover { background: $chat-surface; color: $chat-text; }
 }
 
 .active {
