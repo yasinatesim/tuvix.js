@@ -10,7 +10,7 @@ services:
     environment:
       - OLLAMA_URL=http://ollama:11434
       - CHROMA_URL=http://chromadb:8000
-      - MODEL_NAME=deepseek-coder-v2:16b
+      - MODEL_NAME=qwen2.5-coder:7b
       - EMBED_MODEL=nomic-embed-text
       - PORT=3001
       - OLLAMA_TIMEOUT_MS=120000
@@ -41,7 +41,7 @@ services:
         echo "⏳ Pulling embedding model..."
         OLLAMA_HOST=http://ollama:11434 ollama pull nomic-embed-text
         echo "⏳ Pulling code generation model (this may take a while)..."
-        OLLAMA_HOST=http://ollama:11434 ollama pull deepseek-coder-v2:16b
+        OLLAMA_HOST=http://ollama:11434 ollama pull qwen2.5-coder:7b
         echo "✅ All models ready!"
 
   # Seeds dataset into ChromaDB on first boot, then exits

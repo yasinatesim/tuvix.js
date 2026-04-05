@@ -86,7 +86,7 @@ describe('OllamaClient', () => {
       const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
       const tokens: string[] = [];
 
-      for await (const token of client.chat('deepseek-coder-v2:16b', [
+      for await (const token of client.chat('qwen2.5-coder:7b', [
         { role: 'system', content: 'You are helpful.' },
         { role: 'user', content: 'Hello' },
       ])) {
@@ -127,11 +127,11 @@ describe('OllamaClient', () => {
     it('returns true when model exists', async () => {
       fetchSpy.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ models: [{ name: 'deepseek-coder-v2:16b' }] }),
+        json: async () => ({ models: [{ name: 'qwen2.5-coder:7b' }] }),
       });
 
       const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
-      expect(await client.isModelAvailable('deepseek-coder-v2:16b')).toBe(true);
+      expect(await client.isModelAvailable('qwen2.5-coder:7b')).toBe(true);
     });
 
     it('returns false when model missing', async () => {
@@ -141,14 +141,14 @@ describe('OllamaClient', () => {
       });
 
       const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
-      expect(await client.isModelAvailable('deepseek-coder-v2:16b')).toBe(false);
+      expect(await client.isModelAvailable('qwen2.5-coder:7b')).toBe(false);
     });
 
     it('returns false when Ollama tags endpoint fails', async () => {
       fetchSpy.mockResolvedValueOnce({ ok: false, status: 500 });
 
       const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
-      expect(await client.isModelAvailable('deepseek-coder-v2:16b')).toBe(false);
+      expect(await client.isModelAvailable('qwen2.5-coder:7b')).toBe(false);
     });
   });
 });
