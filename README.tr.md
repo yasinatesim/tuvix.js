@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 AI Bileşen Üreticisi
+
+Yerleşik AI chatbot ile doğal dilden tuvix.js bileşenleri üretin.
+
+- **Motor:** Ollama + DeepSeek Coder (tamamen yerel çalışır, API maliyeti yok)
+- **RAG tabanlı:** 320 açık kaynak bileşen örneğinden ilgili örnekleri alır
+- **Destekler:** React, Vue, Svelte, Angular
+- **Veri seti:** HuggingFace'de [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+---
+
 ## 📦 Kurulum
 
 ```bash

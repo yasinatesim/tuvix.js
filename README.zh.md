@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 AI 组件生成器
+
+使用我们内置的 AI 聊天机器人，通过自然语言生成 tuvix.js 组件。
+
+- **驱动：** Ollama + DeepSeek Coder（100% 本地运行，无 API 费用）
+- **基于 RAG：** 从 320 个开源组件示例中检索相关示例
+- **支持：** React、Vue、Svelte、Angular
+- **数据集：** HuggingFace 上的 [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+---
+
 ## 📦 安装
 
 ```bash

@@ -37,6 +37,19 @@
 
 ---
 
+## 🤖 AI Component Generator
+
+Generate tuvix.js components from natural language using our built-in AI chatbot.
+
+- **Powered by:** Ollama + DeepSeek Coder (runs 100% locally, no API costs)
+- **RAG-based:** Retrieves relevant examples from 320 open-source component examples
+- **Supports:** React, Vue, Svelte, Angular
+- **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) on HuggingFace
+
+> Try it: [AI Generator](/chatbot) on the documentation site
+
+---
+
 ## 📦 Installation
 
 ```bash

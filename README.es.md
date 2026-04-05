@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 Generador de Componentes IA
+
+Genera componentes tuvix.js desde lenguaje natural usando nuestro chatbot de IA integrado.
+
+- **Impulsado por:** Ollama + DeepSeek Coder (funciona 100% localmente, sin costos de API)
+- **Basado en RAG:** Recupera ejemplos relevantes de 320 ejemplos de componentes open-source
+- **Soporta:** React, Vue, Svelte, Angular
+- **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) en HuggingFace
+
+---
+
 ## 📦 Instalación
 
 ```bash
