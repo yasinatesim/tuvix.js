@@ -27,6 +27,17 @@ Build the feature or fix based on the enhanced prompt from Step 1.
 - Preserve all existing `package.json` fields beyond deps
 - Run `pnpm install` from root after any dep change and stage `pnpm-lock.yaml`
 
+### Styling Rules (applies to ALL packages and website)
+
+**Tailwind is FORBIDDEN.** Do not install, import, or use Tailwind CSS anywhere in this project — not in packages, website, or any new code. This is a hard rule with no exceptions.
+
+**Allowed styling approaches:**
+- **CSS Modules** (`.module.css` / `.module.scss`) — preferred for component-scoped styles
+- **SCSS** — for shared variables, mixins, and design tokens
+- **Plain CSS** — when modules aren't needed
+
+**Subagent constraint:** Include in every subagent prompt: *"Do NOT use Tailwind CSS. Use CSS Modules (.module.scss) for component styles and SCSS for shared design tokens."*
+
 ---
 
 ## Step 3: Write Tests with TDD Skill
@@ -69,6 +80,10 @@ pnpm validate-i18n
 
 # 8. e2e-test job — MANDATORY before every commit, no exceptions
 pnpm exec playwright install --with-deps chromium && pnpm exec playwright test
+
+# 9. chatbot tests
+pnpm --filter chatbot test
+pnpm --filter chatbot test:e2e
 ```
 
 **If any command fails, fix it before committing. Never commit after skipping E2E.**
