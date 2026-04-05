@@ -10,6 +10,7 @@ export const enConfig: LocaleConfig<DefaultTheme.Config>[string] = {
         activeMatch: '/packages/',
       },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
+      { text: 'AI Generator', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Contributing', link: '/contributing' },
       {
         text: 'v0.1.4',
