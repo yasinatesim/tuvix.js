@@ -88,7 +88,7 @@ services:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8000/api/v2/heartbeat || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/api/v1/heartbeat || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
