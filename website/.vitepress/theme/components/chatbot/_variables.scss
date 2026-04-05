@@ -1,0 +1,42 @@
+// Colors — map to VitePress CSS custom properties
+$chat-bg: var(--vp-c-bg);
+$chat-bg-soft: var(--vp-c-bg-soft);
+$chat-bg-alt: var(--vp-c-bg-alt);
+$chat-text: var(--vp-c-text-1);
+$chat-text-secondary: var(--vp-c-text-2);
+$chat-text-muted: var(--vp-c-text-3);
+$chat-brand: var(--vp-c-brand-1);
+$chat-brand-soft: var(--vp-c-brand-soft);
+$chat-border: var(--vp-c-divider);
+$chat-user-bubble: var(--vp-c-brand-soft);
+$chat-bot-bubble: var(--vp-c-bg-soft);
+
+// Spacing
+$chat-spacing-xs: 4px;
+$chat-spacing-sm: 8px;
+$chat-spacing-md: 16px;
+$chat-spacing-lg: 24px;
+$chat-spacing-xl: 32px;
+
+// Typography
+$chat-font-size-sm: 13px;
+$chat-font-size-md: 15px;
+$chat-font-size-lg: 18px;
+$chat-font-mono: var(--vp-font-family-mono);
+$chat-font-body: var(--vp-font-family-base);
+
+// Border radius
+$chat-radius-sm: 6px;
+$chat-radius-md: 12px;
+$chat-radius-lg: 18px;
+
+// Shadows
+$chat-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$chat-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+// Layout
+$chat-sidebar-width: 260px;
+$chat-max-width: 800px;
+
+// Component heights
+$chat-input-height: 38px;
