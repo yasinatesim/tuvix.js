@@ -1,4 +1,4 @@
-import type { ComponentTemplate } from '../../generate-dataset';
+import type { ComponentTemplate } from '@scripts/generate-dataset';
 
 const templates: ComponentTemplate[] = [
   {
@@ -595,8 +595,8 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
   template: \`
     <table class="table">
       <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
-      <tbody><tr *ngFor="let row of rows"><td>{{ row.product }}</td><td>{{ row.qty }}</td><td>\${{ row.price }}</td><td>\${{ row.qty * row.price }}</td></tr></tbody>
-      <tfoot><tr class="summary"><td colspan="3">Grand Total</td><td>\${{ grandTotal }}</td></tr></tfoot>
+      <tbody><tr *ngFor="let row of rows"><td>{{ row.product }}</td><td>{{ row.qty }}</td><td>{{ '$' + row.price }}</td><td>{{ '$' + (row.qty * row.price) }}</td></tr></tbody>
+      <tfoot><tr class="summary"><td colspan="3">Grand Total</td><td>{{ '$' + grandTotal }}</td></tr></tfoot>
     </table>
   \`,
   styles: [\`

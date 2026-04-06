@@ -1,5 +1,5 @@
-import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
 import { createOllamaClient } from '../src/services/ollama';
 import { createVectorStore, type ComponentRecord } from '../src/services/vectordb';
 

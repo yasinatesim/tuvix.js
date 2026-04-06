@@ -624,7 +624,7 @@ const WizardNav = defineComponent({
   name: 'WizardNav',
   setup() {
     const steps = ref([
-      { title: 'Welcome', description: 'Let\'s get you set up in just a few steps.' },
+      { title: 'Welcome', description: "Let's get you set up in just a few steps." },
       { title: 'Your Details', description: 'Tell us a bit about yourself.' },
       { title: 'Preferences', description: 'Customise your experience.' },
       { title: 'Review & Finish', description: 'Everything looks good. Ready to launch!' },

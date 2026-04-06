@@ -14,7 +14,7 @@ services:
       - EMBED_MODEL=nomic-embed-text
       - PORT=3001
       - OLLAMA_TIMEOUT_MS=120000
-      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
     depends_on:
       chromadb:
         condition: service_healthy
@@ -22,10 +22,11 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
-      interval: 15s
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/3001' 2>/dev/null || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+      start_period: 15s
 
   # Auto-pulls Ollama models on first boot, then exits
   ollama-setup:

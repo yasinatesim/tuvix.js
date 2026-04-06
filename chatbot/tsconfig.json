@@ -6,11 +6,15 @@
     "esModuleInterop": true,
     "strict": true,
     "outDir": "dist",
-    "rootDir": "src",
     "declaration": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@scripts/*": ["./scripts/*"],
+      "@data/*": ["./data/*"]
+    }
   },
   "include": ["src/**/*", "data/**/*"],
   "exclude": ["node_modules", "dist", "__tests__"]

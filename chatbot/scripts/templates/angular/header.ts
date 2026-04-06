@@ -1,4 +1,4 @@
-import type { ComponentTemplate } from '../../generate-dataset';
+import type { ComponentTemplate } from '@scripts/generate-dataset';
 
 const templates: ComponentTemplate[] = [
   {

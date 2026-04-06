@@ -1,4 +1,4 @@
-import type { ComponentTemplate } from '../../generate-dataset';
+import type { ComponentTemplate } from '@scripts/generate-dataset';
 
 const templates: ComponentTemplate[] = [
   {
@@ -495,7 +495,7 @@ export class ErrorBoundaryComponent {
   triggerError() {
     this.hasError = true;
     this.errorMessage = 'Failed to load the requested resource.';
-    this.errorTrace = "TypeError: Cannot read property 'data' of undefined\n  at fetchUser (api.ts:42)";
+    this.errorTrace = "TypeError: Cannot read property 'data' of undefined\\n  at fetchUser (api.ts:42)";
   }
   retry() { this.hasError = false; this.errorMessage = ''; }
   report() { alert('Error reported to monitoring service.'); }

@@ -9,9 +9,15 @@ const props = defineProps<{
   apiUrl?: string;
 }>();
 
-const baseUrl = props.apiUrl ?? 'http://localhost:3001';
+const API_BASE_URL = props.apiUrl ?? 'http://localhost:3001';
+
+const MESSAGE_ROLES = {
+  USER: 'user',
+  ASSISTANT: 'assistant',
+} as const;
+
 const messages = ref<Message[]>([]);
-const activeFramework = ref('react'); // updated per-message by ChatInput's auto-detection
+const activeFramework = ref<string | null>(null);
 
 const EXAMPLE_PROMPTS = [
   'React header with navigation: Home, Gallery, About, Blog, Contact',
@@ -23,19 +29,17 @@ const EXAMPLE_PROMPTS = [
 async function handleSend(userMessage: string, framework: string) {
   activeFramework.value = framework;
 
-  // Add user message
-  messages.value.push({ role: 'user', content: userMessage });
+  messages.value.push({ role: MESSAGE_ROLES.USER, content: userMessage });
 
-  // Add empty bot message (streaming)
   const botIndex = messages.value.length;
   messages.value.push({
-    role: 'assistant',
+    role: MESSAGE_ROLES.ASSISTANT,
     content: '',
     streaming: true,
   });
 
   try {
-    const res = await fetch(`${baseUrl}/api/chat`, {
+    const res = await fetch(`${API_BASE_URL}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: userMessage, framework }),
@@ -88,8 +92,16 @@ function saveConversation() {
     const id = Date.now().toString();
     const title = messages.value[0]?.content.slice(0, 60) ?? 'Chat';
     history.unshift({ id, title, messages: messages.value });
-    // Keep last 20 conversations
     localStorage.setItem('chatbot-history', JSON.stringify(history.slice(0, 20)));
+  } catch { /* ignore */ }
+}
+
+function loadConversation(id: string) {
+  if (typeof window === 'undefined') return;
+  try {
+    const history = JSON.parse(localStorage.getItem('chatbot-history') ?? '[]');
+    const conv = history.find((c: { id: string }) => c.id === id);
+    if (conv) messages.value = conv.messages;
   } catch { /* ignore */ }
 }
 
@@ -107,7 +119,7 @@ function sendExamplePrompt(prompt: string) {
   <div :class="$style.chatbot">
     <ChatSidebar
       @new-chat="handleNewChat"
-      @select-chat="() => { /* TODO: load selected conversation from localStorage */ }"
+      @select-chat="loadConversation"
     />
     <div :class="$style.main">
       <template v-if="messages.length === 0">
@@ -138,7 +150,7 @@ function sendExamplePrompt(prompt: string) {
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"
-              >320 examples</a>
+              >600 examples</a>
             </p>
           </div>
         </div>

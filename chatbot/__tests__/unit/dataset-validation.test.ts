@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, readdirSync, existsSync } from 'fs';
+import { join } from 'path';
 
-const DATA_DIR = join(import.meta.dirname, '../../data/components');
+const DATA_DIR = join(process.cwd(), 'data/components');
 
 // v2 dataset uses singular category names (card.jsonl, not cards.jsonl)
 const V2_CATEGORIES = [

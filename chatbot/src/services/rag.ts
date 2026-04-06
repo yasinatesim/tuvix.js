@@ -10,7 +10,7 @@ export interface SourceReference {
 export interface RagPipeline {
   generate(
     userMessage: string,
-    framework: string,
+    framework: string | null,
     onSources: (sources: SourceReference[]) => void,
   ): AsyncGenerator<string>;
 }
@@ -23,11 +23,11 @@ export function createRagPipeline(
   return {
     async *generate(
       userMessage: string,
-      framework: string,
+      framework: string | null,
       onSources: (sources: SourceReference[]) => void,
     ): AsyncGenerator<string> {
       const embedding = await ollama.embed(userMessage);
-      const results = await store.query(embedding, 5, framework);
+      const results = await store.query(embedding, 5, framework ?? undefined);
       onSources(results.map((r) => ({ id: r.id, score: r.score })));
       const examples = results.map((r) => ({ code: r.code, description: r.description }));
       const systemPrompt = buildSystemPrompt(framework, examples);

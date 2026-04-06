@@ -65,9 +65,6 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: Chatbot unit tests
-        run: pnpm --filter chatbot test
-
       - name: Type check
         run: pnpm check-types
 
@@ -98,10 +95,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: pnpm exec playwright test
-
-      - name: Chatbot E2E tests
-        run: pnpm --filter chatbot test:e2e
+        run: pnpm exec playwright test && pnpm --filter chatbot test:e2e
 
   lint:
     runs-on: ubuntu-latest

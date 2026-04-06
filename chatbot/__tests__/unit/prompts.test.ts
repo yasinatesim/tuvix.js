@@ -4,15 +4,49 @@ import { buildSystemPrompt, formatExamples } from '../../src/prompts/system';
 
 describe('System Prompts', () => {
   describe('buildSystemPrompt', () => {
-    it('includes framework name', () => {
+    it('React prompt imports @tuvix.js/react and uses createReactMicroApp', () => {
       const prompt = buildSystemPrompt('react', []);
       expect(prompt).toContain('@tuvix.js/react');
+      expect(prompt).toContain('createReactMicroApp');
       expect(prompt).toContain('React');
     });
 
-    it('includes no-tailwind rule', () => {
+    it('Vue prompt imports @tuvix.js/vue and uses createVueMicroApp', () => {
       const prompt = buildSystemPrompt('vue', []);
-      expect(prompt).toContain('Do NOT use Tailwind');
+      expect(prompt).toContain('@tuvix.js/vue');
+      expect(prompt).toContain('createVueMicroApp');
+      expect(prompt).toContain('Vue 3');
+    });
+
+    it('Svelte prompt imports @tuvix.js/svelte and uses createSvelteMicroApp', () => {
+      const prompt = buildSystemPrompt('svelte', []);
+      expect(prompt).toContain('@tuvix.js/svelte');
+      expect(prompt).toContain('createSvelteMicroApp');
+      expect(prompt).toContain('Svelte');
+    });
+
+    it('Angular prompt imports @tuvix.js/angular and uses createAngularMicroApp', () => {
+      const prompt = buildSystemPrompt('angular', []);
+      expect(prompt).toContain('@tuvix.js/angular');
+      expect(prompt).toContain('createAngularMicroApp');
+      expect(prompt).toContain('Angular');
+    });
+
+    it('null framework generates vanilla JS prompt with defineMicroApp', () => {
+      const prompt = buildSystemPrompt(null, []);
+      expect(prompt).toContain('defineMicroApp');
+      expect(prompt).toContain('plain JavaScript/TypeScript');
+      expect(prompt).not.toContain('@tuvix.js/react');
+      expect(prompt).not.toContain('@tuvix.js/vue');
+      expect(prompt).not.toContain('@tuvix.js/svelte');
+      expect(prompt).not.toContain('@tuvix.js/angular');
+    });
+
+    it('includes no-tailwind rule in every prompt', () => {
+      for (const fw of ['react', 'vue', 'svelte', 'angular', null]) {
+        const prompt = buildSystemPrompt(fw, []);
+        expect(prompt).toContain('Do NOT use Tailwind');
+      }
     });
 
     it('includes examples when provided', () => {
@@ -22,11 +56,9 @@ describe('System Prompts', () => {
       expect(prompt).toContain('Simple component');
     });
 
-    it('works for all four frameworks', () => {
-      for (const fw of ['react', 'vue', 'svelte', 'angular'] as const) {
-        const prompt = buildSystemPrompt(fw, []);
-        expect(prompt).toContain(`@tuvix.js/${fw}`);
-      }
+    it('shows fallback message when no examples', () => {
+      const prompt = buildSystemPrompt('react', []);
+      expect(prompt).toContain('No reference examples available');
     });
   });
 
@@ -44,7 +76,7 @@ describe('System Prompts', () => {
       expect(formatted).toContain('---');
     });
 
-    it('returns empty message when no examples', () => {
+    it('returns fallback message when no examples', () => {
       const formatted = formatExamples([]);
       expect(formatted).toContain('No reference examples');
     });

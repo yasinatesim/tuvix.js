@@ -933,7 +933,7 @@ const ThreeColumnLayout = defineComponent({
     const items = [
       { id: 1, title: 'Welcome', preview: 'Getting started...', body: 'Welcome to the platform! Here is how to get started.', from: 'Team', date: 'Today' },
       { id: 2, title: 'Update v2.1', preview: 'New features...', body: 'Version 2.1 includes new dashboard widgets and performance improvements.', from: 'Release Bot', date: 'Yesterday' },
-      { id: 3, title: 'Reminder', preview: 'Meeting at 3pm...', body: 'Don\'t forget the standup meeting at 3pm today.', from: 'Calendar', date: 'Mar 12' },
+      { id: 3, title: 'Reminder', preview: 'Meeting at 3pm...', body: "Don't forget the standup meeting at 3pm today.", from: 'Calendar', date: 'Mar 12' },
     ];
     const selectedItem = computed(() => items.find(i => i.id === selected.value) || null);
     return { selected, items, selectedItem };

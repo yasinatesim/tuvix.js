@@ -1,4 +1,3 @@
-// chatbot/data/seed-clear.ts
 import { ChromaClient } from 'chromadb';
 
 async function clearCollection() {

@@ -9,31 +9,16 @@ beforeAll(async () => {
   const { createApp } = await import('../../src/server');
 
   const mockRag = {
-    async *generate(_msg: string, _fw: string, onSources: (s: Array<{ id: string; score: number }>) => void) {
+    async *generate(_msg: string, _fw: string | null, onSources: (s: Array<{ id: string; score: number }>) => void) {
       onSources([{ id: 'test-001', score: 0.1 }]);
       yield 'Hello ';
       yield 'world';
     },
   };
 
-  const mockStore = {
-    init: async () => {},
-    upsert: async () => {},
-    query: async () => [],
-    count: async () => 5,
-  };
-
-  const mockOllama = {
-    embed: async () => [0.1],
-    chat: async function* () { yield 'x'; },
-    isModelAvailable: async () => true,
-  };
-
   const app = createApp({
     rag: mockRag,
-    store: mockStore,
-    ollama: mockOllama,
-    config: { corsOrigin: '*', modelName: 'test-model', embedModel: 'test-embed' },
+    config: { corsOrigin: '*' },
   });
 
   await new Promise<void>((resolve) => {
@@ -81,23 +66,18 @@ describe('Chat API - SSE Streaming', () => {
     expect(res.status).toBe(400);
   });
 
-  it('returns 400 for missing framework', async () => {
+  it('returns 200 when framework is omitted (vanilla JS path)', async () => {
     const res = await fetch(`${baseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: 'hello' }),
     });
-    expect(res.status).toBe(400);
-  });
-});
-
-describe('Health API', () => {
-  it('returns health status', async () => {
-    const res = await fetch(`${baseUrl}/api/health`);
-    const body = await res.json();
     expect(res.status).toBe(200);
-    expect(body.status).toBe('ok');
-    expect(body.chromadb.connected).toBe(true);
+  });
+
+  it('returns 404 for GET /api/health (endpoint removed)', async () => {
+    const res = await fetch(`${baseUrl}/api/health`);
+    expect(res.status).toBe(404);
   });
 });
 
@@ -108,16 +88,14 @@ describe('Rate Limiting', () => {
   beforeAll(async () => {
     const { createApp } = await import('../../src/server');
     const mockRag = {
-      async *generate(_m: string, _f: string, onSources: (s: Array<{ id: string; score: number }>) => void) {
+      async *generate(_m: string, _f: string | null, onSources: (s: Array<{ id: string; score: number }>) => void) {
         onSources([]);
         yield 'ok';
       },
     };
     const app = createApp({
       rag: mockRag,
-      store: { init: async () => {}, upsert: async () => {}, query: async () => [], count: async () => 0 },
-      ollama: { embed: async () => [0.1], chat: async function* () { yield 'x'; }, isModelAvailable: async () => true },
-      config: { corsOrigin: '*', modelName: 'test', embedModel: 'test' },
+      config: { corsOrigin: '*' },
     });
     await new Promise<void>((resolve) => {
       rlServer = app.listen(0, () => {
@@ -131,7 +109,6 @@ describe('Rate Limiting', () => {
   afterAll(() => { rlServer?.close(); });
 
   it('returns 429 after 10 requests from the same IP within one minute', async () => {
-    // Send 10 allowed requests
     for (let i = 0; i < 10; i++) {
       const res = await fetch(`${rlBaseUrl}/api/chat`, {
         method: 'POST',
@@ -141,7 +118,6 @@ describe('Rate Limiting', () => {
       expect(res.status).toBe(200);
     }
 
-    // The 11th request should be rate-limited
     const limited = await fetch(`${rlBaseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

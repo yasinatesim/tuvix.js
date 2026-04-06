@@ -509,7 +509,7 @@ const ErrorBoundaryDemo = defineComponent({
     const triggerError = () => {
       hasError.value = true;
       errorMessage.value = 'Failed to load the requested resource.';
-      errorTrace.value = 'TypeError: Cannot read property \'data\' of undefined\n  at fetchUser (api.ts:42)\n  at setup (Component.ts:15)';
+      errorTrace.value = "TypeError: Cannot read property 'data' of undefined\\n  at fetchUser (api.ts:42)\\n  at setup (Component.ts:15)";
     };
     const retry = () => { hasError.value = false; errorMessage.value = ''; };
     const report = () => alert('Error reported to monitoring service.');

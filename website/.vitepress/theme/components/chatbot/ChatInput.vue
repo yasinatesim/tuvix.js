@@ -19,7 +19,7 @@ function detectFramework(text: string): string {
   for (const [keyword, fw] of Object.entries(FRAMEWORK_KEYWORDS)) {
     if (lower.includes(keyword)) return fw;
   }
-  return 'react'; // default
+  return ''; // no framework keyword found — backend will generate vanilla JS
 }
 
 function handleSend() {
@@ -51,7 +51,7 @@ function handleKeydown(e: KeyboardEvent) {
         ↵
       </button>
     </div>
-    <p :class="$style.hint">mention react · vue · svelte · angular — or omit for react</p>
+    <p :class="$style.hint">mention react · vue · svelte · angular — or omit for plain JS</p>
   </div>
 </template>
 

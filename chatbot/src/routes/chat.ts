@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express';
 import type { RagPipeline, SourceReference } from '../services/rag';
 
+const VALID_FRAMEWORKS = ['react', 'vue', 'svelte', 'angular'] as const;
+
 export function createChatRoute(rag: RagPipeline) {
   return async (req: Request, res: Response) => {
     const { message, framework } = req.body;
@@ -10,20 +12,17 @@ export function createChatRoute(rag: RagPipeline) {
       return;
     }
 
-    if (!framework || typeof framework !== 'string') {
-      res.status(400).json({ error: 'framework is required' });
-      return;
+    // framework is optional — omitting it generates vanilla JS output
+    if (framework !== undefined && framework !== null) {
+      if (typeof framework !== 'string' || !VALID_FRAMEWORKS.includes(framework as never)) {
+        res.status(400).json({ error: `framework must be one of: ${VALID_FRAMEWORKS.join(', ')}` });
+        return;
+      }
     }
 
-    const validFrameworks = ['react', 'vue', 'svelte', 'angular'];
-    if (!validFrameworks.includes(framework)) {
-      res.status(400).json({ error: `framework must be one of: ${validFrameworks.join(', ')}` });
-      return;
-    }
-
-    // Server-side safety: detect framework from message text (overrides client if explicit mention found)
+    // Server-side: detect framework from message text; falls back to client value or null (vanilla)
     const msgLower = message.toLowerCase();
-    const detectedFramework = validFrameworks.find((fw) => msgLower.includes(fw)) ?? framework;
+    const detectedFramework = VALID_FRAMEWORKS.find((fw) => msgLower.includes(fw)) ?? framework ?? null;
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
