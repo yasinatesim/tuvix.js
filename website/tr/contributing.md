@@ -58,6 +58,7 @@ docs: Angular rehber örneği eklendi
 ## Pull Request Süreci
 
 1. `master`'dan bir dal oluşturun:
+
    ```bash
    git checkout -b ozellik/yeni-ozelligim
    ```
@@ -65,11 +66,13 @@ docs: Angular rehber örneği eklendi
 2. Değişikliklerinizi yapın ve test ekleyin
 
 3. Tam test paketini çalıştırın:
+
    ```bash
    pnpm test && pnpm check-types && pnpm lint
    ```
 
 4. Yayınlanan bir paketi etkileyen değişiklik varsa changeset ekleyin:
+
    ```bash
    pnpm changeset
    ```

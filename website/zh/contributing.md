@@ -100,6 +100,7 @@ test(event-bus): add once() edge case tests
 ## Pull Request 流程
 
 1. 从 `master` 创建分支：
+
    ```bash
    git checkout -b feat/my-feature
    ```
@@ -107,6 +108,7 @@ test(event-bus): add once() edge case tests
 2. 进行更改并添加测试
 
 3. 运行完整的测试套件：
+
    ```bash
    pnpm test
    pnpm check-types
@@ -114,6 +116,7 @@ test(event-bus): add once() edge case tests
    ```
 
 4. 如果你的更改影响了已发布的包，请添加 changeset：
+
    ```bash
    pnpm changeset
    ```
@@ -146,6 +149,7 @@ website/
 4. 运行 `cd website && pnpm dev` 进行预览
 
 ::: tip 翻译提示
+
 - 保持所有代码示例为英文
 - 翻译界面标签、描述和说明文字
 - 在有标准翻译的地方使用本地术语

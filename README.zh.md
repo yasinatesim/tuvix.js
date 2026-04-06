@@ -295,6 +295,7 @@ tuvix.js/
 | [Vue 示例](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 每个示例演示了：
+
 - 启动Orchestrator的**Shell (Host)**应用
 - 动态注册和加载的两个**微前端应用**
 - 通过事件总线进行的应用间通信
@@ -325,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - MIT 许可证。
 查看 [LICENSE](./LICENSE) 了解更多信息。
-
 
 ---
 

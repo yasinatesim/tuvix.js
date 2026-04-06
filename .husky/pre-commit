@@ -11,6 +11,7 @@ pnpm format --check || true
 pnpm --filter @tuvix.js/website lint
 pnpm validate-docs
 pnpm validate-i18n
+pnpm lint:md
 pnpm exec playwright test
 pnpm --filter chatbot test
 pnpm --filter chatbot test:e2e

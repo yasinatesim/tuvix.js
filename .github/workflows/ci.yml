@@ -139,6 +139,20 @@ jobs:
         run: pnpm build
         working-directory: website
 
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint markdown
+        run: pnpm lint:md
+
   docs-validation:
     runs-on: ubuntu-latest
     steps:
@@ -160,7 +174,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     # Only publish after ALL checks pass, and only on push to master (not PRs)
-    needs: [unit-test, e2e-test, lint, website-lint, website-build, docs-validation]
+    needs: [unit-test, e2e-test, lint, website-lint, website-build, markdown-lint, docs-validation]
     if: github.event_name == 'push'
     permissions:
       contents: write

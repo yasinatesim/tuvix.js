@@ -13,7 +13,7 @@
 
 # with-react-devtools
 
-Demonstrates the **In-page DevTools panel** (`@tuvix.js/devtools`). 
+Demonstrates the **In-page DevTools panel** (`@tuvix.js/devtools`).
 
 The DevTools panel provides real-time visibility into the Tuvix.js orchestrator instance, allowing developers to inspect registered applications, view active mounted apps, track lifecycle events, and monitor the event bus.
 

@@ -35,4 +35,5 @@ npm install && npm run dev
 | [`with-multiple-frameworks`](./with-multiple-frameworks/) | React & Vue 3 | Polyglot architecture (sharing a single shell across frameworks) |
 
 ## Support Multilingue
+
 Chaque exemple fournit une documentation en **10 langues** (anglais, turc, espagnol, allemand, français, japonais, chinois, italien, portugais et hindi). Ouvrez le répertoire de n'importe quel exemple pour voir les fichiers README localisés.

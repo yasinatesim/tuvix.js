@@ -15,7 +15,7 @@
 
 Demonstrates a **Polyglot Micro-Frontend** architecture where multiple UI frameworks coexist on the same page.
 
-A single Tuvix.js orchestrator dynamically loads and mounts a **React 18** application and a **Vue 3** application side-by-side. 
+A single Tuvix.js orchestrator dynamically loads and mounts a **React 18** application and a **Vue 3** application side-by-side.
 
 ## Packages used
 

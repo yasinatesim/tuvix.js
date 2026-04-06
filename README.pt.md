@@ -295,6 +295,7 @@ Exemplos prontos para execução para cada framework suportado estão disponíve
 | [Exemplo Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Cada exemplo demonstra:
+
 - Uma aplicação **shell (host)** que inicializa o orquestrador
 - Duas **apps micro frontend** registradas e carregadas dinamicamente
 - Comunicação entre apps via event bus
@@ -325,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - Licença MIT.
 Consulte [LICENSE](./LICENSE) para mais informações.
-
 
 ---
 

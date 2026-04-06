@@ -295,6 +295,7 @@ Ejemplos listos para ejecutar de cada framework soportado están disponibles en 
 | [Ejemplo Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Cada ejemplo demuestra:
+
 - Una aplicación **shell (anfitriona)** que inicia el orquestador
 - Dos **aplicaciones micro frontend** registradas y cargadas dinámicamente
 - Comunicación entre aplicaciones mediante el bus de eventos
@@ -325,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - Licencia MIT.
 Consulta [LICENSE](./LICENSE) para más información.
-
 
 ---
 

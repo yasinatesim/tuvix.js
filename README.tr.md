@@ -295,6 +295,7 @@ Desteklenen her framework için çalıştırmaya hazır örnekler [`examples/`](
 | [Vue Örneği](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Her örnek şunları gösterir:
+
 - Orchestrator'ü başlatan bir **Shell (Host)** uygulaması
 - Dinamik olarak kaydedilen ve yüklenen iki **mikro frontend uygulaması**
 - Event Bus üzerinden uygulamalar arası iletişim
@@ -325,7 +326,6 @@ pnpm test
 
 Telif Hakkı © 2026 - MIT Lisansı.
 Daha fazla bilgi için [LICENSE](./LICENSE) dosyasına bakın.
-
 
 ---
 

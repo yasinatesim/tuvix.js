@@ -17,10 +17,12 @@ async mount(container: HTMLElement, props?: Record<string, unknown>): Promise<vo
 ```
 
 **参数：**
+
 - `container` - 用于渲染的根 DOM 元素
 - `props` - 来自 shell 的可选键值对 props
 
 **示例：**
+
 ```ts
 async mount(container, props) {
   // 设置你的应用
@@ -44,6 +46,7 @@ async unmount(container: HTMLElement): Promise<void>
 这是你应该**清理**的地方 - 取消事件订阅、销毁框架实例、移除 DOM 节点。
 
 **示例：**
+
 ```ts
 async unmount(container) {
   this._root?.unmount();
@@ -66,6 +69,7 @@ async update(container: HTMLElement, props?: Record<string, unknown>): Promise<v
 如果未实现，orchestrator 将调用 `unmount` → `mount` 来更新 props。
 
 **示例：**
+
 ```ts
 async update(container, props) {
   // 无需完全重新挂载即可高效更新

@@ -28,6 +28,7 @@ The `@tuvix.js/module-federation` package allows a modern Vite shell to dynamica
 ## Get started
 
 ### Requirements
+
 You must have `webpack-cli` and `serve` installed (included in devDependencies, so `pnpm install` handles this).
 
 ### Via npx (recommended)
@@ -49,6 +50,7 @@ pnpm start
 ```
 
 This will concurrently:
+
 1. Start `remote1` server on port 3001
 2. Start `remote2` server on port 3002
 3. Start the `shell` Vite server on port 3000

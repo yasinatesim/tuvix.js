@@ -100,6 +100,7 @@ test(event-bus): add once() edge case tests
 ## Processus de Pull Request
 
 1. Créez une branche depuis `master` :
+
    ```bash
    git checkout -b feat/ma-fonctionnalite
    ```
@@ -107,6 +108,7 @@ test(event-bus): add once() edge case tests
 2. Effectuez vos modifications et ajoutez des tests
 
 3. Exécutez la suite de tests complète :
+
    ```bash
    pnpm test
    pnpm check-types
@@ -114,6 +116,7 @@ test(event-bus): add once() edge case tests
    ```
 
 4. Si votre modification affecte un paquet publié, ajoutez un changeset :
+
    ```bash
    pnpm changeset
    ```
@@ -146,6 +149,7 @@ website/
 4. Exécutez `cd website && pnpm dev` pour prévisualiser
 
 ::: tip Conseils de Traduction
+
 - Gardez tous les exemples de code en anglais
 - Traduisez les libellés de l'interface, les descriptions et le texte explicatif
 - Utilisez la terminologie native lorsque des traductions standard existent

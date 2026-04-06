@@ -17,10 +17,12 @@ async mount(container: HTMLElement, props?: Record<string, unknown>): Promise<vo
 ```
 
 **引数：**
+
 - `container` - レンダリング先のルート DOM 要素
 - `props` - シェルからのオプションのキー・バリュー props
 
 **例：**
+
 ```ts
 async mount(container, props) {
   // アプリをセットアップ
@@ -44,6 +46,7 @@ async unmount(container: HTMLElement): Promise<void>
 ここで**クリーンアップ**を行います - イベントの購読解除、フレームワークインスタンスの破棄、DOM ノードの削除。
 
 **例：**
+
 ```ts
 async unmount(container) {
   this._root?.unmount();
@@ -66,6 +69,7 @@ async update(container: HTMLElement, props?: Record<string, unknown>): Promise<v
 実装されていない場合、Orchestrator は props の更新に `unmount` → `mount` を呼び出します。
 
 **例：**
+
 ```ts
 async update(container, props) {
   // 完全な再マウントなしで効率的に更新

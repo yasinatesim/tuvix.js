@@ -64,6 +64,7 @@ Create an isolated scope for the given element. Returns the container to render 
 ### CSS Isolation Details
 
 When `css: true`:
+
 - The target element becomes a Shadow DOM host
 - All styles inside are scoped to the shadow root
 - External global styles do not affect the micro app
@@ -71,6 +72,7 @@ When `css: true`:
 ### JS Isolation Details
 
 When `js: true`, the following are intercepted and cleaned up on `cleanup()`:
+
 - `window.*` property assignments
 - `addEventListener` calls
 - `setTimeout` / `setInterval` calls

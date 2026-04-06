@@ -16,6 +16,7 @@
 Demonstrates **CSS and JavaScript isolation** using `@tuvix.js/sandbox`.
 
 Two React micro apps run side-by-side:
+
 1. **App 1 (Sandboxed)** is wrapped in a Shadow DOM. Its CSS is strictly scoped and cannot break the shell or other apps.
 2. **App 2 (Unsandboxed)** is injected normally. Its CSS bleeds out and overwrites the shell's global styles.
 

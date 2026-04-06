@@ -295,6 +295,7 @@ tuvix.js/
 | [Vueサンプル](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 各サンプルでは以下を実演します：
+
 - Orchestratorを起動する**Host (Shell)**アプリケーション
 - 動的に登録・読み込みされる2つの**マイクロフロントエンドアプリ**
 - イベントバスによるアプリ間通信
@@ -325,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - MITライセンス。
 詳細は[LICENSE](./LICENSE)をご覧ください。
-
 
 ---
 

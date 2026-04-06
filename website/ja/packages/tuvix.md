@@ -45,10 +45,12 @@ import { createOrchestrator, createRouter, getGlobalBus } from 'tuvix.js';
 ## 個別パッケージを使う場合
 
 Use the umbrella `tuvix.js` when:
+
 - You're starting out and want everything available
 - Bundle size is not a concern (all packages are zero-dep and tiny)
 
 Use individual packages when:
+
 - You want to be explicit about dependencies
 - You need tree-shaking control in a large monorepo
 - You're building a micro app that only needs `@tuvix.js/event-bus`

@@ -100,6 +100,7 @@ test(event-bus): add once() edge case tests
 ## プルリクエストのプロセス
 
 1. `master` からブランチを作成：
+
    ```bash
    git checkout -b feat/my-feature
    ```
@@ -107,6 +108,7 @@ test(event-bus): add once() edge case tests
 2. 変更を行い、テストを追加
 
 3. 完全なテストスイートを実行：
+
    ```bash
    pnpm test
    pnpm check-types
@@ -114,6 +116,7 @@ test(event-bus): add once() edge case tests
    ```
 
 4. 公開済みパッケージに影響する変更の場合、changeset を追加：
+
    ```bash
    pnpm changeset
    ```
@@ -146,6 +149,7 @@ website/
 4. `cd website && pnpm dev` を実行してプレビュー
 
 ::: tip 翻訳のヒント
+
 - すべてのコード例は英語のまま保持
 - UI ラベル、説明、解説テキストを翻訳
 - 標準的な翻訳が存在する場合はネイティブの用語を使用
