@@ -21,7 +21,8 @@ function BreadcrumbNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'breadcrumb-nav', App: BreadcrumbNav });`,
+const app = createReactMicroApp({ name: 'breadcrumb-nav', App: BreadcrumbNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -45,7 +46,8 @@ function TabsNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'tabs-nav', App: TabsNav });`,
+const app = createReactMicroApp({ name: 'tabs-nav', App: TabsNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -75,7 +77,8 @@ function StepperNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'stepper-nav', App: StepperNav });`,
+const app = createReactMicroApp({ name: 'stepper-nav', App: StepperNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -102,7 +105,8 @@ function PaginationNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'pagination-nav', App: PaginationNav });`,
+const app = createReactMicroApp({ name: 'pagination-nav', App: PaginationNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -128,7 +132,8 @@ function MenuNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'menu-nav', App: MenuNav });`,
+const app = createReactMicroApp({ name: 'menu-nav', App: MenuNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -151,7 +156,8 @@ function NavbarNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'navbar-nav', App: NavbarNav });`,
+const app = createReactMicroApp({ name: 'navbar-nav', App: NavbarNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -184,7 +190,8 @@ function DrawerNav() {
     </>
   );
 }
-export default createReactMicroApp({ name: 'drawer-nav', App: DrawerNav });`,
+const app = createReactMicroApp({ name: 'drawer-nav', App: DrawerNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -221,7 +228,8 @@ function MegaMenuNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'mega-menu-nav', App: MegaMenuNav });`,
+const app = createReactMicroApp({ name: 'mega-menu-nav', App: MegaMenuNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -251,7 +259,8 @@ function BottomBarNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'bottom-bar-nav', App: BottomBarNav });`,
+const app = createReactMicroApp({ name: 'bottom-bar-nav', App: BottomBarNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -275,7 +284,8 @@ function SideMenuNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'side-menu-nav', App: SideMenuNav });`,
+const app = createReactMicroApp({ name: 'side-menu-nav', App: SideMenuNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -306,7 +316,8 @@ function WizardNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'wizard-nav', App: WizardNav });`,
+const app = createReactMicroApp({ name: 'wizard-nav', App: WizardNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -327,7 +338,8 @@ function SegmentedControlNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'segmented-control-nav', App: SegmentedControlNav });`,
+const app = createReactMicroApp({ name: 'segmented-control-nav', App: SegmentedControlNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -353,7 +365,8 @@ function AnchorNav() {
     </nav>
   );
 }
-export default createReactMicroApp({ name: 'anchor-nav', App: AnchorNav });`,
+const app = createReactMicroApp({ name: 'anchor-nav', App: AnchorNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -379,7 +392,8 @@ function TagNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'tag-nav', App: TagNav });`,
+const app = createReactMicroApp({ name: 'tag-nav', App: TagNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -405,7 +419,8 @@ function DotNav() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'dot-nav', App: DotNav });`,
+const app = createReactMicroApp({ name: 'dot-nav', App: DotNav });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

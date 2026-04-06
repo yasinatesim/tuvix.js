@@ -28,6 +28,7 @@ export function parseMarkdownContent(md: string): string {
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import hljs from 'highlight.js';
 import CodeBlock from './CodeBlock.vue';
 import TypingIndicator from './TypingIndicator.vue';
 
@@ -43,15 +44,44 @@ const codeBlocks = computed(() =>
   props.streaming ? [] : extractCodeBlocks(props.content),
 );
 
-// During streaming show raw content; after done show parsed markdown without code blocks
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+const PRE_STYLE =
+  'white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed';
+const BLOCK_WRAP = 'border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;margin:8px 0';
+const BLOCK_HDR  = 'padding:4px 12px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--vp-font-family-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--vp-c-text-3)';
+
+function renderHighlighted(rawLang: string, code: string): string {
+  const lang = rawLang === 'tsx' || rawLang === 'jsx' ? 'javascript' : (rawLang || 'plaintext');
+  try {
+    return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+  } catch {
+    return escapeHtml(code);
+  }
+}
+
+// OpenWebUI approach: use marked.lexer() to parse full content progressively.
+// All blocks (closed and open/unclosed) stay visible and highlighted throughout streaming.
 const htmlContent = computed(() => {
   if (props.streaming) {
-    // Show raw text with minimal escaping during streaming
-    const safe = props.content
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-    return `<pre style="white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed">${safe}</pre>`;
+    const tokens = marked.lexer(props.content);
+    let html = '';
+    for (const token of tokens) {
+      if (token.type === 'code') {
+        const lang = (token as { lang?: string; text: string }).lang || '';
+        const text = (token as { text: string }).text;
+        html += `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${lang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, text)}</code></pre></div>`;
+      } else if (token.type === 'paragraph' || token.type === 'text') {
+        const text = escapeHtml((token as { text: string }).text ?? '');
+        if (text.trim()) html += `<p style="margin:4px 0;font-size:13px;line-height:1.6;color:var(--vp-c-text-2)">${text}</p>`;
+      }
+    }
+    return html || `<pre style="${PRE_STYLE}">${escapeHtml(props.content)}</pre>`;
   }
   return parseMarkdownContent(props.content);
 });
@@ -73,6 +103,7 @@ const htmlContent = computed(() => {
           :code="block.code"
           :language="block.language"
           :framework="framework"
+          :paired-css="block.language !== 'css' && codeBlocks[i - 1]?.language === 'css' ? codeBlocks[i - 1].code : undefined"
         />
         <div
           v-if="sources && sources.length"

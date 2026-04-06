@@ -42,13 +42,7 @@ const templates: ComponentTemplate[] = [
   td { padding: 12px 16px; font-size: 14px; color: #374151; border-bottom: 1px solid #e5e7eb; }
   tr:hover td { background-color: #f9fafb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BasicTable from './BasicTable.svelte';
-export default createSvelteMicroApp({ name: 'basic-table', App: BasicTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -117,13 +111,7 @@ export default createSvelteMicroApp({ name: 'basic-table', App: BasicTable });
   th.sortable:hover { color: #374151; }
   td { padding: 12px 16px; font-size: 14px; color: #374151; border-bottom: 1px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SortableTable from './SortableTable.svelte';
-export default createSvelteMicroApp({ name: 'sortable-table', App: SortableTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -169,13 +157,7 @@ export default createSvelteMicroApp({ name: 'sortable-table', App: SortableTable
   .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
   .pagination span { font-size: 14px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PaginatedTable from './PaginatedTable.svelte';
-export default createSvelteMicroApp({ name: 'paginated-table', App: PaginatedTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -221,13 +203,7 @@ export default createSvelteMicroApp({ name: 'paginated-table', App: PaginatedTab
   .status-badge { padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; background-color: #fef2f2; color: #dc2626; }
   .status-badge.active { background-color: #f0fdf4; color: #16a34a; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FilterableTable from './FilterableTable.svelte';
-export default createSvelteMicroApp({ name: 'filterable-table', App: FilterableTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -289,13 +265,7 @@ export default createSvelteMicroApp({ name: 'filterable-table', App: FilterableT
   td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
   .delete-btn { padding: 4px 10px; border: none; border-radius: 4px; background-color: #fef2f2; color: #dc2626; font-size: 12px; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import CrudTable from './CrudTable.svelte';
-export default createSvelteMicroApp({ name: 'crud-table', App: CrudTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -342,13 +312,7 @@ export default createSvelteMicroApp({ name: 'crud-table', App: CrudTable });
   .expand-icon { width: 30px; color: #6b7280; }
   .detail-row td { background-color: #f9fafb; color: #6b7280; font-size: 13px; padding: 12px 16px 12px 46px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ExpandableTable from './ExpandableTable.svelte';
-export default createSvelteMicroApp({ name: 'expandable-table', App: ExpandableTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -405,13 +369,7 @@ export default createSvelteMicroApp({ name: 'expandable-table', App: ExpandableT
   .check-col { width: 40px; }
   tr.selected td { background-color: #faf5ff; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SelectableTable from './SelectableTable.svelte';
-export default createSvelteMicroApp({ name: 'selectable-table', App: SelectableTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -461,13 +419,7 @@ export default createSvelteMicroApp({ name: 'selectable-table', App: SelectableT
   .action-btn { padding: 4px 10px; border: 1px solid #d1d5db; border-radius: 4px; background: #fff; font-size: 12px; cursor: pointer; }
   .action-btn.delete { border-color: #fca5a5; color: #dc2626; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ActionsTable from './ActionsTable.svelte';
-export default createSvelteMicroApp({ name: 'actions-table', App: ActionsTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -508,13 +460,7 @@ export default createSvelteMicroApp({ name: 'actions-table', App: ActionsTable }
   .status.failed { background-color: #fef2f2; color: #dc2626; }
   .status.processing { background-color: #eff6ff; color: #2563eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StatusTable from './StatusTable.svelte';
-export default createSvelteMicroApp({ name: 'status-table', App: StatusTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -555,13 +501,7 @@ export default createSvelteMicroApp({ name: 'status-table', App: StatusTable });
   th { text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6b7280; background-color: #f9fafb; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; }
   td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid #f3f4f6; height: 40px; box-sizing: border-box; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import VirtualizedTable from './VirtualizedTable.svelte';
-export default createSvelteMicroApp({ name: 'virtualized-table', App: VirtualizedTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -594,13 +534,7 @@ export default createSvelteMicroApp({ name: 'virtualized-table', App: Virtualize
   td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
   .group-header td { font-weight: 700; font-size: 13px; background-color: #f3f4f6; color: #374151; padding: 8px 16px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import GroupedTable from './GroupedTable.svelte';
-export default createSvelteMicroApp({ name: 'grouped-table', App: GroupedTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -669,13 +603,7 @@ export default createSvelteMicroApp({ name: 'grouped-table', App: GroupedTable }
   .edit-input { padding: 4px 8px; border: 2px solid #6366f1; border-radius: 4px; outline: none; width: 100%; font-size: 14px; }
   .hint { font-size: 12px; color: #9ca3af; margin-top: 8px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import EditableTable from './EditableTable.svelte';
-export default createSvelteMicroApp({ name: 'editable-table', App: EditableTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -721,13 +649,7 @@ export default createSvelteMicroApp({ name: 'editable-table', App: EditableTable
   td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
   .summary-row td { font-weight: 700; background-color: #f9fafb; border-top: 2px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SummaryTable from './SummaryTable.svelte';
-export default createSvelteMicroApp({ name: 'summary-table', App: SummaryTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -764,13 +686,7 @@ export default createSvelteMicroApp({ name: 'summary-table', App: SummaryTable }
   th { text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6b7280; background-color: #f9fafb; border-bottom: 2px solid #e5e7eb; }
   td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ResponsiveTable from './ResponsiveTable.svelte';
-export default createSvelteMicroApp({ name: 'responsive-table', App: ResponsiveTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -817,13 +733,7 @@ export default createSvelteMicroApp({ name: 'responsive-table', App: ResponsiveT
   th { text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb; }
   td { padding: 10px 16px; font-size: 14px; border-bottom: 1px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ExportTable from './ExportTable.svelte';
-export default createSvelteMicroApp({ name: 'export-table', App: ExportTable });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

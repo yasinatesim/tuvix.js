@@ -33,7 +33,8 @@ function LoginForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'login-form', App: LoginForm });`,
+const app = createReactMicroApp({ name: 'login-form', App: LoginForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -75,7 +76,8 @@ function SignupForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'signup-form', App: SignupForm });`,
+const app = createReactMicroApp({ name: 'signup-form', App: SignupForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -112,7 +114,8 @@ function ContactForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'contact-form', App: ContactForm });`,
+const app = createReactMicroApp({ name: 'contact-form', App: ContactForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -147,7 +150,8 @@ function SearchForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'search-form', App: SearchForm });`,
+const app = createReactMicroApp({ name: 'search-form', App: SearchForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -185,7 +189,8 @@ function MultiStepForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'multi-step-form', App: MultiStepForm });`,
+const app = createReactMicroApp({ name: 'multi-step-form', App: MultiStepForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -226,7 +231,8 @@ function SettingsForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'settings-form', App: SettingsForm });`,
+const app = createReactMicroApp({ name: 'settings-form', App: SettingsForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -263,7 +269,8 @@ function PasswordResetForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'password-reset-form', App: PasswordResetForm });`,
+const app = createReactMicroApp({ name: 'password-reset-form', App: PasswordResetForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -299,7 +306,8 @@ function CheckoutForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'checkout-form', App: CheckoutForm });`,
+const app = createReactMicroApp({ name: 'checkout-form', App: CheckoutForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -332,7 +340,8 @@ function ProfileForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'profile-form', App: ProfileForm });`,
+const app = createReactMicroApp({ name: 'profile-form', App: ProfileForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -373,7 +382,8 @@ function FilterForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'filter-form', App: FilterForm });`,
+const app = createReactMicroApp({ name: 'filter-form', App: FilterForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -411,7 +421,8 @@ function NewsletterForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'newsletter-form', App: NewsletterForm });`,
+const app = createReactMicroApp({ name: 'newsletter-form', App: NewsletterForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -443,7 +454,8 @@ function SurveyForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'survey-form', App: SurveyForm });`,
+const app = createReactMicroApp({ name: 'survey-form', App: SurveyForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -477,7 +489,8 @@ function AddressForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'address-form', App: AddressForm });`,
+const app = createReactMicroApp({ name: 'address-form', App: AddressForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -517,7 +530,8 @@ function PaymentForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'payment-form', App: PaymentForm });`,
+const app = createReactMicroApp({ name: 'payment-form', App: PaymentForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -570,7 +584,8 @@ function FileUploadForm() {
   );
 }
 
-export default createReactMicroApp({ name: 'file-upload-form', App: FileUploadForm });`,
+const app = createReactMicroApp({ name: 'file-upload-form', App: FileUploadForm });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

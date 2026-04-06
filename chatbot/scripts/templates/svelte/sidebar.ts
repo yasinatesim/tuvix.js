@@ -38,13 +38,7 @@ const templates: ComponentTemplate[] = [
   .icon { width: 24px; text-align: center; font-weight: 600; }
   .label { font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Sidebar from './Sidebar.svelte';
-export default createSvelteMicroApp({ name: 'collapsible-sidebar', App: Sidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -92,13 +86,7 @@ export default createSvelteMicroApp({ name: 'collapsible-sidebar', App: Sidebar 
   .nav-item.active { background-color: #ede9fe; color: #6366f1; font-weight: 600; }
   .icon { font-size: 18px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import IconSidebar from './IconSidebar.svelte';
-export default createSvelteMicroApp({ name: 'icon-sidebar', App: IconSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -147,13 +135,7 @@ export default createSvelteMicroApp({ name: 'icon-sidebar', App: IconSidebar });
   .children a { padding: 8px 20px 8px 36px; text-decoration: none; color: #6b7280; font-size: 13px; }
   .children a:hover { color: #6366f1; background-color: #f9fafb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import NestedSidebar from './NestedSidebar.svelte';
-export default createSvelteMicroApp({ name: 'nested-sidebar', App: NestedSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -194,13 +176,7 @@ export default createSvelteMicroApp({ name: 'nested-sidebar', App: NestedSidebar
   .icon-btn:hover { background-color: #374151; }
   .icon-btn.active { background-color: #4f46e5; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MiniSidebar from './MiniSidebar.svelte';
-export default createSvelteMicroApp({ name: 'mini-sidebar', App: MiniSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -240,13 +216,7 @@ export default createSvelteMicroApp({ name: 'mini-sidebar', App: MiniSidebar });
   .nav-item:hover { color: #f9fafb; background-color: #1f2937; }
   .nav-item.active { color: #fff; background-color: #4f46e5; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DarkSidebar from './DarkSidebar.svelte';
-export default createSvelteMicroApp({ name: 'dark-sidebar', App: DarkSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -283,13 +253,7 @@ export default createSvelteMicroApp({ name: 'dark-sidebar', App: DarkSidebar });
   .nav a:hover { background-color: #f3f4f6; }
   .no-results { padding: 8px 12px; color: #9ca3af; font-size: 13px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SearchSidebar from './SearchSidebar.svelte';
-export default createSvelteMicroApp({ name: 'search-sidebar', App: SearchSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -326,13 +290,7 @@ export default createSvelteMicroApp({ name: 'search-sidebar', App: SearchSidebar
   .nav a { padding: 10px 12px; text-decoration: none; color: #374151; border-radius: 6px; font-size: 14px; }
   .nav a:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ProfileSidebar from './ProfileSidebar.svelte';
-export default createSvelteMicroApp({ name: 'profile-sidebar', App: ProfileSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -371,13 +329,7 @@ export default createSvelteMicroApp({ name: 'profile-sidebar', App: ProfileSideb
   .nav-item:hover { background-color: #f3f4f6; }
   .badge { background-color: #ef4444; color: #fff; font-size: 11px; padding: 2px 7px; border-radius: 10px; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BadgeSidebar from './BadgeSidebar.svelte';
-export default createSvelteMicroApp({ name: 'badge-sidebar', App: BadgeSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -420,13 +372,7 @@ export default createSvelteMicroApp({ name: 'badge-sidebar', App: BadgeSidebar }
   .nav a { padding: 10px 12px; text-decoration: none; color: #374151; border-radius: 6px; font-size: 14px; }
   .nav a:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ResponsiveSidebar from './ResponsiveSidebar.svelte';
-export default createSvelteMicroApp({ name: 'responsive-sidebar', App: ResponsiveSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -482,13 +428,7 @@ export default createSvelteMicroApp({ name: 'responsive-sidebar', App: Responsiv
   .l3-link { display: block; padding: 4px 20px 4px 48px; text-decoration: none; color: #6b7280; font-size: 13px; }
   .l3-link:hover { color: #6366f1; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MultiLevelSidebar from './MultiLevelSidebar.svelte';
-export default createSvelteMicroApp({ name: 'multi-level-sidebar', App: MultiLevelSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -522,13 +462,7 @@ export default createSvelteMicroApp({ name: 'multi-level-sidebar', App: MultiLev
   .footer a { padding: 8px 12px; text-decoration: none; color: #6b7280; font-size: 13px; border-radius: 6px; }
   .footer a:hover { background-color: #f3f4f6; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FooterSidebar from './FooterSidebar.svelte';
-export default createSvelteMicroApp({ name: 'footer-sidebar', App: FooterSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -555,13 +489,7 @@ export default createSvelteMicroApp({ name: 'footer-sidebar', App: FooterSidebar
   .nav a { padding: 8px 12px; text-decoration: none; color: #4b5563; border-radius: 6px; font-size: 14px; }
   .nav a:hover { background-color: #e5e7eb; color: #111827; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StickySidebar from './StickySidebar.svelte';
-export default createSvelteMicroApp({ name: 'sticky-sidebar', App: StickySidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -594,13 +522,7 @@ export default createSvelteMicroApp({ name: 'sticky-sidebar', App: StickySidebar
   .nav-item { display: block; padding: 8px 12px; text-decoration: none; color: #374151; border-radius: 6px; font-size: 14px; }
   .nav-item:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import GroupSidebar from './GroupSidebar.svelte';
-export default createSvelteMicroApp({ name: 'group-sidebar', App: GroupSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -646,13 +568,7 @@ export default createSvelteMicroApp({ name: 'group-sidebar', App: GroupSidebar }
   .nav a { padding: 12px; text-decoration: none; color: #374151; border-radius: 6px; font-size: 16px; }
   .nav a:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import OverlaySidebar from './OverlaySidebar.svelte';
-export default createSvelteMicroApp({ name: 'overlay-sidebar', App: OverlaySidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -696,13 +612,7 @@ export default createSvelteMicroApp({ name: 'overlay-sidebar', App: OverlaySideb
   .nav-item:hover { background-color: #e5e7eb; }
   .icon { width: 24px; text-align: center; font-weight: 600; font-size: 16px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ToggleSidebar from './ToggleSidebar.svelte';
-export default createSvelteMicroApp({ name: 'toggle-sidebar', App: ToggleSidebar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

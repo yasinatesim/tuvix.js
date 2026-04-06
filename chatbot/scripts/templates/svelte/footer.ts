@@ -24,13 +24,7 @@ const templates: ComponentTemplate[] = [
   .links a { text-decoration: none; color: #6b7280; }
   .links a:hover { color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MinimalFooter from './MinimalFooter.svelte';
-export default createSvelteMicroApp({ name: 'minimal-footer', App: MinimalFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -70,13 +64,7 @@ export default createSvelteMicroApp({ name: 'minimal-footer', App: MinimalFooter
   .column a:hover { color: #374151; }
   .bottom { padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MultiColumnFooter from './MultiColumnFooter.svelte';
-export default createSvelteMicroApp({ name: 'multi-column-footer', App: MultiColumnFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -126,13 +114,7 @@ export default createSvelteMicroApp({ name: 'multi-column-footer', App: MultiCol
   .links { display: flex; gap: 16px; }
   .links a { text-decoration: none; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import NewsletterFooter from './NewsletterFooter.svelte';
-export default createSvelteMicroApp({ name: 'newsletter-footer', App: NewsletterFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -181,13 +163,7 @@ export default createSvelteMicroApp({ name: 'newsletter-footer', App: Newsletter
   .section a:hover { color: #374151; }
   .bottom { padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import CorporateFooter from './CorporateFooter.svelte';
-export default createSvelteMicroApp({ name: 'corporate-footer', App: CorporateFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -221,13 +197,7 @@ export default createSvelteMicroApp({ name: 'corporate-footer', App: CorporateFo
   .social-link:hover { background-color: #e5e7eb; }
   .copyright { font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SocialFooter from './SocialFooter.svelte';
-export default createSvelteMicroApp({ name: 'social-footer', App: SocialFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -256,13 +226,7 @@ export default createSvelteMicroApp({ name: 'social-footer', App: SocialFooter }
   .links a:hover { color: #f9fafb; }
   .copyright { font-size: 13px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DarkFooter from './DarkFooter.svelte';
-export default createSvelteMicroApp({ name: 'dark-footer', App: DarkFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -293,13 +257,7 @@ export default createSvelteMicroApp({ name: 'dark-footer', App: DarkFooter });
   .tagline { font-size: 14px; color: #9ca3af; margin: 0 0 16px; }
   .copyright { font-size: 12px; color: #d1d5db; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import CenteredFooter from './CenteredFooter.svelte';
-export default createSvelteMicroApp({ name: 'centered-footer', App: CenteredFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -340,13 +298,7 @@ export default createSvelteMicroApp({ name: 'centered-footer', App: CenteredFoot
   .bottom nav a { text-decoration: none; color: #9ca3af; }
   .bottom nav a:hover { color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import LogoFooter from './LogoFooter.svelte';
-export default createSvelteMicroApp({ name: 'logo-footer', App: LogoFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -383,13 +335,7 @@ export default createSvelteMicroApp({ name: 'logo-footer', App: LogoFooter });
   .section a:hover { color: #6366f1; }
   .bottom { padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SitemapFooter from './SitemapFooter.svelte';
-export default createSvelteMicroApp({ name: 'sitemap-footer', App: SitemapFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -418,13 +364,7 @@ export default createSvelteMicroApp({ name: 'sitemap-footer', App: SitemapFooter
   .disclaimer { font-size: 12px; color: #9ca3af; line-height: 1.5; max-width: 600px; margin: 0 0 12px; }
   .copyright { font-size: 12px; color: #d1d5db; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import LegalFooter from './LegalFooter.svelte';
-export default createSvelteMicroApp({ name: 'legal-footer', App: LegalFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -460,13 +400,7 @@ export default createSvelteMicroApp({ name: 'legal-footer', App: LegalFooter });
   .contact-info p { margin: 0 0 6px; font-size: 14px; color: #6b7280; }
   .bottom { padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MapFooter from './MapFooter.svelte';
-export default createSvelteMicroApp({ name: 'map-footer', App: MapFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -510,13 +444,7 @@ export default createSvelteMicroApp({ name: 'map-footer', App: MapFooter });
   .links a { text-decoration: none; color: #6b7280; font-size: 14px; }
   .copyright { font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AppLinksFooter from './AppLinksFooter.svelte';
-export default createSvelteMicroApp({ name: 'app-links-footer', App: AppLinksFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -543,13 +471,7 @@ export default createSvelteMicroApp({ name: 'app-links-footer', App: AppLinksFoo
   .links a:hover { color: #fff; }
   .copyright { font-size: 13px; color: rgba(255,255,255,0.6); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TransparentFooter from './TransparentFooter.svelte';
-export default createSvelteMicroApp({ name: 'transparent-footer', App: TransparentFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -584,13 +506,7 @@ export default createSvelteMicroApp({ name: 'transparent-footer', App: Transpare
   .links a:hover { color: #374151; }
   .copyright { font-size: 13px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AwardsFooter from './AwardsFooter.svelte';
-export default createSvelteMicroApp({ name: 'awards-footer', App: AwardsFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -626,13 +542,7 @@ export default createSvelteMicroApp({ name: 'awards-footer', App: AwardsFooter }
   .payment-badge { padding: 4px 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; }
   .copyright { font-size: 12px; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PaymentFooter from './PaymentFooter.svelte';
-export default createSvelteMicroApp({ name: 'payment-footer', App: PaymentFooter });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

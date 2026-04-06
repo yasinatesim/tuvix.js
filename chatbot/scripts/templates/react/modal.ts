@@ -30,7 +30,8 @@ function ConfirmationModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'confirmation-modal', App: ConfirmationModal });`,
+const app = createReactMicroApp({ name: 'confirmation-modal', App: ConfirmationModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -72,7 +73,8 @@ function FormModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'form-modal', App: FormModal });`,
+const app = createReactMicroApp({ name: 'form-modal', App: FormModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -98,7 +100,8 @@ function LightboxModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'lightbox-modal', App: LightboxModal });`,
+const app = createReactMicroApp({ name: 'lightbox-modal', App: LightboxModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -130,7 +133,8 @@ function VideoModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'video-modal', App: VideoModal });`,
+const app = createReactMicroApp({ name: 'video-modal', App: VideoModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -176,7 +180,8 @@ function SettingsModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'settings-modal', App: SettingsModal });`,
+const app = createReactMicroApp({ name: 'settings-modal', App: SettingsModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -221,7 +226,8 @@ function SidePanelModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'side-panel-modal', App: SidePanelModal });`,
+const app = createReactMicroApp({ name: 'side-panel-modal', App: SidePanelModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -254,7 +260,8 @@ function GalleryModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'gallery-modal', App: GalleryModal });`,
+const app = createReactMicroApp({ name: 'gallery-modal', App: GalleryModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -299,7 +306,8 @@ function TermsModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'terms-modal', App: TermsModal });`,
+const app = createReactMicroApp({ name: 'terms-modal', App: TermsModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -326,7 +334,8 @@ function AlertModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'alert-modal', App: AlertModal });`,
+const app = createReactMicroApp({ name: 'alert-modal', App: AlertModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -360,7 +369,8 @@ function FullscreenModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'fullscreen-modal', App: FullscreenModal });`,
+const app = createReactMicroApp({ name: 'fullscreen-modal', App: FullscreenModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -393,7 +403,8 @@ function DrawerModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'drawer-modal', App: DrawerModal });`,
+const app = createReactMicroApp({ name: 'drawer-modal', App: DrawerModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -432,7 +443,8 @@ function BottomSheetModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'bottom-sheet-modal', App: BottomSheetModal });`,
+const app = createReactMicroApp({ name: 'bottom-sheet-modal', App: BottomSheetModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -472,7 +484,8 @@ function CookieConsentModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'cookie-consent-modal', App: CookieConsentModal });`,
+const app = createReactMicroApp({ name: 'cookie-consent-modal', App: CookieConsentModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -520,7 +533,8 @@ function SearchModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'search-modal', App: SearchModal });`,
+const app = createReactMicroApp({ name: 'search-modal', App: SearchModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -583,7 +597,8 @@ function CommandPaletteModal() {
   );
 }
 
-export default createReactMicroApp({ name: 'command-palette-modal', App: CommandPaletteModal });`,
+const app = createReactMicroApp({ name: 'command-palette-modal', App: CommandPaletteModal });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

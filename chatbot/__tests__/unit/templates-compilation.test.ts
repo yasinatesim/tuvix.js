@@ -94,28 +94,29 @@ describe('Angular template compilation', () => {
 });
 
 // ─── Vue ─────────────────────────────────────────────────────────────────────
-describe('Vue template compilation (script block)', () => {
+// Vue templates are now TypeScript module format (not SFC).
+// We strip the template: `...` string (Vue HTML templates may contain ${ which
+// is not valid in a JS template literal) and compile the remaining TypeScript.
+describe('Vue template compilation (TypeScript module)', () => {
   for (const category of CATEGORIES) {
     describe(category, () => {
-      it('all variants <script> block compiles as TypeScript without errors', async () => {
+      it('all variants compile as TypeScript without errors', async () => {
         const templates = await loadTemplates('vue', category);
         expect(templates.length).toBeGreaterThan(0);
 
         for (const tmpl of templates) {
-          let scriptContent: string;
-          try {
-            scriptContent = extractScriptBlock(tmpl.code);
-          } catch {
-            throw new Error(
-              `vue/${category}/${tmpl.variant}: could not extract <script> block`,
-            );
-          }
+          // Strip template: `...` block to avoid Vue template syntax (${{ }})
+          // being misinterpreted as JS template literal interpolation by esbuild
+          const codeWithoutTemplate = tmpl.code.replace(
+            /template:\s*`[\s\S]*?`,/,
+            "template: '',",
+          );
 
-          const result = await transform(scriptContent, {
+          const result = await transform(codeWithoutTemplate, {
             loader: 'ts',
           }).catch((err) => {
             throw new Error(
-              `vue/${category}/${tmpl.variant} script failed to compile:\n${err.message}`,
+              `vue/${category}/${tmpl.variant} failed to compile:\n${err.message}`,
             );
           });
 

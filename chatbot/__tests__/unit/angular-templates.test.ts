@@ -10,8 +10,8 @@ const CATEGORIES = [
 ];
 
 const REQUIRED_FIELDS = ['variant', 'description', 'tags', 'code', 'dependencies'];
-const REQUIRED_ANGULAR_IMPORTS = ['@angular/core', 'createAngularMicroApp', '@tuvix.js/angular'];
-const REQUIRED_API_FIELDS = ['module:', 'platform:', 'name:'];
+const REQUIRED_ANGULAR_IMPORTS = ['@angular/core', 'defineMicroApp', 'tuvix.js', 'bootstrapApplication'];
+const REQUIRED_API_FIELDS = ['standalone: true', 'defineMicroApp', 'mount', 'unmount'];
 
 describe('Angular template files', () => {
   for (const category of CATEGORIES) {
@@ -69,7 +69,7 @@ describe('Angular template files', () => {
         }
       });
 
-      it('all template code uses correct createAngularMicroApp API fields', async () => {
+      it('all template code uses correct defineMicroApp API pattern', async () => {
         const mod = await import(join(ANGULAR_TEMPLATE_DIR, `${category}.ts`));
         const tmplList: Array<Record<string, unknown>> = mod.default;
 
@@ -78,6 +78,9 @@ describe('Angular template files', () => {
           for (const field of REQUIRED_API_FIELDS) {
             expect(code, `${category}/${tmpl.variant} missing API field "${field}"`).toContain(field);
           }
+          // Must NOT use old API
+          expect(code, `${category}/${tmpl.variant} should not use createAngularMicroApp`).not.toContain('createAngularMicroApp');
+          expect(code, `${category}/${tmpl.variant} should not use NgModule`).not.toContain('NgModule');
         }
       });
     });

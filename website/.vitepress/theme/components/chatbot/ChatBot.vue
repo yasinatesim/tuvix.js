@@ -186,6 +186,18 @@ function sendExamplePrompt(prompt: string) {
   position: relative;
 }
 
+// Stagger fade-up animation
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // Welcome screen with subtle dot grid
 .welcome {
   flex: 1;
@@ -206,36 +218,77 @@ function sendExamplePrompt(prompt: string) {
     opacity: 0.4;
     pointer-events: none;
   }
+
+  // Radial glow behind content
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, var(--vp-c-brand-soft) 0%, transparent 70%);
+    pointer-events: none;
+    opacity: 0.6;
+  }
 }
 
 .welcomeContent {
-  position: relative; // above the grid
+  position: relative;
+  z-index: 1;
   text-align: center;
-  max-width: 520px;
+  max-width: 540px;
   width: 100%;
+
+  > * {
+    animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  > *:nth-child(1) { animation-delay: 0.05s; }
+  > *:nth-child(2) { animation-delay: 0.14s; }
+  > *:nth-child(3) { animation-delay: 0.23s; }
+  > *:nth-child(4) { animation-delay: 0.32s; }
 }
 
 // "AI Component Generator" title — "AI" in brand color
 .welcomeTitle {
   font-family: $font-mono;
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: $chat-text;
-  margin: 0 0 $sp-2;
-  line-height: 1.2;
+  margin: 0 0 $sp-3;
+  line-height: 1.1;
 
-  // Style the span.accent inside it
-  span { color: $chat-brand; }
+  span {
+    background: linear-gradient(
+      135deg,
+      var(--vp-c-brand-1) 0%,
+      var(--vp-c-brand-2, var(--vp-c-brand-1)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
 
 .welcomeSubtitle {
   font-size: $text-sm;
   color: $chat-text-3;
   margin: 0 0 $sp-6;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   font-family: $font-mono;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $sp-3;
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: $chat-border;
+  }
 }
 
 // Chips in 2-column grid
@@ -256,13 +309,20 @@ function sendExamplePrompt(prompt: string) {
   font-family: $font-body;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
   line-height: 1.4;
 
   &:hover {
     border-color: $chat-brand;
     color: $chat-text;
     background: $chat-brand-soft;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -271,11 +331,25 @@ function sendExamplePrompt(prompt: string) {
   color: $chat-text-3;
   font-family: $font-mono;
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $sp-2;
+  flex-wrap: wrap;
 
   a {
-    color: $chat-brand;
+    color: $chat-text-2;
     text-decoration: none;
-    &:hover { text-decoration: underline; }
+    padding: 2px 10px;
+    border: 1px solid $chat-border;
+    border-radius: $r-pill;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+
+    &:hover {
+      color: $chat-brand;
+      border-color: $chat-brand;
+      background: $chat-brand-soft;
+    }
   }
 }
 </style>

@@ -18,11 +18,12 @@ const EXPECTED_TOTAL = 600;
 const EXPECTED_PER_CATEGORY = 60;
 const REQUIRED_FIELDS = ['id', 'description', 'framework', 'category', 'tags', 'code', 'dependencies'];
 const VALID_FRAMEWORKS = ['react', 'vue', 'svelte', 'angular'];
+// Svelte is '' (falsy) because Svelte SFCs are raw component files — no @tuvix.js/svelte import
 const FRAMEWORK_IMPORTS: Record<string, string> = {
   react: '@tuvix.js/react',
   vue: '@tuvix.js/vue',
-  svelte: '@tuvix.js/svelte',
-  angular: '@tuvix.js/angular',
+  svelte: '',  // Svelte SFC — no package import in the component file itself
+  angular: 'tuvix.js',  // Angular now uses defineMicroApp from 'tuvix.js'
 };
 
 describe('Dataset v2 Validation', () => {
@@ -70,6 +71,7 @@ describe('Dataset v2 Validation', () => {
       const fw = record.framework as string;
       const code = record.code as string;
       const expectedImport = FRAMEWORK_IMPORTS[fw];
+      if (!expectedImport) continue; // Svelte SFC — no package import needed
       expect(code, `${record.id} missing correct import`).toContain(expectedImport);
     }
   });
@@ -94,24 +96,27 @@ describe('Dataset v2 Validation', () => {
     }
   });
 
-  it('Svelte records contain createSvelteMicroApp in entry comment', () => {
+  it('Svelte records are raw SFC format (no createSvelteMicroApp wrapper)', () => {
     const svelteRecords = allRecords.filter((r) => r.framework === 'svelte');
     for (const record of svelteRecords) {
       const code = record.code as string;
-      expect(code, `${record.id} missing createSvelteMicroApp`).toContain('createSvelteMicroApp');
-      expect(code, `${record.id} missing name:`).toContain('name:');
-      expect(code, `${record.id} missing App:`).toContain('App:');
+      // Svelte files are raw SFC — no createSvelteMicroApp in the code itself
+      expect(code, `${record.id} should not contain createSvelteMicroApp`).not.toContain('createSvelteMicroApp');
+      // Must have a <script> block
+      expect(code, `${record.id} missing <script> block`).toContain('<script>');
     }
   });
 
-  it('Angular records use createAngularMicroApp with module and platform', () => {
+  it('Angular records use defineMicroApp with standalone components', () => {
     const angularRecords = allRecords.filter((r) => r.framework === 'angular');
     for (const record of angularRecords) {
       const code = record.code as string;
-      expect(code, `${record.id} missing createAngularMicroApp`).toContain('createAngularMicroApp');
-      expect(code, `${record.id} missing module:`).toContain('module:');
-      expect(code, `${record.id} missing platform:`).toContain('platform:');
+      expect(code, `${record.id} missing defineMicroApp`).toContain('defineMicroApp');
+      expect(code, `${record.id} missing standalone: true`).toContain('standalone: true');
+      expect(code, `${record.id} missing bootstrapApplication`).toContain('bootstrapApplication');
       expect(code, `${record.id} missing name:`).toContain('name:');
+      // Must NOT use old API
+      expect(code, `${record.id} should not use createAngularMicroApp`).not.toContain('createAngularMicroApp');
     }
   });
 

@@ -37,7 +37,8 @@ function BasicTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'basic-table', App: BasicTable });`,
+const app = createReactMicroApp({ name: 'basic-table', App: BasicTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -94,7 +95,8 @@ function SortableTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'sortable-table', App: SortableTable });`,
+const app = createReactMicroApp({ name: 'sortable-table', App: SortableTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -136,7 +138,8 @@ function PaginatedTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'paginated-table', App: PaginatedTable });`,
+const app = createReactMicroApp({ name: 'paginated-table', App: PaginatedTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -177,7 +180,8 @@ function FilterableTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'filterable-table', App: FilterableTable });`,
+const app = createReactMicroApp({ name: 'filterable-table', App: FilterableTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -221,7 +225,8 @@ function CrudTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'crud-table', App: CrudTable });`,
+const app = createReactMicroApp({ name: 'crud-table', App: CrudTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -265,7 +270,8 @@ function ExpandableTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'expandable-table', App: ExpandableTable });`,
+const app = createReactMicroApp({ name: 'expandable-table', App: ExpandableTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -317,7 +323,8 @@ function SelectableTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'selectable-table', App: SelectableTable });`,
+const app = createReactMicroApp({ name: 'selectable-table', App: SelectableTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -364,7 +371,8 @@ function ActionsTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'actions-table', App: ActionsTable });`,
+const app = createReactMicroApp({ name: 'actions-table', App: ActionsTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -410,7 +418,8 @@ function StatusTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'status-table', App: StatusTable });`,
+const app = createReactMicroApp({ name: 'status-table', App: StatusTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -462,7 +471,8 @@ function VirtualizedTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'virtualized-table', App: VirtualizedTable });`,
+const app = createReactMicroApp({ name: 'virtualized-table', App: VirtualizedTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -499,7 +509,8 @@ function GroupedTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'grouped-table', App: GroupedTable });`,
+const app = createReactMicroApp({ name: 'grouped-table', App: GroupedTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -548,7 +559,8 @@ function EditableTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'editable-table', App: EditableTable });`,
+const app = createReactMicroApp({ name: 'editable-table', App: EditableTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -594,7 +606,8 @@ function SummaryTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'summary-table', App: SummaryTable });`,
+const app = createReactMicroApp({ name: 'summary-table', App: SummaryTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -628,7 +641,8 @@ function ResponsiveTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'responsive-table', App: ResponsiveTable });`,
+const app = createReactMicroApp({ name: 'responsive-table', App: ResponsiveTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -678,7 +692,8 @@ function ExportTable() {
   );
 }
 
-export default createReactMicroApp({ name: 'export-table', App: ExportTable });`,
+const app = createReactMicroApp({ name: 'export-table', App: ExportTable });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

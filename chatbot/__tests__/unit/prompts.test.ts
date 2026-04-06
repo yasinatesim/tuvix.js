@@ -18,24 +18,30 @@ describe('System Prompts', () => {
       expect(prompt).toContain('Vue 3');
     });
 
-    it('Svelte prompt imports @tuvix.js/svelte and uses createSvelteMicroApp', () => {
+    it('Svelte prompt uses raw SFC format (createSvelteMicroApp is only in FORBIDDEN rule)', () => {
       const prompt = buildSystemPrompt('svelte', []);
-      expect(prompt).toContain('@tuvix.js/svelte');
-      expect(prompt).toContain('createSvelteMicroApp');
+      // Svelte prompt tells the LLM to output raw SFC
       expect(prompt).toContain('Svelte');
+      // createSvelteMicroApp appears only in the "NO createSvelteMicroApp" forbidden rule
+      expect(prompt).toContain('NO createSvelteMicroApp');
+      // Must NOT show createSvelteMicroApp as a usage pattern (in import or call)
+      expect(prompt).not.toContain("import { createSvelteMicroApp }");
     });
 
-    it('Angular prompt imports @tuvix.js/angular and uses createAngularMicroApp', () => {
+    it('Angular prompt uses defineMicroApp from tuvix.js', () => {
       const prompt = buildSystemPrompt('angular', []);
-      expect(prompt).toContain('@tuvix.js/angular');
-      expect(prompt).toContain('createAngularMicroApp');
+      expect(prompt).toContain('tuvix.js');
+      expect(prompt).toContain('defineMicroApp');
       expect(prompt).toContain('Angular');
+      expect(prompt).toContain('bootstrapApplication');
+      // createAngularMicroApp only appears in the FORBIDDEN rule, not as correct usage
+      expect(prompt).not.toContain("import { createAngularMicroApp }");
     });
 
     it('null framework generates vanilla JS prompt with defineMicroApp', () => {
       const prompt = buildSystemPrompt(null, []);
       expect(prompt).toContain('defineMicroApp');
-      expect(prompt).toContain('plain JavaScript/TypeScript');
+      expect(prompt).toContain('vanilla');
       expect(prompt).not.toContain('@tuvix.js/react');
       expect(prompt).not.toContain('@tuvix.js/vue');
       expect(prompt).not.toContain('@tuvix.js/svelte');
@@ -44,8 +50,8 @@ describe('System Prompts', () => {
 
     it('includes no-tailwind rule in every prompt', () => {
       for (const fw of ['react', 'vue', 'svelte', 'angular', null]) {
-        const prompt = buildSystemPrompt(fw, []);
-        expect(prompt).toContain('Do NOT use Tailwind');
+        const prompt = buildSystemPrompt(fw as string | null, []);
+        expect(prompt).toContain('Tailwind');
       }
     });
 

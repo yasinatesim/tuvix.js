@@ -20,7 +20,8 @@ function MinimalFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'minimal-footer', App: MinimalFooter });`,
+const app = createReactMicroApp({ name: 'minimal-footer', App: MinimalFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -55,7 +56,8 @@ function MultiColumnFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'multi-column-footer', App: MultiColumnFooter });`,
+const app = createReactMicroApp({ name: 'multi-column-footer', App: MultiColumnFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -98,7 +100,8 @@ function NewsletterFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'newsletter-footer', App: NewsletterFooter });`,
+const app = createReactMicroApp({ name: 'newsletter-footer', App: NewsletterFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -134,7 +137,8 @@ function CorporateFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'corporate-footer', App: CorporateFooter });`,
+const app = createReactMicroApp({ name: 'corporate-footer', App: CorporateFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -167,7 +171,8 @@ function SocialFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'social-footer', App: SocialFooter });`,
+const app = createReactMicroApp({ name: 'social-footer', App: SocialFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -199,7 +204,8 @@ function DarkFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'dark-footer', App: DarkFooter });`,
+const app = createReactMicroApp({ name: 'dark-footer', App: DarkFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -224,7 +230,8 @@ function CenteredFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'centered-footer', App: CenteredFooter });`,
+const app = createReactMicroApp({ name: 'centered-footer', App: CenteredFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -258,7 +265,8 @@ function LogoFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'logo-footer', App: LogoFooter });`,
+const app = createReactMicroApp({ name: 'logo-footer', App: LogoFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -298,7 +306,8 @@ function SitemapFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'sitemap-footer', App: SitemapFooter });`,
+const app = createReactMicroApp({ name: 'sitemap-footer', App: SitemapFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -327,7 +336,8 @@ function LegalFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'legal-footer', App: LegalFooter });`,
+const app = createReactMicroApp({ name: 'legal-footer', App: LegalFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -362,7 +372,8 @@ function MapFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'map-footer', App: MapFooter });`,
+const app = createReactMicroApp({ name: 'map-footer', App: MapFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -392,7 +403,8 @@ function AppLinksFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'app-links-footer', App: AppLinksFooter });`,
+const app = createReactMicroApp({ name: 'app-links-footer', App: AppLinksFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -415,7 +427,8 @@ function TransparentFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'transparent-footer', App: TransparentFooter });`,
+const app = createReactMicroApp({ name: 'transparent-footer', App: TransparentFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -445,7 +458,8 @@ function AwardsFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'awards-footer', App: AwardsFooter });`,
+const app = createReactMicroApp({ name: 'awards-footer', App: AwardsFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -478,7 +492,8 @@ function PaymentFooter() {
   );
 }
 
-export default createReactMicroApp({ name: 'payment-footer', App: PaymentFooter });`,
+const app = createReactMicroApp({ name: 'payment-footer', App: PaymentFooter });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

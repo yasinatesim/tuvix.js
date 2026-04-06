@@ -41,13 +41,7 @@ const templates: ComponentTemplate[] = [
   .cancel-btn { padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
   .confirm-btn { padding: 8px 16px; border: none; border-radius: 6px; background-color: #ef4444; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ConfirmModal from './ConfirmModal.svelte';
-export default createSvelteMicroApp({ name: 'confirm-modal', App: ConfirmModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -99,13 +93,7 @@ export default createSvelteMicroApp({ name: 'confirm-modal', App: ConfirmModal }
   .cancel-btn { padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
   .submit-btn { padding: 8px 16px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FormModal from './FormModal.svelte';
-export default createSvelteMicroApp({ name: 'form-modal', App: FormModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -141,13 +129,7 @@ export default createSvelteMicroApp({ name: 'form-modal', App: FormModal });
   .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
   .image-display { width: 600px; height: 400px; background-color: #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 64px; color: #fff; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import LightboxModal from './LightboxModal.svelte';
-export default createSvelteMicroApp({ name: 'lightbox-modal', App: LightboxModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -191,13 +173,7 @@ export default createSvelteMicroApp({ name: 'lightbox-modal', App: LightboxModal
   .info h3 { margin: 0 0 4px; color: #fff; font-size: 16px; }
   .info p { margin: 0; color: #9ca3af; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import VideoModal from './VideoModal.svelte';
-export default createSvelteMicroApp({ name: 'video-modal', App: VideoModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -262,13 +238,7 @@ export default createSvelteMicroApp({ name: 'video-modal', App: VideoModal });
   .footer-actions { padding: 0 24px 20px; display: flex; justify-content: flex-end; }
   .save-btn { padding: 8px 20px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SettingsModal from './SettingsModal.svelte';
-export default createSvelteMicroApp({ name: 'settings-modal', App: SettingsModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -308,13 +278,7 @@ export default createSvelteMicroApp({ name: 'settings-modal', App: SettingsModal
   .body { flex: 1; padding: 24px; overflow-y: auto; }
   .body p { font-size: 14px; color: #6b7280; line-height: 1.6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SidePanelModal from './SidePanelModal.svelte';
-export default createSvelteMicroApp({ name: 'side-panel-modal', App: SidePanelModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -360,13 +324,7 @@ export default createSvelteMicroApp({ name: 'side-panel-modal', App: SidePanelMo
   .image { width: 500px; height: 350px; background-color: #374151; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #fff; }
   .close-btn { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import GalleryModal from './GalleryModal.svelte';
-export default createSvelteMicroApp({ name: 'gallery-modal', App: GalleryModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -416,13 +374,7 @@ export default createSvelteMicroApp({ name: 'gallery-modal', App: GalleryModal }
   .decline-btn { padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
   .accept-btn { padding: 8px 16px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TermsModal from './TermsModal.svelte';
-export default createSvelteMicroApp({ name: 'terms-modal', App: TermsModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -458,13 +410,7 @@ export default createSvelteMicroApp({ name: 'terms-modal', App: TermsModal });
   .modal p { margin: 0 0 20px; font-size: 14px; color: #6b7280; }
   .ok-btn { padding: 10px 32px; border: none; border-radius: 6px; background-color: #f59e0b; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AlertModal from './AlertModal.svelte';
-export default createSvelteMicroApp({ name: 'alert-modal', App: AlertModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -501,13 +447,7 @@ export default createSvelteMicroApp({ name: 'alert-modal', App: AlertModal });
   .modal-body { flex: 1; padding: 32px; overflow-y: auto; }
   .modal-body p { font-size: 16px; color: #374151; line-height: 1.6; max-width: 640px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FullscreenModal from './FullscreenModal.svelte';
-export default createSvelteMicroApp({ name: 'fullscreen-modal', App: FullscreenModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -546,13 +486,7 @@ export default createSvelteMicroApp({ name: 'fullscreen-modal', App: FullscreenM
   .option:hover { background-color: #f3f4f6; }
   .cancel-option { display: block; width: 100%; text-align: center; padding: 14px; background: none; border: none; font-size: 16px; color: #ef4444; font-weight: 600; cursor: pointer; margin-top: 8px; border-top: 1px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DrawerModal from './DrawerModal.svelte';
-export default createSvelteMicroApp({ name: 'drawer-modal', App: DrawerModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -590,13 +524,7 @@ export default createSvelteMicroApp({ name: 'drawer-modal', App: DrawerModal });
   .sheet-item { display: block; width: 100%; text-align: left; padding: 12px 12px; background: none; border: none; font-size: 15px; color: #374151; cursor: pointer; border-radius: 8px; }
   .sheet-item:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BottomSheet from './BottomSheet.svelte';
-export default createSvelteMicroApp({ name: 'bottom-sheet', App: BottomSheet });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -631,13 +559,7 @@ export default createSvelteMicroApp({ name: 'bottom-sheet', App: BottomSheet });
   .reject-btn { padding: 8px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; }
   .accept-btn { padding: 8px 16px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import CookieConsent from './CookieConsent.svelte';
-export default createSvelteMicroApp({ name: 'cookie-consent', App: CookieConsent });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -685,13 +607,7 @@ export default createSvelteMicroApp({ name: 'cookie-consent', App: CookieConsent
   .results li:hover { background-color: #f3f4f6; }
   .no-results { padding: 20px; text-align: center; color: #9ca3af; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SearchModal from './SearchModal.svelte';
-export default createSvelteMicroApp({ name: 'search-modal', App: SearchModal });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -748,13 +664,7 @@ export default createSvelteMicroApp({ name: 'search-modal', App: SearchModal });
   .cmd-item:hover { background-color: #ede9fe; color: #6366f1; }
   .no-results { padding: 20px; text-align: center; color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import CommandPalette from './CommandPalette.svelte';
-export default createSvelteMicroApp({ name: 'command-palette', App: CommandPalette });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

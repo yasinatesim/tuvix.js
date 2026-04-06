@@ -108,7 +108,10 @@ describe('Dataset compilation (JSONL records)', () => {
   });
 
   // ─── Vue ─────────────────────────────────────────────────────────────────
-  describe('Vue records <script> block compiles as TypeScript', () => {
+  // Vue records are now TypeScript module format (not SFC).
+  // Strip template: `...` to avoid Vue ${{ }} syntax confusing esbuild's
+  // template-literal parser, then compile the remaining TypeScript.
+  describe('Vue records compile as TypeScript module', () => {
     const vueRecords = allRecords.filter((r) => r.framework === 'vue');
 
     it(`has records to test (got ${vueRecords.length})`, () => {
@@ -117,11 +120,14 @@ describe('Dataset compilation (JSONL records)', () => {
 
     for (const record of vueRecords) {
       it(record.id, async () => {
-        const scriptContent = extractScriptBlock(record.code, record.id);
-        const result = await transform(scriptContent, {
+        const codeWithoutTemplate = record.code.replace(
+          /template:\s*`[\s\S]*?`,/,
+          "template: '',",
+        );
+        const result = await transform(codeWithoutTemplate, {
           loader: 'ts',
         }).catch((err) => {
-          throw new Error(`${record.id} script failed to compile:\n${err.message}`);
+          throw new Error(`${record.id} failed to compile:\n${err.message}`);
         });
         expect(result.code.length).toBeGreaterThan(0);
       });

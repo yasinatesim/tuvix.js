@@ -724,9 +724,10 @@ let editorInst:    import('monaco-editor').editor.IStandaloneCodeEditor | null =
 let monacoApi:     typeof import('monaco-editor') | null = null;
 let debounce:      ReturnType<typeof setTimeout> | null = null;
 let compileId = 0;
+let injectedCss = '';
 
 // ── Frame builder ──────────────────────────────────────────────────
-function buildSrcdoc(code: string, tabId: string): string {
+function buildSrcdoc(code: string, tabId: string, injectedCss = ''): string {
   const imports = { ...BASE, ...(FRAMEWORK_IMPORTS[tabId] ?? {}) };
   const importmap = JSON.stringify({ imports }, null, 2);
   const safe = code.replaceAll('<' + '/script>', '<\\/' + 'script>');
@@ -740,6 +741,7 @@ function buildSrcdoc(code: string, tabId: string): string {
   return [
     '<!DOCTYPE html><html><head><meta charset="utf-8">',
     '<style>*{box-sizing:border-box}body{margin:0;background:#080c10;color:#e2e8f0}</style>',
+    injectedCss ? `<style>${injectedCss.replaceAll('<' + '/style>', '<\\/style>')}</style>` : '',
     zoneTag,
     '<script type="importmap">', importmap, CS,
     compilerTag,
@@ -857,7 +859,7 @@ async function compile(code: string, tabId: string, id: number) {
     }
     if (id !== compileId) return;
     messages.value = [{ kind: 'success', text: `Compiled in ${Math.round(performance.now() - t0)}ms` }];
-    if (iframeEl.value) iframeEl.value.srcdoc = buildSrcdoc(compiled, tabId);
+    if (iframeEl.value) iframeEl.value.srcdoc = buildSrcdoc(compiled, tabId, injectedCss);
   } catch (err: unknown) {
     if (id !== compileId) return;
     const e = err as { errors?: { text: string; location?: { line: number } }[]; message?: string };
@@ -1359,25 +1361,53 @@ onMounted(async () => {
 
     if (codeParam) {
       try {
-        const decoded = atob(codeParam);
-        // Switch to the right framework tab if specified
-        if (frameworkParam) {
-          const tabMap: Record<string, string> = {
-            react: 'react',
-            vue: 'vue',
-            svelte: 'svelte',
-            angular: 'vanilla', // angular not in playground, fall back
-          };
-          const tab = tabMap[frameworkParam] ?? frameworkParam;
-          const validIds = TABS.map(t => t.id);
-          if (validIds.includes(tab)) {
-            activeTab.value = tab;
-          }
+        let decoded = decodeURIComponent(
+          atob(codeParam)
+            .split('')
+            .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+            .join(''),
+        );
+
+        // Strip CSS module imports: replace styles.xxx → 'xxx', remove import line
+        decoded = decoded.replace(
+          /import\s+(\w+)\s+from\s+['"][^'"]+\.module\.css['"];?\n?/g,
+          (_, varName: string) => {
+            decoded = decoded.replace(new RegExp(`\\b${varName}\\.(\\w+)\\b`, 'g'), "'$1'");
+            return '';
+          },
+        );
+
+        // Decode paired CSS and inject into iframe
+        const cssParam = params.get('css');
+        if (cssParam) {
+          try {
+            injectedCss = decodeURIComponent(
+              atob(decodeURIComponent(cssParam))
+                .split('')
+                .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+                .join(''),
+            );
+          } catch { /* ignore */ }
         }
-        // Wait for Vue reactivity (tab switch triggers loadEditor via watch)
-        // then overwrite with the decoded content
+
+        // Detect framework from URL param or auto-detect from code
+        const tabMap: Record<string, string> = {
+          react: 'react', vue: 'vue', svelte: 'svelte', angular: 'vanilla',
+        };
+        const autoDetect = frameworkParam
+          ? (tabMap[frameworkParam] ?? frameworkParam)
+          : decoded.includes("from '@tuvix.js/react'") || decoded.includes('from "react"') ? 'react'
+          : decoded.includes("from '@tuvix.js/vue'") || decoded.includes('from "vue"') ? 'vue'
+          : decoded.includes("from '@tuvix.js/svelte'") ? 'svelte'
+          : null;
+
+        const validIds = TABS.map((t: { id: string }) => t.id);
+        if (autoDetect && validIds.includes(autoDetect)) {
+          activeTab.value = autoDetect;
+          loadEditor(autoDetect, demoType.value);
+        }
+
         await nextTick();
-        await nextTick(); // second tick ensures watch callbacks have settled
         if (editorInst) {
           editorInst.setValue(decoded);
           scheduleCompile(decoded);

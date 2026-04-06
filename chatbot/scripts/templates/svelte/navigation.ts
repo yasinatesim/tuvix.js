@@ -32,13 +32,7 @@ const templates: ComponentTemplate[] = [
   a:hover { text-decoration: underline; }
   .current { color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Breadcrumb from './Breadcrumb.svelte';
-export default createSvelteMicroApp({ name: 'breadcrumb-nav', App: Breadcrumb });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -71,13 +65,7 @@ export default createSvelteMicroApp({ name: 'breadcrumb-nav', App: Breadcrumb })
   .content { padding: 20px 0; }
   .content p { color: #374151; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TabsNav from './TabsNav.svelte';
-export default createSvelteMicroApp({ name: 'tabs-nav', App: TabsNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -135,13 +123,7 @@ export default createSvelteMicroApp({ name: 'tabs-nav', App: TabsNav });
   button:disabled { opacity: 0.4; }
   button.primary { background-color: #6366f1; color: #fff; border: none; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StepperNav from './StepperNav.svelte';
-export default createSvelteMicroApp({ name: 'stepper-nav', App: StepperNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -176,13 +158,7 @@ export default createSvelteMicroApp({ name: 'stepper-nav', App: StepperNav });
   .page-btn:hover { background-color: #f3f4f6; }
   .page-btn.active:hover { background-color: #6366f1; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PaginationNav from './PaginationNav.svelte';
-export default createSvelteMicroApp({ name: 'pagination-nav', App: PaginationNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -216,13 +192,7 @@ export default createSvelteMicroApp({ name: 'pagination-nav', App: PaginationNav
   .menu-item { display: block; width: 100%; text-align: left; padding: 8px 12px; background: none; border: none; font-size: 14px; color: #374151; cursor: pointer; border-radius: 6px; }
   .menu-item:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MenuNav from './MenuNav.svelte';
-export default createSvelteMicroApp({ name: 'menu-nav', App: MenuNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -248,13 +218,7 @@ export default createSvelteMicroApp({ name: 'menu-nav', App: MenuNav });
   .nav-link:hover { background-color: #e5e7eb; color: #374151; }
   .nav-link.active { background-color: #fff; color: #111827; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Navbar from './Navbar.svelte';
-export default createSvelteMicroApp({ name: 'navbar', App: Navbar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -295,13 +259,7 @@ export default createSvelteMicroApp({ name: 'navbar', App: Navbar });
   .drawer a { display: block; padding: 12px 20px; text-decoration: none; color: #374151; font-size: 15px; }
   .drawer a:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DrawerNav from './DrawerNav.svelte';
-export default createSvelteMicroApp({ name: 'drawer-nav', App: DrawerNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -350,13 +308,7 @@ export default createSvelteMicroApp({ name: 'drawer-nav', App: DrawerNav });
   .mega-column a { display: block; padding: 4px 0; text-decoration: none; color: #6b7280; font-size: 14px; }
   .mega-column a:hover { color: #6366f1; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MegaMenu from './MegaMenu.svelte';
-export default createSvelteMicroApp({ name: 'mega-menu', App: MegaMenu });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -392,13 +344,7 @@ export default createSvelteMicroApp({ name: 'mega-menu', App: MegaMenu });
   .label { font-size: 10px; color: #6b7280; }
   .bar-item.active .label { color: #6366f1; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BottomBar from './BottomBar.svelte';
-export default createSvelteMicroApp({ name: 'bottom-bar', App: BottomBar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -440,13 +386,7 @@ export default createSvelteMicroApp({ name: 'bottom-bar', App: BottomBar });
   .menu-item:hover { background-color: #f3f4f6; }
   .menu-item.active { color: #6366f1; background-color: #ede9fe; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SideMenu from './SideMenu.svelte';
-export default createSvelteMicroApp({ name: 'side-menu', App: SideMenu });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -493,13 +433,7 @@ export default createSvelteMicroApp({ name: 'side-menu', App: SideMenu });
   button:disabled { opacity: 0.4; }
   .next-btn { background-color: #6366f1; color: #fff; border: none; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import WizardNav from './WizardNav.svelte';
-export default createSvelteMicroApp({ name: 'wizard-nav', App: WizardNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -532,13 +466,7 @@ export default createSvelteMicroApp({ name: 'wizard-nav', App: WizardNav });
   .display { margin-top: 16px; }
   .display p { font-size: 14px; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SegmentedControl from './SegmentedControl.svelte';
-export default createSvelteMicroApp({ name: 'segmented-control', App: SegmentedControl });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -573,13 +501,7 @@ export default createSvelteMicroApp({ name: 'segmented-control', App: SegmentedC
   .anchor-link:hover { color: #374151; }
   .anchor-link.active { color: #6366f1; border-left-color: #6366f1; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AnchorNav from './AnchorNav.svelte';
-export default createSvelteMicroApp({ name: 'anchor-nav', App: AnchorNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -607,13 +529,7 @@ export default createSvelteMicroApp({ name: 'anchor-nav', App: AnchorNav });
   .tag.active { background-color: #6366f1; color: #fff; border-color: #6366f1; }
   .result { font-size: 14px; color: #374151; margin-top: 8px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TagNav from './TagNav.svelte';
-export default createSvelteMicroApp({ name: 'tag-nav', App: TagNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -651,13 +567,7 @@ export default createSvelteMicroApp({ name: 'tag-nav', App: TagNav });
   .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #d1d5db; background: #fff; cursor: pointer; padding: 0; }
   .dot.active { background-color: #6366f1; border-color: #6366f1; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DotNav from './DotNav.svelte';
-export default createSvelteMicroApp({ name: 'dot-nav', App: DotNav });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

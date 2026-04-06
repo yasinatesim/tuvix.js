@@ -21,7 +21,8 @@ function MinimalHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'minimal-header', App: MinimalHeader });`,
+const app = createReactMicroApp({ name: 'minimal-header', App: MinimalHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -61,7 +62,8 @@ function SearchHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'search-header', App: SearchHeader });`,
+const app = createReactMicroApp({ name: 'search-header', App: SearchHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -96,7 +98,8 @@ function AuthHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'auth-header', App: AuthHeader });`,
+const app = createReactMicroApp({ name: 'auth-header', App: AuthHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -129,7 +132,8 @@ function ResponsiveHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'responsive-header', App: ResponsiveHeader });`,
+const app = createReactMicroApp({ name: 'responsive-header', App: ResponsiveHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -155,7 +159,8 @@ function DarkHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'dark-header', App: DarkHeader });`,
+const app = createReactMicroApp({ name: 'dark-header', App: DarkHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -193,7 +198,8 @@ function StickyHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'sticky-header', App: StickyHeader });`,
+const app = createReactMicroApp({ name: 'sticky-header', App: StickyHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -220,7 +226,8 @@ function LogoHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'logo-header', App: LogoHeader });`,
+const app = createReactMicroApp({ name: 'logo-header', App: LogoHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -261,7 +268,8 @@ function DropdownHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'dropdown-header', App: DropdownHeader });`,
+const app = createReactMicroApp({ name: 'dropdown-header', App: DropdownHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -302,7 +310,8 @@ function BreadcrumbHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'breadcrumb-header', App: BreadcrumbHeader });`,
+const app = createReactMicroApp({ name: 'breadcrumb-header', App: BreadcrumbHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -332,7 +341,8 @@ function ActionsHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'actions-header', App: ActionsHeader });`,
+const app = createReactMicroApp({ name: 'actions-header', App: ActionsHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -355,7 +365,8 @@ function TransparentHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'transparent-header', App: TransparentHeader });`,
+const app = createReactMicroApp({ name: 'transparent-header', App: TransparentHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -379,7 +390,8 @@ function FixedHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'fixed-header', App: FixedHeader });`,
+const app = createReactMicroApp({ name: 'fixed-header', App: FixedHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -412,7 +424,8 @@ function BannerHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'banner-header', App: BannerHeader });`,
+const app = createReactMicroApp({ name: 'banner-header', App: BannerHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -447,7 +460,8 @@ function MobileMenuHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'mobile-menu-header', App: MobileMenuHeader });`,
+const app = createReactMicroApp({ name: 'mobile-menu-header', App: MobileMenuHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -485,7 +499,8 @@ function ProgressHeader() {
   );
 }
 
-export default createReactMicroApp({ name: 'progress-header', App: ProgressHeader });`,
+const app = createReactMicroApp({ name: 'progress-header', App: ProgressHeader });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

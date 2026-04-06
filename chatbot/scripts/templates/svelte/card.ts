@@ -36,13 +36,7 @@ const templates: ComponentTemplate[] = [
   .price { font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 12px; }
   .cart-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ProductCard from './ProductCard.svelte';
-export default createSvelteMicroApp({ name: 'product-card', App: ProductCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -74,13 +68,7 @@ export default createSvelteMicroApp({ name: 'product-card', App: ProductCard });
   .social { display: flex; justify-content: center; gap: 16px; }
   .social a { text-decoration: none; color: #6366f1; font-size: 14px; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ProfileCard from './ProfileCard.svelte';
-export default createSvelteMicroApp({ name: 'profile-card', App: ProfileCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -107,13 +95,7 @@ export default createSvelteMicroApp({ name: 'profile-card', App: ProfileCard });
   .change.positive { color: #16a34a; }
   .change.negative { color: #dc2626; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StatsCard from './StatsCard.svelte';
-export default createSvelteMicroApp({ name: 'stats-card', App: StatsCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -149,13 +131,7 @@ export default createSvelteMicroApp({ name: 'stats-card', App: StatsCard });
   .features li { padding: 6px 0; font-size: 14px; color: #374151; }
   .cta-btn { width: 100%; padding: 12px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; font-size: 16px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PricingCard from './PricingCard.svelte';
-export default createSvelteMicroApp({ name: 'pricing-card', App: PricingCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -191,13 +167,7 @@ export default createSvelteMicroApp({ name: 'pricing-card', App: PricingCard });
   .title { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
   .meta { font-size: 13px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MediaCard from './MediaCard.svelte';
-export default createSvelteMicroApp({ name: 'media-card', App: MediaCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -227,13 +197,7 @@ export default createSvelteMicroApp({ name: 'media-card', App: MediaCard });
   .excerpt { margin: 0 0 12px; font-size: 14px; color: #6b7280; line-height: 1.5; }
   .author { font-size: 13px; color: #6366f1; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BlogCard from './BlogCard.svelte';
-export default createSvelteMicroApp({ name: 'blog-card', App: BlogCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -269,13 +233,7 @@ export default createSvelteMicroApp({ name: 'blog-card', App: BlogCard });
   .author-name { font-weight: 600; font-size: 14px; }
   .company { font-size: 13px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TestimonialCard from './TestimonialCard.svelte';
-export default createSvelteMicroApp({ name: 'testimonial-card', App: TestimonialCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -300,13 +258,7 @@ export default createSvelteMicroApp({ name: 'testimonial-card', App: Testimonial
   .description { margin: 0 0 16px; font-size: 14px; color: #6b7280; line-height: 1.5; }
   .link { text-decoration: none; color: #6366f1; font-size: 14px; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FeatureCard from './FeatureCard.svelte';
-export default createSvelteMicroApp({ name: 'feature-card', App: FeatureCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -343,13 +295,7 @@ export default createSvelteMicroApp({ name: 'feature-card', App: FeatureCard });
   .time { font-size: 12px; color: #9ca3af; }
   .dismiss-btn { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import NotificationCard from './NotificationCard.svelte';
-export default createSvelteMicroApp({ name: 'notification-card', App: NotificationCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -381,13 +327,7 @@ export default createSvelteMicroApp({ name: 'notification-card', App: Notificati
   .skill-tag { padding: 3px 10px; background-color: #f3f4f6; border-radius: 12px; font-size: 12px; color: #374151; }
   .contact-btn { padding: 8px 24px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TeamMemberCard from './TeamMemberCard.svelte';
-export default createSvelteMicroApp({ name: 'team-member-card', App: TeamMemberCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -429,13 +369,7 @@ export default createSvelteMicroApp({ name: 'team-member-card', App: TeamMemberC
   .rsvp-btn { margin-top: 10px; padding: 6px 20px; border: 2px solid #6366f1; border-radius: 6px; background: #fff; color: #6366f1; font-weight: 600; cursor: pointer; }
   .rsvp-btn.active { background-color: #6366f1; color: #fff; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import EventCard from './EventCard.svelte';
-export default createSvelteMicroApp({ name: 'event-card', App: EventCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -474,13 +408,7 @@ export default createSvelteMicroApp({ name: 'event-card', App: EventCard });
   .tag { padding: 4px 10px; background-color: #f3f4f6; border-radius: 12px; font-size: 12px; color: #374151; }
   .apply-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #2563eb; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import JobListingCard from './JobListingCard.svelte';
-export default createSvelteMicroApp({ name: 'job-listing-card', App: JobListingCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -523,13 +451,7 @@ export default createSvelteMicroApp({ name: 'job-listing-card', App: JobListingC
   .ingredients { display: flex; flex-wrap: wrap; gap: 4px; }
   .ing-tag { padding: 3px 8px; background-color: #f3f4f6; border-radius: 8px; font-size: 12px; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import RecipeCard from './RecipeCard.svelte';
-export default createSvelteMicroApp({ name: 'recipe-card', App: RecipeCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -558,13 +480,7 @@ export default createSvelteMicroApp({ name: 'recipe-card', App: RecipeCard });
   .footer { display: flex; justify-content: space-between; font-size: 12px; color: #9ca3af; }
   .source { font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import NewsCard from './NewsCard.svelte';
-export default createSvelteMicroApp({ name: 'news-card', App: NewsCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -605,13 +521,7 @@ export default createSvelteMicroApp({ name: 'news-card', App: NewsCard });
   .action-btn { padding: 8px 20px; border-radius: 6px; background-color: #6366f1; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; }
   .dismiss-btn { padding: 8px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AnnouncementCard from './AnnouncementCard.svelte';
-export default createSvelteMicroApp({ name: 'announcement-card', App: AnnouncementCard });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

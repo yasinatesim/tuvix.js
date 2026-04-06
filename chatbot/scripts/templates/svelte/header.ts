@@ -24,13 +24,7 @@ const templates: ComponentTemplate[] = [
   .nav { display: flex; gap: 24px; }
   .nav a { text-decoration: none; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Header from './Header.svelte';
-export default createSvelteMicroApp({ name: 'minimal-header', App: Header });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -86,13 +80,7 @@ export default createSvelteMicroApp({ name: 'minimal-header', App: Header });
   .suggestions li { padding: 8px 12px; cursor: pointer; }
   .suggestions li:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SearchHeader from './SearchHeader.svelte';
-export default createSvelteMicroApp({ name: 'search-header', App: SearchHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -141,13 +129,7 @@ export default createSvelteMicroApp({ name: 'search-header', App: SearchHeader }
   .btn-outline { padding: 6px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: transparent; cursor: pointer; }
   .btn-primary { padding: 6px 16px; border: none; border-radius: 6px; background: #6366f1; color: #fff; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AuthHeader from './AuthHeader.svelte';
-export default createSvelteMicroApp({ name: 'auth-header', App: AuthHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -191,13 +173,7 @@ export default createSvelteMicroApp({ name: 'auth-header', App: AuthHeader });
   .mobile-nav { display: flex; flex-direction: column; padding: 0 24px 16px; }
   .mobile-nav a { padding: 10px 0; text-decoration: none; color: #374151; border-bottom: 1px solid #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ResponsiveHeader from './ResponsiveHeader.svelte';
-export default createSvelteMicroApp({ name: 'responsive-header', App: ResponsiveHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -225,13 +201,7 @@ export default createSvelteMicroApp({ name: 'responsive-header', App: Responsive
   .nav a { text-decoration: none; color: #d1d5db; font-size: 14px; }
   .upgrade-btn { padding: 8px 18px; border: none; border-radius: 6px; background-color: #818cf8; color: #fff; cursor: pointer; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DarkHeader from './DarkHeader.svelte';
-export default createSvelteMicroApp({ name: 'dark-header', App: DarkHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -272,13 +242,7 @@ export default createSvelteMicroApp({ name: 'dark-header', App: DarkHeader });
   .nav { display: flex; gap: 20px; }
   .nav a { text-decoration: none; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StickyHeader from './StickyHeader.svelte';
-export default createSvelteMicroApp({ name: 'sticky-header', App: StickyHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -310,13 +274,7 @@ export default createSvelteMicroApp({ name: 'sticky-header', App: StickyHeader }
   .nav { display: flex; gap: 28px; }
   .nav a { text-decoration: none; color: #374151; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import LogoHeader from './LogoHeader.svelte';
-export default createSvelteMicroApp({ name: 'logo-header', App: LogoHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -372,13 +330,7 @@ export default createSvelteMicroApp({ name: 'logo-header', App: LogoHeader });
   .dropdown-list li a { display: block; padding: 8px 16px; text-decoration: none; color: #374151; }
   .dropdown-list li a:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DropdownHeader from './DropdownHeader.svelte';
-export default createSvelteMicroApp({ name: 'dropdown-header', App: DropdownHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -427,13 +379,7 @@ export default createSvelteMicroApp({ name: 'dropdown-header', App: DropdownHead
   .crumb-link { text-decoration: none; color: #6366f1; }
   .crumb-current { color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BreadcrumbHeader from './BreadcrumbHeader.svelte';
-export default createSvelteMicroApp({ name: 'breadcrumb-header', App: BreadcrumbHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -466,13 +412,7 @@ export default createSvelteMicroApp({ name: 'breadcrumb-header', App: Breadcrumb
   .badge { position: absolute; top: -4px; right: -6px; background-color: #ef4444; color: #fff; font-size: 11px; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
   .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #10b981; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ActionsHeader from './ActionsHeader.svelte';
-export default createSvelteMicroApp({ name: 'actions-header', App: ActionsHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -498,13 +438,7 @@ export default createSvelteMicroApp({ name: 'actions-header', App: ActionsHeader
   .nav { display: flex; gap: 24px; }
   .nav a { text-decoration: none; color: #fff; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TransparentHeader from './TransparentHeader.svelte';
-export default createSvelteMicroApp({ name: 'transparent-header', App: TransparentHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -532,13 +466,7 @@ export default createSvelteMicroApp({ name: 'transparent-header', App: Transpare
   .nav a { text-decoration: none; color: #4b5563; }
   .cta-btn { padding: 8px 20px; border-radius: 6px; border: none; background-color: #2563eb; color: #fff; cursor: pointer; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FixedHeader from './FixedHeader.svelte';
-export default createSvelteMicroApp({ name: 'fixed-header', App: FixedHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -578,13 +506,7 @@ export default createSvelteMicroApp({ name: 'fixed-header', App: FixedHeader });
   .nav { display: flex; gap: 20px; }
   .nav a { text-decoration: none; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BannerHeader from './BannerHeader.svelte';
-export default createSvelteMicroApp({ name: 'banner-header', App: BannerHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -632,13 +554,7 @@ export default createSvelteMicroApp({ name: 'banner-header', App: BannerHeader }
   .side-panel a { padding: 12px 8px; text-decoration: none; color: #374151; border-radius: 6px; font-size: 16px; }
   .side-panel a:hover { background-color: #f3f4f6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MobileMenuHeader from './MobileMenuHeader.svelte';
-export default createSvelteMicroApp({ name: 'mobile-menu-header', App: MobileMenuHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -686,13 +602,7 @@ export default createSvelteMicroApp({ name: 'mobile-menu-header', App: MobileMen
   .progress-track { height: 3px; background-color: #e5e7eb; }
   .progress-fill { height: 100%; background-color: #6366f1; transition: width 0.1s; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ProgressHeader from './ProgressHeader.svelte';
-export default createSvelteMicroApp({ name: 'progress-header', App: ProgressHeader });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

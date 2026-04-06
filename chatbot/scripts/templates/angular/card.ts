@@ -5,15 +5,15 @@ const templates: ComponentTemplate[] = [
     variant: 'product',
     description: 'Product card with image placeholder, title, price and add-to-cart button',
     tags: ['card', 'product', 'e-commerce'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-product-card',
   template: \`
+
     <div class="card">
       <div class="image"></div>
       <div class="body">
@@ -22,47 +22,41 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <button class="btn" (click)="added=true">{{ added ? 'Added!' : 'Add to Cart' }}</button>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 280px; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
-    .image { height: 180px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
-    .body { padding: 16px; }
-    .title { font-size: 16px; font-weight: 700; margin: 0 0 8px; }
-    .price { font-size: 18px; font-weight: 700; color: #6366f1; margin: 0 0 16px; }
-    .btn { width: 100%; padding: 10px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-  \`]
 })
 export class ProductCardComponent {
-  added = false;
+added = false;
 }
 
-@NgModule({
-  declarations: [ProductCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [ProductCardComponent],
-})
-export class ProductCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'product-card',
-  module: ProductCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-product-card');
+    container.appendChild(el);
+    await bootstrapApplication(ProductCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'profile',
     description: 'Profile card with avatar, name, role and social links',
     tags: ['card', 'profile', 'user'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-profile-card',
   template: \`
+
     <div class="card">
       <div class="avatar">JD</div>
       <h3 class="name">Jane Doe</h3>
@@ -74,46 +68,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
       </div>
       <button class="btn">Follow</button>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 260px; padding: 32px; border: 1px solid #e5e7eb; border-radius: 12px; text-align: center; }
-    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #6366f1; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; font-weight: 700; margin: 0 auto 16px; }
-    .name { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
-    .role { font-size: 14px; color: #6b7280; margin: 0 0 16px; }
-    .links { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; }
-    .links a { font-size: 13px; color: #6366f1; text-decoration: none; }
-    .btn { padding: 8px 32px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-  \`]
 })
-export class ProfileCardComponent {}
+export class ProfileCardComponent {
+}
 
-@NgModule({
-  declarations: [ProfileCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [ProfileCardComponent],
-})
-export class ProfileCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'profile-card',
-  module: ProfileCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-profile-card');
+    container.appendChild(el);
+    await bootstrapApplication(ProfileCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'stats',
     description: 'Stats card displaying a metric with trend indicator',
     tags: ['card', 'stats', 'dashboard'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-stats-card',
   template: \`
+
     <div class="card">
       <div class="header">
         <span class="label">Total Revenue</span>
@@ -122,46 +110,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
       <div class="value">\$48,290</div>
       <div class="sub">vs \$42,930 last month</div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 260px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .label { font-size: 13px; color: #6b7280; font-weight: 500; }
-    .trend { font-size: 13px; font-weight: 600; }
-    .trend.up { color: #10b981; }
-    .value { font-size: 32px; font-weight: 700; margin-bottom: 4px; }
-    .sub { font-size: 12px; color: #9ca3af; }
-  \`]
 })
-export class StatsCardComponent {}
+export class StatsCardComponent {
+}
 
-@NgModule({
-  declarations: [StatsCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [StatsCardComponent],
-})
-export class StatsCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'stats-card',
-  module: StatsCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-stats-card');
+    container.appendChild(el);
+    await bootstrapApplication(StatsCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'pricing',
     description: 'Pricing card with plan name, features list and CTA button',
     tags: ['card', 'pricing', 'plan'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-pricing-card',
   template: \`
+
     <div class="card">
       <div class="plan">Pro</div>
       <div class="price">\$29<span class="period">/mo</span></div>
@@ -170,48 +152,41 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
       </ul>
       <button class="btn">Get Started</button>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 280px; padding: 32px; border: 2px solid #6366f1; border-radius: 12px; text-align: center; }
-    .plan { font-size: 14px; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-    .price { font-size: 48px; font-weight: 700; margin-bottom: 24px; }
-    .period { font-size: 16px; font-weight: 400; color: #6b7280; }
-    .features { list-style: none; padding: 0; margin: 0 0 24px; text-align: left; }
-    .features li { padding: 8px 0; font-size: 14px; color: #374151; border-bottom: 1px solid #f3f4f6; }
-    .btn { width: 100%; padding: 12px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
-  \`]
 })
 export class PricingCardComponent {
-  features = ['Unlimited projects', '50GB storage', 'Priority support', 'Custom domain', 'Analytics'];
+features = ['Unlimited projects', '50GB storage', 'Priority support', 'Custom domain', 'Analytics'];
 }
 
-@NgModule({
-  declarations: [PricingCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [PricingCardComponent],
-})
-export class PricingCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'pricing-card',
-  module: PricingCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-pricing-card');
+    container.appendChild(el);
+    await bootstrapApplication(PricingCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'media',
     description: 'Media card with image, title, description and action buttons',
     tags: ['card', 'media', 'content'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-media-card',
   template: \`
+
     <div class="card">
       <div class="media"></div>
       <div class="body">
@@ -223,47 +198,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         </div>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 300px; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
-    .media { height: 200px; background: linear-gradient(135deg, #fde68a, #f97316); }
-    .body { padding: 16px; }
-    .title { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
-    .desc { font-size: 14px; color: #6b7280; margin: 0 0 16px; line-height: 1.5; }
-    .actions { display: flex; gap: 8px; }
-    .btn-primary { padding: 8px 20px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-    .btn-outline { padding: 8px 20px; background: transparent; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; }
-  \`]
 })
-export class MediaCardComponent {}
+export class MediaCardComponent {
+}
 
-@NgModule({
-  declarations: [MediaCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [MediaCardComponent],
-})
-export class MediaCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'media-card',
-  module: MediaCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-media-card');
+    container.appendChild(el);
+    await bootstrapApplication(MediaCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'blog',
     description: 'Blog post card with author info, date and read-more link',
     tags: ['card', 'blog', 'article'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-blog-card',
   template: \`
+
     <div class="card">
       <div class="tag">Tutorial</div>
       <h3 class="title">Getting Started with Micro Frontends</h3>
@@ -279,49 +247,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <a href="#read" class="read-more">Read more</a>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 320px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; }
-    .tag { display: inline-block; padding: 4px 10px; background: #ede9fe; color: #6366f1; font-size: 12px; font-weight: 600; border-radius: 4px; margin-bottom: 12px; }
-    .title { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
-    .excerpt { font-size: 14px; color: #6b7280; line-height: 1.5; margin: 0 0 16px; }
-    .footer { display: flex; justify-content: space-between; align-items: center; }
-    .author { display: flex; align-items: center; gap: 10px; }
-    .avatar { width: 32px; height: 32px; border-radius: 50%; background: #10b981; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 700; }
-    .author-name { font-size: 13px; font-weight: 600; }
-    .date { font-size: 11px; color: #9ca3af; }
-    .read-more { font-size: 13px; color: #6366f1; text-decoration: none; font-weight: 600; }
-  \`]
 })
-export class BlogCardComponent {}
+export class BlogCardComponent {
+}
 
-@NgModule({
-  declarations: [BlogCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [BlogCardComponent],
-})
-export class BlogCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'blog-card',
-  module: BlogCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-blog-card');
+    container.appendChild(el);
+    await bootstrapApplication(BlogCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'testimonial',
     description: 'Testimonial card with quote, author name and rating stars',
     tags: ['card', 'testimonial', 'review'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-testimonial-card',
   template: \`
+
     <div class="card">
       <div class="stars">
         <span *ngFor="let s of [1,2,3,4,5]" class="star" [class.filled]="s <= rating">\\u2605</span>
@@ -335,92 +294,80 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         </div>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 300px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; }
-    .stars { margin-bottom: 12px; }
-    .star { font-size: 18px; color: #d1d5db; }
-    .star.filled { color: #f59e0b; }
-    .quote { font-size: 15px; color: #374151; line-height: 1.6; font-style: italic; margin: 0 0 20px; }
-    .author { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 40px; height: 40px; border-radius: 50%; background: #6366f1; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; }
-    .name { font-size: 14px; font-weight: 600; }
-    .role { font-size: 12px; color: #6b7280; }
-  \`]
 })
 export class TestimonialCardComponent {
-  rating = 5;
+rating = 5;
 }
 
-@NgModule({
-  declarations: [TestimonialCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [TestimonialCardComponent],
-})
-export class TestimonialCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'testimonial-card',
-  module: TestimonialCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-testimonial-card');
+    container.appendChild(el);
+    await bootstrapApplication(TestimonialCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'feature',
     description: 'Feature card with icon, title and description for landing pages',
     tags: ['card', 'feature', 'landing'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-feature-card',
   template: \`
+
     <div class="card">
       <div class="icon-box">\\u26A1</div>
       <h3 class="title">Lightning Fast</h3>
       <p class="desc">Built for performance with lazy loading and tree-shaking out of the box.</p>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 260px; padding: 28px; border: 1px solid #e5e7eb; border-radius: 12px; text-align: center; }
-    .icon-box { width: 48px; height: 48px; border-radius: 12px; background: #ede9fe; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px; }
-    .title { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
-    .desc { font-size: 14px; color: #6b7280; line-height: 1.5; margin: 0; }
-  \`]
 })
-export class FeatureCardComponent {}
+export class FeatureCardComponent {
+}
 
-@NgModule({
-  declarations: [FeatureCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [FeatureCardComponent],
-})
-export class FeatureCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'feature-card',
-  module: FeatureCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-feature-card');
+    container.appendChild(el);
+    await bootstrapApplication(FeatureCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'notification',
     description: 'Notification card with type indicator and dismiss button',
     tags: ['card', 'notification', 'alert'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-notification-card',
   template: \`
+
     <div class="card" *ngIf="visible">
       <div class="icon">\\u{1F514}</div>
       <div class="content">
@@ -430,48 +377,41 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
       </div>
       <button class="dismiss" (click)="visible=false">\\u2715</button>
     </div>
+  
   \`,
-  styles: [\`
-    .card { display: flex; gap: 12px; width: 360px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px; align-items: flex-start; }
-    .icon { font-size: 24px; flex-shrink: 0; }
-    .content { flex: 1; }
-    .title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .message { font-size: 13px; color: #6b7280; line-height: 1.4; }
-    .time { font-size: 11px; color: #9ca3af; margin-top: 8px; }
-    .dismiss { background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 14px; flex-shrink: 0; }
-  \`]
 })
 export class NotificationCardComponent {
-  visible = true;
+visible = true;
 }
 
-@NgModule({
-  declarations: [NotificationCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [NotificationCardComponent],
-})
-export class NotificationCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'notification-card',
-  module: NotificationCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-notification-card');
+    container.appendChild(el);
+    await bootstrapApplication(NotificationCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'team-member',
     description: 'Team member card with photo placeholder, name and department',
     tags: ['card', 'team', 'member'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-team-card',
   template: \`
+
     <div class="card">
       <div class="photo"></div>
       <h3 class="name">Sarah Chen</h3>
@@ -482,46 +422,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <a href="#linkedin">LinkedIn</a>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 240px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; text-align: center; }
-    .photo { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #a78bfa, #6366f1); margin: 0 auto 16px; }
-    .name { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
-    .dept { font-size: 13px; color: #6366f1; font-weight: 600; margin: 0 0 12px; }
-    .bio { font-size: 13px; color: #6b7280; line-height: 1.5; margin: 0 0 16px; }
-    .links { display: flex; justify-content: center; gap: 16px; }
-    .links a { font-size: 13px; color: #6366f1; text-decoration: none; }
-  \`]
 })
-export class TeamCardComponent {}
+export class TeamCardComponent {
+}
 
-@NgModule({
-  declarations: [TeamCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [TeamCardComponent],
-})
-export class TeamCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'team-member-card',
-  module: TeamCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-team-card');
+    container.appendChild(el);
+    await bootstrapApplication(TeamCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'event',
     description: 'Event card with date badge, title, location and RSVP button',
     tags: ['card', 'event', 'calendar'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-event-card',
   template: \`
+
     <div class="card">
       <div class="date-badge">
         <div class="month">MAR</div>
@@ -534,46 +468,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <button class="btn">RSVP</button>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { display: flex; gap: 16px; width: 340px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; }
-    .date-badge { width: 56px; height: 64px; border-radius: 8px; background: #6366f1; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
-    .month { font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .day { font-size: 24px; font-weight: 700; }
-    .title { font-size: 16px; font-weight: 700; margin: 0 0 8px; }
-    .location, .time { font-size: 13px; color: #6b7280; margin: 0 0 4px; }
-    .btn { margin-top: 8px; padding: 6px 20px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
-  \`]
 })
-export class EventCardComponent {}
+export class EventCardComponent {
+}
 
-@NgModule({
-  declarations: [EventCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [EventCardComponent],
-})
-export class EventCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'event-card',
-  module: EventCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-event-card');
+    container.appendChild(el);
+    await bootstrapApplication(EventCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'job-listing',
     description: 'Job listing card with position, company, tags and apply button',
     tags: ['card', 'job', 'listing'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-job-card',
   template: \`
+
     <div class="card">
       <div class="header">
         <div class="company-logo">TC</div>
@@ -590,51 +518,41 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <button class="btn">Apply Now</button>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 340px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; }
-    .header { display: flex; gap: 12px; margin-bottom: 12px; }
-    .company-logo { width: 44px; height: 44px; border-radius: 10px; background: #10b981; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; flex-shrink: 0; }
-    .title { font-size: 16px; font-weight: 700; margin: 0 0 2px; }
-    .company { font-size: 13px; color: #6b7280; margin: 0; }
-    .tags { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
-    .tag { padding: 4px 10px; background: #f3f4f6; border-radius: 4px; font-size: 12px; color: #374151; }
-    .footer { display: flex; justify-content: space-between; align-items: center; }
-    .salary { font-size: 14px; font-weight: 700; color: #6366f1; }
-    .btn { padding: 8px 20px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
-  \`]
 })
 export class JobCardComponent {
-  tags = ['Angular', 'TypeScript', 'Remote', 'Full-time'];
+tags = ['Angular', 'TypeScript', 'Remote', 'Full-time'];
 }
 
-@NgModule({
-  declarations: [JobCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [JobCardComponent],
-})
-export class JobCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'job-listing-card',
-  module: JobCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-job-card');
+    container.appendChild(el);
+    await bootstrapApplication(JobCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'recipe',
     description: 'Recipe card with prep time, servings and ingredient preview',
     tags: ['card', 'recipe', 'food'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-recipe-card',
   template: \`
+
     <div class="card">
       <div class="image"></div>
       <div class="body">
@@ -648,46 +566,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <button class="btn">View Recipe</button>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 280px; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
-    .image { height: 160px; background: linear-gradient(135deg, #fde68a, #f97316); }
-    .body { padding: 16px; }
-    .title { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
-    .meta { display: flex; gap: 12px; font-size: 12px; color: #6b7280; margin-bottom: 8px; }
-    .ingredients { font-size: 13px; color: #6b7280; line-height: 1.4; margin: 0 0 12px; }
-    .btn { width: 100%; padding: 8px; background: #6366f1; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
-  \`]
 })
-export class RecipeCardComponent {}
+export class RecipeCardComponent {
+}
 
-@NgModule({
-  declarations: [RecipeCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [RecipeCardComponent],
-})
-export class RecipeCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'recipe-card',
-  module: RecipeCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-recipe-card');
+    container.appendChild(el);
+    await bootstrapApplication(RecipeCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'news',
     description: 'News card with category label, headline and source attribution',
     tags: ['card', 'news', 'article'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-news-card',
   template: \`
+
     <div class="card">
       <div class="category">Technology</div>
       <h3 class="headline">AI-Powered Development Tools See Record Adoption in 2024</h3>
@@ -697,45 +609,40 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
         <span class="date">Mar 22, 2024</span>
       </div>
     </div>
+  
   \`,
-  styles: [\`
-    .card { width: 320px; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; }
-    .category { display: inline-block; padding: 4px 10px; background: #dbeafe; color: #2563eb; font-size: 12px; font-weight: 600; border-radius: 4px; margin-bottom: 12px; }
-    .headline { font-size: 18px; font-weight: 700; line-height: 1.3; margin: 0 0 8px; }
-    .summary { font-size: 14px; color: #6b7280; line-height: 1.5; margin: 0 0 16px; }
-    .footer { display: flex; justify-content: space-between; font-size: 12px; color: #9ca3af; }
-    .source { font-weight: 600; }
-  \`]
 })
-export class NewsCardComponent {}
+export class NewsCardComponent {
+}
 
-@NgModule({
-  declarations: [NewsCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [NewsCardComponent],
-})
-export class NewsCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'news-card',
-  module: NewsCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-news-card');
+    container.appendChild(el);
+    await bootstrapApplication(NewsCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
   {
     variant: 'announcement',
     description: 'Announcement card with icon, message and action link',
     tags: ['card', 'announcement', 'banner'],
-    code: `import { Component } from '@angular/core';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { createAngularMicroApp } from '@tuvix.js/angular';
+    code: `import { defineMicroApp } from 'tuvix.js';
+import { Component } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 
 @Component({
+  standalone: true,
   selector: 'app-announcement-card',
   template: \`
+
     <div class="card" *ngIf="visible">
       <div class="icon">\\u{1F389}</div>
       <div class="content">
@@ -745,34 +652,27 @@ import { createAngularMicroApp } from '@tuvix.js/angular';
       </div>
       <button class="dismiss" (click)="visible=false">\\u2715</button>
     </div>
+  
   \`,
-  styles: [\`
-    .card { display: flex; gap: 16px; padding: 20px; background: linear-gradient(135deg, #ede9fe, #e0e7ff); border-radius: 12px; align-items: flex-start; }
-    .icon { font-size: 32px; flex-shrink: 0; }
-    .content { flex: 1; }
-    .title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
-    .message { font-size: 14px; color: #4b5563; line-height: 1.5; margin: 0 0 8px; }
-    .link { font-size: 14px; color: #6366f1; text-decoration: none; font-weight: 600; }
-    .dismiss { background: none; border: none; cursor: pointer; color: #6b7280; font-size: 16px; flex-shrink: 0; }
-  \`]
 })
 export class AnnouncementCardComponent {
-  visible = true;
+visible = true;
 }
 
-@NgModule({
-  declarations: [AnnouncementCardComponent],
-  imports: [BrowserModule],
-  bootstrap: [AnnouncementCardComponent],
-})
-export class AnnouncementCardModule {}
-
-export default createAngularMicroApp({
+const app = defineMicroApp({
   name: 'announcement-card',
-  module: AnnouncementCardModule,
-  platform: platformBrowserDynamic,
-});`,
-    dependencies: ['@tuvix.js/angular', '@tuvix.js/core', '@angular/core', '@angular/platform-browser', '@angular/platform-browser-dynamic'],
+  async mount({ container }) {
+    const el = document.createElement('app-announcement-card');
+    container.appendChild(el);
+    await bootstrapApplication(AnnouncementCardComponent);
+  },
+  async unmount({ container }) {
+    container.innerHTML = '';
+  },
+});
+
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
+    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
   },
 ];
 

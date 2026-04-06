@@ -1,8 +1,17 @@
 <script lang="ts">
 // Named export for testing — must be outside <script setup>
-export function buildPlaygroundUrl(code: string, framework: string): string {
-  const encoded = btoa(code);
-  return `/playground?framework=${framework}&code=${encoded}`;
+function utf8ToB64(str: string): string {
+  return btoa(
+    encodeURIComponent(str).replace(/%([0-9A-F]{2})/gi, (_, hex) =>
+      String.fromCharCode(parseInt(hex, 16)),
+    ),
+  );
+}
+
+export function buildPlaygroundUrl(code: string, framework: string, pairedCss?: string): string {
+  const fw = framework && framework !== 'null' ? `&framework=${framework}` : '';
+  const css = pairedCss ? `&css=${encodeURIComponent(utf8ToB64(pairedCss))}` : '';
+  return `/playground?code=${encodeURIComponent(utf8ToB64(code))}${fw}${css}`;
 }
 </script>
 
@@ -10,11 +19,16 @@ export function buildPlaygroundUrl(code: string, framework: string): string {
 import { ref, computed } from 'vue';
 import hljs from 'highlight.js';
 
+const JS_LANGS = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript']);
+
 const props = defineProps<{
   code: string;
   language: string;
   framework: string;
+  pairedCss?: string;
 }>();
+
+const showPlayground = computed(() => JS_LANGS.has(props.language));
 
 const copied = ref(false);
 
@@ -51,7 +65,7 @@ function copyCode() {
 
 function openInPlayground() {
   if (typeof window !== 'undefined') {
-    window.location.href = buildPlaygroundUrl(props.code, props.framework);
+    window.location.href = buildPlaygroundUrl(props.code, props.framework, props.pairedCss);
   }
 }
 </script>
@@ -64,7 +78,7 @@ function openInPlayground() {
         <button :class="$style.btn" @click="copyCode">
           {{ copied ? '✓ copied' : 'copy' }}
         </button>
-        <button :class="[$style.btn, $style.btnAccent]" @click="openInPlayground">
+        <button v-if="showPlayground" :class="[$style.btn, $style.btnAccent]" @click="openInPlayground">
           playground →
         </button>
       </div>

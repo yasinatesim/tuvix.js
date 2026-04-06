@@ -32,7 +32,8 @@ function CollapsibleSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'collapsible-sidebar', App: CollapsibleSidebar });`,
+const app = createReactMicroApp({ name: 'collapsible-sidebar', App: CollapsibleSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -65,7 +66,8 @@ function IconSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'icon-sidebar', App: IconSidebar });`,
+const app = createReactMicroApp({ name: 'icon-sidebar', App: IconSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -101,7 +103,8 @@ function NestedSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'nested-sidebar', App: NestedSidebar });`,
+const app = createReactMicroApp({ name: 'nested-sidebar', App: NestedSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -137,7 +140,8 @@ function MiniSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'mini-sidebar', App: MiniSidebar });`,
+const app = createReactMicroApp({ name: 'mini-sidebar', App: MiniSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -168,7 +172,8 @@ function DarkSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'dark-sidebar', App: DarkSidebar });`,
+const app = createReactMicroApp({ name: 'dark-sidebar', App: DarkSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -202,7 +207,8 @@ function SearchSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'search-sidebar', App: SearchSidebar });`,
+const app = createReactMicroApp({ name: 'search-sidebar', App: SearchSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -236,7 +242,8 @@ function ProfileSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'profile-sidebar', App: ProfileSidebar });`,
+const app = createReactMicroApp({ name: 'profile-sidebar', App: ProfileSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -272,7 +279,8 @@ function BadgeSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'badge-sidebar', App: BadgeSidebar });`,
+const app = createReactMicroApp({ name: 'badge-sidebar', App: BadgeSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -308,7 +316,8 @@ function ResponsiveSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'responsive-sidebar', App: ResponsiveSidebar });`,
+const app = createReactMicroApp({ name: 'responsive-sidebar', App: ResponsiveSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -356,7 +365,8 @@ function MultiLevelSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'multi-level-sidebar', App: MultiLevelSidebar });`,
+const app = createReactMicroApp({ name: 'multi-level-sidebar', App: MultiLevelSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -388,7 +398,8 @@ function FooterSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'footer-sidebar', App: FooterSidebar });`,
+const app = createReactMicroApp({ name: 'footer-sidebar', App: FooterSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -419,7 +430,8 @@ function StickySidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'sticky-sidebar', App: StickySidebar });`,
+const app = createReactMicroApp({ name: 'sticky-sidebar', App: StickySidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -450,7 +462,8 @@ function GroupedSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'grouped-sidebar', App: GroupedSidebar });`,
+const app = createReactMicroApp({ name: 'grouped-sidebar', App: GroupedSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -487,7 +500,8 @@ function OverlaySidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'overlay-sidebar', App: OverlaySidebar });`,
+const app = createReactMicroApp({ name: 'overlay-sidebar', App: OverlaySidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -523,7 +537,8 @@ function ToggleSidebar() {
   );
 }
 
-export default createReactMicroApp({ name: 'toggle-sidebar', App: ToggleSidebar });`,
+const app = createReactMicroApp({ name: 'toggle-sidebar', App: ToggleSidebar });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

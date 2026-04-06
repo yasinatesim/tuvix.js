@@ -45,13 +45,7 @@ const templates: ComponentTemplate[] = [
   .field input { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; outline: none; font-size: 14px; }
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import LoginForm from './LoginForm.svelte';
-export default createSvelteMicroApp({ name: 'login-form', App: LoginForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -112,13 +106,7 @@ export default createSvelteMicroApp({ name: 'login-form', App: LoginForm });
   .field input { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; outline: none; font-size: 14px; }
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SignupForm from './SignupForm.svelte';
-export default createSvelteMicroApp({ name: 'signup-form', App: SignupForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -167,13 +155,7 @@ export default createSvelteMicroApp({ name: 'signup-form', App: SignupForm });
   .field input, .field textarea { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; outline: none; font-size: 14px; font-family: inherit; }
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ContactForm from './ContactForm.svelte';
-export default createSvelteMicroApp({ name: 'contact-form', App: ContactForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -220,13 +202,7 @@ export default createSvelteMicroApp({ name: 'contact-form', App: ContactForm });
   .results { margin-top: 16px; list-style: none; padding: 0; }
   .results li { padding: 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #374151; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SearchForm from './SearchForm.svelte';
-export default createSvelteMicroApp({ name: 'search-form', App: SearchForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -300,13 +276,7 @@ export default createSvelteMicroApp({ name: 'search-form', App: SearchForm });
   .back-btn { padding: 8px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
   .next-btn { padding: 8px 20px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import MultiStepForm from './MultiStepForm.svelte';
-export default createSvelteMicroApp({ name: 'multi-step-form', App: MultiStepForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -363,13 +333,7 @@ export default createSvelteMicroApp({ name: 'multi-step-form', App: MultiStepFor
   .save-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
   .saved-msg { margin-top: 12px; text-align: center; color: #16a34a; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SettingsForm from './SettingsForm.svelte';
-export default createSvelteMicroApp({ name: 'settings-form', App: SettingsForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -424,13 +388,7 @@ export default createSvelteMicroApp({ name: 'settings-form', App: SettingsForm }
   .field input { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; outline: none; }
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PasswordResetForm from './PasswordResetForm.svelte';
-export default createSvelteMicroApp({ name: 'password-reset-form', App: PasswordResetForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -481,13 +439,7 @@ export default createSvelteMicroApp({ name: 'password-reset-form', App: Password
   .half { flex: 1; }
   .submit-btn { width: 100%; padding: 12px; border: none; border-radius: 6px; background-color: #16a34a; color: #fff; font-weight: 600; cursor: pointer; font-size: 16px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import CheckoutForm from './CheckoutForm.svelte';
-export default createSvelteMicroApp({ name: 'checkout-form', App: CheckoutForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -542,13 +494,7 @@ export default createSvelteMicroApp({ name: 'checkout-form', App: CheckoutForm }
   .save-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
   .saved-msg { margin-top: 12px; text-align: center; color: #16a34a; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ProfileForm from './ProfileForm.svelte';
-export default createSvelteMicroApp({ name: 'profile-form', App: ProfileForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -610,13 +556,7 @@ export default createSvelteMicroApp({ name: 'profile-form', App: ProfileForm });
   .reset-btn { flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
   .apply-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FilterForm from './FilterForm.svelte';
-export default createSvelteMicroApp({ name: 'filter-form', App: FilterForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -659,13 +599,7 @@ export default createSvelteMicroApp({ name: 'filter-form', App: FilterForm });
   .success h3 { margin: 0 0 8px; color: #16a34a; }
   .success p { color: #6b7280; margin: 0; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import NewsletterForm from './NewsletterForm.svelte';
-export default createSvelteMicroApp({ name: 'newsletter-form', App: NewsletterForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -725,13 +659,7 @@ export default createSvelteMicroApp({ name: 'newsletter-form', App: NewsletterFo
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
   .success { text-align: center; padding: 24px 0; color: #16a34a; font-size: 18px; font-weight: 600; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SurveyForm from './SurveyForm.svelte';
-export default createSvelteMicroApp({ name: 'survey-form', App: SurveyForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -791,13 +719,7 @@ export default createSvelteMicroApp({ name: 'survey-form', App: SurveyForm });
   .half { flex: 1; }
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AddressForm from './AddressForm.svelte';
-export default createSvelteMicroApp({ name: 'address-form', App: AddressForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -867,13 +789,7 @@ export default createSvelteMicroApp({ name: 'address-form', App: AddressForm });
   .half { flex: 1; }
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #16a34a; color: #fff; font-weight: 600; cursor: pointer; font-size: 16px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PaymentForm from './PaymentForm.svelte';
-export default createSvelteMicroApp({ name: 'payment-form', App: PaymentForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -941,13 +857,7 @@ export default createSvelteMicroApp({ name: 'payment-form', App: PaymentForm });
   .submit-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background-color: #6366f1; color: #fff; font-weight: 600; cursor: pointer; }
   .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FileUploadForm from './FileUploadForm.svelte';
-export default createSvelteMicroApp({ name: 'file-upload-form', App: FileUploadForm });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

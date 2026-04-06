@@ -53,13 +53,7 @@ const templates: ComponentTemplate[] = [
   .page-title { font-size: 18px; font-weight: 600; }
   .content { flex: 1; padding: 24px; background-color: #f9fafb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DashboardLayout from './DashboardLayout.svelte';
-export default createSvelteMicroApp({ name: 'dashboard-layout', App: DashboardLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -120,13 +114,7 @@ export default createSvelteMicroApp({ name: 'dashboard-layout', App: DashboardLa
   .widget h3 { margin: 0 0 8px; font-size: 16px; }
   .widget a { display: block; padding: 4px 0; text-decoration: none; color: #6366f1; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BlogLayout from './BlogLayout.svelte';
-export default createSvelteMicroApp({ name: 'blog-layout', App: BlogLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -175,13 +163,7 @@ export default createSvelteMicroApp({ name: 'blog-layout', App: BlogLayout });
   .project-card h3 { margin: 12px 16px 4px; font-size: 15px; }
   .category { padding: 0 16px 12px; display: block; font-size: 13px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import PortfolioLayout from './PortfolioLayout.svelte';
-export default createSvelteMicroApp({ name: 'portfolio-layout', App: PortfolioLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -232,13 +214,7 @@ export default createSvelteMicroApp({ name: 'portfolio-layout', App: PortfolioLa
   .feature h3 { margin: 12px 0 8px; }
   .feature p { margin: 0; font-size: 14px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import LandingLayout from './LandingLayout.svelte';
-export default createSvelteMicroApp({ name: 'landing-layout', App: LandingLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -288,13 +264,7 @@ export default createSvelteMicroApp({ name: 'landing-layout', App: LandingLayout
   .search-input { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; width: 300px; }
   .table-area { padding: 24px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AdminLayout from './AdminLayout.svelte';
-export default createSvelteMicroApp({ name: 'admin-layout', App: AdminLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -354,13 +324,7 @@ export default createSvelteMicroApp({ name: 'admin-layout', App: AdminLayout });
   .pname { font-weight: 600; font-size: 14px; }
   .pprice { color: #16a34a; font-weight: 700; margin-top: 4px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import EcommerceLayout from './EcommerceLayout.svelte';
-export default createSvelteMicroApp({ name: 'e-commerce-layout', App: EcommerceLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -401,13 +365,7 @@ export default createSvelteMicroApp({ name: 'e-commerce-layout', App: EcommerceL
   .content h1 { margin: 0 0 16px; font-size: 32px; }
   .content p { font-size: 16px; color: #374151; line-height: 1.7; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import DocsLayout from './DocsLayout.svelte';
-export default createSvelteMicroApp({ name: 'docs-layout', App: DocsLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -467,13 +425,7 @@ export default createSvelteMicroApp({ name: 'docs-layout', App: DocsLayout });
   .stat-label { font-size: 13px; color: #6b7280; margin-bottom: 4px; }
   .stat-value { font-size: 24px; font-weight: 700; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SaasLayout from './SaasLayout.svelte';
-export default createSvelteMicroApp({ name: 'saas-layout', App: SaasLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -506,13 +458,7 @@ export default createSvelteMicroApp({ name: 'saas-layout', App: SaasLayout });
   .right { background-color: #fafafa; }
   .divider { width: 1px; background-color: #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import SplitLayout from './SplitLayout.svelte';
-export default createSvelteMicroApp({ name: 'split-layout', App: SplitLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -556,13 +502,7 @@ export default createSvelteMicroApp({ name: 'split-layout', App: SplitLayout });
   .widget h4 { margin: 0 0 8px; font-size: 14px; }
   .widget p { margin: 0; font-size: 13px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ThreeColumnLayout from './ThreeColumnLayout.svelte';
-export default createSvelteMicroApp({ name: 'three-column-layout', App: ThreeColumnLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -596,13 +536,7 @@ export default createSvelteMicroApp({ name: 'three-column-layout', App: ThreeCol
   .content h1 { margin: 0 0 16px; }
   .content p { color: #6b7280; line-height: 1.6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import TwoColumnLayout from './TwoColumnLayout.svelte';
-export default createSvelteMicroApp({ name: 'two-column-layout', App: TwoColumnLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -640,13 +574,7 @@ export default createSvelteMicroApp({ name: 'two-column-layout', App: TwoColumnL
   .section p { color: #6b7280; font-size: 16px; line-height: 1.6; }
   .footer { padding: 24px 32px; text-align: center; color: #9ca3af; font-size: 14px; border-top: 1px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FullWidthLayout from './FullWidthLayout.svelte';
-export default createSvelteMicroApp({ name: 'full-width-layout', App: FullWidthLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -680,13 +608,7 @@ export default createSvelteMicroApp({ name: 'full-width-layout', App: FullWidthL
   .content { flex: 1; overflow-y: auto; padding: 24px; }
   .item { padding: 16px; margin-bottom: 8px; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StickyHeaderLayout from './StickyHeaderLayout.svelte';
-export default createSvelteMicroApp({ name: 'sticky-header-layout', App: StickyHeaderLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -726,13 +648,7 @@ export default createSvelteMicroApp({ name: 'sticky-header-layout', App: StickyH
   .block h3 { margin: 0 0 8px; }
   .block p { color: #6b7280; line-height: 1.6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StickySidebarLayout from './StickySidebarLayout.svelte';
-export default createSvelteMicroApp({ name: 'sticky-sidebar-layout', App: StickySidebarLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -774,13 +690,7 @@ export default createSvelteMicroApp({ name: 'sticky-sidebar-layout', App: Sticky
   .card-body h3 { margin: 0 0 6px; font-size: 16px; }
   .card-body p { margin: 0; font-size: 14px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import GridLayout from './GridLayout.svelte';
-export default createSvelteMicroApp({ name: 'grid-layout', App: GridLayout });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

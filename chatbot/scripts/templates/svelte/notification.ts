@@ -40,13 +40,7 @@ const templates: ComponentTemplate[] = [
   .toast-msg { flex: 1; font-size: 14px; color: #374151; }
   .close-btn { background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 14px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Toast from './Toast.svelte';
-export default createSvelteMicroApp({ name: 'toast-notification', App: Toast });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -84,13 +78,7 @@ export default createSvelteMicroApp({ name: 'toast-notification', App: Toast });
   .alert.error { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
   .dismiss-btn { background: none; border: none; color: inherit; cursor: pointer; font-size: 14px; opacity: 0.6; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import AlertNotification from './AlertNotification.svelte';
-export default createSvelteMicroApp({ name: 'alert-notification', App: AlertNotification });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -126,13 +114,7 @@ export default createSvelteMicroApp({ name: 'alert-notification', App: AlertNoti
   .controls { display: flex; gap: 8px; }
   .controls button { padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BadgeNotification from './BadgeNotification.svelte';
-export default createSvelteMicroApp({ name: 'badge-notification', App: BadgeNotification });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -158,13 +140,7 @@ export default createSvelteMicroApp({ name: 'badge-notification', App: BadgeNoti
   .message { text-align: center; flex: 1; }
   .dismiss-btn { position: absolute; right: 16px; background: none; border: none; color: #92400e; cursor: pointer; font-size: 16px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import BannerNotification from './BannerNotification.svelte';
-export default createSvelteMicroApp({ name: 'banner-notification', App: BannerNotification });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -201,13 +177,7 @@ export default createSvelteMicroApp({ name: 'banner-notification', App: BannerNo
   .snackbar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; padding: 12px 20px; background-color: #1f2937; color: #fff; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 100; }
   .action-btn { background: none; border: none; color: #818cf8; font-weight: 600; cursor: pointer; font-size: 14px; text-transform: uppercase; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Snackbar from './Snackbar.svelte';
-export default createSvelteMicroApp({ name: 'snackbar', App: Snackbar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -258,13 +228,7 @@ export default createSvelteMicroApp({ name: 'snackbar', App: Snackbar });
   .progress-fill { height: 100%; background-color: #6366f1; border-radius: 4px; transition: width 0.2s; }
   .complete-msg { margin-top: 8px; font-size: 14px; color: #16a34a; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ProgressBar from './ProgressBar.svelte';
-export default createSvelteMicroApp({ name: 'progress-bar', App: ProgressBar });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -309,13 +273,7 @@ export default createSvelteMicroApp({ name: 'progress-bar', App: ProgressBar });
   h3 { margin: 0 0 8px; font-size: 16px; }
   p { margin: 0; font-size: 14px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Skeleton from './Skeleton.svelte';
-export default createSvelteMicroApp({ name: 'skeleton-loader', App: Skeleton });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -367,13 +325,7 @@ export default createSvelteMicroApp({ name: 'skeleton-loader', App: Skeleton });
   .actions-row { display: flex; gap: 8px; margin-top: 12px; }
   .clear-btn { padding: 8px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import EmptyState from './EmptyState.svelte';
-export default createSvelteMicroApp({ name: 'empty-state', App: EmptyState });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -422,13 +374,7 @@ export default createSvelteMicroApp({ name: 'empty-state', App: EmptyState });
   .content p { margin: 0 0 16px; font-size: 14px; color: #374151; }
   .break-btn { padding: 8px 20px; border: 1px solid #fca5a5; border-radius: 6px; background: #fff; color: #dc2626; cursor: pointer; font-weight: 500; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import ErrorBoundary from './ErrorBoundary.svelte';
-export default createSvelteMicroApp({ name: 'error-boundary', App: ErrorBoundary });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -463,13 +409,7 @@ export default createSvelteMicroApp({ name: 'error-boundary', App: ErrorBoundary
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner-text { font-size: 14px; color: #6b7280; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Spinner from './Spinner.svelte';
-export default createSvelteMicroApp({ name: 'spinner', App: Spinner });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -530,13 +470,7 @@ export default createSvelteMicroApp({ name: 'spinner', App: Spinner });
   .start-btn:disabled { opacity: 0.4; }
   .reset-btn { padding: 8px 20px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Countdown from './Countdown.svelte';
-export default createSvelteMicroApp({ name: 'countdown', App: Countdown });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -587,13 +521,7 @@ export default createSvelteMicroApp({ name: 'countdown', App: Countdown });
   .chip.neutral .dot { background-color: #9ca3af; }
   .chip.neutral.active { border-color: #9ca3af; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import StatusChip from './StatusChip.svelte';
-export default createSvelteMicroApp({ name: 'status-chip', App: StatusChip });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -640,13 +568,7 @@ export default createSvelteMicroApp({ name: 'status-chip', App: StatusChip });
   .inline-alert.error { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
   .inline-alert.success { background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import InlineAlert from './InlineAlert.svelte';
-export default createSvelteMicroApp({ name: 'inline-alert', App: InlineAlert });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -690,13 +612,7 @@ export default createSvelteMicroApp({ name: 'inline-alert', App: InlineAlert });
   .float-notif.warning { background-color: #fffbeb; color: #d97706; }
   .dismiss { background: none; border: none; color: inherit; cursor: pointer; font-size: 14px; opacity: 0.6; margin-left: auto; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import FloatingNotification from './FloatingNotification.svelte';
-export default createSvelteMicroApp({ name: 'floating-notification', App: FloatingNotification });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
   {
@@ -736,13 +652,7 @@ export default createSvelteMicroApp({ name: 'floating-notification', App: Floati
   .learn-btn { padding: 8px 16px; background-color: #6366f1; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 600; text-align: center; }
   .dismiss-btn { padding: 6px 16px; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; }
 </style>
-
-<!--
-// main.ts — tuvix.js entry
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Announcement from './Announcement.svelte';
-export default createSvelteMicroApp({ name: 'announcement', App: Announcement });
--->`,
+`,
     dependencies: ['@tuvix.js/svelte', '@tuvix.js/core'],
   },
 ];

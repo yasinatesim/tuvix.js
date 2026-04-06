@@ -19,7 +19,8 @@ function ToastNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'toast-notification', App: ToastNotification });`,
+const app = createReactMicroApp({ name: 'toast-notification', App: ToastNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -47,7 +48,8 @@ function AlertNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'alert-notification', App: AlertNotification });`,
+const app = createReactMicroApp({ name: 'alert-notification', App: AlertNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -70,7 +72,8 @@ function BadgeNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'badge-notification', App: BadgeNotification });`,
+const app = createReactMicroApp({ name: 'badge-notification', App: BadgeNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -90,7 +93,8 @@ function BannerNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'banner-notification', App: BannerNotification });`,
+const app = createReactMicroApp({ name: 'banner-notification', App: BannerNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -117,7 +121,8 @@ function SnackbarNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'snackbar-notification', App: SnackbarNotification });`,
+const app = createReactMicroApp({ name: 'snackbar-notification', App: SnackbarNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -146,7 +151,8 @@ function ProgressBarNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'progress-notification', App: ProgressBarNotification });`,
+const app = createReactMicroApp({ name: 'progress-notification', App: ProgressBarNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -173,7 +179,8 @@ function SkeletonNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'skeleton-notification', App: SkeletonNotification });`,
+const app = createReactMicroApp({ name: 'skeleton-notification', App: SkeletonNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -193,7 +200,8 @@ function EmptyStateNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'empty-state-notification', App: EmptyStateNotification });`,
+const app = createReactMicroApp({ name: 'empty-state-notification', App: EmptyStateNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -218,7 +226,8 @@ function ErrorBoundaryNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'error-boundary-notification', App: ErrorBoundaryNotification });`,
+const app = createReactMicroApp({ name: 'error-boundary-notification', App: ErrorBoundaryNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -237,7 +246,8 @@ function SpinnerNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'spinner-notification', App: SpinnerNotification });`,
+const app = createReactMicroApp({ name: 'spinner-notification', App: SpinnerNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -268,7 +278,8 @@ function CountdownNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'countdown-notification', App: CountdownNotification });`,
+const app = createReactMicroApp({ name: 'countdown-notification', App: CountdownNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -296,7 +307,8 @@ function StatusChipNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'status-chip-notification', App: StatusChipNotification });`,
+const app = createReactMicroApp({ name: 'status-chip-notification', App: StatusChipNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -320,7 +332,8 @@ function InlineAlertNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'inline-alert-notification', App: InlineAlertNotification });`,
+const app = createReactMicroApp({ name: 'inline-alert-notification', App: InlineAlertNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -351,7 +364,8 @@ function FloatingNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'floating-notification', App: FloatingNotification });`,
+const app = createReactMicroApp({ name: 'floating-notification', App: FloatingNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -379,7 +393,8 @@ function AnnouncementNotification() {
     </div>
   );
 }
-export default createReactMicroApp({ name: 'announcement-notification', App: AnnouncementNotification });`,
+const app = createReactMicroApp({ name: 'announcement-notification', App: AnnouncementNotification });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

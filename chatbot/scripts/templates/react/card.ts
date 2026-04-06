@@ -26,7 +26,8 @@ function ProductCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'product-card', App: ProductCard });`,
+const app = createReactMicroApp({ name: 'product-card', App: ProductCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -59,7 +60,8 @@ function ProfileCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'profile-card', App: ProfileCard });`,
+const app = createReactMicroApp({ name: 'profile-card', App: ProfileCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -89,7 +91,8 @@ function StatsCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'stats-card', App: StatsCard });`,
+const app = createReactMicroApp({ name: 'stats-card', App: StatsCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -122,7 +125,8 @@ function PricingCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'pricing-card', App: PricingCard });`,
+const app = createReactMicroApp({ name: 'pricing-card', App: PricingCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -153,7 +157,8 @@ function MediaCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'media-card', App: MediaCard });`,
+const app = createReactMicroApp({ name: 'media-card', App: MediaCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -182,7 +187,8 @@ function BlogCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'blog-card', App: BlogCard });`,
+const app = createReactMicroApp({ name: 'blog-card', App: BlogCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -211,7 +217,8 @@ function TestimonialCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'testimonial-card', App: TestimonialCard });`,
+const app = createReactMicroApp({ name: 'testimonial-card', App: TestimonialCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -241,7 +248,8 @@ function FeatureCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'feature-card', App: FeatureCard });`,
+const app = createReactMicroApp({ name: 'feature-card', App: FeatureCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -270,7 +278,8 @@ function NotificationCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'notification-card', App: NotificationCard });`,
+const app = createReactMicroApp({ name: 'notification-card', App: NotificationCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -302,7 +311,8 @@ function TeamMemberCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'team-member-card', App: TeamMemberCard });`,
+const app = createReactMicroApp({ name: 'team-member-card', App: TeamMemberCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -336,7 +346,8 @@ function EventCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'event-card', App: EventCard });`,
+const app = createReactMicroApp({ name: 'event-card', App: EventCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -372,7 +383,8 @@ function JobListingCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'job-listing-card', App: JobListingCard });`,
+const app = createReactMicroApp({ name: 'job-listing-card', App: JobListingCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -406,7 +418,8 @@ function RecipeCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'recipe-card', App: RecipeCard });`,
+const app = createReactMicroApp({ name: 'recipe-card', App: RecipeCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -436,7 +449,8 @@ function NewsCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'news-card', App: NewsCard });`,
+const app = createReactMicroApp({ name: 'news-card', App: NewsCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -465,7 +479,8 @@ function AnnouncementCard() {
   );
 }
 
-export default createReactMicroApp({ name: 'announcement-card', App: AnnouncementCard });`,
+const app = createReactMicroApp({ name: 'announcement-card', App: AnnouncementCard });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];

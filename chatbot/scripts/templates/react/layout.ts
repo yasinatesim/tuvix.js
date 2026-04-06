@@ -37,7 +37,8 @@ function DashboardLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'dashboard-layout', App: DashboardLayout });`,
+const app = createReactMicroApp({ name: 'dashboard-layout', App: DashboardLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -74,7 +75,8 @@ function BlogLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'blog-layout', App: BlogLayout });`,
+const app = createReactMicroApp({ name: 'blog-layout', App: BlogLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -111,7 +113,8 @@ function PortfolioLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'portfolio-layout', App: PortfolioLayout });`,
+const app = createReactMicroApp({ name: 'portfolio-layout', App: PortfolioLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -146,7 +149,8 @@ function LandingLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'landing-layout', App: LandingLayout });`,
+const app = createReactMicroApp({ name: 'landing-layout', App: LandingLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -190,7 +194,8 @@ function AdminLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'admin-layout', App: AdminLayout });`,
+const app = createReactMicroApp({ name: 'admin-layout', App: AdminLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -237,7 +242,8 @@ function EcommerceLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'ecommerce-layout', App: EcommerceLayout });`,
+const app = createReactMicroApp({ name: 'ecommerce-layout', App: EcommerceLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -275,7 +281,8 @@ function DocsLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'docs-layout', App: DocsLayout });`,
+const app = createReactMicroApp({ name: 'docs-layout', App: DocsLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -311,7 +318,8 @@ function SaasLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'saas-layout', App: SaasLayout });`,
+const app = createReactMicroApp({ name: 'saas-layout', App: SaasLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -342,7 +350,8 @@ function SplitLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'split-layout', App: SplitLayout });`,
+const app = createReactMicroApp({ name: 'split-layout', App: SplitLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -376,7 +385,8 @@ function ThreeColumnLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'three-column-layout', App: ThreeColumnLayout });`,
+const app = createReactMicroApp({ name: 'three-column-layout', App: ThreeColumnLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -405,7 +415,8 @@ function TwoColumnLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'two-column-layout', App: TwoColumnLayout });`,
+const app = createReactMicroApp({ name: 'two-column-layout', App: TwoColumnLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -435,7 +446,8 @@ function FullWidthLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'full-width-layout', App: FullWidthLayout });`,
+const app = createReactMicroApp({ name: 'full-width-layout', App: FullWidthLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -468,7 +480,8 @@ function StickyHeaderLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'sticky-header-layout', App: StickyHeaderLayout });`,
+const app = createReactMicroApp({ name: 'sticky-header-layout', App: StickyHeaderLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -499,7 +512,8 @@ function StickySidebarLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'sticky-sidebar-layout', App: StickySidebarLayout });`,
+const app = createReactMicroApp({ name: 'sticky-sidebar-layout', App: StickySidebarLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
   {
@@ -535,7 +549,8 @@ function GridLayout() {
   );
 }
 
-export default createReactMicroApp({ name: 'grid-layout', App: GridLayout });`,
+const app = createReactMicroApp({ name: 'grid-layout', App: GridLayout });
+app.mount({ container: document.getElementById('app') as HTMLElement });`,
     dependencies: ['@tuvix.js/react', '@tuvix.js/core'],
   },
 ];
