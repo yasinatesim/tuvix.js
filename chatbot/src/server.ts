@@ -1,5 +1,6 @@
 import express, { type Express } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { createChatRoute } from './routes/chat';
 import { createOllamaClient } from './services/ollama';
 import { createVectorStore } from './services/vectordb';
@@ -16,11 +17,18 @@ interface AppDependencies {
 export function createApp(deps: AppDependencies): Express {
   const app = express();
 
-  app.use(cors({ origin: deps.config.corsOrigin }));
-  app.use(express.json());
+  // Trust first proxy (nginx/load balancer) so req.ip reflects the real client IP
+  app.set('trust proxy', 1);
 
-  // Simple rate limiting: 10 requests per minute per IP
+  app.use(helmet());
+  app.use(cors({ origin: deps.config.corsOrigin }));
+  app.use(express.json({ limit: '16kb' }));
+
+  // Rate limiting: 10 requests per minute per IP
   const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+  // Concurrent SSE connection tracking: max 2 open streams per IP
+  const activeStreams = new Map<string, number>();
+
   app.use('/api/chat', (req, res, next) => {
     const ip = req.ip ?? 'unknown';
     const now = Date.now();
@@ -36,7 +44,7 @@ export function createApp(deps: AppDependencies): Express {
     }
   });
 
-  app.post('/api/chat', createChatRoute(deps.rag));
+  app.post('/api/chat', createChatRoute(deps.rag, activeStreams));
 
   return app;
 }

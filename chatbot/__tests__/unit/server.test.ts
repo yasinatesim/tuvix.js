@@ -61,6 +61,15 @@ describe('createApp', () => {
       expect(res.status).toBe(200);
     });
 
+    it('returns 400 for message exceeding 2000 characters', async () => {
+      const app = buildApp();
+      const res = await request(app)
+        .post('/api/chat')
+        .send({ message: 'a'.repeat(2001), framework: 'react' });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/2000/);
+    });
+
     it('applies rate limit after 10 requests from same IP', async () => {
       const app = buildApp();
       const payload = { message: 'make a header', framework: 'react' };

@@ -14,13 +14,16 @@ function mockRag(tokens: string[] = ['Hello']): RagPipeline {
 
 function mockRes() {
   const chunks: string[] = [];
+  const listeners: Record<string, () => void> = {};
   return {
     status: vi.fn().mockReturnThis(),
     json: vi.fn(),
     writeHead: vi.fn(),
     write: vi.fn((chunk: string) => { chunks.push(chunk); }),
     end: vi.fn(),
+    on: vi.fn((event: string, cb: () => void) => { listeners[event] = cb; }),
     _chunks: chunks,
+    _listeners: listeners,
   };
 }
 
@@ -28,10 +31,14 @@ function mockReq(body: Record<string, unknown> = {}) {
   return { body, ip: '127.0.0.1' } as never;
 }
 
+function makeStreams() {
+  return new Map<string, number>();
+}
+
 describe('createChatRoute', () => {
   describe('input validation', () => {
     it('returns 400 when message is missing', async () => {
-      const route = createChatRoute(mockRag());
+      const route = createChatRoute(mockRag(), makeStreams());
       const res = mockRes();
       await route(mockReq({ framework: 'react' }), res as never);
       expect(res.status).toHaveBeenCalledWith(400);
@@ -39,14 +46,22 @@ describe('createChatRoute', () => {
     });
 
     it('returns 400 when message is not a string', async () => {
-      const route = createChatRoute(mockRag());
+      const route = createChatRoute(mockRag(), makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 123, framework: 'react' }), res as never);
       expect(res.status).toHaveBeenCalledWith(400);
     });
 
+    it('returns 400 when message exceeds 2000 characters', async () => {
+      const route = createChatRoute(mockRag(), makeStreams());
+      const res = mockRes();
+      await route(mockReq({ message: 'a'.repeat(2001), framework: 'react' }), res as never);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json.mock.calls[0][0].error).toMatch(/2000/);
+    });
+
     it('accepts missing framework (generates vanilla JS)', async () => {
-      const route = createChatRoute(mockRag());
+      const route = createChatRoute(mockRag(), makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a header' }), res as never);
       expect(res.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
@@ -55,11 +70,21 @@ describe('createChatRoute', () => {
     });
 
     it('returns 400 for unknown framework', async () => {
-      const route = createChatRoute(mockRag());
+      const route = createChatRoute(mockRag(), makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a header', framework: 'unknown' }), res as never);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json.mock.calls[0][0].error).toMatch(/framework must be one of/);
+    });
+
+    it('returns 429 when IP has too many concurrent streams', async () => {
+      const streams = makeStreams();
+      streams.set('127.0.0.1', 2); // already at max
+      const route = createChatRoute(mockRag(), streams);
+      const res = mockRes();
+      await route(mockReq({ message: 'make a header', framework: 'react' }), res as never);
+      expect(res.status).toHaveBeenCalledWith(429);
+      expect(res.json.mock.calls[0][0].error).toMatch(/Too many concurrent/);
     });
   });
 
@@ -68,7 +93,7 @@ describe('createChatRoute', () => {
 
     for (const framework of frameworks) {
       it(`accepts framework: ${framework}`, async () => {
-        const route = createChatRoute(mockRag());
+        const route = createChatRoute(mockRag(), makeStreams());
         const res = mockRes();
         await route(mockReq({ message: `make a header`, framework }), res as never);
         expect(res.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
@@ -81,7 +106,7 @@ describe('createChatRoute', () => {
   describe('streaming response', () => {
     it('streams token events from rag pipeline', async () => {
       const rag = mockRag(['Hello', ' world']);
-      const route = createChatRoute(rag);
+      const route = createChatRoute(rag, makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a header', framework: 'react' }), res as never);
 
@@ -93,7 +118,7 @@ describe('createChatRoute', () => {
 
     it('sends sources event after tokens', async () => {
       const rag = mockRag(['token']);
-      const route = createChatRoute(rag);
+      const route = createChatRoute(rag, makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a header', framework: 'react' }), res as never);
 
@@ -102,7 +127,7 @@ describe('createChatRoute', () => {
     });
 
     it('sends done event at the end', async () => {
-      const route = createChatRoute(mockRag());
+      const route = createChatRoute(mockRag(), makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a header', framework: 'react' }), res as never);
 
@@ -113,7 +138,7 @@ describe('createChatRoute', () => {
 
     it('detects framework from message text, overriding client value', async () => {
       const rag = mockRag();
-      const route = createChatRoute(rag);
+      const route = createChatRoute(rag, makeStreams());
       const res = mockRes();
       // message mentions "vue" but client sends framework: "react"
       await route(mockReq({ message: 'make a vue header', framework: 'react' }), res as never);
@@ -126,7 +151,7 @@ describe('createChatRoute', () => {
     });
 
     it('accepts no framework (null) and uses vanilla JS path', async () => {
-      const route = createChatRoute(mockRag());
+      const route = createChatRoute(mockRag(), makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a component' }), res as never);
       expect(res.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
@@ -134,19 +159,32 @@ describe('createChatRoute', () => {
       }));
     });
 
-    it('sends error event when rag throws', async () => {
+    it('sends generic error event (not raw error) when rag throws', async () => {
       const rag: RagPipeline = {
         generate: vi.fn(async function* () {
-          throw new Error('model unavailable');
+          throw new Error('model unavailable internal detail');
         }),
       };
-      const route = createChatRoute(rag);
+      const route = createChatRoute(rag, makeStreams());
       const res = mockRes();
       await route(mockReq({ message: 'make a header', framework: 'react' }), res as never);
 
       const errorChunk = res._chunks.find((c) => c.includes('"type":"error"'));
       expect(errorChunk).toBeDefined();
-      expect(errorChunk).toContain('model unavailable');
+      // Must NOT leak the raw internal error message
+      expect(errorChunk).not.toContain('model unavailable internal detail');
+      expect(errorChunk).toContain('An error occurred');
+    });
+
+    it('decrements active stream count on connection close', async () => {
+      const streams = makeStreams();
+      const route = createChatRoute(mockRag(), streams);
+      const res = mockRes();
+      await route(mockReq({ message: 'make a header', framework: 'react' }), res as never);
+
+      // Simulate connection close
+      res._listeners['close']?.();
+      expect(streams.has('127.0.0.1')).toBe(false);
     });
   });
 });

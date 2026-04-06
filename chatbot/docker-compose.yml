@@ -65,11 +65,9 @@ services:
         echo "✅ Dataset seeded!"
     restart: "no"
 
-  # Ollama LLM server
+  # Ollama LLM server (no host port — only reachable within Docker network)
   ollama:
     image: ollama/ollama
-    ports:
-      - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
@@ -80,11 +78,9 @@ services:
       retries: 10
       start_period: 60s
 
-  # ChromaDB vector database
+  # ChromaDB vector database (no host port — only reachable within Docker network)
   chromadb:
     image: chromadb/chroma:latest
-    ports:
-      - "8000:8000"
     volumes:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
