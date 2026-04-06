@@ -42,7 +42,7 @@
 Gere componentes tuvix.js a partir de linguagem natural usando nosso chatbot de IA integrado.
 
 - **Movido por:** Ollama + DeepSeek Coder (roda 100% localmente, sem custos de API)
-- **Baseado em RAG:** Recupera exemplos relevantes de 320 exemplos de componentes open-source
+- **Baseado em RAG:** Recupera exemplos relevantes de 600 exemplos de componentes open-source
 - **Suporta:** React, Vue, Svelte, Angular
 - **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) no HuggingFace
 
