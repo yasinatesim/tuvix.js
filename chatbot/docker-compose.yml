@@ -21,12 +21,6 @@ services:
       ollama-setup:
         condition: service_completed_successfully
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/3001' 2>/dev/null || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
 
   # Auto-pulls Ollama models on first boot, then exits
   ollama-setup:
@@ -55,8 +49,10 @@ services:
       - CHROMA_URL=http://chromadb:8000
       - EMBED_MODEL=nomic-embed-text
     depends_on:
-      chatbot:
+      chromadb:
         condition: service_healthy
+      ollama-setup:
+        condition: service_completed_successfully
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -85,7 +81,7 @@ services:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8000' 2>/dev/null || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/api/v1/heartbeat || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
