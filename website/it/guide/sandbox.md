@@ -76,9 +76,11 @@ import { createSandbox } from '@tuvix.js/sandbox';
 
 const sandbox = createSandbox({ css: true, js: true });
 
-// Crea un contenitore isolato per un elemento
-const { container, cleanup } = sandbox.mount(rootElement);
+// Attivare l'isolamento
+const shadowRoot = sandbox.activate(rootElement);
 
-// Più tardi, smontalo
-cleanup();
+// ... l'app viene eseguita in isolamento ...
+
+// Disattivare quando si è finito
+sandbox.deactivate(rootElement);
 ```

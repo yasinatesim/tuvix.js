@@ -107,7 +107,8 @@ async function downloadAndExtractExample(
         const extract = tar.x({
           cwd: targetDir,
           strip: 3,
-          filter: (p) => p.startsWith(`tuvix.js-master/examples/${safeExample}/`),
+          filter: (p) =>
+            p.startsWith(`tuvix.js-master/examples/${safeExample}/`),
         });
         res.pipe(extract).on('finish', resolve).on('error', reject);
       })

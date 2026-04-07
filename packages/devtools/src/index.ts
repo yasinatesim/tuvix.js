@@ -42,7 +42,11 @@ export function installDevTools(
   orchestrator: OrchestratorLike,
   options: DevToolsOptions = {}
 ): () => void {
-  const { maxLogEntries = 200, updateInterval = 1000, autoOpen = true } = options;
+  const {
+    maxLogEntries = 200,
+    updateInterval = 1000,
+    autoOpen = true,
+  } = options;
 
   const panel = new DevToolsPanel();
   const logger = new EventLogger(maxLogEntries);
