@@ -11,7 +11,6 @@ function createMockOllama(): OllamaClient {
       yield 'Here is ';
       yield 'your component';
     })()),
-    isModelAvailable: vi.fn().mockResolvedValue(true),
   };
 }
 

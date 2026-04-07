@@ -77,11 +77,6 @@ export function createApp(deps: AppDependencies): AppInstance {
 async function main() {
   const ollama = createOllamaClient(CONFIG.ollamaUrl, CONFIG.embedModel, CONFIG.ollamaTimeoutMs);
 
-  const modelReady = await ollama.isModelAvailable(CONFIG.modelName);
-  if (!modelReady) {
-    throw new Error(`Model "${CONFIG.modelName}" is not available in Ollama. Run: ollama pull ${CONFIG.modelName}`);
-  }
-
   const store = createVectorStore(CONFIG.chromaUrl, CONFIG.collectionName);
 
   await store.init();

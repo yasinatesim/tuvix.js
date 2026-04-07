@@ -6,7 +6,6 @@ export interface ChatMessage {
 export interface OllamaClient {
   embed(text: string): Promise<number[]>;
   chat(model: string, messages: ChatMessage[]): AsyncGenerator<string>;
-  isModelAvailable(model: string): Promise<boolean>;
 }
 
 function fetchWithTimeout(url: string, options: RequestInit, ms = 30_000): Promise<Response> {
@@ -72,20 +71,6 @@ export function createOllamaClient(baseUrl: string, embedModel: string, timeoutM
           }
         }
       }
-    },
-
-    async isModelAvailable(model: string): Promise<boolean> {
-      const res = await fetchWithTimeout(`${baseUrl}/api/tags`, {
-        method: 'GET',
-      });
-
-      if (!res.ok) return false;
-
-      const data = await res.json();
-      // Match exact name or prefix before any digest/variant suffix (e.g. "qwen2.5-coder:7b-instruct-q4_K_M")
-      return data.models.some(
-        (m: { name: string }) => m.name === model || m.name.startsWith(`${model}-`) || m.name.startsWith(`${model}:`)
-      );
     },
   };
 }

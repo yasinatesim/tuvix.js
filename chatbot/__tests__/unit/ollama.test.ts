@@ -122,33 +122,4 @@ describe('OllamaClient', () => {
       );
     });
   });
-
-  describe('isModelAvailable', () => {
-    it('returns true when model exists', async () => {
-      fetchSpy.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ models: [{ name: 'qwen2.5-coder:7b' }] }),
-      });
-
-      const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
-      expect(await client.isModelAvailable('qwen2.5-coder:7b')).toBe(true);
-    });
-
-    it('returns false when model missing', async () => {
-      fetchSpy.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ models: [{ name: 'other-model' }] }),
-      });
-
-      const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
-      expect(await client.isModelAvailable('qwen2.5-coder:7b')).toBe(false);
-    });
-
-    it('returns false when Ollama tags endpoint fails', async () => {
-      fetchSpy.mockResolvedValueOnce({ ok: false, status: 500 });
-
-      const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
-      expect(await client.isModelAvailable('qwen2.5-coder:7b')).toBe(false);
-    });
-  });
 });
