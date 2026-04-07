@@ -67,10 +67,17 @@ function openInPlayground() {
     <div :class="$style.header">
       <span :class="$style.lang">{{ language || 'code' }}</span>
       <div :class="$style.actions">
-        <button :class="$style.btn" @click="copyCode">
+        <button
+          :class="$style.btn"
+          @click="copyCode"
+        >
           {{ copied ? '✓ copied' : 'copy' }}
         </button>
-        <button v-if="showPlayground" :class="[$style.btn, $style.btnAccent]" @click="openInPlayground">
+        <button
+          v-if="showPlayground"
+          :class="[$style.btn, $style.btnAccent]"
+          @click="openInPlayground"
+        >
           playground →
         </button>
       </div>

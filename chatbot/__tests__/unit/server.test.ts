@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../../src/server';
 import type { RagPipeline } from '../../src/services/rag';
@@ -13,9 +13,17 @@ function mockRag(tokens: string[] = ['Hello']): RagPipeline {
   };
 }
 
+const cleanups: Array<() => void> = [];
+
 function buildApp(corsOrigin = '*', rag = mockRag()) {
-  return createApp({ rag, config: { corsOrigin } });
+  const { app, cleanup } = createApp({ rag, config: { corsOrigin } });
+  cleanups.push(cleanup);
+  return app;
 }
+
+afterEach(() => {
+  while (cleanups.length) cleanups.pop()!();
+});
 
 describe('createApp', () => {
   describe('POST /api/chat', () => {

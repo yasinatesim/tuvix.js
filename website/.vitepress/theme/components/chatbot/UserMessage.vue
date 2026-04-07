@@ -4,7 +4,9 @@ defineProps<{ content: string }>();
 
 <template>
   <div :class="$style.container">
-    <p :class="$style.text">{{ content }}</p>
+    <p :class="$style.text">
+      {{ content }}
+    </p>
   </div>
 </template>
 

@@ -9,10 +9,9 @@
         :data-tab="tab.id"
         @click="switchTab(tab.id)"
       >
-        <span
-          class="tab-icon"
-          v-html="tab.icon"
-        />
+        <!-- eslint-disable vue/no-v-html, vue/max-attributes-per-line -->
+        <span class="tab-icon" v-html="tab.icon" />
+        <!-- eslint-enable vue/no-v-html, vue/max-attributes-per-line -->
         {{ tab.label }}
       </button>
     </div>

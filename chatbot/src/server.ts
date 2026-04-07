@@ -15,7 +15,13 @@ interface AppDependencies {
   };
 }
 
-export function createApp(deps: AppDependencies): Express {
+export interface AppInstance {
+  app: Express;
+  /** Call in tests or shutdown handlers to stop the rate-limit cleanup timer. */
+  cleanup(): void;
+}
+
+export function createApp(deps: AppDependencies): AppInstance {
   const app = express();
 
   // Trust first proxy (nginx/load balancer) so req.ip reflects the real client IP
@@ -27,13 +33,17 @@ export function createApp(deps: AppDependencies): Express {
 
   // Rate limiting: 10 requests per minute per IP
   const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-  // Evict stale rate-limit entries every minute to prevent unbounded growth
-  setInterval(() => {
+  // Evict stale rate-limit entries every minute to prevent unbounded growth.
+  // Store the timer so callers can clear it (prevents leaks in tests).
+  const cleanupTimer = setInterval(() => {
     const now = Date.now();
     for (const [ip, entry] of rateLimitMap) {
       if (now > entry.resetAt) rateLimitMap.delete(ip);
     }
   }, 60_000);
+  // Allow Node.js to exit even if the timer is still active (non-blocking ref)
+  cleanupTimer.unref();
+
   // Concurrent SSE connection tracking: max 2 open streams per IP
   const activeStreams = new Map<string, number>();
 
@@ -54,7 +64,12 @@ export function createApp(deps: AppDependencies): Express {
 
   app.post('/api/chat', createChatRoute(deps.rag, activeStreams));
 
-  return app;
+  return {
+    app,
+    cleanup() {
+      clearInterval(cleanupTimer);
+    },
+  };
 }
 
 async function main() {
@@ -71,7 +86,7 @@ async function main() {
 
   const rag = createRagPipeline(ollama, store, CONFIG.modelName);
 
-  const app = createApp({
+  const { app } = createApp({
     rag,
     config: {
       corsOrigin: CONFIG.corsOrigin,

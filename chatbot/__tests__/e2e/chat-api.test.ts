@@ -21,7 +21,7 @@ export default createReactMicroApp({ name: 'header', App: Header });`;
     },
   };
 
-  const app = createApp({
+  const { app } = createApp({
     rag: mockRag,
     config: { corsOrigin: '*' },
   });

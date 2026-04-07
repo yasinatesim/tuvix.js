@@ -16,7 +16,7 @@ beforeAll(async () => {
     },
   };
 
-  const app = createApp({
+  const { app } = createApp({
     rag: mockRag,
     config: { corsOrigin: '*' },
   });
@@ -93,7 +93,7 @@ describe('Rate Limiting', () => {
         yield 'ok';
       },
     };
-    const app = createApp({
+    const { app } = createApp({
       rag: mockRag,
       config: { corsOrigin: '*' },
     });

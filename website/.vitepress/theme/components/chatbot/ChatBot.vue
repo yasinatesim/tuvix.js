@@ -33,19 +33,11 @@ const EXAMPLE_PROMPTS = [
   'Angular dashboard layout',
 ];
 
-const FRAMEWORK_KEYWORDS: Record<string, string> = {
-  react: 'react',
-  vue: 'vue',
-  svelte: 'svelte',
-  angular: 'angular',
-};
+const FRAMEWORKS = ['react', 'vue', 'svelte', 'angular'] as const;
 
 function detectFramework(text: string): string {
   const lower = text.toLowerCase();
-  for (const [keyword, fw] of Object.entries(FRAMEWORK_KEYWORDS)) {
-    if (lower.includes(keyword)) return fw;
-  }
-  return '';
+  return FRAMEWORKS.find((fw) => lower.includes(fw)) ?? '';
 }
 
 onMounted(() => {

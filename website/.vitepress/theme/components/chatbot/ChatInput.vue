@@ -47,11 +47,17 @@ function handleKeydown(e: KeyboardEvent) {
         rows="1"
         @keydown="handleKeydown"
       />
-      <button :class="$style.send" :disabled="!message.trim()" @click="handleSend">
+      <button
+        :class="$style.send"
+        :disabled="!message.trim()"
+        @click="handleSend"
+      >
         ↵
       </button>
     </div>
-    <p :class="$style.hint">mention react · vue · svelte · angular — or omit for plain JS</p>
+    <p :class="$style.hint">
+      mention react · vue · svelte · angular — or omit for plain JS
+    </p>
   </div>
 </template>
 

@@ -86,11 +86,9 @@ const htmlContent = computed(() => {
     <div :class="$style.body">
       <TypingIndicator v-if="streaming && !content" />
       <template v-else>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div
-          :class="$style.markdown"
-          v-html="htmlContent"
-        />
+        <!-- eslint-disable vue/no-v-html, vue/max-attributes-per-line -->
+        <div :class="$style.markdown" v-html="htmlContent" />
+        <!-- eslint-enable vue/no-v-html, vue/max-attributes-per-line -->
         <CodeBlock
           v-for="(block, i) in codeBlocks"
           :key="i"
