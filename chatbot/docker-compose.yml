@@ -20,21 +20,6 @@ services:
         condition: service_started
       ollama-setup:
         condition: service_completed_successfully
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        node -e "
-        const http = require('http');
-        let n = 0;
-        (function check() {
-          n++;
-          process.stdout.write('\u23f3 Waiting for ChromaDB (attempt ' + n + ')...\n');
-          http.get('http://chromadb:8000/api/v1/heartbeat', function(r) {
-            process.stdout.write('\u2705 ChromaDB ready!\n');
-            process.exit(0);
-          }).on('error', function() { setTimeout(check, 3000); });
-        })();
-        " && node dist/server.js
     restart: unless-stopped
 
   # Auto-pulls Ollama models on first boot, then exits

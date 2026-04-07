@@ -74,12 +74,27 @@ export function createApp(deps: AppDependencies): AppInstance {
   };
 }
 
+async function waitForChromaDb(store: ReturnType<typeof createVectorStore>, maxAttempts = 30, delayMs = 3000): Promise<void> {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await store.init();
+      console.log('✅ ChromaDB ready!');
+      return;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.log(`⏳ Waiting for ChromaDB (attempt ${attempt}/${maxAttempts}): ${msg}`);
+      if (attempt === maxAttempts) throw new Error(`ChromaDB not reachable after ${maxAttempts} attempts`);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+}
+
 async function main() {
   const ollama = createOllamaClient(CONFIG.ollamaUrl, CONFIG.embedModel, CONFIG.ollamaTimeoutMs);
 
   const store = createVectorStore(CONFIG.chromaUrl, CONFIG.collectionName);
 
-  await store.init();
+  await waitForChromaDb(store);
 
   const rag = createRagPipeline(ollama, store, CONFIG.modelName);
 
