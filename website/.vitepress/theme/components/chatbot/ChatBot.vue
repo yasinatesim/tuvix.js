@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import ChatSidebar from './ChatSidebar.vue';
 import ChatMessages from './ChatMessages.vue';
 import type { Message } from './ChatMessages.vue';
@@ -16,8 +16,15 @@ const MESSAGE_ROLES = {
   ASSISTANT: 'assistant',
 } as const;
 
+interface ConversationEntry {
+  id: string;
+  title: string;
+  messages: Message[];
+}
+
 const messages = ref<Message[]>([]);
-const activeFramework = ref<string | null>(null);
+const activeFramework = ref<string>('');
+const conversationHistory = ref<ConversationEntry[]>([]);
 
 const EXAMPLE_PROMPTS = [
   'React header with navigation: Home, Gallery, About, Blog, Contact',
@@ -25,6 +32,30 @@ const EXAMPLE_PROMPTS = [
   'Svelte login form with validation',
   'Angular dashboard layout',
 ];
+
+const FRAMEWORK_KEYWORDS: Record<string, string> = {
+  react: 'react',
+  vue: 'vue',
+  svelte: 'svelte',
+  angular: 'angular',
+};
+
+function detectFramework(text: string): string {
+  const lower = text.toLowerCase();
+  for (const [keyword, fw] of Object.entries(FRAMEWORK_KEYWORDS)) {
+    if (lower.includes(keyword)) return fw;
+  }
+  return '';
+}
+
+onMounted(() => {
+  if (typeof window === 'undefined') return;
+  try {
+    const saved = localStorage.getItem('chatbot-history');
+    const parsed = JSON.parse(saved ?? '[]');
+    if (Array.isArray(parsed)) conversationHistory.value = parsed;
+  } catch { /* ignore */ }
+});
 
 async function handleSend(userMessage: string, framework: string) {
   activeFramework.value = framework;
@@ -66,12 +97,17 @@ async function handleSend(userMessage: string, framework: string) {
 
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
-        const event = JSON.parse(line.slice(6));
+        let event: { type: string; content?: unknown };
+        try {
+          event = JSON.parse(line.slice(6));
+        } catch {
+          continue;
+        }
 
         if (event.type === 'token') {
-          messages.value[botIndex].content += event.content;
+          messages.value[botIndex].content += event.content as string;
         } else if (event.type === 'sources') {
-          messages.value[botIndex].sources = event.content;
+          messages.value[botIndex].sources = event.content as Array<{ id: string; score: number }>;
         } else if (event.type === 'done') {
           messages.value[botIndex].streaming = false;
           saveConversation();
@@ -88,21 +124,17 @@ async function handleSend(userMessage: string, framework: string) {
 function saveConversation() {
   if (typeof window === 'undefined' || messages.value.length === 0) return;
   try {
-    const history = JSON.parse(localStorage.getItem('chatbot-history') ?? '[]');
     const id = Date.now().toString();
     const title = messages.value[0]?.content.slice(0, 60) ?? 'Chat';
-    history.unshift({ id, title, messages: messages.value });
-    localStorage.setItem('chatbot-history', JSON.stringify(history.slice(0, 20)));
+    const entry: ConversationEntry = { id, title, messages: messages.value };
+    conversationHistory.value = [entry, ...conversationHistory.value].slice(0, 20);
+    localStorage.setItem('chatbot-history', JSON.stringify(conversationHistory.value));
   } catch { /* ignore */ }
 }
 
 function loadConversation(id: string) {
-  if (typeof window === 'undefined') return;
-  try {
-    const history = JSON.parse(localStorage.getItem('chatbot-history') ?? '[]');
-    const conv = history.find((c: { id: string }) => c.id === id);
-    if (conv) messages.value = conv.messages;
-  } catch { /* ignore */ }
+  const conv = conversationHistory.value.find((c) => c.id === id);
+  if (conv) messages.value = conv.messages;
 }
 
 function handleNewChat() {
@@ -111,13 +143,14 @@ function handleNewChat() {
 }
 
 function sendExamplePrompt(prompt: string) {
-  handleSend(prompt, activeFramework.value);
+  handleSend(prompt, detectFramework(prompt));
 }
 </script>
 
 <template>
   <div :class="$style.chatbot">
     <ChatSidebar
+      :conversations="conversationHistory"
       @new-chat="handleNewChat"
       @select-chat="loadConversation"
     />
@@ -146,7 +179,7 @@ function sendExamplePrompt(prompt: string) {
                 href="https://ollama.com"
                 target="_blank"
                 rel="noopener"
-              >DeepSeek Coder</a> &middot; <a
+              >Qwen2.5 Coder</a> &middot; <a
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"

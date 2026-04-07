@@ -9,7 +9,7 @@ function utf8ToB64(str: string): string {
 }
 
 export function buildPlaygroundUrl(code: string, framework: string, pairedCss?: string): string {
-  const fw = framework && framework !== 'null' ? `&framework=${framework}` : '';
+  const fw = framework ? `&framework=${framework}` : '';
   const css = pairedCss ? `&css=${encodeURIComponent(utf8ToB64(pairedCss))}` : '';
   return `/playground?code=${encodeURIComponent(utf8ToB64(code))}${fw}${css}`;
 }
@@ -18,6 +18,7 @@ export function buildPlaygroundUrl(code: string, framework: string, pairedCss?: 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import hljs from 'highlight.js';
+import { escapeHtml } from './utils';
 
 const JS_LANGS = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript']);
 
@@ -43,15 +44,6 @@ const highlighted = computed(() => {
   return hljs.highlight(props.code, { language: lang, ignoreIllegals: true })
     .value;
 });
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
 
 function copyCode() {
   if (typeof navigator !== 'undefined') {

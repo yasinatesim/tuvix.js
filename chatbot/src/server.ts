@@ -1,6 +1,7 @@
 import express, { type Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { fileURLToPath } from 'url';
 import { createChatRoute } from './routes/chat';
 import { createOllamaClient } from './services/ollama';
 import { createVectorStore } from './services/vectordb';
@@ -26,6 +27,13 @@ export function createApp(deps: AppDependencies): Express {
 
   // Rate limiting: 10 requests per minute per IP
   const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+  // Evict stale rate-limit entries every minute to prevent unbounded growth
+  setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of rateLimitMap) {
+      if (now > entry.resetAt) rateLimitMap.delete(ip);
+    }
+  }, 60_000);
   // Concurrent SSE connection tracking: max 2 open streams per IP
   const activeStreams = new Map<string, number>();
 
@@ -51,6 +59,12 @@ export function createApp(deps: AppDependencies): Express {
 
 async function main() {
   const ollama = createOllamaClient(CONFIG.ollamaUrl, CONFIG.embedModel, CONFIG.ollamaTimeoutMs);
+
+  const modelReady = await ollama.isModelAvailable(CONFIG.modelName);
+  if (!modelReady) {
+    throw new Error(`Model "${CONFIG.modelName}" is not available in Ollama. Run: ollama pull ${CONFIG.modelName}`);
+  }
+
   const store = createVectorStore(CONFIG.chromaUrl, CONFIG.collectionName);
 
   await store.init();
@@ -70,6 +84,6 @@ async function main() {
 }
 
 // Only start server when run directly (not when imported in tests)
-if (process.argv[1]?.includes('server')) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch(console.error);
 }

@@ -41,7 +41,7 @@
 
 Genera componenti tuvix.js dal linguaggio naturale usando il nostro chatbot IA integrato.
 
-- **Alimentato da:** Ollama + DeepSeek Coder (funziona 100% localmente, nessun costo API)
+- **Alimentato da:** Ollama + Qwen2.5 Coder (funziona 100% localmente, nessun costo API)
 - **Basato su RAG:** Recupera esempi rilevanti da 600 esempi di componenti open-source
 - **Supporta:** React, Vue, Svelte, Angular
 - **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) su HuggingFace

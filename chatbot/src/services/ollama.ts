@@ -6,7 +6,6 @@ export interface ChatMessage {
 export interface OllamaClient {
   embed(text: string): Promise<number[]>;
   chat(model: string, messages: ChatMessage[]): AsyncGenerator<string>;
-  chatCollect(model: string, messages: ChatMessage[]): Promise<string>;
   isModelAvailable(model: string): Promise<boolean>;
 }
 
@@ -61,21 +60,18 @@ export function createOllamaClient(baseUrl: string, embedModel: string, timeoutM
 
         for (const line of lines) {
           if (!line.trim()) continue;
-          const parsed = JSON.parse(line);
+          let parsed: { done?: boolean; message?: { content?: string } };
+          try {
+            parsed = JSON.parse(line);
+          } catch {
+            continue;
+          }
           if (parsed.done) return;
           if (parsed.message?.content) {
             yield parsed.message.content;
           }
         }
       }
-    },
-
-    async chatCollect(model: string, messages: ChatMessage[]): Promise<string> {
-      let result = '';
-      for await (const token of this.chat(model, messages)) {
-        result += token;
-      }
-      return result;
     },
 
     async isModelAvailable(model: string): Promise<boolean> {

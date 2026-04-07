@@ -1,29 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-
 interface ConversationEntry {
   id: string;
   title: string;
   messages: Array<{ role: string; content: string }>;
 }
 
-const props = defineProps<{ activeId?: string }>();
+const props = defineProps<{
+  conversations: ConversationEntry[];
+  activeId?: string;
+}>();
 const emit = defineEmits<{
   newChat: [];
   selectChat: [id: string];
 }>();
-
-const conversations = ref<ConversationEntry[]>([]);
-
-onMounted(() => {
-  try {
-    const saved = localStorage.getItem('chatbot-history');
-    const parsed = JSON.parse(saved);
-    if (Array.isArray(parsed)) conversations.value = parsed;
-  } catch {
-    // ignore
-  }
-});
 </script>
 
 <template>

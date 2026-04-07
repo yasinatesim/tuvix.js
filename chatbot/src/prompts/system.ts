@@ -188,21 +188,21 @@ function render(el: HTMLElement) {
       <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Vanilla JS</h2>
       <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">\${count}</div>
       <div style="display:flex;gap:12px;justify-content:center">
-        <button onclick="__dec()"
+        <button id="dec-btn"
           style="padding:10px 24px;background:#1e2d3d;color:#e2e8f0;border:1px solid #2d3748;
                  border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">&minus;</button>
-        <button onclick="__inc()"
+        <button id="inc-btn"
           style="padding:10px 24px;background:#00e5a0;color:#000;border:none;
                  border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>
       </div>
     </div>\`;
+  el.querySelector('#dec-btn')?.addEventListener('click', () => { count--; render(el); });
+  el.querySelector('#inc-btn')?.addEventListener('click', () => { count++; render(el); });
 }
 
 const app = defineMicroApp({
   name: 'my-component',
   mount({ container }) {
-    window.__dec = () => { count--; render(container); };
-    window.__inc = () => { count++; render(container); };
     render(container);
   },
   unmount({ container }) { container.innerHTML = ''; },
@@ -215,7 +215,7 @@ STRICT RULES:
 1. MUST import: import { defineMicroApp } from 'tuvix.js'
 2. NO React, Vue, Svelte, or Angular — pure DOM manipulation only
 3. All UI built with el.innerHTML = \`...\` template literals with inline styles
-4. Interactive handlers attached to window (e.g. window.__fn) and called via onclick="__fn()"
+4. Interactive handlers: add id attributes to buttons, then use el.querySelector('#id')?.addEventListener('click', ...) after setting innerHTML — NEVER use window.__fn globals
 5. re-call render(container) after every state change
 6. defineMicroApp MUST receive: { name: '...', mount({ container }) { ... }, unmount({ container }) { ... } }
 7. MUST end with: app.mount({ container: document.getElementById('app') as HTMLElement })

@@ -41,7 +41,7 @@
 
 Yerleşik AI chatbot ile doğal dilden tuvix.js bileşenleri üretin.
 
-- **Motor:** Ollama + DeepSeek Coder (tamamen yerel çalışır, API maliyeti yok)
+- **Motor:** Ollama + Qwen2.5 Coder (tamamen yerel çalışır, API maliyeti yok)
 - **RAG tabanlı:** 600 açık kaynak bileşen örneğinden ilgili örnekleri alır
 - **Destekler:** React, Vue, Svelte, Angular
 - **Veri seti:** HuggingFace'de [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)

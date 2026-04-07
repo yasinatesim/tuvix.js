@@ -31,6 +31,7 @@ import { computed } from 'vue';
 import hljs from 'highlight.js';
 import CodeBlock from './CodeBlock.vue';
 import TypingIndicator from './TypingIndicator.vue';
+import { escapeHtml } from './utils';
 
 const props = defineProps<{
   content: string;
@@ -43,13 +44,6 @@ const props = defineProps<{
 const codeBlocks = computed(() =>
   props.streaming ? [] : extractCodeBlocks(props.content),
 );
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
 
 const PRE_STYLE =
   'white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed';

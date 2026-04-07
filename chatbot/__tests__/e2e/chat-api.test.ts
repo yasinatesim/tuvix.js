@@ -21,24 +21,9 @@ export default createReactMicroApp({ name: 'header', App: Header });`;
     },
   };
 
-  const mockStore = {
-    init: async () => {},
-    upsert: async () => {},
-    query: async () => [],
-    count: async () => 10,
-  };
-
-  const mockOllama = {
-    embed: async () => [0.1],
-    chat: async function* () { yield 'x'; },
-    isModelAvailable: async () => true,
-  };
-
   const app = createApp({
     rag: mockRag,
-    store: mockStore,
-    ollama: mockOllama,
-    config: { corsOrigin: '*', modelName: 'test', embedModel: 'test' },
+    config: { corsOrigin: '*' },
   });
 
   await new Promise<void>((resolve) => {
