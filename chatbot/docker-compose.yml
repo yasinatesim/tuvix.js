@@ -76,6 +76,16 @@ services:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
 
+  # Cloudflare Tunnel — exposes chatbot API publicly without opening ports
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - chatbot
+    restart: unless-stopped
+
 volumes:
   chromadb_data:
   ollama_data:
