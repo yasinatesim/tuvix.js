@@ -1,5 +1,15 @@
 # with-react-devtools
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [b5a7081]
+  - @tuvix.js/core@0.4.2
+  - @tuvix.js/devtools@0.4.2
+  - @tuvix.js/event-bus@0.4.2
+  - @tuvix.js/react@0.4.2
+
 ## 0.1.4
 
 ### Patch Changes

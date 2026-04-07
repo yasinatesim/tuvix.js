@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/module-federation",
-	"version": "0.1.2",
+	"version": "0.4.2",
 	"description": "Webpack Module Federation integration for Tuvix.js",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
