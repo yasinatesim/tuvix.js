@@ -1,6 +1,6 @@
 {
 	"name": "create-tuvix-app",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "CLI scaffolding tool for Tuvix.js microfrontend projects",
 	"bin": {
 		"create-tuvix-app": "dist/index.js"

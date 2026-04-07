@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/event-bus",
-	"version": "0.1.2",
+	"version": "0.4.2",
 	"description": "Lightweight event bus for inter-app communication in Tuvix.js",
 	"main": "dist/index.cjs",
 	"module": "dist/index.mjs",
