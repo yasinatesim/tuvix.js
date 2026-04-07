@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "pnpm exec vue-tsc && pnpm exec vite build",
     "preview": "vite preview"
   },
   "dependencies": {
