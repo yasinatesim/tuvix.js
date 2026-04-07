@@ -25,6 +25,8 @@ interface ConversationEntry {
 const messages = ref<Message[]>([]);
 const activeFramework = ref<string>('');
 const conversationHistory = ref<ConversationEntry[]>([]);
+// Track the id of the currently loaded/active conversation to avoid creating duplicates on save
+const activeConversationId = ref<string | null>(null);
 
 const EXAMPLE_PROMPTS = [
   'React header with navigation: Home, Gallery, About, Blog, Contact',
@@ -97,9 +99,13 @@ async function handleSend(userMessage: string, framework: string) {
         }
 
         if (event.type === 'token') {
-          messages.value[botIndex].content += event.content as string;
+          if (typeof event.content === 'string') {
+            messages.value[botIndex].content += event.content;
+          }
         } else if (event.type === 'sources') {
-          messages.value[botIndex].sources = event.content as Array<{ id: string; score: number }>;
+          if (Array.isArray(event.content)) {
+            messages.value[botIndex].sources = event.content as Array<{ id: string; score: number }>;
+          }
         } else if (event.type === 'done') {
           messages.value[botIndex].streaming = false;
           saveConversation();
@@ -116,22 +122,33 @@ async function handleSend(userMessage: string, framework: string) {
 function saveConversation() {
   if (typeof window === 'undefined' || messages.value.length === 0) return;
   try {
-    const id = Date.now().toString();
     const title = messages.value[0]?.content.slice(0, 60) ?? 'Chat';
-    const entry: ConversationEntry = { id, title, messages: messages.value };
-    conversationHistory.value = [entry, ...conversationHistory.value].slice(0, 20);
+    if (activeConversationId.value) {
+      // Update existing conversation in-place rather than duplicating
+      conversationHistory.value = conversationHistory.value.map((c) =>
+        c.id === activeConversationId.value ? { ...c, title, messages: messages.value } : c,
+      );
+    } else {
+      const id = Date.now().toString();
+      activeConversationId.value = id;
+      conversationHistory.value = [{ id, title, messages: messages.value }, ...conversationHistory.value].slice(0, 20);
+    }
     localStorage.setItem('chatbot-history', JSON.stringify(conversationHistory.value));
   } catch { /* ignore */ }
 }
 
 function loadConversation(id: string) {
   const conv = conversationHistory.value.find((c) => c.id === id);
-  if (conv) messages.value = conv.messages;
+  if (conv) {
+    messages.value = conv.messages;
+    activeConversationId.value = id;
+  }
 }
 
 function handleNewChat() {
   saveConversation();
   messages.value = [];
+  activeConversationId.value = null;
 }
 
 function sendExamplePrompt(prompt: string) {

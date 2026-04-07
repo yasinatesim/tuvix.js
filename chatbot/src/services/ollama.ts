@@ -82,7 +82,10 @@ export function createOllamaClient(baseUrl: string, embedModel: string, timeoutM
       if (!res.ok) return false;
 
       const data = await res.json();
-      return data.models.some((m: { name: string }) => m.name === model);
+      // Match exact name or prefix before any digest/variant suffix (e.g. "qwen2.5-coder:7b-instruct-q4_K_M")
+      return data.models.some(
+        (m: { name: string }) => m.name === model || m.name.startsWith(`${model}-`) || m.name.startsWith(`${model}:`)
+      );
     },
   };
 }

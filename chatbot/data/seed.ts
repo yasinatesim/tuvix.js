@@ -32,10 +32,13 @@ async function seed() {
 
     console.log(`Seeding ${records.length} records from ${file}...`);
 
+    // Embed in parallel batches of 10 to avoid overwhelming Ollama
+    const BATCH_SIZE = 10;
     const embeddings: number[][] = [];
-    for (const record of records) {
-      const embedding = await ollama.embed(record.description);
-      embeddings.push(embedding);
+    for (let i = 0; i < records.length; i += BATCH_SIZE) {
+      const batch = records.slice(i, i + BATCH_SIZE);
+      const batchEmbeddings = await Promise.all(batch.map((r) => ollama.embed(r.description)));
+      embeddings.push(...batchEmbeddings);
     }
 
     await store.upsert(records, embeddings);

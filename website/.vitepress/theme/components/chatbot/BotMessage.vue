@@ -75,7 +75,8 @@ const htmlContent = computed(() => {
         if (text.trim()) html += `<p style="margin:4px 0;font-size:13px;line-height:1.6;color:var(--vp-c-text-2)">${text}</p>`;
       }
     }
-    return html || `<pre style="${PRE_STYLE}">${escapeHtml(props.content)}</pre>`;
+    const raw = html || `<pre style="${PRE_STYLE}">${escapeHtml(props.content)}</pre>`;
+    return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
   }
   return parseMarkdownContent(props.content);
 });

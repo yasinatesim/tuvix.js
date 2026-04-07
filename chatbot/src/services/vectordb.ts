@@ -62,14 +62,18 @@ export function createVectorStore(chromaUrl: string, collectionName: string): Ve
 
       const results = await collection.query(queryParams);
 
-      return (results.ids[0] ?? []).map((id, i) => ({
-        id,
-        description: results.documents[0]?.[i] ?? '',
-        framework: (results.metadatas[0]?.[i] as Record<string, string>)?.framework ?? '',
-        category: (results.metadatas[0]?.[i] as Record<string, string>)?.category ?? '',
-        code: (results.metadatas[0]?.[i] as Record<string, string>)?.code ?? '',
-        score: results.distances?.[0]?.[i] ?? 0,
-      }));
+      return (results.ids[0] ?? []).map((id, i) => {
+        const meta = results.metadatas[0]?.[i];
+        const metaStr = (meta != null && typeof meta === 'object') ? meta as Record<string, string> : {};
+        return {
+          id,
+          description: results.documents[0]?.[i] ?? '',
+          framework: metaStr.framework ?? '',
+          category: metaStr.category ?? '',
+          code: metaStr.code ?? '',
+          score: results.distances?.[0]?.[i] ?? 0,
+        };
+      });
     },
 
     async count() {

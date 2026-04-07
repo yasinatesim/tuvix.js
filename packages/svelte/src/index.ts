@@ -80,6 +80,12 @@ export function createSvelteMicroApp(
         // Svelte 3/4: $set()
         if (typeof instance.$set === 'function') {
           instance.$set(props);
+        } else {
+          // Svelte 5 removed $set — props must be passed via reactive state inside the component
+          console.warn(
+            `[Tuvix] updateAppProps("${config.name}"): Svelte 5 does not support $set(). ` +
+            `Pass props via a shared store or rune-based state inside the component.`
+          );
         }
       }
     },
@@ -181,6 +187,12 @@ export function createSsrSvelteMicroApp(
         // Svelte 3/4: $set()
         if (typeof instance.$set === 'function') {
           instance.$set(props);
+        } else {
+          // Svelte 5 removed $set — props must be passed via reactive state inside the component
+          console.warn(
+            `[Tuvix] updateAppProps("${config.name}"): Svelte 5 does not support $set(). ` +
+            `Pass props via a shared store or rune-based state inside the component.`
+          );
         }
       }
     },

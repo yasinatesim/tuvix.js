@@ -55,6 +55,8 @@ export function createApp(deps: AppDependencies): AppInstance {
       rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
       next();
     } else if (limit.count >= 10) {
+      const retryAfter = Math.ceil((limit.resetAt - now) / 1000);
+      res.setHeader('Retry-After', retryAfter);
       res.status(429).json({ error: 'Rate limit exceeded. Please wait before sending more requests.' });
     } else {
       limit.count++;

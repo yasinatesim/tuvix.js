@@ -45,6 +45,9 @@ export interface IJsSandbox {
   /** Execute a script string within the sandbox context */
   execScript(code: string): unknown;
 
+  /** Reset the sandbox, clearing all faked properties */
+  reset(): void;
+
   /** Check if sandbox is currently active */
   readonly active: boolean;
 

@@ -46,13 +46,13 @@ const highlighted = computed(() => {
 });
 
 function copyCode() {
-  if (typeof navigator !== 'undefined') {
-    navigator.clipboard.writeText(props.code);
-  }
-  copied.value = true;
-  setTimeout(() => {
-    copied.value = false;
-  }, 1000);
+  if (typeof navigator === 'undefined') return;
+  navigator.clipboard.writeText(props.code).then(() => {
+    copied.value = true;
+    setTimeout(() => { copied.value = false; }, 1000);
+  }).catch(() => {
+    // Clipboard permission denied — silently ignore, no false-positive feedback
+  });
 }
 
 function openInPlayground() {
