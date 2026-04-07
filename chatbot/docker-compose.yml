@@ -17,7 +17,7 @@ services:
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
     depends_on:
       chromadb:
-        condition: service_healthy
+        condition: service_started
       ollama-setup:
         condition: service_completed_successfully
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       - EMBED_MODEL=nomic-embed-text
     depends_on:
       chromadb:
-        condition: service_healthy
+        condition: service_started
       ollama-setup:
         condition: service_completed_successfully
     entrypoint: ["/bin/sh", "-c"]
