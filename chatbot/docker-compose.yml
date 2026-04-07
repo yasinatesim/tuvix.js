@@ -20,6 +20,15 @@ services:
         condition: service_started
       ollama-setup:
         condition: service_completed_successfully
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "⏳ Waiting for ChromaDB..."
+        until wget -qO- http://chromadb:8000/api/v1/heartbeat >/dev/null 2>&1; do
+          sleep 3
+        done
+        echo "✅ ChromaDB ready, starting server..."
+        node dist/server.js
     restart: unless-stopped
 
   # Auto-pulls Ollama models on first boot, then exits
