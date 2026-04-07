@@ -87,3 +87,8 @@ services:
 volumes:
   chromadb_data:
   ollama_data:
+
+networks:
+  default:
+    name: tuvix-chatbot-net
+    driver: bridge
