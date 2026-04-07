@@ -27,7 +27,7 @@ services:
     image: ollama/ollama
     depends_on:
       ollama:
-        condition: service_healthy
+        condition: service_started
     volumes:
       - ollama_data:/root/.ollama
     entrypoint: ["/bin/sh", "-c"]
