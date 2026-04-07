@@ -5,8 +5,6 @@ services:
     build:
       context: ..
       dockerfile: chatbot/Dockerfile
-    ports:
-      - "3001:3001"
     environment:
       - OLLAMA_URL=http://ollama:11434
       - CHROMA_URL=http://chromadb:8000
