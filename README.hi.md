@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 AI कंपोनेंट जेनरेटर
+
+हमारे अंतर्निहित AI चैटबॉट का उपयोग करके प्राकृतिक भाषा से tuvix.js कंपोनेंट जनरेट करें।
+
+- **संचालित:** Ollama + Qwen2.5 Coder (100% लोकल, कोई API लागत नहीं)
+- **RAG-आधारित:** 600 ओपन-सोर्स कंपोनेंट उदाहरणों से प्रासंगिक उदाहरण लाता है
+- **सपोर्ट करता है:** React, Vue, Svelte, Angular
+- **Dataset:** HuggingFace पर [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+---
+
 ## 📦 इंस्टॉलेशन
 
 ```bash
@@ -284,6 +295,7 @@ tuvix.js/
 | [Vue उदाहरण](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 प्रत्येक उदाहरण में दिखाया गया है:
+
 - एक **Shell (Host)** एप्लिकेशन जो Orchestrator को बूट करता है
 - दो **माइक्रो फ्रंटएंड ऐप्स** जो डायनेमिक रूप से रजिस्टर और लोड होते हैं
 - इवेंट बस के माध्यम से इंटर-ऐप कम्युनिकेशन
@@ -314,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - MIT लाइसेंस।
 अधिक जानकारी के लिए [LICENSE](./LICENSE) देखें।
-
 
 ---
 

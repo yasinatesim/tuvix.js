@@ -8,7 +8,12 @@
  *   per group as the English config. Catches "added a page to en.ts but forgot
  *   the other locales" mistakes.
  *
- * Check 2 — HEADING STRUCTURE:
+ * Check 2 — NAV STRUCTURE:
+ *   Every locale config must have the same number of top-level nav items as
+ *   English, and every nav item with a simple `link:` must share the same path.
+ *   Catches "added a nav link to en.ts but forgot all other locales" mistakes.
+ *
+ * Check 3 — HEADING STRUCTURE:
  *   Every translated markdown file must have the same number of H2 headings as
  *   its English counterpart. VitePress auto-generates the "On this page" TOC
  *   from H2 headings, so a mismatch means a broken TOC in that language.
@@ -43,7 +48,7 @@ interface ValidationError {
  * Extracts the content of the block starting after `key:` using brace counting.
  * Works for both `{ ... }` and `[ ... ]` blocks.
  */
-function extractBlock(source: string, key: string): string | null {
+export function extractBlock(source: string, key: string): string | null {
   const keyIdx = source.indexOf(key);
   if (keyIdx === -1) return null;
 
@@ -64,6 +69,83 @@ function extractBlock(source: string, key: string): string | null {
     }
   }
   return null;
+}
+
+// ─── Nav parsing ─────────────────────────────────────────────────────────────
+
+/**
+ * Extracts link paths from the nav array of a locale config file.
+ * Only extracts simple items that have a direct `link:` property (not dropdown `items:`).
+ * Returns an array of link strings like ['/guide/getting-started', '/playground', ...]
+ */
+export function parseNavLinks(configPath: string): string[] {
+  if (!fs.existsSync(configPath)) return [];
+  const content = fs.readFileSync(configPath, 'utf-8');
+
+  const navBlock = extractBlock(content, 'nav:');
+  if (!navBlock) return [];
+
+  // Extract all link values that appear directly in nav items (not nested items arrays)
+  // A simple item looks like: { text: '...', link: '/path', ... }
+  // We skip items that only appear inside a nested `items: [...]` dropdown
+  const links: string[] = [];
+
+  // Remove nested items blocks first to avoid matching their links
+  const withoutDropdowns = navBlock.replace(/items\s*:\s*\[[\s\S]*?\]/g, '');
+
+  const linkRegex = /link\s*:\s*['"]([^'"]+)['"]/g;
+  let match: RegExpExecArray | null;
+  while ((match = linkRegex.exec(withoutDropdowns)) !== null) {
+    links.push(match[1]);
+  }
+
+  return links;
+}
+
+/**
+ * Strips locale prefix from a nav link for comparison.
+ * '/de/guide/getting-started' → '/guide/getting-started'
+ * '/playground' → '/playground' (unchanged — no locale prefix)
+ */
+export function normalizeNavLink(link: string, locale: string): string {
+  const prefix = `/${locale}/`;
+  return link.startsWith(prefix) ? link.slice(prefix.length - 1) : link;
+}
+
+export function validateNav(): ValidationError[] {
+  const errors: ValidationError[] = [];
+  const enLinks = parseNavLinks(path.join(CONFIG_DIR, 'en.ts'));
+
+  for (const locale of LOCALES) {
+    const configPath = path.join(CONFIG_DIR, `${locale}.ts`);
+
+    if (!fs.existsSync(configPath)) continue; // already caught by sidebar check
+
+    const rawLinks = parseNavLinks(configPath);
+    const normalizedLinks = rawLinks.map((l) => normalizeNavLink(l, locale));
+
+    if (normalizedLinks.length !== enLinks.length) {
+      const missing = enLinks.filter((l) => !normalizedLinks.includes(l));
+      errors.push({
+        locale,
+        message:
+          `Nav has ${normalizedLinks.length} link item(s) but English has ${enLinks.length}. ` +
+          `Missing: [${missing.join(', ')}]`,
+      });
+      continue;
+    }
+
+    for (const enLink of enLinks) {
+      if (!normalizedLinks.includes(enLink)) {
+        errors.push({
+          locale,
+          message: `Nav is missing link: '${enLink}' (present in English config)`,
+        });
+      }
+    }
+  }
+
+  return errors;
 }
 
 // ─── Sidebar parsing ──────────────────────────────────────────────────────────
@@ -268,13 +350,26 @@ function main(): void {
     console.log('');
   }
 
-  console.log('2. Checking H2 heading counts across all locale docs...');
+  console.log('2. Checking nav link structure across all locales...');
+  const navErrors = validateNav();
+  if (navErrors.length === 0) {
+    console.log('   ✓ All locale navs match English nav links\n');
+  } else {
+    hasErrors = true;
+    console.error(`   ✗ ${navErrors.length} nav issue(s):\n`);
+    for (const err of navErrors) {
+      console.error(`   [${err.locale}] ${err.message}`);
+    }
+    console.log('');
+  }
+
+  console.log('3. Checking H2 heading counts across all locale docs...');
   const headingErrors = validateHeadings();
   if (headingErrors.length === 0) {
     console.log('   ✓ All translated files match English H2 heading counts\n');
   } else {
     hasErrors = true;
-    console.error(`   ✗ ${headingErrors.length} heading issue(s):\n`);
+    console.error(`   ✗ ${headingErrors.length} H2 heading issue(s):\n`);
     for (const err of headingErrors) {
       const loc = err.file ?? err.locale;
       console.error(`   [${loc}] ${err.message}`);

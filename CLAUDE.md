@@ -23,9 +23,22 @@ Build the feature or fix based on the enhanced prompt from Step 1.
 **Lockfile:** After any `package.json` change, run `pnpm install` from the monorepo root immediately and include `pnpm-lock.yaml` in the same commit. CI runs `--frozen-lockfile` — an out-of-sync lockfile breaks every CI job before any test runs.
 
 **Subagent constraints:** When dispatching subagents via subagent-driven-development, explicitly state these rules in each subagent prompt:
+
 - Use `pnpm`, not `npm`
 - Preserve all existing `package.json` fields beyond deps
 - Run `pnpm install` from root after any dep change and stage `pnpm-lock.yaml`
+
+### Styling Rules (applies to ALL packages and website)
+
+**Tailwind is FORBIDDEN.** Do not install, import, or use Tailwind CSS anywhere in this project — not in packages, website, or any new code. This is a hard rule with no exceptions.
+
+**Allowed styling approaches:**
+
+- **CSS Modules** (`.module.css` / `.module.scss`) — preferred for component-scoped styles
+- **SCSS** — for shared variables, mixins, and design tokens
+- **Plain CSS** — when modules aren't needed
+
+**Subagent constraint:** Include in every subagent prompt: *"Do NOT use Tailwind CSS. Use CSS Modules (.module.scss) for component styles and SCSS for shared design tokens."*
 
 ---
 
@@ -69,6 +82,10 @@ pnpm validate-i18n
 
 # 8. e2e-test job — MANDATORY before every commit, no exceptions
 pnpm exec playwright install --with-deps chromium && pnpm exec playwright test
+
+# 9. chatbot tests
+pnpm --filter chatbot test
+pnpm --filter chatbot test:e2e
 ```
 
 **If any command fails, fix it before committing. Never commit after skipping E2E.**
@@ -90,6 +107,7 @@ Tests must pass on **Node.js 18, 20, and 22** (matching the CI matrix).
 ### Test Quality Rules
 
 **String-based tests are insufficient for runtime code.** If you are testing code that runs in a different environment (browser, CDN, iframe) or gets compiled/transformed, string assertions will pass while the runtime fails. Use real compilation/execution tests:
+
 - For playground code examples → compile with esbuild (`transform()`) inside the test, assert no errors
 - For CLI templates → `createProject()` to a temp dir and check actual file contents
 - For transformer functions → run the actual transform and verify output compiles
@@ -121,6 +139,7 @@ Even if linter shows no errors, run the reviewer — it checks for security vuln
 ## Step 5: Commit Message
 
 After both tests and code review pass, **provide a commit message** in this format:
+
 ```
 <type>(<scope>): <short summary>
 
@@ -132,6 +151,7 @@ After both tests and code review pass, **provide a commit message** in this form
 **Types:** `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
 
 ### Example
+
 ```
 feat(parser): add support for async token resolution
 

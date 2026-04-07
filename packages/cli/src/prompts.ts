@@ -34,12 +34,12 @@ export async function runPrompts(args: {
     const result = await select({
       message: 'Template',
       options: [
-        { value: 'shell',        label: 'Shell',      hint: 'orchestrator with routing' },
-        { value: 'react-app',    label: 'React',      hint: 'micro-app' },
-        { value: 'vue-app',      label: 'Vue',        hint: 'micro-app' },
-        { value: 'svelte-app',   label: 'Svelte',     hint: 'micro-app' },
-        { value: 'angular-app',  label: 'Angular',    hint: 'micro-app' },
-        { value: 'vanilla-app',  label: 'Vanilla JS', hint: 'micro-app' },
+        { value: 'shell', label: 'Shell', hint: 'orchestrator with routing' },
+        { value: 'react-app', label: 'React', hint: 'micro-app' },
+        { value: 'vue-app', label: 'Vue', hint: 'micro-app' },
+        { value: 'svelte-app', label: 'Svelte', hint: 'micro-app' },
+        { value: 'angular-app', label: 'Angular', hint: 'micro-app' },
+        { value: 'vanilla-app', label: 'Vanilla JS', hint: 'micro-app' },
       ],
     });
     if (isCancel(result)) {
@@ -65,7 +65,9 @@ export async function runPrompts(args: {
 
   // Angular always requires TypeScript
   if (template === 'angular-app' && !typescript) {
-    console.log('  Angular requires TypeScript. Switching to TypeScript automatically.');
+    console.log(
+      '  Angular requires TypeScript. Switching to TypeScript automatically.'
+    );
     typescript = true;
   }
 

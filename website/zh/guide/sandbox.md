@@ -76,9 +76,11 @@ import { createSandbox } from '@tuvix.js/sandbox';
 
 const sandbox = createSandbox({ css: true, js: true });
 
-// 为元素创建隔离容器
-const { container, cleanup } = sandbox.mount(rootElement);
+// 激活隔离
+const shadowRoot = sandbox.activate(rootElement);
 
-// 稍后拆除
-cleanup();
+// ... 应用在隔离中运行 ...
+
+// 完成后停用
+sandbox.deactivate(rootElement);
 ```

@@ -34,10 +34,15 @@ orchestrator.register('my-app', {
 import { createSandbox } from '@tuvix.js/sandbox';
 
 const sandbox = createSandbox({ css: true, js: true });
-const { container, cleanup } = sandbox.mount(document.getElementById('root')!);
+const container = document.getElementById('app')!;
 
-myApp.mount(container);
-cleanup();
+// Activate isolation
+const shadowRoot = sandbox.activate(container);
+
+// ... app runs in isolation ...
+
+// Deactivate when done
+sandbox.deactivate(container);
 ```
 
 ## API
@@ -48,12 +53,22 @@ cleanup();
 interface SandboxOptions {
   css?: boolean;
   js?: boolean;
+  allowedGlobals?: string[];
+  strict?: boolean;
 }
 ```
 
-### `sandbox.mount(element) → { container, cleanup }`
+### `sandbox.activate(element) → ShadowRoot`
 
-Verilen element için izole bir kapsam oluşturur.
+Tüm izolasyon katmanlarını etkinleştirir. Shadow DOM kökünü döndürür.
+
+### `sandbox.deactivate(element)`
+
+Tüm izolasyon katmanlarını devre dışı bırakır ve konteyneri geri yükler.
+
+### `sandbox.destroy(element)`
+
+İzolasyonu devre dışı bırakır ve JS sandbox kapsamını tamamen sıfırlar.
 
 ### CSS İzolasyon Detayları
 
@@ -61,4 +76,4 @@ Verilen element için izole bir kapsam oluşturur.
 
 ### JS İzolasyon Detayları
 
-`js: true` olduğunda `window.*` atamaları, `addEventListener` çağrıları, `setTimeout` / `setInterval` ve stil/script enjeksiyonu yakalanır ve `cleanup()` ile temizlenir.
+`js: true` olduğunda `window.*` atamaları, `addEventListener` çağrıları, `setTimeout` / `setInterval` ve stil/script enjeksiyonu yakalanır ve `sandbox.deactivate(container)` ile temizlenir.

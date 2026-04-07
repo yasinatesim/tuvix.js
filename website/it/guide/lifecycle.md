@@ -17,10 +17,12 @@ async mount(container: HTMLElement, props?: Record<string, unknown>): Promise<vo
 ```
 
 **Argomenti:**
+
 - `container` - L'elemento DOM radice per il rendering
 - `props` - Props chiave-valore opzionali dalla shell
 
 **Esempio:**
+
 ```ts
 async mount(container, props) {
   // Configura la tua app
@@ -44,6 +46,7 @@ async unmount(container: HTMLElement): Promise<void>
 Qui è dove devi **pulire** - annullare le iscrizioni agli eventi, distruggere le istanze del framework, rimuovere i nodi DOM.
 
 **Esempio:**
+
 ```ts
 async unmount(container) {
   this._root?.unmount();
@@ -66,6 +69,7 @@ async update(container: HTMLElement, props?: Record<string, unknown>): Promise<v
 Se non implementato, l'orchestrator chiamerà `unmount` → `mount` per gli aggiornamenti delle props.
 
 **Esempio:**
+
 ```ts
 async update(container, props) {
   // Aggiorna efficientemente senza rimontaggio completo

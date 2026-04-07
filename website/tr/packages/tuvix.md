@@ -35,9 +35,11 @@ import { createOrchestrator, createRouter, getGlobalBus } from 'tuvix.js';
 ## Ne Zaman Bireysel Paketler Kullanmalı
 
 Hepsi bir arada `tuvix.js`'i kullanın:
+
 - Başlangıçtaysanız ve her şeyin kullanılabilir olmasını istiyorsanız
 - Bundle boyutu endişe kaynağı değilse
 
 Bireysel paketleri kullanın:
+
 - Bağımlılıklar konusunda açık olmak istiyorsanız
 - Büyük bir monorepo'da tree-shaking kontrolüne ihtiyacınız varsa

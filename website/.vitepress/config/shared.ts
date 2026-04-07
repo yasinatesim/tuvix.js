@@ -193,9 +193,5 @@ export const sharedConfig: UserConfig<DefaultTheme.Config> = {
       },
     ],
 
-    footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026 Tuvix.js Contributors',
-    },
   },
 };

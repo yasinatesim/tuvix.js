@@ -37,6 +37,19 @@
 
 ---
 
+## 🤖 AI Component Generator
+
+Generate tuvix.js components from natural language using our built-in AI chatbot.
+
+- **Powered by:** Ollama + Qwen2.5 Coder (runs 100% locally, no API costs)
+- **RAG-based:** Retrieves relevant examples from 600 open-source component examples
+- **Supports:** React, Vue, Svelte, Angular
+- **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) on HuggingFace
+
+> Try it: [AI Generator](/chatbot) on the documentation site
+
+---
+
 ## 📦 Installation
 
 ```bash
@@ -251,33 +264,37 @@ tuvix.js/
 
 ### 🔜 Coming Soon
 
-**Core Runtime**
+#### Core Runtime
+
 - [ ] Hot module reload across micro apps
 - [ ] Shared state management adapter (Zustand / Pinia adapter layer)
 - [ ] Plugin system & middleware API
 - [ ] Native ESM / importmap support
 - [x] Intersection Observer–based viewport mounting - lazy-mount apps only when their container scrolls into view, reducing initial JS execution cost
 
-**Server-Side Rendering**
+#### Server-Side Rendering
+
 - [x] BigPipe-style streaming SSR - send the shell HTML immediately over chunked transfer encoding, then stream each micro-app fragment as it resolves; dramatically reduces Time To First Byte compared to the current synchronous `composeHTML` approach
 - [x] Pre-compiled shell templates - compile the slot-injection template once at server startup rather than per request
 - [ ] Critical CSS extraction - inline above-the-fold styles in SSR responses for faster Largest Contentful Paint
 - [ ] Edge/CDN-aware server composition with stale-while-revalidate fragment caching
 
-**Resilience**
+#### Resilience
+
 - [x] Fail-safe fallback fragments - declarative per-app fallback HTML shown automatically when a micro-app fails to load or exceeds its timeout; keeps the page usable even when one service is down
 - [ ] Fragment A/B testing - register multiple versions of a micro-app and select at runtime via cookie matcher or custom predicate, enabling gradual rollouts without redeploying the shell
 
-**Observability**
+#### Observability
+
 - [x] Prometheus-compatible metrics endpoint (`/metrics`) from `@tuvix.js/server` - track mount/unmount counts, load durations, and error rates per app
 - [ ] Visual dependency graph in DevTools
 - [ ] VS Code extension for DevTools integration
 
-**Developer Experience**
+#### Developer Experience
+
 - [ ] Testing utilities & mock orchestrator
 - [ ] Storybook integration for micro app isolation
 - [ ] Preloading & prefetching strategies (already partially available via `prefetch.strategy` config)
-
 
 ---
 
@@ -302,6 +319,7 @@ Ready-to-run examples for each supported framework are available in the [`exampl
 | [Vue Example](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Each example demonstrates:
+
 - A **shell (host)** application that boots the orchestrator
 - Two **micro frontend apps** registered and loaded dynamically
 - Inter-app communication via the event bus
@@ -332,7 +350,6 @@ pnpm test
 
 Copyright © 2026 - MIT License.
 See [LICENSE](./LICENSE) for more information.
-
 
 ---
 

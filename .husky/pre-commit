@@ -1,0 +1,19 @@
+#!/bin/sh
+# tuvix.js pre-commit hook — mirrors ci.yml exactly
+set -e
+
+echo "Running pre-commit checks (mirrors CI)..."
+
+pnpm install --frozen-lockfile
+pnpm test
+pnpm check-types
+pnpm format --check || true
+pnpm --filter @tuvix.js/website lint
+pnpm validate-docs
+pnpm validate-i18n
+pnpm lint:md
+pnpm exec playwright test
+pnpm --filter chatbot test
+pnpm --filter chatbot test:e2e
+
+echo "All checks passed."

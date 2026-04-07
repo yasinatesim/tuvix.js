@@ -76,9 +76,11 @@ import { createSandbox } from '@tuvix.js/sandbox';
 
 const sandbox = createSandbox({ css: true, js: true });
 
-// 要素用の分離されたコンテナを作成
-const { container, cleanup } = sandbox.mount(rootElement);
+// 分離を有効化
+const shadowRoot = sandbox.activate(rootElement);
 
-// 後でクリーンアップ
-cleanup();
+// ... アプリが分離された状態で実行 ...
+
+// 完了したら無効化
+sandbox.deactivate(rootElement);
 ```

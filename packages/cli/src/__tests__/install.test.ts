@@ -43,7 +43,9 @@ describe('installDependencies', () => {
     spawnMock.mockReturnValue(fakeChild);
 
     const { installDependencies } = await import('../install');
-    await expect(installDependencies('/tmp/test', 'npm')).resolves.toBeUndefined();
+    await expect(
+      installDependencies('/tmp/test', 'npm')
+    ).resolves.toBeUndefined();
   });
 
   it('does not throw when spawn exits with non-zero code (graceful failure)', async () => {
@@ -62,7 +64,9 @@ describe('installDependencies', () => {
     spawnMock.mockReturnValue(fakeChild);
 
     const { installDependencies } = await import('../install');
-    await expect(installDependencies('/tmp/test', 'pnpm')).resolves.toBeUndefined();
+    await expect(
+      installDependencies('/tmp/test', 'pnpm')
+    ).resolves.toBeUndefined();
   });
 
   it('does not throw when spawn emits error event (graceful failure)', async () => {
@@ -83,6 +87,8 @@ describe('installDependencies', () => {
     spawnMock.mockReturnValue(fakeChild);
 
     const { installDependencies } = await import('../install');
-    await expect(installDependencies('/tmp/test', 'yarn')).resolves.toBeUndefined();
+    await expect(
+      installDependencies('/tmp/test', 'yarn')
+    ).resolves.toBeUndefined();
   });
 });

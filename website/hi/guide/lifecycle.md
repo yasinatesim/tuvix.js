@@ -17,10 +17,12 @@ async mount(container: HTMLElement, props?: Record<string, unknown>): Promise<vo
 ```
 
 **पैरामीटर:**
+
 - `container` - रेंडर करने के लिए रूट DOM एलिमेंट
 - `props` - शेल से वैकल्पिक कुंजी-मान props
 
 **उदाहरण:**
+
 ```ts
 async mount(container, props) {
   // अपनी ऐप सेटअप करें
@@ -44,6 +46,7 @@ async unmount(container: HTMLElement): Promise<void>
 यहां आपको **सफाई** करनी होगी - इवेंट की सदस्यता रद्द करें, फ्रेमवर्क इंस्टेंस नष्ट करें, DOM नोड्स हटाएं।
 
 **उदाहरण:**
+
 ```ts
 async unmount(container) {
   this._root?.unmount();
@@ -66,6 +69,7 @@ async update(container: HTMLElement, props?: Record<string, unknown>): Promise<v
 यदि लागू नहीं किया गया है, तो orchestrator props अपडेट के लिए `unmount` → `mount` को कॉल करेगा।
 
 **उदाहरण:**
+
 ```ts
 async update(container, props) {
   // पूर्ण रीमाउंट के बिना कुशलता से अपडेट करें

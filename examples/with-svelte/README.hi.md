@@ -15,7 +15,7 @@
 
 Demonstrates basic **Svelte 4 integration** using `@tuvix.js/svelte`.
 
-Two Svelte components (`.svelte`) are compiled by Vite, exported as Tuvix.js compatible modules via `createSvelteMicroApp`, and mounted by the core shell orchestrator. 
+Two Svelte components (`.svelte`) are compiled by Vite, exported as Tuvix.js compatible modules via `createSvelteMicroApp`, and mounted by the core shell orchestrator.
 
 ## Packages used
 

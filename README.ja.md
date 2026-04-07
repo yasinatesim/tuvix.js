@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 AIコンポーネントジェネレーター
+
+内蔵AIチャットボットを使用して、自然言語からtuvix.jsコンポーネントを生成します。
+
+- **搭載：** Ollama + Qwen2.5 Coder（100%ローカル動作、APIコストなし）
+- **RAGベース：** 600件のオープンソースコンポーネント事例から関連例を取得
+- **対応フレームワーク：** React、Vue、Svelte、Angular
+- **Dataset：** HuggingFaceの[tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+---
+
 ## 📦 インストール
 
 ```bash
@@ -284,6 +295,7 @@ tuvix.js/
 | [Vueサンプル](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 各サンプルでは以下を実演します：
+
 - Orchestratorを起動する**Host (Shell)**アプリケーション
 - 動的に登録・読み込みされる2つの**マイクロフロントエンドアプリ**
 - イベントバスによるアプリ間通信
@@ -314,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - MITライセンス。
 詳細は[LICENSE](./LICENSE)をご覧ください。
-
 
 ---
 

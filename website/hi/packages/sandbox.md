@@ -36,14 +36,15 @@ orchestrator.register('my-app', {
 import { createSandbox } from '@tuvix.js/sandbox';
 
 const sandbox = createSandbox({ css: true, js: true });
+const container = document.getElementById('app')!;
 
-const { container, cleanup } = sandbox.mount(document.getElementById('root')!);
+// Activate isolation
+const shadowRoot = sandbox.activate(container);
 
-// Render your app into `container`
-myApp.mount(container);
+// ... app runs in isolation ...
 
-// On teardown
-cleanup();
+// Deactivate when done
+sandbox.deactivate(container);
 ```
 
 ## API
@@ -54,23 +55,35 @@ cleanup();
 interface SandboxOptions {
   css?: boolean;  // Enable Shadow DOM isolation
   js?: boolean;   // Enable Proxy scope isolation
+  allowedGlobals?: string[];
+  strict?: boolean;
 }
 ```
 
-### `sandbox.mount(element) → { container, cleanup }`
+### `sandbox.activate(element) → ShadowRoot`
 
-Create an isolated scope for the given element. Returns the container to render into and a `cleanup` function.
+Activates all isolation layers. Returns the Shadow DOM root.
+
+### `sandbox.deactivate(element)`
+
+Deactivates all isolation layers and restores the container.
+
+### `sandbox.destroy(element)`
+
+Deactivates and fully resets the JS sandbox scope.
 
 ### CSS Isolation Details
 
 When `css: true`:
+
 - The target element becomes a Shadow DOM host
 - All styles inside are scoped to the shadow root
 - External global styles do not affect the micro app
 
 ### JS Isolation Details
 
-When `js: true`, the following are intercepted and cleaned up on `cleanup()`:
+When `js: true`, the following are intercepted and cleaned up on `sandbox.deactivate(container)`:
+
 - `window.*` property assignments
 - `addEventListener` calls
 - `setTimeout` / `setInterval` calls

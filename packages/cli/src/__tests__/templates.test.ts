@@ -88,10 +88,7 @@ describe('Template content validation', () => {
         tmpDir = await setup();
         try {
           const mainFile = MAIN_FILE[template]!;
-          const source = fs.readFileSync(
-            path.join(tmpDir, mainFile),
-            'utf-8'
-          );
+          const source = fs.readFileSync(path.join(tmpDir, mainFile), 'utf-8');
           const expectedImport = EXPECTED_IMPORTS[template]!;
           expect(source).toContain(expectedImport);
         } finally {
@@ -106,12 +103,18 @@ describe('JavaScript mode (typescript: false)', () => {
   it('react-app JS produces .jsx files not .tsx', async () => {
     const tmpName = `.tmp/tuvix-react-js-${Date.now()}`;
     const tmpDir = path.resolve(process.cwd(), tmpName);
-    await createProject({ name: tmpName, template: 'react-app', typescript: false });
+    await createProject({
+      name: tmpName,
+      template: 'react-app',
+      typescript: false,
+    });
     try {
       expect(fs.existsSync(path.join(tmpDir, 'src/main.jsx'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'src/App.jsx'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(false);
-      const pkg = JSON.parse(fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8'));
+      const pkg = JSON.parse(
+        fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
+      );
       expect(pkg.devDependencies.typescript).toBeUndefined();
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -121,7 +124,11 @@ describe('JavaScript mode (typescript: false)', () => {
   it('vue-app JS produces main.js and App.vue without lang="ts"', async () => {
     const tmpName = `.tmp/tuvix-vue-js-${Date.now()}`;
     const tmpDir = path.resolve(process.cwd(), tmpName);
-    await createProject({ name: tmpName, template: 'vue-app', typescript: false });
+    await createProject({
+      name: tmpName,
+      template: 'vue-app',
+      typescript: false,
+    });
     try {
       expect(fs.existsSync(path.join(tmpDir, 'src/main.js'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(false);
@@ -135,7 +142,11 @@ describe('JavaScript mode (typescript: false)', () => {
   it('vanilla-app JS produces main.js without tsconfig', async () => {
     const tmpName = `.tmp/tuvix-vanilla-js-${Date.now()}`;
     const tmpDir = path.resolve(process.cwd(), tmpName);
-    await createProject({ name: tmpName, template: 'vanilla-app', typescript: false });
+    await createProject({
+      name: tmpName,
+      template: 'vanilla-app',
+      typescript: false,
+    });
     try {
       expect(fs.existsSync(path.join(tmpDir, 'src/main.js'))).toBe(true);
       expect(fs.existsSync(path.join(tmpDir, 'tsconfig.json'))).toBe(false);

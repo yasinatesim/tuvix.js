@@ -1,6 +1,5 @@
 <template>
   <div class="live-playground">
-
     <div class="tab-bar">
       <button
         v-for="tab in TABS"
@@ -10,52 +9,96 @@
         :data-tab="tab.id"
         @click="switchTab(tab.id)"
       >
+        <!-- eslint-disable vue/no-v-html, vue/max-attributes-per-line -->
         <span class="tab-icon" v-html="tab.icon" />
+        <!-- eslint-enable vue/no-v-html, vue/max-attributes-per-line -->
         {{ tab.label }}
       </button>
     </div>
 
     <div class="demo-bar">
-      <button class="demo-btn" :class="{ active: demoType === 'counter' }" @click="switchDemo('counter')">Counter</button>
-      <button class="demo-btn" :class="{ active: demoType === 'todo' }" @click="switchDemo('todo')">Todo</button>
+      <button
+        class="demo-btn"
+        :class="{ active: demoType === 'counter' }"
+        @click="switchDemo('counter')"
+      >
+        Counter
+      </button>
+      <button
+        class="demo-btn"
+        :class="{ active: demoType === 'todo' }"
+        @click="switchDemo('todo')"
+      >
+        Todo
+      </button>
     </div>
 
     <div class="playground-body">
       <div class="editor-pane">
         <div class="pane-header">
           <span>{{ activeTabObj?.file }}</span>
-          <span v-if="compiling" class="compiling-pill">Compiling…</span>
+          <span
+            v-if="compiling"
+            class="compiling-pill"
+          >Compiling…</span>
         </div>
-        <div ref="editorEl" class="editor-mount" />
+        <div
+          ref="editorEl"
+          class="editor-mount"
+        />
       </div>
 
       <div class="right-pane">
         <div class="preview-pane">
-          <div class="pane-header"><span class="live-dot" />Preview</div>
-          <iframe ref="iframeEl" class="preview-frame" sandbox="allow-scripts" title="Live Preview" />
+          <div class="pane-header">
+            <span class="live-dot" />Preview
+          </div>
+          <iframe
+            ref="iframeEl"
+            class="preview-frame"
+            sandbox="allow-scripts"
+            title="Live Preview"
+          />
         </div>
         <div class="console-pane">
           <div class="pane-header">
             Console
-            <button class="clear-btn" @click="messages = []">Clear</button>
+            <button
+              class="clear-btn"
+              @click="messages = []"
+            >
+              Clear
+            </button>
           </div>
           <div class="console-body">
-            <div v-for="(msg, i) in messages" :key="i" class="console-msg" :class="msg.kind">
+            <div
+              v-for="(msg, i) in messages"
+              :key="i"
+              class="console-msg"
+              :class="msg.kind"
+            >
               <span class="msg-icon">{{ ICONS[msg.kind] }}</span>
               <span class="msg-text">{{ msg.text }}</span>
-              <span v-if="msg.line" class="msg-loc">:{{ msg.line }}</span>
+              <span
+                v-if="msg.line"
+                class="msg-loc"
+              >:{{ msg.line }}</span>
             </div>
-            <div v-if="!messages.length" class="console-empty">No output yet</div>
+            <div
+              v-if="!messages.length"
+              class="console-empty"
+            >
+              No output yet
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 // ── Closing script tag via unicode — keeps Vue SFC parser happy ────
 const CS = '<\u002Fscript>';
@@ -680,9 +723,10 @@ let editorInst:    import('monaco-editor').editor.IStandaloneCodeEditor | null =
 let monacoApi:     typeof import('monaco-editor') | null = null;
 let debounce:      ReturnType<typeof setTimeout> | null = null;
 let compileId = 0;
+let injectedCss = '';
 
 // ── Frame builder ──────────────────────────────────────────────────
-function buildSrcdoc(code: string, tabId: string): string {
+function buildSrcdoc(code: string, tabId: string, injectedCss = ''): string {
   const imports = { ...BASE, ...(FRAMEWORK_IMPORTS[tabId] ?? {}) };
   const importmap = JSON.stringify({ imports }, null, 2);
   const safe = code.replaceAll('<' + '/script>', '<\\/' + 'script>');
@@ -696,6 +740,7 @@ function buildSrcdoc(code: string, tabId: string): string {
   return [
     '<!DOCTYPE html><html><head><meta charset="utf-8">',
     '<style>*{box-sizing:border-box}body{margin:0;background:#080c10;color:#e2e8f0}</style>',
+    injectedCss ? `<style>${injectedCss.replaceAll('<' + '/style>', '<\\/style>')}</style>` : '',
     zoneTag,
     '<script type="importmap">', importmap, CS,
     compilerTag,
@@ -813,7 +858,7 @@ async function compile(code: string, tabId: string, id: number) {
     }
     if (id !== compileId) return;
     messages.value = [{ kind: 'success', text: `Compiled in ${Math.round(performance.now() - t0)}ms` }];
-    if (iframeEl.value) iframeEl.value.srcdoc = buildSrcdoc(compiled, tabId);
+    if (iframeEl.value) iframeEl.value.srcdoc = buildSrcdoc(compiled, tabId, injectedCss);
   } catch (err: unknown) {
     if (id !== compileId) return;
     const e = err as { errors?: { text: string; location?: { line: number } }[]; message?: string };
@@ -1306,6 +1351,71 @@ onMounted(async () => {
   // If we just compile `firstCode` here, we'd send vanilla code to the Svelte compiler
   // when the active tab is already 'svelte', causing a compilation failure.
   loadEditor(activeTab.value, demoType.value);
+
+  // Read query params from URL (e.g. from chatbot "Open in Playground")
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search);
+    const codeParam = params.get('code');
+    const frameworkParam = params.get('framework');
+
+    if (codeParam) {
+      try {
+        let decoded = decodeURIComponent(
+          atob(codeParam)
+            .split('')
+            .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+            .join(''),
+        );
+
+        // Strip CSS module imports: replace styles.xxx → 'xxx', remove import line
+        decoded = decoded.replace(
+          /import\s+(\w+)\s+from\s+['"][^'"]+\.module\.css['"];?\n?/g,
+          (_, varName: string) => {
+            decoded = decoded.replace(new RegExp(`\\b${varName}\\.(\\w+)\\b`, 'g'), "'$1'");
+            return '';
+          },
+        );
+
+        // Decode paired CSS and inject into iframe
+        const cssParam = params.get('css');
+        if (cssParam) {
+          try {
+            injectedCss = decodeURIComponent(
+              atob(decodeURIComponent(cssParam))
+                .split('')
+                .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+                .join(''),
+            );
+          } catch { /* ignore */ }
+        }
+
+        // Detect framework from URL param or auto-detect from code
+        const tabMap: Record<string, string> = {
+          react: 'react', vue: 'vue', svelte: 'svelte', angular: 'vanilla',
+        };
+        const autoDetect = frameworkParam
+          ? (tabMap[frameworkParam] ?? frameworkParam)
+          : decoded.includes("from '@tuvix.js/react'") || decoded.includes('from "react"') ? 'react'
+          : decoded.includes("from '@tuvix.js/vue'") || decoded.includes('from "vue"') ? 'vue'
+          : decoded.includes("from '@tuvix.js/svelte'") ? 'svelte'
+          : null;
+
+        const validIds = TABS.map((t: { id: string }) => t.id);
+        if (autoDetect && validIds.includes(autoDetect)) {
+          activeTab.value = autoDetect;
+          loadEditor(autoDetect, demoType.value);
+        }
+
+        await nextTick();
+        if (editorInst) {
+          editorInst.setValue(decoded);
+          scheduleCompile(decoded);
+        }
+      } catch {
+        // ignore invalid base64
+      }
+    }
+  }
 });
 
 onBeforeUnmount(() => {

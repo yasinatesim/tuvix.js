@@ -42,7 +42,11 @@ export function installDevTools(
   orchestrator: OrchestratorLike,
   options: DevToolsOptions = {}
 ): () => void {
-  const { maxLogEntries = 200, updateInterval = 1000 } = options;
+  const {
+    maxLogEntries = 200,
+    updateInterval = 1000,
+    autoOpen = true,
+  } = options;
 
   const panel = new DevToolsPanel();
   const logger = new EventLogger(maxLogEntries);
@@ -51,8 +55,11 @@ export function installDevTools(
   const bus = orchestrator.getEventBus();
   logger.attach(bus);
 
-  // Mount the panel
+  // Mount the panel (auto-open based on option)
   panel.mount();
+  if (!autoOpen) {
+    panel.toggle();
+  }
 
   // Periodic update loop
   const intervalId = setInterval(() => {

@@ -7,7 +7,8 @@
     "build": "vitepress build",
     "preview": "vitepress preview",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -17,10 +18,16 @@
     "globals": "^15.12.0",
     "typescript-eslint": "^8.15.0",
     "vitepress": "^1.6.4",
+    "vitest": "^2.1.0",
     "vue": "^3.5.13"
   },
   "dependencies": {
     "@monaco-editor/loader": "^1.7.0",
-    "esbuild-wasm": "^0.24.0"
+    "@types/dompurify": "^3.2.0",
+    "dompurify": "^3.3.3",
+    "esbuild-wasm": "^0.24.0",
+    "highlight.js": "^11.11.1",
+    "marked": "^14.0.0",
+    "sass": "^1.99.0"
   }
 }

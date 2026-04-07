@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 AI 组件生成器
+
+使用我们内置的 AI 聊天机器人，通过自然语言生成 tuvix.js 组件。
+
+- **驱动：** Ollama + Qwen2.5 Coder（100% 本地运行，无 API 费用）
+- **基于 RAG：** 从 600 个开源组件示例中检索相关示例
+- **支持：** React、Vue、Svelte、Angular
+- **数据集：** HuggingFace 上的 [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+---
+
 ## 📦 安装
 
 ```bash
@@ -284,6 +295,7 @@ tuvix.js/
 | [Vue 示例](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 每个示例演示了：
+
 - 启动Orchestrator的**Shell (Host)**应用
 - 动态注册和加载的两个**微前端应用**
 - 通过事件总线进行的应用间通信
@@ -314,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - MIT 许可证。
 查看 [LICENSE](./LICENSE) 了解更多信息。
-
 
 ---
 

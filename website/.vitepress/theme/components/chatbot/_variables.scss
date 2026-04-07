@@ -1,0 +1,44 @@
+// Mapped to VitePress CSS custom properties
+$chat-bg: var(--vp-c-bg);
+$chat-surface: var(--vp-c-bg-soft);
+$chat-surface-alt: var(--vp-c-bg-alt);
+$chat-border: var(--vp-c-divider);
+$chat-border-subtle: rgba(255, 255, 255, 0.06);
+$chat-text: var(--vp-c-text-1);
+$chat-text-2: var(--vp-c-text-2);
+$chat-text-3: var(--vp-c-text-3);
+$chat-brand: var(--vp-c-brand-1);
+$chat-brand-soft: var(--vp-c-brand-soft);
+
+// Spacing
+$sp-1: 4px;
+$sp-2: 8px;
+$sp-3: 12px;
+$sp-4: 16px;
+$sp-5: 20px;
+$sp-6: 24px;
+$sp-8: 32px;
+
+// Radii
+$r-sm: 4px;
+$r-md: 6px;
+$r-lg: 8px;
+$r-pill: 999px;
+
+// Typography
+$font-mono: var(--vp-font-family-mono);
+$font-body: var(--vp-font-family-base);
+$text-xs: 11px;
+$text-sm: 13px;
+$text-md: 15px;
+$text-lg: 18px;
+
+// Layout
+$sidebar-w: 220px;
+$nav-h: var(--vp-nav-height, 64px);
+
+// Code
+$code-bg: #0d1117;
+
+// Avatar
+$avatar-bg: var(--vp-c-brand-1);

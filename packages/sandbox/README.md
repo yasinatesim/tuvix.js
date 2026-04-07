@@ -15,21 +15,33 @@ npm install @tuvix.js/sandbox
 ```ts
 import { createSandbox } from '@tuvix.js/sandbox';
 
-const sandbox = createSandbox({
-  css: { mode: 'shadow' },
-  js: { enabled: true },
-});
-
+const sandbox = createSandbox({ css: true, js: true });
 const container = document.getElementById('app')!;
-sandbox.attach(container);
+
+// Activate isolation — styles and globals are now scoped
+const shadowRoot = sandbox.activate(container);
+
+// ... app runs in isolation ...
+
+// Deactivate when done
+sandbox.deactivate(container);
 ```
 
 ## API
 
 - **`createSandbox(options?)`** — Create a combined CSS + JS sandbox
-- **`CssSandbox`** — CSS isolation via Shadow DOM
-- **`JsSandbox`** — JavaScript isolation via Proxy scope
-- **`Sandbox`** — Combined sandbox managing both CSS and JS isolation
+- **`CssSandbox`** — CSS isolation via Shadow DOM (`wrap`, `addStyle`, `removeStyle`, `unwrap`)
+- **`JsSandbox`** — JavaScript isolation via Proxy scope (`activate`, `deactivate`, `execScript`, `reset`)
+- **`Sandbox`** — Combined sandbox: `activate(container)` → `deactivate(container)` → `destroy(container)`
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `css` | `boolean` | `true` | Enable CSS isolation via Shadow DOM |
+| `js` | `boolean` | `true` | Enable JS isolation via Proxy |
+| `allowedGlobals` | `string[]` | `[]` | Extra globals to pass through the JS sandbox |
+| `strict` | `boolean` | `false` | Block all writes to the real `window` |
 
 ## License
 

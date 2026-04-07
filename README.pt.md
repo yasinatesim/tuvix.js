@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 Gerador de Componentes IA
+
+Gere componentes tuvix.js a partir de linguagem natural usando nosso chatbot de IA integrado.
+
+- **Movido por:** Ollama + Qwen2.5 Coder (roda 100% localmente, sem custos de API)
+- **Baseado em RAG:** Recupera exemplos relevantes de 600 exemplos de componentes open-source
+- **Suporta:** React, Vue, Svelte, Angular
+- **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) no HuggingFace
+
+---
+
 ## 📦 Instalação
 
 ```bash
@@ -284,6 +295,7 @@ Exemplos prontos para execução para cada framework suportado estão disponíve
 | [Exemplo Vue](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Cada exemplo demonstra:
+
 - Uma aplicação **shell (host)** que inicializa o orquestrador
 - Duas **apps micro frontend** registradas e carregadas dinamicamente
 - Comunicação entre apps via event bus
@@ -314,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - Licença MIT.
 Consulte [LICENSE](./LICENSE) para mais informações.
-
 
 ---
 

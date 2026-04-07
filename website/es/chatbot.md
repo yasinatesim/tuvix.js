@@ -1,0 +1,10 @@
+---
+layout: page
+title: Generador de Componentes IA
+---
+
+<script setup>
+import ChatBot from '../.vitepress/theme/components/chatbot/ChatBot.vue'
+</script>
+
+<ChatBot />

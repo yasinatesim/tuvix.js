@@ -37,6 +37,17 @@
 
 ---
 
+## 🤖 KI-Komponenten-Generator
+
+Generieren Sie tuvix.js-Komponenten aus natürlicher Sprache mit unserem integrierten KI-Chatbot.
+
+- **Betrieben von:** Ollama + Qwen2.5 Coder (läuft 100% lokal, keine API-Kosten)
+- **RAG-basiert:** Ruft relevante Beispiele aus 600 Open-Source-Komponentenbeispielen ab
+- **Unterstützt:** React, Vue, Svelte, Angular
+- **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) auf HuggingFace
+
+---
+
 ## 📦 Installation
 
 ```bash
@@ -284,6 +295,7 @@ Sofort ausführbare Beispiele für jedes unterstützte Framework sind im Verzeic
 | [Vue-Beispiel](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
 
 Jedes Beispiel zeigt:
+
 - Eine **Shell-(Host-)Anwendung**, die den Orchestrator startet
 - Zwei **Micro-Frontend-Apps**, die dynamisch registriert und geladen werden
 - Inter-App-Kommunikation über den Event-Bus
@@ -314,7 +326,6 @@ pnpm test
 
 Copyright © 2026 - MIT-Lizenz.
 Siehe [LICENSE](./LICENSE) für weitere Informationen.
-
 
 ---
 

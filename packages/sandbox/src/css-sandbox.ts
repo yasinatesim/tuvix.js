@@ -62,23 +62,21 @@ export class CssSandbox implements ICssSandbox {
   }
 
   /**
-   * Remove the Shadow DOM wrapper. Content stays in place.
+   * Remove the Shadow DOM wrapper. Non-style content is moved back to the container.
    */
   unwrap(container: HTMLElement): void {
     const shadowRoot = this.shadowRoots.get(container);
     if (!shadowRoot) return;
 
-    // Move shadow content back to regular DOM
-    // Note: Shadow DOM can't be fully removed, but we clear it
-    while (shadowRoot.childNodes.length > 0) {
-      const child = shadowRoot.childNodes[0];
-      if (child) {
-        // Style elements should be discarded
-        if (child instanceof HTMLStyleElement) {
-          child.remove();
-        }
+    // Move shadow content back to regular DOM.
+    // Style elements are discarded (they were injected for isolation only).
+    // All other nodes (app content) are restored to the container.
+    const children = Array.from(shadowRoot.childNodes);
+    for (const child of children) {
+      if (child instanceof HTMLStyleElement) {
+        child.remove();
       } else {
-        break;
+        container.appendChild(child);
       }
     }
 

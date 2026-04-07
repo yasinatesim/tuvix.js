@@ -83,6 +83,14 @@ async function downloadAndExtractExample(
   example: string,
   targetDir: string
 ): Promise<void> {
+  // Allowlist: example names are kebab-case directory names only (no path components)
+  const safeExample = example.replace(/[^a-z0-9-]/gi, '');
+  if (!safeExample || safeExample !== example) {
+    throw new Error(
+      `Invalid example name "${example}". Only alphanumeric characters and hyphens are allowed.`
+    );
+  }
+
   const url = 'https://codeload.github.com/yasinatesim/tuvix.js/tar.gz/master';
 
   return new Promise((resolve, reject) => {
@@ -99,7 +107,8 @@ async function downloadAndExtractExample(
         const extract = tar.x({
           cwd: targetDir,
           strip: 3,
-          filter: (p) => p.startsWith(`tuvix.js-master/examples/${example}/`),
+          filter: (p) =>
+            p.startsWith(`tuvix.js-master/examples/${safeExample}/`),
         });
         res.pipe(extract).on('finish', resolve).on('error', reject);
       })
@@ -440,7 +449,10 @@ export default defineConfig({
   };
 
   if (typescript) {
-    files['tsconfig.json'] = buildTsconfig(undefined, ['src', 'vite.config.ts']);
+    files['tsconfig.json'] = buildTsconfig(undefined, [
+      'src',
+      'vite.config.ts',
+    ]);
   }
 
   return files;

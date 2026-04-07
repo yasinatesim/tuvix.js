@@ -222,6 +222,7 @@ export class Orchestrator {
    * Manually unmount a specific app
    */
   async unmountApp(name: string): Promise<void> {
+    this.ensureAlive();
     const app = this.apps.get(name);
     if (!app) {
       throw new Error(`[Tuvix] App "${name}" is not registered.`);
@@ -266,10 +267,18 @@ export class Orchestrator {
 
     if (app.status === 'mounted' && app.module?.update) {
       this.setAppStatus(app, 'updating');
-      // Apply props to config only after a successful update to keep state consistent.
-      await app.module.update({ props: mergedProps });
-      app.config.props = mergedProps;
-      this.setAppStatus(app, 'mounted');
+      try {
+        // Apply props to config only after a successful update to keep state consistent.
+        await app.module.update({ props: mergedProps });
+        app.config.props = mergedProps;
+        this.setAppStatus(app, 'mounted');
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        app.error = err;
+        this.setAppStatus(app, 'error');
+        this.config.onError?.(err, name);
+        throw err;
+      }
     } else {
       app.config.props = mergedProps;
     }
@@ -561,7 +570,8 @@ export class Orchestrator {
           app.container === entry.target &&
           app.status !== 'mounted' &&
           app.status !== 'mounting' &&
-          app.status !== 'bootstrapping'
+          app.status !== 'bootstrapping' &&
+          app.status !== 'error'
         ) {
           // Stop observing — we are about to mount.
           this.viewportObserver?.unobserve(entry.target);

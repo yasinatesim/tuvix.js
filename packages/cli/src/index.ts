@@ -98,7 +98,10 @@ async function main(): Promise<void> {
       console.log(`    ${pm} install`);
       console.log(`    ${pm} run dev\n`);
     } catch (error) {
-      console.error('\n  Error:', error instanceof Error ? error.message : error);
+      console.error(
+        '\n  Error:',
+        error instanceof Error ? error.message : error
+      );
       process.exit(1);
     }
     return;
