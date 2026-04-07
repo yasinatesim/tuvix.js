@@ -15,4 +15,4 @@ COPY --from=builder /app/chatbot/data ./data
 COPY --from=builder /app/chatbot/src ./src
 RUN npm install -g tsx
 EXPOSE 3001
-CMD ["node", "dist/server.js"]
+CMD ["tsx", "src/server.ts"]
