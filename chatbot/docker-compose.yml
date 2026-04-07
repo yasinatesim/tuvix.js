@@ -67,12 +67,6 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "ollama list > /dev/null 2>&1 || exit 1"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      start_period: 60s
 
   # ChromaDB vector database (no host port — only reachable within Docker network)
   # Pinned to 0.6.3 — compatible with chromadb@1.9.x npm client (1.x server changed the API)
@@ -81,12 +75,6 @@ services:
     volumes:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/api/v1/heartbeat || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
 
 volumes:
   chromadb_data:
