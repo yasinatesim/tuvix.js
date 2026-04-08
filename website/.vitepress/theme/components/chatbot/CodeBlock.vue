@@ -40,9 +40,15 @@ const highlighted = computed(() => {
   const lang =
     props.language === 'tsx' || props.language === 'jsx'
       ? 'javascript'
-      : props.language || 'plaintext';
-  return hljs.highlight(props.code, { language: lang, ignoreIllegals: true })
-    .value;
+      : props.language;
+  try {
+    if (lang) {
+      return hljs.highlight(props.code, { language: lang, ignoreIllegals: true }).value;
+    }
+    return hljs.highlightAuto(props.code).value;
+  } catch {
+    return escapeHtml(props.code);
+  }
 });
 
 function copyCode() {

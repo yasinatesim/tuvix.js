@@ -51,9 +51,12 @@ const BLOCK_WRAP = 'border:1px solid rgba(255,255,255,0.08);border-radius:6px;ov
 const BLOCK_HDR  = 'padding:4px 12px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--vp-font-family-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--vp-c-text-3)';
 
 function renderHighlighted(rawLang: string, code: string): string {
-  const lang = rawLang === 'tsx' || rawLang === 'jsx' ? 'javascript' : (rawLang || 'plaintext');
+  const lang = rawLang === 'tsx' || rawLang === 'jsx' ? 'javascript' : rawLang;
   try {
-    return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+    if (lang) {
+      return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+    }
+    return hljs.highlightAuto(code).value;
   } catch {
     return escapeHtml(code);
   }
