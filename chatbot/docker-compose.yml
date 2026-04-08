@@ -8,7 +8,7 @@ services:
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - MODEL_NAME=${MODEL_NAME:-minimax/minimax-m2.5:free}
-      - EMBED_MODEL=${EMBED_MODEL:-qwen/qwen3-embedding-0.6b:free}
+      - EMBED_MODEL=${EMBED_MODEL:-qwen/qwen3-embedding-0.6b}
       - CHROMA_URL=http://chromadb:8000
       - PORT=3001
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
@@ -31,7 +31,7 @@ services:
       dockerfile: chatbot/Dockerfile
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - EMBED_MODEL=${EMBED_MODEL:-qwen/qwen3-embedding-0.6b:free}
+      - EMBED_MODEL=${EMBED_MODEL:-qwen/qwen3-embedding-0.6b}
       - CHROMA_URL=http://chromadb:8000
     depends_on:
       chromadb:
