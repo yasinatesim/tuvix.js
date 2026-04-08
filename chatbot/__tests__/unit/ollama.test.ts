@@ -86,7 +86,7 @@ describe('OllamaClient', () => {
       const client = createOllamaClient('http://localhost:11434', 'nomic-embed-text');
       const tokens: string[] = [];
 
-      for await (const token of client.chat('starcoder2:3b', [
+      for await (const token of client.chat('phi3.5:mini', [
         { role: 'system', content: 'You are helpful.' },
         { role: 'user', content: 'Hello' },
       ])) {

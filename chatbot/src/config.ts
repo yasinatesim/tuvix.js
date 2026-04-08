@@ -1,7 +1,7 @@
 export const CONFIG = {
   ollamaUrl: process.env.OLLAMA_URL ?? 'http://localhost:11434',
   chromaUrl: process.env.CHROMA_URL ?? 'http://localhost:8000',
-  modelName: process.env.MODEL_NAME ?? 'starcoder2:3b',
+  modelName: process.env.MODEL_NAME ?? 'phi3.5:mini',
   embedModel: process.env.EMBED_MODEL ?? 'nomic-embed-text',
   port: parseInt(process.env.PORT ?? '3001', 10),
   corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
