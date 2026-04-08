@@ -41,9 +41,18 @@ const props = defineProps<{
 }>();
 
 // Only extract/render code blocks after streaming is done — prevents duplicate display
-const codeBlocks = computed(() =>
-  props.streaming ? [] : extractCodeBlocks(props.content),
-);
+const CODE_PATTERN = /import\s+[\w{*]|function\s+\w+|const\s+\w+\s*=|<\w[\w.]*[\s/>]/;
+
+const codeBlocks = computed(() => {
+  if (props.streaming) return [];
+  const blocks = extractCodeBlocks(props.content);
+  if (blocks.length > 0) return blocks;
+  // Fallback: model output has no fences but looks like code
+  if (CODE_PATTERN.test(props.content)) {
+    return [{ language: props.framework || 'javascript', code: props.content.trim() }];
+  }
+  return [];
+});
 
 const PRE_STYLE =
   'white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed';
@@ -62,10 +71,22 @@ function renderHighlighted(rawLang: string, code: string): string {
   }
 }
 
-// OpenWebUI approach: use marked.lexer() to parse full content progressively.
-// All blocks (closed and open/unclosed) stay visible and highlighted throughout streaming.
+const FENCE_OPEN_RE = /^```(\w*)\n?/;
+
 const htmlContent = computed(() => {
   if (props.streaming) {
+    // If content starts with a code fence (possibly still open/unclosed during streaming),
+    // strip the fence line and render the raw code directly — avoids marked.lexer treating
+    // an unclosed fence as plain paragraph text.
+    const fenceMatch = props.content.match(FENCE_OPEN_RE);
+    if (fenceMatch) {
+      const lang = fenceMatch[1] || props.framework || '';
+      const code = props.content.slice(fenceMatch[0].length).replace(/```\s*$/, '');
+      const raw = `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${lang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, code)}</code></pre></div>`;
+      return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
+    }
+
+    // No fence — try lexer for mixed markdown responses
     const tokens = marked.lexer(props.content);
     let html = '';
     for (const token of tokens) {
@@ -78,7 +99,8 @@ const htmlContent = computed(() => {
         if (text.trim()) html += `<p style="margin:4px 0;font-size:13px;line-height:1.6;color:var(--vp-c-text-2)">${text}</p>`;
       }
     }
-    const raw = html || `<pre style="${PRE_STYLE}">${escapeHtml(props.content)}</pre>`;
+    // If still nothing rendered, show raw content as code (fence-less model output)
+    const raw = html || `<div style="${BLOCK_WRAP}"><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(props.framework || '', props.content)}</code></pre></div>`;
     return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
   }
   return parseMarkdownContent(props.content);
