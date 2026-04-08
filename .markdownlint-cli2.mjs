@@ -50,6 +50,8 @@ const config = {
     '.claude/**',
     // Memory files
     'memory/**',
+    // Playwright test artifacts (auto-generated, may contain malformed markdown)
+    'test-results/**',
   ],
 };
 

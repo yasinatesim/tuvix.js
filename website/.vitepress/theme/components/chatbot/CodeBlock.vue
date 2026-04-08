@@ -37,8 +37,9 @@ const highlighted = computed(() => {
   if (typeof window === 'undefined') {
     return escapeHtml(props.code);
   }
+  // jsx/tsx/js/javascript all go through the javascript highlighter (ignoreIllegals handles JSX)
   const lang =
-    props.language === 'tsx' || props.language === 'jsx'
+    ['jsx', 'tsx', 'js', 'javascript'].includes(props.language)
       ? 'javascript'
       : props.language;
   try {

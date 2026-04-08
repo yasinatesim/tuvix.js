@@ -4,7 +4,8 @@
 
 # Dependencies
 node_modules
-
+.env.production
+.env.development
 # Misc
 .DS_Store
 *.log

@@ -9,7 +9,7 @@ const props = defineProps<{
   apiUrl?: string;
 }>();
 
-const API_BASE_URL = props.apiUrl ?? 'http://localhost:3001';
+const API_BASE_URL = props.apiUrl ?? import.meta.env.VITE_CHATBOT_API_URL ?? 'http://localhost:3001';
 
 const MESSAGE_ROLES = {
   USER: 'user',

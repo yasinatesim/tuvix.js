@@ -41,18 +41,9 @@ const props = defineProps<{
 }>();
 
 // Only extract/render code blocks after streaming is done — prevents duplicate display
+// Detect fence-less code output from model (import/function/JSX patterns)
 const CODE_PATTERN = /import\s+[\w{*]|function\s+\w+|const\s+\w+\s*=|<\w[\w.]*[\s/>]/;
-
-const codeBlocks = computed(() => {
-  if (props.streaming) return [];
-  const blocks = extractCodeBlocks(props.content);
-  if (blocks.length > 0) return blocks;
-  // Fallback: model output has no fences but looks like code
-  if (CODE_PATTERN.test(props.content)) {
-    return [{ language: props.framework || 'javascript', code: props.content.trim() }];
-  }
-  return [];
-});
+const FENCE_OPEN_RE = /^```(\w*)\n?/;
 
 const PRE_STYLE =
   'white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed';
@@ -60,7 +51,7 @@ const BLOCK_WRAP = 'border:1px solid rgba(255,255,255,0.08);border-radius:6px;ov
 const BLOCK_HDR  = 'padding:4px 12px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--vp-font-family-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--vp-c-text-3)';
 
 function renderHighlighted(rawLang: string, code: string): string {
-  const lang = rawLang === 'tsx' || rawLang === 'jsx' ? 'javascript' : rawLang;
+  const lang = ['jsx', 'tsx', 'js', 'javascript'].includes(rawLang) ? 'javascript' : rawLang;
   try {
     if (lang) {
       return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
@@ -71,38 +62,63 @@ function renderHighlighted(rawLang: string, code: string): string {
   }
 }
 
-const FENCE_OPEN_RE = /^```(\w*)\n?/;
+function renderCodeBlock(lang: string, code: string): string {
+  return `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${lang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, code)}</code></pre></div>`;
+}
+
+// True when the whole response is code (no fences) — used to suppress the markdown div
+const isFencelessCode = computed(() =>
+  !props.streaming &&
+  extractCodeBlocks(props.content).length === 0 &&
+  CODE_PATTERN.test(props.content),
+);
+
+const codeBlocks = computed(() => {
+  if (props.streaming) return [];
+  const blocks = extractCodeBlocks(props.content);
+  if (blocks.length > 0) return blocks;
+  // Fence-less fallback: entire response is code
+  if (CODE_PATTERN.test(props.content)) {
+    return [{ language: props.framework || 'javascript', code: props.content.trim() }];
+  }
+  return [];
+});
 
 const htmlContent = computed(() => {
   if (props.streaming) {
-    // If content starts with a code fence (possibly still open/unclosed during streaming),
-    // strip the fence line and render the raw code directly — avoids marked.lexer treating
-    // an unclosed fence as plain paragraph text.
+    // Case 1: content starts with an (unclosed) code fence → render as code block immediately
     const fenceMatch = props.content.match(FENCE_OPEN_RE);
     if (fenceMatch) {
       const lang = fenceMatch[1] || props.framework || '';
       const code = props.content.slice(fenceMatch[0].length).replace(/```\s*$/, '');
-      const raw = `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${lang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, code)}</code></pre></div>`;
+      const raw = renderCodeBlock(lang, code);
       return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
     }
 
-    // No fence — try lexer for mixed markdown responses
+    // Case 2: no fence but content looks like code — render as code block (avoids <p> collapsing newlines)
+    if (CODE_PATTERN.test(props.content)) {
+      const raw = renderCodeBlock(props.framework || '', props.content);
+      return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
+    }
+
+    // Case 3: markdown text (no code detected) — use lexer for best-effort rendering
     const tokens = marked.lexer(props.content);
     let html = '';
     for (const token of tokens) {
       if (token.type === 'code') {
         const lang = (token as { lang?: string; text: string }).lang || '';
-        const text = (token as { text: string }).text;
-        html += `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${lang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, text)}</code></pre></div>`;
+        html += renderCodeBlock(lang, (token as { text: string }).text);
       } else if (token.type === 'paragraph' || token.type === 'text') {
         const text = escapeHtml((token as { text: string }).text ?? '');
         if (text.trim()) html += `<p style="margin:4px 0;font-size:13px;line-height:1.6;color:var(--vp-c-text-2)">${text}</p>`;
       }
     }
-    // If still nothing rendered, show raw content as code (fence-less model output)
-    const raw = html || `<div style="${BLOCK_WRAP}"><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(props.framework || '', props.content)}</code></pre></div>`;
+    const raw = html || escapeHtml(props.content);
     return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
   }
+
+  // Post-streaming: fence-less code is handled entirely by <CodeBlock>, suppress markdown div
+  if (isFencelessCode.value) return '';
   return parseMarkdownContent(props.content);
 });
 </script>

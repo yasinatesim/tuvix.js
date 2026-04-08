@@ -32,6 +32,12 @@ const app = createReactMicroApp({ name: 'my-component', App: MyComponent });
 app.mount({ container: document.getElementById('app') });
 \`\`\`
 
+WRONG — never do this:
+\`\`\`javascript
+export default createReactMicroApp(...);   // ❌ export default is forbidden
+const app = createReactMicroApp(...);      // ❌ without app.mount() is wrong
+\`\`\`
+
 STRICT RULES:
 0. YOU MUST wrap your entire response in \`\`\`jsx ... \`\`\` fences. No raw code, no explanation outside the fences.
 1. createReactMicroApp MUST receive an object: { name: '...', App: ComponentName }
@@ -42,6 +48,9 @@ STRICT RULES:
 6. NO invented hooks (useTuvix, useRouter are FORBIDDEN)
 7. Standard React hooks only: useState, useEffect, useRef
 8. ALWAYS close every JSX tag. Every <tag> must have a matching </tag> or be self-closing.
+9. NEVER nest JSX without closing the parent. Wrong: <div>text<span>. Correct: <div>text</div><span>.
+10. Template literals in JSX attributes MUST use backticks: href={\`#\${section}\`} — NOT href={#\${section}}
+11. Every JSX element attribute list ends with > or /> before children begin. Wrong: <div style={{}} children. Correct: <div style={{}}><children/></div>.
 
 Reference examples:
 ${examples}`;
