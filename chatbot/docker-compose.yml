@@ -8,7 +8,7 @@ services:
     environment:
       - OLLAMA_URL=http://ollama:11434
       - CHROMA_URL=http://chromadb:8000
-      - MODEL_NAME=qwen2.5-coder:1.5b
+      - MODEL_NAME=starcoder2:3b
       - EMBED_MODEL=nomic-embed-text
       - PORT=3001
       - OLLAMA_TIMEOUT_MS=300000
@@ -38,7 +38,7 @@ services:
         echo "⏳ Pulling embedding model..."
         OLLAMA_HOST=http://ollama:11434 ollama pull nomic-embed-text
         echo "⏳ Pulling code generation model (this may take a while)..."
-        OLLAMA_HOST=http://ollama:11434 ollama pull qwen2.5-coder:1.5b
+        OLLAMA_HOST=http://ollama:11434 ollama pull starcoder2:3b
         echo "✅ All models ready!"
     networks:
       - dokploy-network
