@@ -11,7 +11,7 @@ services:
       - MODEL_NAME=qwen2.5-coder:3b
       - EMBED_MODEL=nomic-embed-text
       - PORT=3001
-      - OLLAMA_TIMEOUT_MS=120000
+      - OLLAMA_TIMEOUT_MS=300000
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
     ports:
       - "3001:3001"
