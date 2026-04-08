@@ -51,9 +51,11 @@ export function createVectorStore(chromaUrl: string, collectionName: string): Ve
     },
 
     async query(embedding: number[], nResults: number, framework?: string): Promise<QueryResult[]> {
+      const total = await collection.count();
+      if (total === 0) return [];
       const queryParams: Parameters<typeof collection.query>[0] = {
         queryEmbeddings: [embedding],
-        nResults,
+        nResults: Math.min(nResults, total),
       };
 
       if (framework) {

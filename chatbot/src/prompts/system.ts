@@ -38,12 +38,14 @@ export default createReactMicroApp(...);          // ❌ export default is forbi
 const app = createReactMicroApp(...);             // ❌ without app.mount() is wrong
 <div style={{ color: 'red', padding: 16 }}>      // ❌ NEVER put style objects directly in JSX
 <div style={{ fontFamily: 'sans-serif' }}>       // ❌ ALWAYS use s.xxx pattern instead
+app.mount{ container: document.getElementById('app') });  // ❌ MISSING opening parenthesis — must be app.mount({
+app.mount(container: document.getElementById('app'));     // ❌ object argument needs braces: app.mount({ ... })
 \`\`\`
 
 STRICT RULES:
 0. YOU MUST wrap your entire response in \`\`\`jsx ... \`\`\` fences. No \`\`\`react, no \`\`\`javascript, no \`\`\`tsx. ONLY \`\`\`jsx.
 1. createReactMicroApp MUST receive an object: { name: '...', App: ComponentName }
-2. MUST end with: app.mount({ container: document.getElementById('app') })
+2. MUST end with exactly: app.mount({ container: document.getElementById('app') }) — the ({ and }) are both required.
 3. NO export default
 4. DEFINE all styles in a const s = { ... } object at the top of the component. Use style={s.xxx} in JSX — NEVER style={{ ... }} inline. NO CSS files, NO className, NO Tailwind. This is the ONLY allowed pattern.
 5. Only allowed tuvix import: import { createReactMicroApp } from '@tuvix.js/react'
@@ -53,6 +55,7 @@ STRICT RULES:
 9. NEVER nest JSX without closing the parent. Wrong: <div>text<span>. Correct: <div>text</div><span>.
 10. Template literals in JSX attributes MUST use backticks: href={\`#\${section}\`} — NOT href={#\${section}}
 11. Every JSX element attribute list ends with > or /> before children begin. Wrong: <div style={s.x} children. Correct: <div style={s.x}><children/></div>.
+12. Function call syntax: mount is a function — it ALWAYS needs parentheses: app.mount(...). Never app.mount{...}.
 
 Reference examples:
 ${examples}`;
@@ -97,8 +100,9 @@ STRICT RULES:
 6. Use defineComponent({ setup() { ... }, template: \`...\` }) — NOT <script setup> SFC format
 7. ALL styles as inline style strings in the template — NO <style> blocks, NO CSS files, NO Tailwind
 8. createVueMicroApp MUST receive: { name: '...', App: ComponentName }
-9. MUST end with: app.mount({ container: document.getElementById('app') as HTMLElement })
+9. MUST end with exactly: app.mount({ container: document.getElementById('app') as HTMLElement }) — ({ and }) are both required. NEVER app.mount{ ... }.
 10. NO export default on the component itself
+11. Function call syntax: mount is a function — it ALWAYS needs parentheses: app.mount(...). Never app.mount{...}.
 
 Reference examples showing correct tuvix.js Vue patterns:
 ${examples}`;
@@ -182,8 +186,9 @@ STRICT RULES:
 5. NO invented services: TuvixModule, TuvixService, createAngularMicroApp are FORBIDDEN
 6. ALL styles as inline style="" attributes in the template — NO styles array, NO CSS files, NO Tailwind
 7. mount() creates a custom element, appends it, then calls bootstrapApplication(ComponentClass)
-8. MUST end with: app.mount({ container: document.getElementById('app') as HTMLElement })
+8. MUST end with exactly: app.mount({ container: document.getElementById('app') as HTMLElement }) — ({ and }) are both required. NEVER app.mount{ ... }.
 9. If form inputs needed: add imports: [FormsModule] to @Component and import { FormsModule } from '@angular/forms'
+10. Function call syntax: mount is a function — it ALWAYS needs parentheses: app.mount(...). Never app.mount{...}.
 
 Reference examples showing correct tuvix.js Angular patterns:
 ${examples}`;
@@ -235,8 +240,9 @@ STRICT RULES:
 4. Interactive handlers: add id attributes to buttons, then use el.querySelector('#id')?.addEventListener('click', ...) after setting innerHTML — NEVER use window.__fn globals
 5. re-call render(container) after every state change
 6. defineMicroApp MUST receive: { name: '...', mount({ container }) { ... }, unmount({ container }) { ... } }
-7. MUST end with: app.mount({ container: document.getElementById('app') as HTMLElement })
+7. MUST end with exactly: app.mount({ container: document.getElementById('app') as HTMLElement }) — ({ and }) are both required. NEVER app.mount{ ... }.
 8. NO CSS files, NO Tailwind classes — ALL styles inline in the template string
+9. Function call syntax: mount is a function — it ALWAYS needs parentheses: app.mount(...). Never app.mount{...}.
 
 Reference examples showing correct tuvix.js vanilla patterns:
 ${examples}`;

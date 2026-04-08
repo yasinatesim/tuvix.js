@@ -64,6 +64,7 @@ describe('VectorStore', () => {
 
   describe('query', () => {
     it('queries with embedding and returns results', async () => {
+      mockCollection.count.mockResolvedValueOnce(10);
       mockCollection.query.mockResolvedValueOnce({
         ids: [['react-header-001']],
         distances: [[0.15]],
@@ -88,6 +89,7 @@ describe('VectorStore', () => {
     });
 
     it('queries with framework filter', async () => {
+      mockCollection.count.mockResolvedValueOnce(10);
       mockCollection.query.mockResolvedValueOnce({ ids: [[]], distances: [[]], metadatas: [[]], documents: [[]] });
 
       const store = createVectorStore('http://localhost:8000', 'tuvix_components');
