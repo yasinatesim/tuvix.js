@@ -188,7 +188,7 @@ function sendExamplePrompt(prompt: string) {
                 href="https://ollama.com"
                 target="_blank"
                 rel="noopener"
-              >Qwen2.5 Coder</a> &middot; <a
+              >StarCoder2</a> &middot; <a
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"
