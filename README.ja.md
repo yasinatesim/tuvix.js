@@ -41,8 +41,7 @@
 
 内蔵AIチャットボットを使用して、自然言語からtuvix.jsコンポーネントを生成します。
 
-- **搭載：** Ollama + Phi3.5%ローカル動作、APIコストなし）
-- **RAGベース：** 600件のオープンソースコンポーネント事例から関連例を取得
+- **動作環境：** OpenRouter 経由の MiniMax M2.5（無料 API、セルフホスティング不要）
 - **対応フレームワーク：** React、Vue、Svelte、Angular
 - **Dataset：** HuggingFaceの[tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
 

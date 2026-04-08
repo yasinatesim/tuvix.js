@@ -41,8 +41,7 @@
 
 Yerleşik AI chatbot ile doğal dilden tuvix.js bileşenleri üretin.
 
-- **Motor:** Ollama + Phi3.5 (tamamen yerel çalışır, API maliyeti yok)
-- **RAG tabanlı:** 600 açık kaynak bileşen örneğinden ilgili örnekleri alır
+- **Motor:** OpenRouter üzerinden MiniMax M2.5 (ücretsiz API, sunucu gerektirmez)
 - **Destekler:** React, Vue, Svelte, Angular
 - **Veri seti:** HuggingFace'de [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
 

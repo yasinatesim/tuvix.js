@@ -6,74 +6,45 @@ services:
       context: ..
       dockerfile: chatbot/Dockerfile
     environment:
-      - OLLAMA_URL=http://ollama:11434
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - MODEL_NAME=${MODEL_NAME:-minimax/minimax-m2.5:free}
+      - EMBED_MODEL=${EMBED_MODEL:-qwen/qwen3-embedding-0.6b:free}
       - CHROMA_URL=http://chromadb:8000
-      - MODEL_NAME=phi3.5
-      - EMBED_MODEL=nomic-embed-text
       - PORT=3001
-      - OLLAMA_TIMEOUT_MS=300000
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
     ports:
       - "3001:3001"
     depends_on:
       chromadb:
         condition: service_started
-      ollama-setup:
+      chatbot-seed:
         condition: service_completed_successfully
     restart: unless-stopped
     networks:
       - dokploy-network
 
-  # Auto-pulls Ollama models on first boot, then exits
-  ollama-setup:
-    image: ollama/ollama
-    depends_on:
-      ollama:
-        condition: service_started
-    volumes:
-      - ollama_data:/root/.ollama
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        set -e
-        echo "⏳ Pulling embedding model..."
-        OLLAMA_HOST=http://ollama:11434 ollama pull nomic-embed-text
-        echo "⏳ Pulling code generation model (this may take a while)..."
-        OLLAMA_HOST=http://ollama:11434 ollama pull phi3.5
-        echo "✅ All models ready!"
-    networks:
-      - dokploy-network
-
   # Seeds dataset into ChromaDB on first boot, then exits
+  # Clears and re-seeds so embedding model changes take effect cleanly
   chatbot-seed:
     build:
       context: ..
       dockerfile: chatbot/Dockerfile
     environment:
-      - OLLAMA_URL=http://ollama:11434
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - EMBED_MODEL=${EMBED_MODEL:-qwen/qwen3-embedding-0.6b:free}
       - CHROMA_URL=http://chromadb:8000
-      - EMBED_MODEL=nomic-embed-text
     depends_on:
       chromadb:
         condition: service_started
-      ollama-setup:
-        condition: service_completed_successfully
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-        echo "⏳ Seeding dataset into ChromaDB..."
-        cd /app && tsx data/seed.ts
+        echo "⏳ Clearing old ChromaDB collection..."
+        cd /app && tsx chatbot/data/seed-clear.ts
+        echo "⏳ Seeding dataset into ChromaDB via OpenRouter embeddings..."
+        tsx chatbot/data/seed.ts
         echo "✅ Dataset seeded!"
     restart: "no"
-    networks:
-      - dokploy-network
-
-  # Ollama LLM server
-  ollama:
-    image: ollama/ollama
-    volumes:
-      - ollama_data:/root/.ollama
-    restart: unless-stopped
     networks:
       - dokploy-network
 
@@ -89,7 +60,6 @@ services:
 
 volumes:
   chromadb_data:
-  ollama_data:
 
 networks:
   dokploy-network:

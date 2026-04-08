@@ -185,10 +185,10 @@ function sendExamplePrompt(prompt: string) {
             </div>
             <p :class="$style.welcomeFooter">
               Powered by <a
-                href="https://ollama.com"
+                href="https://openrouter.ai/minimax/minimax-m2.5:free"
                 target="_blank"
                 rel="noopener"
-              >Phi3.5</a> &middot; <a
+              >MiniMax M2.5</a> &middot; <a
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"

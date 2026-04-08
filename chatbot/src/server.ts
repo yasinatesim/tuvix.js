@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { fileURLToPath } from 'url';
 import { createChatRoute } from './routes/chat';
-import { createOllamaClient } from './services/ollama';
+import { createOpenRouterClient } from './services/openrouter';
 import { createVectorStore } from './services/vectordb';
 import { createRagPipeline, type RagPipeline } from './services/rag';
 import { CONFIG } from './config';
@@ -33,15 +33,12 @@ export function createApp(deps: AppDependencies): AppInstance {
 
   // Rate limiting: 10 requests per minute per IP
   const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-  // Evict stale rate-limit entries every minute to prevent unbounded growth.
-  // Store the timer so callers can clear it (prevents leaks in tests).
   const cleanupTimer = setInterval(() => {
     const now = Date.now();
     for (const [ip, entry] of rateLimitMap) {
       if (now > entry.resetAt) rateLimitMap.delete(ip);
     }
   }, 60_000);
-  // Allow Node.js to exit even if the timer is still active (non-blocking ref)
   cleanupTimer.unref();
 
   // Concurrent SSE connection tracking: max 2 open streams per IP
@@ -90,13 +87,16 @@ async function waitForChromaDb(store: ReturnType<typeof createVectorStore>, maxA
 }
 
 async function main() {
-  const ollama = createOllamaClient(CONFIG.ollamaUrl, CONFIG.embedModel, CONFIG.ollamaTimeoutMs);
+  if (!CONFIG.openRouterApiKey) {
+    throw new Error('OPENROUTER_API_KEY environment variable is required');
+  }
 
+  const llm = createOpenRouterClient(CONFIG.openRouterApiKey, CONFIG.embedModel, CONFIG.timeoutMs);
   const store = createVectorStore(CONFIG.chromaUrl, CONFIG.collectionName);
 
   await waitForChromaDb(store);
 
-  const rag = createRagPipeline(ollama, store, CONFIG.modelName);
+  const rag = createRagPipeline(llm, store, CONFIG.modelName);
 
   const { app } = createApp({
     rag,
@@ -110,7 +110,6 @@ async function main() {
   });
 }
 
-// Only start server when run directly (not when imported in tests)
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch(console.error);
 }

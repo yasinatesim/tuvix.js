@@ -1,4 +1,4 @@
-import type { OllamaClient, ChatMessage } from './ollama';
+import type { LLMClient, ChatMessage } from './openrouter';
 import type { VectorStore } from './vectordb';
 import { buildSystemPrompt } from '../prompts/system';
 
@@ -16,7 +16,7 @@ export interface RagPipeline {
 }
 
 export function createRagPipeline(
-  ollama: OllamaClient,
+  llm: LLMClient,
   store: VectorStore,
   modelName: string,
 ): RagPipeline {
@@ -26,7 +26,7 @@ export function createRagPipeline(
       framework: string | null,
       onSources: (sources: SourceReference[]) => void,
     ): AsyncGenerator<string> {
-      const embedding = await ollama.embed(userMessage);
+      const embedding = await llm.embed(userMessage);
       const results = await store.query(embedding, 5, framework ?? undefined);
       onSources(results.map((r) => ({ id: r.id, score: r.score })));
       const examples = results.map((r) => ({ code: r.code, description: r.description }));
@@ -35,7 +35,7 @@ export function createRagPipeline(
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userMessage },
       ];
-      yield* ollama.chat(modelName, messages);
+      yield* llm.chat(modelName, messages);
     },
   };
 }
