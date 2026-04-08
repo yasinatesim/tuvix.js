@@ -41,7 +41,8 @@
 
 内蔵AIチャットボットを使用して、自然言語からtuvix.jsコンポーネントを生成します。
 
-- **動作環境：** OpenRouter 経由の MiniMax M2.5（無料 API、セルフホスティング不要）
+- **チャットモデル：** OpenRouter 経由の MiniMax M2.5（無料 API、セルフホスティング不要）
+- **埋め込みモデル：** OpenRouter 経由の NVIDIA Nemotron Embed 1B（RAG 検索）
 - **対応フレームワーク：** React、Vue、Svelte、Angular
 - **Dataset：** HuggingFaceの[tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
 

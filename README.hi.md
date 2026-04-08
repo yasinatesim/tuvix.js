@@ -41,7 +41,8 @@
 
 हमारे अंतर्निहित AI चैटबॉट का उपयोग करके प्राकृतिक भाषा से tuvix.js कंपोनेंट जनरेट करें।
 
-- **संचालित:** OpenRouter के माध्यम से MiniMax M2.5 (मुफ़्त API, सेल्फ-होस्टिंग की ज़रूरत नहीं)
+- **चैट मॉडल:** OpenRouter के माध्यम से MiniMax M2.5 (मुफ़्त API, सेल्फ-होस्टिंग की ज़रूरत नहीं)
+- **एम्बेडिंग मॉडल:** OpenRouter के माध्यम से NVIDIA Nemotron Embed 1B (RAG रिट्रीवल)
 - **सपोर्ट करता है:** React, Vue, Svelte, Angular
 - **Dataset:** HuggingFace पर [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
 

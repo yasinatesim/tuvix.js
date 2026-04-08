@@ -41,7 +41,8 @@
 
 Yerleşik AI chatbot ile doğal dilden tuvix.js bileşenleri üretin.
 
-- **Motor:** OpenRouter üzerinden MiniMax M2.5 (ücretsiz API, sunucu gerektirmez)
+- **Sohbet modeli:** OpenRouter üzerinden MiniMax M2.5 (ücretsiz API, sunucu gerektirmez)
+- **Gömme modeli:** OpenRouter üzerinden NVIDIA Nemotron Embed 1B (RAG erişimi)
 - **Destekler:** React, Vue, Svelte, Angular
 - **Veri seti:** HuggingFace'de [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
 

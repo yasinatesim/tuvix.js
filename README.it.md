@@ -41,7 +41,8 @@
 
 Genera componenti tuvix.js dal linguaggio naturale usando il nostro chatbot IA integrato.
 
-- **Powered by:** MiniMax M2.5 via OpenRouter (API gratuita, nessun self-hosting richiesto)
+- **Modello chat:** MiniMax M2.5 via OpenRouter (API gratuita, nessun self-hosting richiesto)
+- **Modello embedding:** NVIDIA Nemotron Embed 1B via OpenRouter (recupero RAG)
 - **Supporta:** React, Vue, Svelte, Angular
 - **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) su HuggingFace
 

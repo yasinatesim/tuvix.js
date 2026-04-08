@@ -189,6 +189,10 @@ function sendExamplePrompt(prompt: string) {
                 target="_blank"
                 rel="noopener"
               >MiniMax M2.5</a> &middot; <a
+                href="https://openrouter.ai/nvidia/llama-nemotron-embed-vl-1b-v2:free"
+                target="_blank"
+                rel="noopener"
+              >NVIDIA Nemotron Embed</a> &middot; <a
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"

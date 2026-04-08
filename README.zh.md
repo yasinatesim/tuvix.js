@@ -41,7 +41,8 @@
 
 使用我们内置的 AI 聊天机器人，通过自然语言生成 tuvix.js 组件。
 
-- **驱动：** MiniMax M2.5 通过 OpenRouter（免费 API，无需自托管）
+- **对话模型：** MiniMax M2.5 通过 OpenRouter（免费 API，无需自托管）
+- **嵌入模型：** NVIDIA Nemotron Embed 1B 通过 OpenRouter（RAG 检索）
 - **支持：** React、Vue、Svelte、Angular
 - **数据集：** HuggingFace 上的 [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
 
