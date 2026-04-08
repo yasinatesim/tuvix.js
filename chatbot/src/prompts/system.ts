@@ -33,6 +33,7 @@ app.mount({ container: document.getElementById('app') });
 \`\`\`
 
 STRICT RULES:
+0. YOU MUST wrap your entire response in \`\`\`jsx ... \`\`\` fences. No raw code, no explanation outside the fences.
 1. createReactMicroApp MUST receive an object: { name: '...', App: ComponentName }
 2. MUST end with: app.mount({ container: document.getElementById('app') })
 3. NO export default
@@ -40,6 +41,7 @@ STRICT RULES:
 5. Only allowed tuvix import: import { createReactMicroApp } from '@tuvix.js/react'
 6. NO invented hooks (useTuvix, useRouter are FORBIDDEN)
 7. Standard React hooks only: useState, useEffect, useRef
+8. ALWAYS close every JSX tag. Every <tag> must have a matching </tag> or be self-closing.
 
 Reference examples:
 ${examples}`;
@@ -75,6 +77,7 @@ app.mount({ container: document.getElementById('app') as HTMLElement });
 \`\`\`
 
 STRICT RULES:
+0. YOU MUST wrap your entire response in \`\`\`typescript ... \`\`\` fences. No raw code, no explanation outside the fences.
 1. MUST import: import { createVueMicroApp } from '@tuvix.js/vue'
 2. MUST import: import { defineComponent, ... } from 'vue'
 3. NO other @tuvix.js/* imports allowed
@@ -107,6 +110,7 @@ CORRECT format (follow exactly):
 \`\`\`
 
 STRICT RULES:
+0. YOU MUST wrap your entire response in \`\`\`svelte ... \`\`\` fences. No raw code, no explanation outside the fences.
 1. Output is a raw Svelte SFC — NO wrapper functions, NO imports from @tuvix.js/*
 2. Script section uses plain Svelte 4 syntax: let, function declarations
 3. NO invented utilities: useTuvix is FORBIDDEN
@@ -159,6 +163,7 @@ app.mount({ container: document.getElementById('app') as HTMLElement });
 \`\`\`
 
 STRICT RULES:
+0. YOU MUST wrap your entire response in \`\`\`typescript ... \`\`\` fences. No raw code, no explanation outside the fences.
 1. MUST import: import { defineMicroApp } from 'tuvix.js'
 2. MUST import: import { Component } from '@angular/core'
 3. MUST import: import { bootstrapApplication } from '@angular/platform-browser'
@@ -212,6 +217,7 @@ app.mount({ container: document.getElementById('app') as HTMLElement });
 \`\`\`
 
 STRICT RULES:
+0. YOU MUST wrap your entire response in \`\`\`typescript ... \`\`\` fences. No raw code, no explanation outside the fences.
 1. MUST import: import { defineMicroApp } from 'tuvix.js'
 2. NO React, Vue, Svelte, or Angular — pure DOM manipulation only
 3. All UI built with el.innerHTML = \`...\` template literals with inline styles
