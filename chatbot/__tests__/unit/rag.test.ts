@@ -36,7 +36,7 @@ describe('RAG Pipeline', () => {
   it('embeds the user message', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
-    const rag = createRagPipeline(ollama, store, 'phi3.5:mini');
+    const rag = createRagPipeline(ollama, store, 'phi3.5');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _ of rag.generate('react header', 'react', () => {})) { /* consume */ }
     expect(ollama.embed).toHaveBeenCalledWith('react header');
@@ -45,7 +45,7 @@ describe('RAG Pipeline', () => {
   it('queries vector store with embedding and framework', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
-    const rag = createRagPipeline(ollama, store, 'phi3.5:mini');
+    const rag = createRagPipeline(ollama, store, 'phi3.5');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _ of rag.generate('react header', 'react', () => {})) { /* consume */ }
     expect(store.query).toHaveBeenCalledWith([0.1, 0.2, 0.3], 5, 'react');
@@ -54,12 +54,12 @@ describe('RAG Pipeline', () => {
   it('passes retrieved examples to LLM via system prompt', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
-    const rag = createRagPipeline(ollama, store, 'phi3.5:mini');
+    const rag = createRagPipeline(ollama, store, 'phi3.5');
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _ of rag.generate('header', 'react', () => {})) { /* consume */ }
 
     const chatCall = (ollama.chat as ReturnType<typeof vi.fn>).mock.calls[0];
-    expect(chatCall[0]).toBe('phi3.5:mini');
+    expect(chatCall[0]).toBe('phi3.5');
 
     const messages = chatCall[1];
     expect(messages[0].role).toBe('system');
@@ -72,7 +72,7 @@ describe('RAG Pipeline', () => {
   it('yields tokens from LLM', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
-    const rag = createRagPipeline(ollama, store, 'phi3.5:mini');
+    const rag = createRagPipeline(ollama, store, 'phi3.5');
 
     const tokens: string[] = [];
     for await (const token of rag.generate('header', 'react', () => {})) {
@@ -84,7 +84,7 @@ describe('RAG Pipeline', () => {
   it('calls onSources callback with retrieved sources', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
-    const rag = createRagPipeline(ollama, store, 'phi3.5:mini');
+    const rag = createRagPipeline(ollama, store, 'phi3.5');
     let capturedSources: Array<{ id: string; score: number }> = [];
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _ of rag.generate('header', 'react', (s) => { capturedSources = s; })) { /* consume */ }
@@ -94,7 +94,7 @@ describe('RAG Pipeline', () => {
   it('invokes onSources before yielding any tokens', async () => {
     const ollama = createMockOllama();
     const store = createMockStore();
-    const rag = createRagPipeline(ollama, store, 'phi3.5:mini');
+    const rag = createRagPipeline(ollama, store, 'phi3.5');
     let sourcesReceivedBeforeFirstToken = false;
     let onSourcesCalled = false;
 

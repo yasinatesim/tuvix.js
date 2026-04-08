@@ -188,7 +188,7 @@ function sendExamplePrompt(prompt: string) {
                 href="https://ollama.com"
                 target="_blank"
                 rel="noopener"
-              >Phi3.5 Mini</a> &middot; <a
+              >Phi3.5</a> &middot; <a
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"

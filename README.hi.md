@@ -41,7 +41,7 @@
 
 हमारे अंतर्निहित AI चैटबॉट का उपयोग करके प्राकृतिक भाषा से tuvix.js कंपोनेंट जनरेट करें।
 
-- **संचालित:** Ollama + Phi3.5 Mini (100% लोकल, कोई API लागत नहीं)
+- **संचालित:** Ollama + Phi3.5 (100% लोकल, कोई API लागत नहीं)
 - **RAG-आधारित:** 600 ओपन-सोर्स कंपोनेंट उदाहरणों से प्रासंगिक उदाहरण लाता है
 - **सपोर्ट करता है:** React, Vue, Svelte, Angular
 - **Dataset:** HuggingFace पर [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
