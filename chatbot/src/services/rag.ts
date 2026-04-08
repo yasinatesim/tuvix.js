@@ -27,7 +27,12 @@ export function createRagPipeline(
       onSources: (sources: SourceReference[]) => void,
     ): AsyncGenerator<string> {
       const embedding = await llm.embed(userMessage);
-      const results = await store.query(embedding, 5, framework ?? undefined);
+      let results: Awaited<ReturnType<typeof store.query>> = [];
+      try {
+        results = await store.query(embedding, 5, framework ?? undefined);
+      } catch (err) {
+        console.warn('ChromaDB query failed, falling back to LLM-only response:', err instanceof Error ? err.message : err);
+      }
       onSources(results.map((r) => ({ id: r.id, score: r.score })));
       const examples = results.map((r) => ({ code: r.code, description: r.description }));
       const systemPrompt = buildSystemPrompt(framework, examples);
