@@ -34,23 +34,25 @@ app.mount({ container: document.getElementById('app') });
 
 WRONG — never do this:
 \`\`\`javascript
-export default createReactMicroApp(...);   // ❌ export default is forbidden
-const app = createReactMicroApp(...);      // ❌ without app.mount() is wrong
+export default createReactMicroApp(...);          // ❌ export default is forbidden
+const app = createReactMicroApp(...);             // ❌ without app.mount() is wrong
+<div style={{ color: 'red', padding: 16 }}>      // ❌ NEVER put style objects directly in JSX
+<div style={{ fontFamily: 'sans-serif' }}>       // ❌ ALWAYS use s.xxx pattern instead
 \`\`\`
 
 STRICT RULES:
-0. YOU MUST wrap your entire response in \`\`\`jsx ... \`\`\` fences. No raw code, no explanation outside the fences.
+0. YOU MUST wrap your entire response in \`\`\`jsx ... \`\`\` fences. No \`\`\`react, no \`\`\`javascript, no \`\`\`tsx. ONLY \`\`\`jsx.
 1. createReactMicroApp MUST receive an object: { name: '...', App: ComponentName }
 2. MUST end with: app.mount({ container: document.getElementById('app') })
 3. NO export default
-4. ALL styles as inline JS style objects (s.xxx pattern) — NO CSS files, NO className, NO Tailwind
+4. DEFINE all styles in a const s = { ... } object at the top of the component. Use style={s.xxx} in JSX — NEVER style={{ ... }} inline. NO CSS files, NO className, NO Tailwind. This is the ONLY allowed pattern.
 5. Only allowed tuvix import: import { createReactMicroApp } from '@tuvix.js/react'
 6. NO invented hooks (useTuvix, useRouter are FORBIDDEN)
 7. Standard React hooks only: useState, useEffect, useRef
 8. ALWAYS close every JSX tag. Every <tag> must have a matching </tag> or be self-closing.
 9. NEVER nest JSX without closing the parent. Wrong: <div>text<span>. Correct: <div>text</div><span>.
 10. Template literals in JSX attributes MUST use backticks: href={\`#\${section}\`} — NOT href={#\${section}}
-11. Every JSX element attribute list ends with > or /> before children begin. Wrong: <div style={{}} children. Correct: <div style={{}}><children/></div>.
+11. Every JSX element attribute list ends with > or /> before children begin. Wrong: <div style={s.x} children. Correct: <div style={s.x}><children/></div>.
 
 Reference examples:
 ${examples}`;

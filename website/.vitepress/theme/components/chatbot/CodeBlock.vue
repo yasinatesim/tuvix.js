@@ -20,7 +20,7 @@ import { ref, computed } from 'vue';
 import hljs from 'highlight.js';
 import { escapeHtml } from './utils';
 
-const JS_LANGS = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript']);
+const JS_LANGS = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript', 'react']);
 
 const props = defineProps<{
   code: string;
@@ -39,7 +39,7 @@ const highlighted = computed(() => {
   }
   // jsx/tsx/js/javascript all go through the javascript highlighter (ignoreIllegals handles JSX)
   const lang =
-    ['jsx', 'tsx', 'js', 'javascript'].includes(props.language)
+    ['jsx', 'tsx', 'js', 'javascript', 'react'].includes(props.language)
       ? 'javascript'
       : props.language;
   try {
@@ -72,7 +72,7 @@ function openInPlayground() {
 <template>
   <div :class="$style.codeblock">
     <div :class="$style.header">
-      <span :class="$style.lang">{{ language || 'code' }}</span>
+      <span :class="$style.lang">{{ language === 'react' ? 'jsx' : (language || 'code') }}</span>
       <div :class="$style.actions">
         <button
           :class="$style.btn"

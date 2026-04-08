@@ -50,8 +50,15 @@ const PRE_STYLE =
 const BLOCK_WRAP = 'border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;margin:8px 0';
 const BLOCK_HDR  = 'padding:4px 12px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--vp-font-family-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--vp-c-text-3)';
 
+// Normalize language tag for display and hljs
+// 'react' is not a valid hljs lang — map to 'jsx' for display, 'javascript' for hljs
+function normalizeDisplayLang(rawLang: string): string {
+  if (['jsx', 'tsx', 'js', 'javascript', 'react'].includes(rawLang)) return 'jsx';
+  return rawLang;
+}
+
 function renderHighlighted(rawLang: string, code: string): string {
-  const lang = ['jsx', 'tsx', 'js', 'javascript'].includes(rawLang) ? 'javascript' : rawLang;
+  const lang = ['jsx', 'tsx', 'js', 'javascript', 'react'].includes(rawLang) ? 'javascript' : rawLang;
   try {
     if (lang) {
       return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
@@ -63,7 +70,8 @@ function renderHighlighted(rawLang: string, code: string): string {
 }
 
 function renderCodeBlock(lang: string, code: string): string {
-  return `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${lang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, code)}</code></pre></div>`;
+  const displayLang = normalizeDisplayLang(lang);
+  return `<div style="${BLOCK_WRAP}"><div style="${BLOCK_HDR}">${displayLang || 'code'}</div><pre class="hljs" style="${PRE_STYLE}"><code>${renderHighlighted(lang, code)}</code></pre></div>`;
 }
 
 // True when the whole response is code (no fences) — used to suppress the markdown div
@@ -75,7 +83,10 @@ const isFencelessCode = computed(() =>
 
 const codeBlocks = computed(() => {
   if (props.streaming) return [];
-  const blocks = extractCodeBlocks(props.content);
+  const blocks = extractCodeBlocks(props.content).map((b) => ({
+    ...b,
+    language: b.language === 'react' ? 'jsx' : b.language,
+  }));
   if (blocks.length > 0) return blocks;
   // Fence-less fallback: entire response is code
   if (CODE_PATTERN.test(props.content)) {
