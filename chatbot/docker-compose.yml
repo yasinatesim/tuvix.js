@@ -21,6 +21,8 @@ services:
       ollama-setup:
         condition: service_completed_successfully
     restart: unless-stopped
+    networks:
+      - dokploy-network
 
   # Auto-pulls Ollama models on first boot, then exits
   ollama-setup:
@@ -38,6 +40,8 @@ services:
         echo "⏳ Pulling code generation model (this may take a while)..."
         OLLAMA_HOST=http://ollama:11434 ollama pull qwen2.5-coder:7b
         echo "✅ All models ready!"
+    networks:
+      - dokploy-network
 
   # Seeds dataset into ChromaDB on first boot, then exits
   chatbot-seed:
@@ -60,28 +64,33 @@ services:
         cd /app && tsx data/seed.ts
         echo "✅ Dataset seeded!"
     restart: "no"
+    networks:
+      - dokploy-network
 
-  # Ollama LLM server (no host port — only reachable within Docker network)
+  # Ollama LLM server
   ollama:
     image: ollama/ollama
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+    networks:
+      - dokploy-network
 
-  # ChromaDB vector database (no host port — only reachable within Docker network)
+  # ChromaDB vector database
   # Pinned to 0.6.3 — compatible with chromadb@1.9.x npm client (1.x server changed the API)
   chromadb:
     image: chromadb/chroma:0.6.3
     volumes:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
-
+    networks:
+      - dokploy-network
 
 volumes:
   chromadb_data:
   ollama_data:
 
 networks:
-  default:
-    name: tuvix-chatbot-net
-    driver: bridge
+  dokploy-network:
+    external: true
+    name: dokploy-network
