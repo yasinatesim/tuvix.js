@@ -40,9 +40,9 @@ services:
     command:
       - |
         echo "⏳ Clearing old ChromaDB collection..."
-        cd /app && tsx chatbot/data/seed-clear.ts
+        cd /app && tsx data/seed-clear.ts
         echo "⏳ Seeding dataset into ChromaDB via OpenRouter embeddings..."
-        tsx chatbot/data/seed.ts
+        tsx data/seed.ts
         echo "✅ Dataset seeded!"
     restart: "no"
     networks:
