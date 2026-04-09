@@ -15,4 +15,4 @@ async function clearCollection() {
   console.log('Ready to re-seed.');
 }
 
-clearCollection().catch(console.error);
+clearCollection().catch((err) => { console.error(err); process.exit(1); });

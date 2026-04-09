@@ -51,4 +51,4 @@ async function seed() {
   console.log(`✅ Done! ${total} total records seeded.`);
 }
 
-seed().catch(console.error);
+seed().catch((err) => { console.error(err); process.exit(1); });
