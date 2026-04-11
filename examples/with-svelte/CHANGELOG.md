@@ -1,5 +1,11 @@
 # with-svelte
 
+## 0.1.5
+
+### Patch Changes
+
+- @tuvix.js/core@0.4.4
+
 ## 0.1.4
 
 ### Patch Changes

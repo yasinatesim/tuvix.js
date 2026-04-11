@@ -1,5 +1,15 @@
 # tuvix.js
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [e8f0731]
+  - @tuvix.js/loader@0.4.4
+  - @tuvix.js/router@0.4.4
+  - @tuvix.js/sandbox@0.4.4
+  - @tuvix.js/core@0.4.4
+
 ## 0.1.5
 
 ### Patch Changes
