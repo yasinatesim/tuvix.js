@@ -30,7 +30,14 @@ export class CssSandbox implements ICssSandbox {
       return existing;
     }
 
-    const shadowRoot = container.attachShadow({ mode: 'open' });
+    let shadowRoot: ShadowRoot;
+    try {
+      shadowRoot = container.attachShadow({ mode: 'open' });
+    } catch (err) {
+      throw new Error(
+        `[Tuvix Sandbox] Cannot attach Shadow DOM to <${container.tagName.toLowerCase()}>: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
 
     // Move existing content into shadow root
     while (container.childNodes.length > 0) {
@@ -56,6 +63,8 @@ export class CssSandbox implements ICssSandbox {
 
   /**
    * Remove a stylesheet from a shadow root.
+   * The `shadowRoot` parameter is accepted for interface compatibility;
+   * `styleEl.remove()` handles detachment regardless of parent.
    */
   removeStyle(_shadowRoot: ShadowRoot, styleEl: HTMLStyleElement): void {
     styleEl.remove();

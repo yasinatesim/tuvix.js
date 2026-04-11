@@ -1,16 +1,16 @@
+// In-memory caches for loaded resources — O(1) deduplication vs O(n) DOM scan.
+// These stay in sync with the DOM via removeScript / removeStyle.
+const _loadedScripts = new Set<string>();
+const _loadedStyles = new Set<string>();
+const _prefetchedResources = new Set<string>();
+
 /**
  * Load a JavaScript file by appending a <script> tag.
  */
 export function loadScript(url: string, integrity?: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const scripts = document.querySelectorAll('script[src]');
-    for (const s of Array.from(scripts)) {
-      if (s.getAttribute('src') === url) {
-        resolve();
-        return;
-      }
-    }
+  if (_loadedScripts.has(url)) return Promise.resolve();
 
+  return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     // Unambiguous ES module extensions must be loaded as type="module".
     // Plain .js is intentionally excluded — it is assumed to be a UMD/IIFE bundle
@@ -26,7 +26,10 @@ export function loadScript(url: string, integrity?: string): Promise<void> {
       script.integrity = integrity;
     }
 
-    script.onload = () => resolve();
+    script.onload = () => {
+      _loadedScripts.add(url);
+      resolve();
+    };
     script.onerror = () =>
       reject(new Error(`[Tuvix Loader] Failed to load script: ${url}`));
 
@@ -38,15 +41,9 @@ export function loadScript(url: string, integrity?: string): Promise<void> {
  * Load a CSS file by appending a <link> tag.
  */
 export function loadStyle(url: string, timeoutMs = 10000): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const links = document.querySelectorAll('link[href]');
-    for (const l of Array.from(links)) {
-      if (l.getAttribute('href') === url) {
-        resolve();
-        return;
-      }
-    }
+  if (_loadedStyles.has(url)) return Promise.resolve();
 
+  return new Promise((resolve, reject) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.type = 'text/css';
@@ -60,6 +57,7 @@ export function loadStyle(url: string, timeoutMs = 10000): Promise<void> {
 
     link.onload = () => {
       clearTimeout(timer);
+      _loadedStyles.add(url);
       resolve();
     };
     link.onerror = () => {
@@ -75,36 +73,26 @@ export function loadStyle(url: string, timeoutMs = 10000): Promise<void> {
  * Remove a loaded script tag
  */
 export function removeScript(url: string): void {
-  const scripts = document.querySelectorAll('script[src]');
-  for (const script of Array.from(scripts)) {
-    if (script.getAttribute('src') === url) {
-      script.remove();
-      return;
-    }
-  }
+  _loadedScripts.delete(url);
+  const scripts = document.querySelectorAll(`script[src="${CSS.escape(url)}"]`);
+  scripts.forEach((s) => s.remove());
 }
 
 /**
  * Remove a loaded style tag
  */
 export function removeStyle(url: string): void {
-  const links = document.querySelectorAll('link[href]');
-  for (const link of Array.from(links)) {
-    if (link.getAttribute('href') === url) {
-      link.remove();
-      return;
-    }
-  }
+  _loadedStyles.delete(url);
+  const links = document.querySelectorAll(`link[href="${CSS.escape(url)}"]`);
+  links.forEach((l) => l.remove());
 }
 
 /**
  * Prefetch a resource using <link rel="prefetch">
  */
 export function prefetchResource(url: string): void {
-  const links = document.querySelectorAll('link[rel="prefetch"][href]');
-  for (const link of Array.from(links)) {
-    if (link.getAttribute('href') === url) return;
-  }
+  if (_prefetchedResources.has(url)) return;
+  _prefetchedResources.add(url);
 
   const link = document.createElement('link');
   link.rel = 'prefetch';

@@ -47,14 +47,16 @@ export async function withRetry<T>(
   retries: number,
   retryDelay: number
 ): Promise<T> {
-  let lastError: unknown;
+  // Ensure at least one attempt even if retries is 0 or negative
+  const maxAttempts = Math.max(1, retries + 1);
+  let lastError: unknown = new Error('[Tuvix Loader] withRetry: all attempts failed');
 
-  for (let attempt = 0; attempt <= retries; attempt++) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error;
-      if (attempt < retries) {
+      if (attempt < maxAttempts - 1) {
         await delay(retryDelay);
       }
     }

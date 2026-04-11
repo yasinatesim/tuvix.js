@@ -70,14 +70,12 @@ export class Router implements IRouter {
 
   async push(path: string): Promise<void> {
     this.ensureAlive();
-    const fullPath = this.resolvePath(path);
-    await this.navigate(fullPath, false);
+    await this.navigate(normalizePath(path), false);
   }
 
   async replace(path: string): Promise<void> {
     this.ensureAlive();
-    const fullPath = this.resolvePath(path);
-    await this.navigate(fullPath, true);
+    await this.navigate(normalizePath(path), true);
   }
 
   back(): void {
@@ -114,13 +112,13 @@ export class Router implements IRouter {
 
   getActiveApps(path?: string): string[] {
     const targetPath = path ?? this._currentPath;
+    const seen = new Set<string>();
     const activeApps: string[] = [];
 
     for (const route of this.routes) {
-      if (isPathActive(targetPath, route.path)) {
-        if (!activeApps.includes(route.app)) {
-          activeApps.push(route.app);
-        }
+      if (isPathActive(targetPath, route.path) && !seen.has(route.app)) {
+        seen.add(route.app);
+        activeApps.push(route.app);
       }
     }
 
@@ -271,10 +269,6 @@ export class Router implements IRouter {
 
     const path = window.location.pathname + window.location.search;
     return normalizePath(this.stripBase(path));
-  }
-
-  private resolvePath(path: string): string {
-    return normalizePath(path);
   }
 
   private stripBase(path: string): string {
