@@ -1,5 +1,11 @@
 # with-vanilla
 
+## 0.1.2
+
+### Patch Changes
+
+- @tuvix.js/core@0.4.4
+
 ## 0.1.1
 
 ### Patch Changes
