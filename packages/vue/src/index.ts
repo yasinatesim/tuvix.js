@@ -144,7 +144,6 @@ export function createSsrVueMicroApp(
         }
       }
 
-      // Provide orchestrator props globally
       if (props) {
         app.provide('tuvixProps', props);
       }
@@ -161,7 +160,6 @@ export function createSsrVueMicroApp(
 
     async update({ props }: UpdateContext) {
       if (app) {
-        // Update global properties for reactive access
         app.config.globalProperties.$tuvixProps = props;
       }
     },

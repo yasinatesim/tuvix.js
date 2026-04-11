@@ -230,9 +230,9 @@ export function createSsrAngularMicroApp(
       if (appRef && typeof window !== 'undefined') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const win = window as any;
-        if (win.__TUVIX_ANGULAR_PROPS__) {
-          win.__TUVIX_ANGULAR_PROPS__[config.name] = props;
-        }
+        // Initialize the registry if absent — guard was previously inverted, causing silent drops
+        win.__TUVIX_ANGULAR_PROPS__ = win.__TUVIX_ANGULAR_PROPS__ ?? {};
+        win.__TUVIX_ANGULAR_PROPS__[config.name] = props;
       }
     },
   };

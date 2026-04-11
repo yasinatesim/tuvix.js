@@ -298,6 +298,17 @@ describe('createSsrAngularMicroApp', () => {
 
     expect(onBootstrap).toHaveBeenCalledOnce();
   });
+
+  it('should not throw when update() called before mount', async () => {
+    const module = createSsrAngularMicroApp({
+      name: 'ssr-update-before-mount',
+      component: class StandaloneComponent {},
+    });
+
+    await expect(
+      module.update({ props: { theme: 'dark' } })
+    ).resolves.toBeUndefined();
+  });
 });
 
 // ─── renderAngularToString ───────────────────────────────────────────────────
