@@ -1,6 +1,6 @@
 {
 	"name": "@tuvix.js/core",
-	"version": "0.4.2",
+	"version": "0.4.4",
 	"description": "Core orchestrator for Tuvix.js microfrontend framework",
 	"main": "dist/index.cjs",
 	"module": "dist/index.mjs",
