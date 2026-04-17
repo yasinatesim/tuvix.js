@@ -99,26 +99,144 @@ orchestrator.start();
 ```ts
 import { defineMicroApp } from 'tuvix.js';
 
+let titleEl: HTMLHeadingElement | null = null;
+
 export default defineMicroApp({
   name: 'dashboard',
 
   bootstrap() {
+    // 首次挂载前的一次性设置（例如预加载数据）
     console.log('Dashboard 已初始化');
   },
 
   mount({ container, props }) {
-    container.innerHTML = `<h1>欢迎，${props?.user}！</h1>`;
+    container.innerHTML = `<h1>欢迎，${props?.user ?? '访客'}！</h1>`;
+    titleEl = container.querySelector('h1');
   },
 
   unmount({ container }) {
+    titleEl = null;
     container.innerHTML = '';
   },
 
+  // 当 shell 调用 orchestrator.updateAppProps(name, props) 时触发。
+  // 原地修补 DOM — 无需重新挂载，无闪烁。
   update({ props }) {
-    console.log('Props 已更新:', props);
+    if (titleEl) {
+      titleEl.textContent = `欢迎，${props?.user ?? '访客'}！`;
+    }
   },
 });
 ```
+
+---
+
+## 🔄 运行时更新 Props
+
+向已挂载的微应用传递新 props，无需重新挂载：
+
+```ts
+// 从 shell 推送更新的 props — 调用微应用的 update() 钩子
+await orchestrator.updateAppProps('dashboard', {
+  user: 'Yasin',
+  theme: 'dark',
+});
+```
+
+Props 会与原始 config props 合并。如果应用未实现 `update()`，新 props 会被存储
+并在下次挂载时应用。
+
+---
+
+## 🧭 手动生命周期控制
+
+```ts
+// 路由调和之外的手动挂载/卸载
+await orchestrator.mountApp('dashboard');
+await orchestrator.unmountApp('dashboard');
+
+// 检查当前状态
+orchestrator.getAppStatus('dashboard');     // 'mounted' | 'mounting' | 'error' | ...
+orchestrator.getMountedApps();              // ['dashboard']
+orchestrator.getRegisteredApps();           // ['dashboard', 'settings']
+
+// 销毁一切（幂等 — 多次调用安全）
+await orchestrator.destroy();
+```
+
+---
+
+## 🌉 桥接外部路由器
+
+如果你已经在使用 TanStack Router、Next.js App Router 或 React Router，可以完全
+跳过 `config.router`，让现有路由器通过 `reconcile(path)` 驱动 Tuvix.js：
+
+```ts
+const orchestrator = createOrchestrator(); // 无路由器配置
+
+orchestrator.register({
+  name: 'dashboard',
+  entry: '/dashboard.js',
+  container: '#main',
+  activeWhen: '/dashboard/*',
+});
+
+await orchestrator.start();
+
+// 每次导航后，告知 tuvix.js 当前路径
+tanstackRouter.subscribe('onLoad', () => {
+  orchestrator.reconcile(window.location.pathname);
+});
+```
+
+---
+
+## 👁️ 延迟挂载（视口）
+
+延迟挂载昂贵的微应用，直到其容器滚动进入视口：
+
+```ts
+orchestrator.register({
+  name: 'comments',
+  entry: '/comments.js',
+  container: '#comments-section',
+  mountWhenVisible: true, // 在第一次 IntersectionObserver 命中时挂载
+});
+```
+
+---
+
+## 🛟 加载失败时的回退 HTML
+
+```ts
+orchestrator.register({
+  name: 'reports',
+  entry: '/reports.js',
+  container: '#reports',
+  activeWhen: '/reports/*',
+  fallback: '<p class="error">Reports 暂时不可用。</p>',
+});
+```
+
+---
+
+## ⚡ 预取策略
+
+```ts
+const orchestrator = createOrchestrator({
+  router: { /* ... */ },
+  prefetch: {
+    strategy: 'idle', // 'immediate' | 'idle' | 'hover' | 'none' (默认)
+  },
+});
+```
+
+| 策略 | 何时获取 bundle |
+| --- | --- |
+| `immediate` | `start()` 之后立即 |
+| `idle` | 下一个浏览器空闲窗口（`requestIdleCallback`） |
+| `hover` | 用户在页面任何位置首次 `mouseover` 后 |
+| `none` | 从不（默认）— 仅按需加载 |
 
 ---
 
@@ -129,14 +247,26 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// 应用 A - 发送事件
+// 应用 A — 发送事件
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// 应用 B - 监听事件
-bus.on('user:login', (data) => {
+// 应用 B — 订阅（返回取消订阅函数）
+const unsubscribe = bus.on('user:login', (data) => {
   console.log(`${data.name} 已登录！`);
 });
+
+// 触发一次后自动取消订阅
+bus.once('app:ready', () => console.log('就绪'));
+
+// 监听所有事件用于调试
+bus.onAny((event, data) => console.log('[bus]', event, data));
+
+// 清理
+unsubscribe();
 ```
+
+orchestrator 通过 `orchestrator.getEventBus()` 暴露自己的 bus，所有注册的应用
+自动共享同一个通道。
 
 ---
 
@@ -146,13 +276,32 @@ bus.on('user:login', (data) => {
 import { createRouter } from 'tuvix.js';
 
 const router = createRouter({
-  mode: 'history',
+  mode: 'history', // 或 'hash'
+  base: '/',       // 可选的基础路径
   routes: [
     { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/settings/*', app: 'settings' },
-    { path: '/profile/*', app: 'profile' },
+    { path: '/users/:id', app: 'users' },
+    { path: '/settings', app: 'settings', exact: true },
   ],
 });
+
+// 程序化导航
+await router.push('/dashboard/overview');
+await router.replace('/users/42');
+router.back();
+
+// 导航守卫（返回 false 取消）
+const off = router.beforeEach(async ({ from, to }) => {
+  if (to.startsWith('/admin') && !isAdmin()) return false;
+});
+
+// 响应变更
+router.onChange(({ from, to, toRoute }) => {
+  console.log(`navigated ${from} → ${to}`, toRoute?.params);
+});
+
+// 或使用 orchestrator 的导航助手
+await orchestrator.navigateTo('/settings');
 ```
 
 ---

@@ -1,103 +1,148 @@
-# 生命周期钩子
+# Lifecycle Hooks
 
-## 概述
+## Overview
 
-Tuvix.js 中的每个微应用都遵循可预测的生命周期。Orchestrator 在适当的时候调用生命周期钩子。
+Every micro app in Tuvix.js follows a predictable lifecycle. The orchestrator
+calls hooks at the appropriate times — you implement them on the module
+returned to the loader.
 
 ```
-register()  →  mount()  →  update()  →  unmount()
+register()  →  bootstrap()  →  mount()  →  update()*  →  unmount()
+                                              ↑   loop while mounted
 ```
+
+`bootstrap()` runs only once per page lifetime. `mount()` and `unmount()` run
+every time the app's route activates/deactivates. `update()` is optional and
+runs whenever the shell pushes new props via `orchestrator.updateAppProps()`.
+
+## The Module Shape
+
+All hooks receive a single context object — never positional arguments.
+
+```ts
+interface MicroAppModule {
+  bootstrap?: () => void | Promise<void>;
+  mount: ({ container, props }) => void | Promise<void>;
+  unmount: ({ container }) => void | Promise<void>;
+  update?: ({ props }) => void | Promise<void>;
+}
+```
+
+## bootstrap
+
+Called once before the very first `mount()`. Use it for one-shot setup such as
+pre-loading data, registering globals, or warming caches.
+
+```ts
+async bootstrap() {
+  await preloadCriticalChunks();
+}
+```
+
+If `bootstrap()` throws, the orchestrator marks the app as `error` and emits
+`app:error` on the bus.
 
 ## mount
 
-当微应用的路由激活时（或手动激活时）调用。
+Called when the app's route becomes active (or when `mountApp()` is invoked
+manually). Render your UI into the supplied container.
 
 ```ts
-async mount(container: HTMLElement, props?: Record<string, unknown>): Promise<void>
-```
-
-**参数：**
-
-- `container` - 用于渲染的根 DOM 元素
-- `props` - 来自 shell 的可选键值对 props
-
-**示例：**
-
-```ts
-async mount(container, props) {
-  // 设置你的应用
-  const root = document.createElement('div');
-  container.appendChild(root);
-
-  // 将框架渲染到 root
-  this._root = createRoot(root);
+async mount({ container, props }) {
+  this._root = createRoot(container);
   this._root.render(<App {...props} />);
 }
 ```
 
+`props` is whatever was passed to `register({ props })` (merged with any
+subsequent `updateAppProps()` calls).
+
 ## unmount
 
-当导航离开微应用的路由时（或手动停用时）调用。
+Called when the route deactivates. **Always clean up here** — destroy framework
+instances, unsubscribe from events, clear timers.
 
 ```ts
-async unmount(container: HTMLElement): Promise<void>
-```
-
-这是你应该**清理**的地方 - 取消事件订阅、销毁框架实例、移除 DOM 节点。
-
-**示例：**
-
-```ts
-async unmount(container) {
+async unmount({ container }) {
   this._root?.unmount();
+  this._root = null;
   container.innerHTML = '';
 }
 ```
 
 ::: warning
-始终在 `unmount` 中清理。未销毁框架实例导致的内存泄漏是微前端应用中最常见的 bug。
+Memory leaks from skipping cleanup are the most common micro-frontend bug.
+The orchestrator does not destroy your framework instances for you.
 :::
 
 ## update
 
-当 shell 向已挂载的微应用传递新 props 时调用。**可选。**
+Optional. Called when the shell pushes new props **without** unmounting:
 
 ```ts
-async update(container: HTMLElement, props?: Record<string, unknown>): Promise<void>
+await orchestrator.updateAppProps('dashboard', { theme: 'dark' });
 ```
 
-如果未实现，orchestrator 将调用 `unmount` → `mount` 来更新 props。
-
-**示例：**
+Implement it to patch the live UI in place — this avoids the flicker of an
+unmount/remount cycle:
 
 ```ts
-async update(container, props) {
-  // 无需完全重新挂载即可高效更新
+async update({ props }) {
   this._root?.render(<App {...props} />);
 }
 ```
 
-## Orchestrator 级别的钩子
+If `update()` is not implemented, the new props are stored and applied the
+next time the app mounts. The app is **not** automatically remounted just
+because props changed.
 
-Shell 也可以全局监听生命周期事件：
+## Manual Lifecycle Control
+
+The shell can drive the lifecycle directly without going through the router:
 
 ```ts
+await orchestrator.mountApp('dashboard');
+await orchestrator.unmountApp('dashboard');
+await orchestrator.unregister('dashboard');
+
+orchestrator.getAppStatus('dashboard');
+// 'registered' | 'bootstrapping' | 'bootstrapped' | 'mounting'
+//   | 'mounted' | 'updating' | 'unmounting' | 'unmounted' | 'error'
+```
+
+## Shell-level Hooks
+
+Wire shell-wide reactions through orchestrator config callbacks or by
+subscribing to the event bus:
+
+```ts
+import { createOrchestrator, OrchestratorEvent } from '@tuvix.js/core';
+
 const orchestrator = createOrchestrator({
-  container: '#app',
+  router: { /* ... */ },
 
-  onBeforeMount(app) {
-    console.log(`Mounting: ${app.name}`);
+  onError(error, name) {
+    reportToSentry(error, { app: name });
   },
 
-  onAfterMount(app) {
-    console.log(`Mounted: ${app.name}`);
-    analytics.track('micro_app_mounted', { app: app.name });
-  },
-
-  onError(error, app) {
-    console.error(`Error in ${app.name}:`, error);
-    // 显示后备 UI
-    app.container.innerHTML = '<p>Failed to load. Please refresh.</p>';
+  onStatusChange(name, status) {
+    console.log(`[${name}] → ${status}`);
   },
 });
+
+const bus = orchestrator.getEventBus();
+bus.on(OrchestratorEvent.APP_MOUNT,   ({ name }) => analytics.track('app_mount', { name }));
+bus.on(OrchestratorEvent.APP_UNMOUNT, ({ name }) => analytics.track('app_unmount', { name }));
+bus.on(OrchestratorEvent.ROUTE_CHANGE, ({ from, to }) => analytics.page(to, { from }));
 ```
+
+## Tearing Down
+
+`destroy()` is idempotent — call it whenever the page leaves the shell:
+
+```ts
+await orchestrator.destroy();
+```
+
+It unmounts every active app, disconnects the viewport observer, unsubscribes
+the router, clears the loader cache, and finally tears down the event bus.

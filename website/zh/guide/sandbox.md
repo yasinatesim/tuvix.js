@@ -1,86 +1,137 @@
-# 沙箱
+# Sandboxing
 
-`@tuvix.js/sandbox` 提供 CSS 和 JavaScript 隔离，防止微应用之间或与 shell 之间的干扰。
+`@tuvix.js/sandbox` provides CSS and JavaScript isolation primitives so a
+micro app can render without leaking styles or polluting the host page's
+globals.
 
-## CSS 隔离（Shadow DOM）
+> The orchestrator does **not** auto-sandbox apps. You opt in by wrapping
+> your `mount` / `unmount` hooks with `Sandbox`, `CssSandbox`, or `JsSandbox`
+> directly. This keeps the core small and the cost explicit.
 
-当 CSS 沙箱启用时，微应用的容器升级为 Shadow DOM 宿主。内部定义的样式仅限于该 shadow root - 不会泄漏到 shell 或其他微应用。
+## CSS Isolation (Shadow DOM)
 
-### 按应用启用
-
-```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: { css: true },
-});
-```
-
-### 工作原理
-
-```
-Shell DOM
-├── #app (orchestrator 容器)
-│   ├── Shadow Root (my-app)  ← 样式限定在此
-│   │   ├── <style>.button { color: red }</style>
-│   │   └── <div class="button">Click me</div>
-│   └── Shadow Root (other-app)
-│       └── <div class="button">Not affected!</div>
-```
-
-::: tip
-Shadow DOM CSS 隔离在所有现代浏览器中完全支持。对于旧版浏览器支持，请仅考虑 `js` 隔离模式。
-:::
-
-## JS 隔离（Proxy Scope）
-
-当 JS 沙箱启用时，微应用的全局作用域被包装在 `Proxy` 中。对 `window.*`、事件监听器、定时器和超时的访问会被拦截，并在 `unmount` 时自动清理。
-
-### 按应用启用
+`CssSandbox` upgrades a container into a Shadow DOM host. Styles you inject
+live inside the shadow root and cannot bleed out, and global page styles
+cannot bleed in.
 
 ```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: { js: true },
-});
+import { CssSandbox } from '@tuvix.js/sandbox';
+
+const css = new CssSandbox();
+
+// Wrap once per container (idempotent — repeats return the same root)
+const shadow = css.wrap(container);
+
+// Add scoped styles
+const styleEl = css.addStyle(shadow, '.btn { color: red }');
+
+// Render your UI inside `shadow` instead of `container`
+shadow.appendChild(buildUi());
+
+// On unmount: restore non-style children back to the container
+css.removeStyle(shadow, styleEl); // optional — unwrap discards styles too
+css.unwrap(container);
 ```
 
-### 什么被拦截
+```
+container (host)
+└── ShadowRoot
+    ├── <style>.btn { color: red }</style>
+    └── <button class="btn">Click</button>     ← scoped, can't be themed from outside
+```
 
-| 访问 | 是否拦截？ | 卸载时是否清理？ |
-|------|----------|----------------|
-| `window.someGlobal = x` | ✅ | ✅ |
-| `addEventListener(...)` | ✅ | ✅ |
-| `setTimeout(...)` | ✅ | ✅ |
-| `setInterval(...)` | ✅ | ✅ |
-| `localStorage` | ✅ | 可选 |
-| `sessionStorage` | ✅ | 可选 |
+Shadow DOM is supported in all modern browsers. Components that rely on
+portals to `document.body` (popovers, modals) need explicit handling — they
+escape the shadow root by design.
 
-## 同时使用两者
+## JS Isolation (Proxy Scope)
+
+`JsSandbox` produces a `proxyWindow` whose **writes** go to a per-instance
+`fakeWindow` map. **Reads** pass through to the real window unless they were
+shadowed by a write. This means sandboxed code cannot pollute global state
+even after `deactivate()`.
 
 ```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: {
-    css: true,   // Shadow DOM 隔离
-    js: true,    // Proxy 作用域隔离
-  },
-});
+import { JsSandbox } from '@tuvix.js/sandbox';
+
+const js = new JsSandbox(
+  ['gtag', 'dataLayer'], // additional allowed globals (in strict mode)
+  /* strict */ true,      // warn when sandboxed code touches non-allowed globals
+);
+
+js.activate();
+
+// Run a snippet inside the sandbox
+js.execScript('window.myVar = 42; console.log(window.location.href)');
+
+js.deactivate();
+js.reset(); // clear fakeWindow
 ```
 
-## 自定义沙箱
+`execScript` calls `new Function(...)` and binds `window`, `self`, and
+`globalThis` to the proxy.
 
-你也可以直接使用 `@tuvix.js/sandbox`：
+## Combined Sandbox
+
+`createSandbox` (or `new Sandbox(...)`) wires both isolations together:
 
 ```ts
 import { createSandbox } from '@tuvix.js/sandbox';
 
-const sandbox = createSandbox({ css: true, js: true });
+const sandbox = createSandbox({
+  css: true,
+  js: true,
+  allowedGlobals: ['gtag'],
+  strict: false,
+});
 
-// 激活隔离
-const shadowRoot = sandbox.activate(rootElement);
+// Returns the shadow root when css isolation is on
+const shadow = sandbox.activate(container);
 
-// ... 应用在隔离中运行 ...
+// Use sandbox.css / sandbox.js for fine-grained calls if needed
+sandbox.css.addStyle(shadow, '/* ... */');
 
-// 完成后停用
-sandbox.deactivate(rootElement);
+// Cleanup
+sandbox.deactivate(container);
+sandbox.destroy(container); // deactivate + reset js fakes
 ```
+
+## Wiring into a Micro App
+
+```ts
+import { defineMicroApp } from '@tuvix.js/core';
+import { createSandbox } from '@tuvix.js/sandbox';
+
+const sandbox = createSandbox({ css: true, js: false });
+
+export default defineMicroApp({
+  name: 'widget',
+
+  mount({ container, props }) {
+    const shadow = sandbox.activate(container);
+    sandbox.css.addStyle(shadow, '.box { padding: 8px; }');
+    shadow.appendChild(renderWidget(props));
+  },
+
+  unmount({ container }) {
+    sandbox.deactivate(container);
+  },
+});
+```
+
+## When Not to Sandbox
+
+Skip the sandbox when your micro app:
+
+- Uses portals into `document.body` (popovers, toasts) and you don't need style isolation
+- Loads design-system styles globally on purpose
+- Already runs in a separate iframe or web component context
+
+## API Surface
+
+| Export | Purpose |
+| --- | --- |
+| `CssSandbox` | Shadow DOM wrap / unwrap, scoped style helpers |
+| `JsSandbox` | Proxy window + `execScript` |
+| `Sandbox` / `createSandbox` | Combined CSS + JS isolation |
+| `SandboxOptions`, `ISandbox`, `ICssSandbox`, `IJsSandbox` | Types |

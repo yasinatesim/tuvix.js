@@ -114,10 +114,15 @@ export function createAngularMicroApp(
     },
 
     async mount({ container }: MountContext) {
-      // Create a root element for Angular to bootstrap into
+      // Reuse an existing selector element (e.g. SSR markup) instead of always
+      // appending a new one — appending a duplicate would leave Angular
+      // bootstrapping into the first match and the second sibling orphaned.
       const selector = config.selector ?? 'app-root';
-      const appRoot = document.createElement(selector);
-      container.appendChild(appRoot);
+      let appRoot = container.querySelector(selector);
+      if (!appRoot) {
+        appRoot = document.createElement(selector);
+        container.appendChild(appRoot);
+      }
 
       platformRef = config.platform();
       appRef = await platformRef.bootstrapModule(

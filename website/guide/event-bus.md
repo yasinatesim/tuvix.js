@@ -1,75 +1,107 @@
 # Event Bus
 
-`@tuvix.js/event-bus` provides a typed publish/subscribe channel for cross-app communication - without shared globals or coupling between micro apps.
+`@tuvix.js/event-bus` provides a typed publish/subscribe channel for cross-app
+communication — without shared globals or coupling between micro apps.
 
-## Import
+## Picking a Bus
+
+The recommended way to get a bus is from the orchestrator — every registered
+app already shares it:
+
+```ts
+import { createOrchestrator } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator(/* ... */);
+const bus = orchestrator.getEventBus();
+```
+
+For standalone scripts (no orchestrator), use the lazy global singleton:
 
 ```ts
 import { getGlobalBus } from '@tuvix.js/event-bus';
 
-const eventBus = getGlobalBus();
+const bus = getGlobalBus();
+```
+
+For a fully isolated bus (tests, embedded scenarios):
+
+```ts
+import { createEventBus } from '@tuvix.js/event-bus';
+
+const bus = createEventBus({ debug: true });
 ```
 
 ## Basic Usage
 
 ```ts
-// Publish an event
-eventBus.emit('user:login', { userId: '42', name: 'Alice' });
+// Publish
+bus.emit('user:login', { userId: '42', name: 'Alice' });
 
-// Subscribe to an event
-const unsubscribe = eventBus.on('user:login', (payload) => {
-  console.log('User logged in:', payload.userId);
-});
+// Subscribe — returns an unsubscribe function
+const unsubscribe = bus.on<{ userId: string; name: string }>(
+  'user:login',
+  ({ userId }) => console.log('User logged in:', userId),
+);
 
-// Unsubscribe when done (important in unmount!)
+// Always unsubscribe (most importantly inside unmount)
 unsubscribe();
 ```
 
 ## Typed Events
 
-Define your event map with TypeScript for full type safety:
+Pass the payload type as a generic to `on` / `once` / `emit`:
 
 ```ts
-// events.d.ts (shared types)
-declare module '@tuvix.js/event-bus' {
-  interface TuvixEvents {
-    'user:login':  { userId: string; name: string };
-    'user:logout': { userId: string };
-    'cart:updated': { itemCount: number; total: number };
-    'theme:changed': { theme: 'light' | 'dark' };
-  }
-}
-```
+type LoginPayload = { userId: string; name: string };
+type CartPayload  = { itemCount: number; total: number };
 
-Now TypeScript will enforce the event name and payload:
+bus.emit<LoginPayload>('user:login', { userId: '42', name: 'Alice' });
 
-```ts
-import { getGlobalBus } from '@tuvix.js/event-bus';
-const eventBus = getGlobalBus();
-
-// ✅ Correct
-eventBus.emit('user:login', { userId: '42', name: 'Alice' });
-
-// ✅ Correct
-eventBus.on('cart:updated', ({ itemCount, total }) => {
+bus.on<CartPayload>('cart:updated', ({ itemCount }) => {
   updateCartBadge(itemCount);
 });
+```
 
-// ❌ TypeScript error - wrong payload
-eventBus.emit('user:login', { wrong: 'payload' });
+For a project-wide event registry, define helper wrappers:
+
+```ts
+// events.ts
+import type { IEventBus } from '@tuvix.js/event-bus';
+
+export interface AppEvents {
+  'user:login':   { userId: string; name: string };
+  'user:logout':  { userId: string };
+  'cart:updated': { itemCount: number; total: number };
+}
+
+export function emit<E extends keyof AppEvents>(
+  bus: IEventBus, event: E, payload: AppEvents[E],
+) {
+  bus.emit(event, payload);
+}
+
+export function subscribe<E extends keyof AppEvents>(
+  bus: IEventBus, event: E, handler: (payload: AppEvents[E]) => void,
+) {
+  return bus.on(event, handler);
+}
 ```
 
 ## Once
 
-Subscribe to an event only once - handler is automatically removed after the first call:
+Fire once, auto-unsubscribe:
 
 ```ts
-import { getGlobalBus } from '@tuvix.js/event-bus';
-const eventBus = getGlobalBus();
+bus.once('app:ready', () => initUserSession());
+```
 
-eventBus.once('user:login', (payload) => {
-  // Called once, then removed
-  initUserSession(payload.userId);
+## Wildcard Listener
+
+Useful for logging or DevTools — receives every event:
+
+```ts
+const off = bus.onAny((event, data) => {
+  console.log('[bus]', event, data);
 });
 ```
 
@@ -78,46 +110,68 @@ eventBus.once('user:login', (payload) => {
 Always unsubscribe in `unmount` to prevent memory leaks:
 
 ```ts
-import { getGlobalBus } from '@tuvix.js/event-bus';
+import { defineMicroApp } from '@tuvix.js/core';
 
-export const app: MicroAppDefinition = {
-  _subscriptions: [] as (() => void)[],
+const subscriptions: Array<() => void> = [];
 
-  async mount(container, props) {
-    const eventBus = getGlobalBus();
-    this._subscriptions.push(
-      eventBus.on('theme:changed', ({ theme }) => applyTheme(theme))
+export default defineMicroApp({
+  name: 'header',
+
+  mount({ container, props }) {
+    const bus = (window as any).__tuvixBus;
+    subscriptions.push(
+      bus.on('theme:changed', ({ theme }) => applyTheme(theme)),
+      bus.on('user:logout', () => clearAvatar()),
     );
   },
 
-  async unmount(container) {
-    this._subscriptions.forEach((unsub) => unsub());
-    this._subscriptions = [];
+  unmount({ container }) {
+    subscriptions.splice(0).forEach((off) => off());
     container.innerHTML = '';
   },
-};
+});
 ```
 
-## Create a Custom Bus
+> A clean pattern is to expose the orchestrator's bus on `window` once during
+> shell startup so micro apps can grab it without prop plumbing.
 
-If you need an isolated event channel (e.g. for testing):
+## Removing Listeners
 
 ```ts
-import { createEventBus } from '@tuvix.js/event-bus';
+bus.off('user:login', handler);   // single handler
+bus.offAll('user:login');          // every listener for this event
+bus.offAll();                       // every listener for every event (incl. wildcards)
+```
 
-const bus = createEventBus<{
-  'count:updated': { count: number };
-}>();
+## Introspection
 
-bus.emit('count:updated', { count: 42 });
+```ts
+bus.hasListeners('user:login');   // boolean
+bus.listenerCount('user:login');  // number
+bus.eventNames();                 // string[]
+```
+
+## Lifecycle
+
+`destroy()` removes every listener and marks the bus unusable — any subsequent
+`emit` / `on` / `once` / `onAny` throws.
+
+```ts
+bus.destroy();
 ```
 
 ## API Reference
 
 | Method | Signature | Description |
-|--------|-----------|-------------|
-| `emit` | `emit(event, payload)` | Publish an event |
-| `on` | `on(event, handler) → unsub` | Subscribe, returns unsubscribe fn |
-| `once` | `once(event, handler)` | Subscribe once, auto-removes |
-| `off` | `off(event, handler)` | Remove a specific handler |
-| `clear` | `clear(event?)` | Remove all handlers (optionally for one event) |
+| --- | --- | --- |
+| `emit` | `emit<T>(event, data?)` | Publish an event |
+| `on` | `on<T>(event, handler) → off` | Subscribe, returns unsubscribe |
+| `once` | `once<T>(event, handler) → off` | Subscribe, auto-removes after first call |
+| `off` | `off<T>(event, handler)` | Remove a specific handler |
+| `offAll` | `offAll(event?)` | Remove every handler (event-scoped or global) |
+| `onAny` | `onAny<T>(handler) → off` | Wildcard listener |
+| `offAny` | `offAny<T>(handler)` | Remove a wildcard listener |
+| `hasListeners` | `hasListeners(event) → boolean` | Quick check |
+| `listenerCount` | `listenerCount(event) → number` | Count handlers |
+| `eventNames` | `eventNames() → string[]` | Inventory subscribed events |
+| `destroy` | `destroy()` | Tear down the bus |

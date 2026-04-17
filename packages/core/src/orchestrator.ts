@@ -339,6 +339,8 @@ export class Orchestrator {
    * Destroy the orchestrator, unmount all apps, clean up
    */
   async destroy(): Promise<void> {
+    if (this.destroyed) return;
+
     const mountedApps = this.getMountedApps();
     for (const name of mountedApps) {
       try {

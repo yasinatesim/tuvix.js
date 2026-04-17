@@ -1,102 +1,140 @@
-# 架构
+# Architecture
 
-## 概述
+## Overview
 
-Tuvix.js 被构建为一个由小型、可组合包组成的 monorepo。你只需导入你使用的部分。
-
-```
-@tuvix.js/core          ← Orchestrator、生命周期、注册
-@tuvix.js/router        ← 基于 URL 的路由
-@tuvix.js/event-bus     ← 应用间发布/订阅
-@tuvix.js/loader        ← 动态包加载
-@tuvix.js/sandbox       ← CSS + JS 隔离
-@tuvix.js/react         ← React 绑定
-@tuvix.js/vue           ← Vue 绑定
-@tuvix.js/svelte        ← Svelte 绑定
-@tuvix.js/angular       ← Angular 绑定
-@tuvix.js/devtools      ← 调试面板
-@tuvix.js/server        ← SSR 组合
-@tuvix.js/module-federation  ← Webpack 5 集成
-create-tuvix-app        ← CLI 脚手架
-tuvix.js                ← 统一包（全部合一）
-```
-
-## 请求流程
+Tuvix.js is structured as a monorepo of small, composable packages. You only
+import what you use.
 
 ```
-URL 变更
-    │
-    ▼
-@tuvix.js/router         ← 将路径匹配到微应用名称
-    │
-    ▼
-@tuvix.js/core           ← Orchestrator 决定挂载/卸载
-    │
-    ▼
-@tuvix.js/loader         ← 获取并执行微应用包
-    │
-    ▼
-@tuvix.js/sandbox        ← 在隔离作用域中包装应用（可选）
-    │
-    ▼
-Micro App .mount()       ← 应用渲染到其容器元素
+@tuvix.js/core          ← Orchestrator, lifecycle, registration
+@tuvix.js/router        ← URL-based routing
+@tuvix.js/event-bus     ← Inter-app pub/sub
+@tuvix.js/loader        ← Dynamic bundle loading
+@tuvix.js/sandbox       ← CSS (Shadow DOM) + JS (Proxy) isolation
+@tuvix.js/react         ← React bindings
+@tuvix.js/vue           ← Vue bindings
+@tuvix.js/svelte        ← Svelte bindings
+@tuvix.js/angular       ← Angular bindings
+@tuvix.js/devtools      ← Debug panel
+@tuvix.js/server        ← SSR composition
+@tuvix.js/module-federation  ← Webpack 5 integration
+create-tuvix-app        ← CLI scaffolding
+tuvix.js                ← Umbrella (all-in-one)
 ```
 
-## 生命周期
+## Request Flow
 
-每个微应用必须实现 `MicroApp` 接口：
+```
+URL change (or orchestrator.reconcile)
+    │
+    ▼
+@tuvix.js/router         ← Matches the path against route patterns
+    │
+    ▼
+@tuvix.js/core           ← Orchestrator decides what to mount / unmount
+    │
+    ▼
+@tuvix.js/loader         ← Fetches and executes the micro app bundle (cached)
+    │
+    ▼
+window.__TUVIX_MODULES__[name]   ← Bundle self-registers here
+    │
+    ▼
+module.bootstrap()  →  module.mount({ container, props })
+```
+
+## The MicroAppModule Interface
+
+Every micro app must expose this shape (the framework adapters do it for you):
 
 ```ts
-interface MicroApp {
-  mount(container: HTMLElement, props?: Record<string, unknown>): Promise<void>;
-  unmount(container: HTMLElement): Promise<void>;
-  update?(container: HTMLElement, props?: Record<string, unknown>): Promise<void>;
+interface MicroAppModule {
+  bootstrap?: () => void | Promise<void>;
+  mount: ({ container, props }: { container: HTMLElement; props?: Record<string, unknown> })
+    => void | Promise<void>;
+  unmount: ({ container }: { container: HTMLElement }) => void | Promise<void>;
+  update?: ({ props }: { props: Record<string, unknown> }) => void | Promise<void>;
 }
 ```
 
-Orchestrator 在适当的时候调用这些钩子：
+The orchestrator calls each hook at the right time:
 
-1. **`mount`** - 当应用的路由激活时调用
-2. **`unmount`** - 当导航离开应用的路由时调用
-3. **`update`** - 当 props 改变而无需完全重新挂载时调用
+1. **`bootstrap`** — once, before the first mount
+2. **`mount`** — when the route activates (or on `mountApp(name)`)
+3. **`update`** — when the shell calls `updateAppProps(name, props)`
+4. **`unmount`** — when the route deactivates (or on `unmountApp(name)`)
 
-## 隔离模型
+## How Apps Register Themselves
 
-### CSS 隔离（Shadow DOM）
+When the loader finishes executing a bundle, it looks for the module in this
+priority order:
 
-当 `sandbox.css = true` 时，微应用容器成为 Shadow DOM 宿主。内部定义的样式不会泄漏到外部，全局样式也不会渗入内部。
+1. `window.__TUVIX_MODULES__[name]` — recommended pattern, used by all
+   framework adapters.
+2. New keys appended to `window` after the bundle runs (UMD / IIFE fallback,
+   for legacy bundles).
+
+ES module bundles (`.mjs`, `.mts`, `.tsx`, `.jsx`) are loaded with
+`type="module"` — they cannot rely on the UMD fallback because module scope
+does not pollute `window`. **Always self-register via `window.__TUVIX_MODULES__`
+when shipping ESM.**
+
+## Isolation Model
+
+### CSS Isolation (Shadow DOM)
+
+`@tuvix.js/sandbox`'s `CssSandbox` wraps a container in a Shadow DOM root, so
+styles written inside cannot bleed out and global styles cannot bleed in:
 
 ```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: { css: true },
-});
+import { CssSandbox } from '@tuvix.js/sandbox';
+
+const css = new CssSandbox();
+const shadow = css.wrap(container);
+css.addStyle(shadow, '.btn { color: red }');
+// later
+css.unwrap(container);
 ```
 
-### JS 隔离（Proxy Scope）
+### JS Isolation (Proxy Scope)
 
-当 `sandbox.js = true` 时，微应用的全局作用域被包装在 `Proxy` 中。对 `window.localStorage`、`window.addEventListener` 等的访问会被拦截，并在卸载时清理。
+`JsSandbox` produces a proxy `window` whose writes go to a per-instance
+`fakeWindow` map instead of the real global. Reads pass through to the real
+window unless they were shadowed by a write.
 
 ```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: { css: true, js: true },
-});
+import { JsSandbox } from '@tuvix.js/sandbox';
+
+const js = new JsSandbox(['gtag'], /* strict */ true);
+js.activate();
+js.execScript('window.myVar = 42'); // stored in fakeWindow, not real window
+js.deactivate();
+js.reset();
 ```
 
 ## Event Bus
 
-Event Bus 是所有微应用共享的解耦发布/订阅通道：
+The bus is a decoupled pub/sub channel. Use the orchestrator's bus when you
+have one — it is automatically shared with every registered app:
 
 ```ts
-// 发布者（任意微应用）
-import { getGlobalBus } from '@tuvix.js/event-bus';
-eventBus.emit('user:login', { userId: '42' });
+const bus = orchestrator.getEventBus();
 
-// 订阅者（另一个微应用）
-eventBus.on('user:login', ({ userId }) => {
+const off = bus.on('user:login', ({ userId }) => {
   console.log('User logged in:', userId);
 });
+
+bus.emit('user:login', { userId: '42' });
+off();
 ```
 
-事件是类型化的 - TypeScript 会强制执行事件载荷的形状。
+For standalone or multi-orchestrator pages, `getGlobalBus()` from
+`@tuvix.js/event-bus` returns a lazy singleton.
+
+## Where to Look Next
+
+- [Getting Started](/guide/getting-started) — the 60-second tour
+- [Lifecycle Hooks](/guide/lifecycle) — the contract every app implements
+- [Routing](/guide/routing) — patterns, params, guards
+- [Event Bus](/guide/event-bus) — pub/sub patterns and pitfalls
+- [Sandbox](/guide/sandbox) — when (and when not) to isolate

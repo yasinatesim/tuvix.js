@@ -1,102 +1,140 @@
-# आर्किटेक्चर
+# Architecture
 
-## अवलोकन
+## Overview
 
-Tuvix.js छोटे, संयोजन योग्य पैकेजों के मोनोरेपो के रूप में संरचित है। आप केवल वही आयात करते हैं जो आप उपयोग करते हैं।
-
-```
-@tuvix.js/core          ← Orchestrator, लाइफसाइकल, पंजीकरण
-@tuvix.js/router        ← URL-आधारित रूटिंग
-@tuvix.js/event-bus     ← अंतर-ऐप पब/सब
-@tuvix.js/loader        ← गतिशील बंडल लोडिंग
-@tuvix.js/sandbox       ← CSS + JS आइसोलेशन
-@tuvix.js/react         ← React बाइंडिंग
-@tuvix.js/vue           ← Vue बाइंडिंग
-@tuvix.js/svelte        ← Svelte बाइंडिंग
-@tuvix.js/angular       ← Angular बाइंडिंग
-@tuvix.js/devtools      ← डीबग पैनल
-@tuvix.js/server        ← SSR कंपोजिशन
-@tuvix.js/module-federation  ← Webpack 5 इंटीग्रेशन
-create-tuvix-app        ← CLI स्कैफोल्डिंग
-tuvix.js                ← अम्ब्रेला पैकेज (ऑल-इन-वन)
-```
-
-## अनुरोध प्रवाह
+Tuvix.js is structured as a monorepo of small, composable packages. You only
+import what you use.
 
 ```
-URL परिवर्तन
-    │
-    ▼
-@tuvix.js/router         ← पथ को माइक्रो ऐप नाम से मिलाता है
-    │
-    ▼
-@tuvix.js/core           ← Orchestrator माउंट/अनमाउंट का निर्णय लेता है
-    │
-    ▼
-@tuvix.js/loader         ← माइक्रो ऐप बंडल प्राप्त करता और निष्पादित करता है
-    │
-    ▼
-@tuvix.js/sandbox        ← ऐप को आइसोलेटेड स्कोप में रैप करता है (वैकल्पिक)
-    │
-    ▼
-Micro App .mount()       ← ऐप अपने कंटेनर एलिमेंट में रेंडर होता है
+@tuvix.js/core          ← Orchestrator, lifecycle, registration
+@tuvix.js/router        ← URL-based routing
+@tuvix.js/event-bus     ← Inter-app pub/sub
+@tuvix.js/loader        ← Dynamic bundle loading
+@tuvix.js/sandbox       ← CSS (Shadow DOM) + JS (Proxy) isolation
+@tuvix.js/react         ← React bindings
+@tuvix.js/vue           ← Vue bindings
+@tuvix.js/svelte        ← Svelte bindings
+@tuvix.js/angular       ← Angular bindings
+@tuvix.js/devtools      ← Debug panel
+@tuvix.js/server        ← SSR composition
+@tuvix.js/module-federation  ← Webpack 5 integration
+create-tuvix-app        ← CLI scaffolding
+tuvix.js                ← Umbrella (all-in-one)
 ```
 
-## जीवनचक्र
+## Request Flow
 
-हर माइक्रो ऐप को `MicroApp` इंटरफ़ेस लागू करना होगा:
+```
+URL change (or orchestrator.reconcile)
+    │
+    ▼
+@tuvix.js/router         ← Matches the path against route patterns
+    │
+    ▼
+@tuvix.js/core           ← Orchestrator decides what to mount / unmount
+    │
+    ▼
+@tuvix.js/loader         ← Fetches and executes the micro app bundle (cached)
+    │
+    ▼
+window.__TUVIX_MODULES__[name]   ← Bundle self-registers here
+    │
+    ▼
+module.bootstrap()  →  module.mount({ container, props })
+```
+
+## The MicroAppModule Interface
+
+Every micro app must expose this shape (the framework adapters do it for you):
 
 ```ts
-interface MicroApp {
-  mount(container: HTMLElement, props?: Record<string, unknown>): Promise<void>;
-  unmount(container: HTMLElement): Promise<void>;
-  update?(container: HTMLElement, props?: Record<string, unknown>): Promise<void>;
+interface MicroAppModule {
+  bootstrap?: () => void | Promise<void>;
+  mount: ({ container, props }: { container: HTMLElement; props?: Record<string, unknown> })
+    => void | Promise<void>;
+  unmount: ({ container }: { container: HTMLElement }) => void | Promise<void>;
+  update?: ({ props }: { props: Record<string, unknown> }) => void | Promise<void>;
 }
 ```
 
-Orchestrator इन हुक्स को सही समय पर कॉल करता है:
+The orchestrator calls each hook at the right time:
 
-1. **`mount`** - जब ऐप का रूट सक्रिय होता है तब कॉल होता है
-2. **`unmount`** - जब ऐप के रूट से दूर नेविगेट किया जाता है तब कॉल होता है
-3. **`update`** - जब पूर्ण रीमाउंट के बिना props बदलते हैं तब कॉल होता है
+1. **`bootstrap`** — once, before the first mount
+2. **`mount`** — when the route activates (or on `mountApp(name)`)
+3. **`update`** — when the shell calls `updateAppProps(name, props)`
+4. **`unmount`** — when the route deactivates (or on `unmountApp(name)`)
 
-## आइसोलेशन मॉडल
+## How Apps Register Themselves
 
-### CSS आइसोलेशन (Shadow DOM)
+When the loader finishes executing a bundle, it looks for the module in this
+priority order:
 
-जब `sandbox.css = true`, माइक्रो ऐप का कंटेनर Shadow DOM होस्ट बन जाता है। अंदर परिभाषित स्टाइल बाहर लीक नहीं हो सकते, और ग्लोबल स्टाइल अंदर लीक नहीं हो सकते।
+1. `window.__TUVIX_MODULES__[name]` — recommended pattern, used by all
+   framework adapters.
+2. New keys appended to `window` after the bundle runs (UMD / IIFE fallback,
+   for legacy bundles).
+
+ES module bundles (`.mjs`, `.mts`, `.tsx`, `.jsx`) are loaded with
+`type="module"` — they cannot rely on the UMD fallback because module scope
+does not pollute `window`. **Always self-register via `window.__TUVIX_MODULES__`
+when shipping ESM.**
+
+## Isolation Model
+
+### CSS Isolation (Shadow DOM)
+
+`@tuvix.js/sandbox`'s `CssSandbox` wraps a container in a Shadow DOM root, so
+styles written inside cannot bleed out and global styles cannot bleed in:
 
 ```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: { css: true },
-});
+import { CssSandbox } from '@tuvix.js/sandbox';
+
+const css = new CssSandbox();
+const shadow = css.wrap(container);
+css.addStyle(shadow, '.btn { color: red }');
+// later
+css.unwrap(container);
 ```
 
-### JS आइसोलेशन (Proxy Scope)
+### JS Isolation (Proxy Scope)
 
-जब `sandbox.js = true`, माइक्रो ऐप का ग्लोबल स्कोप `Proxy` में रैप किया जाता है। `window.localStorage`, `window.addEventListener` आदि तक पहुंच इंटरसेप्ट की जाती है और अनमाउंट पर साफ की जाती है।
+`JsSandbox` produces a proxy `window` whose writes go to a per-instance
+`fakeWindow` map instead of the real global. Reads pass through to the real
+window unless they were shadowed by a write.
 
 ```ts
-orchestrator.register('my-app', {
-  entry: '/my-app.js',
-  sandbox: { css: true, js: true },
-});
+import { JsSandbox } from '@tuvix.js/sandbox';
+
+const js = new JsSandbox(['gtag'], /* strict */ true);
+js.activate();
+js.execScript('window.myVar = 42'); // stored in fakeWindow, not real window
+js.deactivate();
+js.reset();
 ```
 
 ## Event Bus
 
-Event Bus सभी माइक्रो ऐप्स के बीच साझा एक विसंबद्ध पब/सब चैनल है:
+The bus is a decoupled pub/sub channel. Use the orchestrator's bus when you
+have one — it is automatically shared with every registered app:
 
 ```ts
-// प्रकाशक (कोई भी माइक्रो ऐप)
-import { getGlobalBus } from '@tuvix.js/event-bus';
-eventBus.emit('user:login', { userId: '42' });
+const bus = orchestrator.getEventBus();
 
-// सदस्य (एक अन्य माइक्रो ऐप)
-eventBus.on('user:login', ({ userId }) => {
+const off = bus.on('user:login', ({ userId }) => {
   console.log('User logged in:', userId);
 });
+
+bus.emit('user:login', { userId: '42' });
+off();
 ```
 
-इवेंट टाइप्ड हैं - TypeScript इवेंट पेलोड के आकार को लागू करेगा।
+For standalone or multi-orchestrator pages, `getGlobalBus()` from
+`@tuvix.js/event-bus` returns a lazy singleton.
+
+## Where to Look Next
+
+- [Getting Started](/guide/getting-started) — the 60-second tour
+- [Lifecycle Hooks](/guide/lifecycle) — the contract every app implements
+- [Routing](/guide/routing) — patterns, params, guards
+- [Event Bus](/guide/event-bus) — pub/sub patterns and pitfalls
+- [Sandbox](/guide/sandbox) — when (and when not) to isolate

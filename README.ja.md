@@ -99,26 +99,145 @@ orchestrator.start();
 ```ts
 import { defineMicroApp } from 'tuvix.js';
 
+let titleEl: HTMLHeadingElement | null = null;
+
 export default defineMicroApp({
   name: 'dashboard',
 
   bootstrap() {
+    // 初回マウント前の一度きりのセットアップ（データの事前ロードなど）
     console.log('ダッシュボードが初期化されました');
   },
 
   mount({ container, props }) {
-    container.innerHTML = `<h1>ようこそ、${props?.user}さん！</h1>`;
+    container.innerHTML = `<h1>ようこそ、${props?.user ?? 'ゲスト'}さん！</h1>`;
+    titleEl = container.querySelector('h1');
   },
 
   unmount({ container }) {
+    titleEl = null;
     container.innerHTML = '';
   },
 
+  // shell が orchestrator.updateAppProps(name, props) を呼び出した時にトリガー。
+  // DOM をその場で更新 — リマウントなし、フラッシュなし。
   update({ props }) {
-    console.log('Propsが更新されました:', props);
+    if (titleEl) {
+      titleEl.textContent = `ようこそ、${props?.user ?? 'ゲスト'}さん！`;
+    }
   },
 });
 ```
+
+---
+
+## 🔄 実行時の Props 更新
+
+マウント済みのマイクロアプリに、再マウントせずに新しい props を渡します:
+
+```ts
+// shell から更新された props をプッシュ — マイクロアプリの update() フックが呼ばれる
+await orchestrator.updateAppProps('dashboard', {
+  user: 'Yasin',
+  theme: 'dark',
+});
+```
+
+Props は元の config props とマージされます。アプリが `update()` を実装していない
+場合、新しい props は保存され、次のマウント時に適用されます。
+
+---
+
+## 🧭 手動ライフサイクル制御
+
+```ts
+// ルート調整以外で手動マウント/アンマウント
+await orchestrator.mountApp('dashboard');
+await orchestrator.unmountApp('dashboard');
+
+// 現在の状態を取得
+orchestrator.getAppStatus('dashboard');     // 'mounted' | 'mounting' | 'error' | ...
+orchestrator.getMountedApps();              // ['dashboard']
+orchestrator.getRegisteredApps();           // ['dashboard', 'settings']
+
+// すべて破棄（冪等 — 複数回呼び出しても安全）
+await orchestrator.destroy();
+```
+
+---
+
+## 🌉 外部ルーターとのブリッジ
+
+すでに TanStack Router、Next.js App Router、または React Router を使用している場合、
+`config.router` を完全に省略し、既存のルーターから `reconcile(path)` 経由で
+Tuvix.js を駆動できます:
+
+```ts
+const orchestrator = createOrchestrator(); // ルーター設定なし
+
+orchestrator.register({
+  name: 'dashboard',
+  entry: '/dashboard.js',
+  container: '#main',
+  activeWhen: '/dashboard/*',
+});
+
+await orchestrator.start();
+
+// ナビゲーション後、tuvix.js に現在のパスを伝える
+tanstackRouter.subscribe('onLoad', () => {
+  orchestrator.reconcile(window.location.pathname);
+});
+```
+
+---
+
+## 👁️ 遅延マウント（ビューポート）
+
+コンテナがビューポートに入るまで、重いマイクロアプリのマウントを遅延させます:
+
+```ts
+orchestrator.register({
+  name: 'comments',
+  entry: '/comments.js',
+  container: '#comments-section',
+  mountWhenVisible: true, // 最初の IntersectionObserver ヒットでマウント
+});
+```
+
+---
+
+## 🛟 ロード失敗時のフォールバック HTML
+
+```ts
+orchestrator.register({
+  name: 'reports',
+  entry: '/reports.js',
+  container: '#reports',
+  activeWhen: '/reports/*',
+  fallback: '<p class="error">Reports は一時的に利用できません。</p>',
+});
+```
+
+---
+
+## ⚡ プリフェッチ戦略
+
+```ts
+const orchestrator = createOrchestrator({
+  router: { /* ... */ },
+  prefetch: {
+    strategy: 'idle', // 'immediate' | 'idle' | 'hover' | 'none' (デフォルト)
+  },
+});
+```
+
+| 戦略 | バンドルが取得されるタイミング |
+| --- | --- |
+| `immediate` | `start()` 直後 |
+| `idle` | 次のブラウザアイドルウィンドウ（`requestIdleCallback`） |
+| `hover` | ページ上の任意の場所での最初の `mouseover` 後 |
+| `none` | なし（デフォルト） — オンデマンドのみ |
 
 ---
 
@@ -129,14 +248,26 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A - イベントを発行
+// App A — イベントを発行
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B - イベントをリッスン
-bus.on('user:login', (data) => {
+// App B — 購読（unsubscribe 関数を返す）
+const unsubscribe = bus.on('user:login', (data) => {
   console.log(`${data.name}がログインしました！`);
 });
+
+// 一度だけ発火して自動的に解除
+bus.once('app:ready', () => console.log('準備完了'));
+
+// デバッグ用にすべてのイベントをリッスン
+bus.onAny((event, data) => console.log('[bus]', event, data));
+
+// クリーンアップ
+unsubscribe();
 ```
+
+orchestrator は `orchestrator.getEventBus()` で独自のバスを公開し、登録された
+すべてのアプリは自動的に同じチャンネルを共有します。
 
 ---
 
@@ -146,13 +277,32 @@ bus.on('user:login', (data) => {
 import { createRouter } from 'tuvix.js';
 
 const router = createRouter({
-  mode: 'history',
+  mode: 'history', // または 'hash'
+  base: '/',       // オプションのベースパス
   routes: [
     { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/settings/*', app: 'settings' },
-    { path: '/profile/*', app: 'profile' },
+    { path: '/users/:id', app: 'users' },
+    { path: '/settings', app: 'settings', exact: true },
   ],
 });
+
+// プログラマティックナビゲーション
+await router.push('/dashboard/overview');
+await router.replace('/users/42');
+router.back();
+
+// ナビゲーションガード（false を返すとキャンセル）
+const off = router.beforeEach(async ({ from, to }) => {
+  if (to.startsWith('/admin') && !isAdmin()) return false;
+});
+
+// 変更に反応
+router.onChange(({ from, to, toRoute }) => {
+  console.log(`navigated ${from} → ${to}`, toRoute?.params);
+});
+
+// または orchestrator のナビゲーションヘルパーを使用
+await orchestrator.navigateTo('/settings');
 ```
 
 ---

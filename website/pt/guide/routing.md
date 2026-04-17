@@ -1,93 +1,164 @@
-# Roteamento
+# Routing
 
-`@tuvix.js/router` fornece ativação de micro apps baseada em URL. Quando uma URL corresponde a uma rota, a micro app correspondente é montada. Quando a URL muda, a app é desmontada.
+`@tuvix.js/router` provides URL-based micro app activation. When the URL
+matches an `activeWhen` pattern (or a route's `path`), the orchestrator
+mounts the corresponding app. When it stops matching, the orchestrator
+unmounts it.
 
-## Configuração
+There are two ways to use the router:
+
+1. **Through the orchestrator** — pass `router` config to
+   `createOrchestrator` and the orchestrator wires everything up.
+2. **Standalone** — call `createRouter` directly when you need URL matching
+   without the orchestrator (e.g. embedded scenarios or tests).
+
+## Setup via the Orchestrator
 
 ```ts
 import { createOrchestrator } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator({
+  router: {
+    mode: 'history',  // or 'hash'
+    base: '/',         // optional base path
+    routes: [
+      { path: '/', app: 'home', exact: true },
+      { path: '/dashboard/*', app: 'dashboard' },
+      { path: '/users/:id', app: 'user-profile' },
+    ],
+  },
+});
+
+orchestrator.register({
+  name: 'dashboard',
+  entry: 'https://cdn.example.com/dashboard.js',
+  container: '#app',
+  activeWhen: '/dashboard/*',
+});
+
+await orchestrator.start();
+```
+
+## Standalone Router
+
+```ts
 import { createRouter } from '@tuvix.js/router';
 
-const orchestrator = createOrchestrator({ container: '#app' });
-
 const router = createRouter({
-  orchestrator,
-  mode: 'history', // ou 'hash'
+  mode: 'history',
   routes: [
-    { path: '/', app: 'home' },
-    { path: '/dashboard', app: 'dashboard' },
-    { path: '/users/:id', app: 'user-profile' },
+    { path: '/users/:id', app: 'users' },
   ],
 });
 
-orchestrator.start();
+router.onChange(({ from, to, toRoute }) => {
+  console.log(`navigated ${from} → ${to}`, toRoute?.params);
+});
 ```
 
-## Correspondência de Rotas
+> Listeners are attached automatically on construction; there is no
+> `start()` to call.
 
-As rotas são comparadas em ordem. A primeira correspondência vence.
+## Route Matching
 
-| Padrão | Corresponde a | Parâmetros |
-|--------|--------------|------------|
-| `/` | `/` | - |
-| `/dashboard` | `/dashboard` | - |
+Routes are evaluated **in order** — the first match wins.
+
+| Pattern | Matches | Params |
+| --- | --- | --- |
+| `/` | exactly `/` | – |
+| `/dashboard` | `/dashboard` (and `/dashboard/`) | – |
+| `/dashboard/*` | `/dashboard` and any nested path | – |
 | `/users/:id` | `/users/42` | `{ id: '42' }` |
-| `/files/*` | `/files/a/b/c` | `{ '*': 'a/b/c' }` |
+| `/users/:id/*` | `/users/42/posts/3` | `{ id: '42' }` |
 
-Os parâmetros de rota são passados para a micro app como `props.params`:
+Use `exact: true` to disallow trailing segments:
 
 ```ts
-// Na sua micro app
-async mount(container, props) {
-  const { id } = (props?.params ?? {}) as { id: string };
-  // buscar usuário com id
+{ path: '/settings', app: 'settings', exact: true }
+```
+
+### Reading Params Inside an App
+
+The params live on the `MatchedRoute` exposed by the router, not in the
+mount context. Read them through `router.currentRoute`:
+
+```ts
+const router = orchestrator.getRouter();
+
+orchestrator.register({
+  name: 'user-profile',
+  entry: '/user.js',
+  container: '#app',
+  activeWhen: '/users/:id',
+});
+
+// Inside the app's mount(), look up the latest match
+mount({ container, props }) {
+  const id = router?.currentRoute?.params.id;
+  fetchUser(id).then(/* ... */);
 }
 ```
 
-## Guards de Navegação
+For a more decoupled pattern, push the params into props via
+`updateAppProps()` from a `router.onChange` handler in the shell.
 
-Proteja rotas com funções guard:
+## Programmatic Navigation
 
 ```ts
-routes: [
-  {
-    path: '/admin',
-    app: 'admin',
-    guard: async () => {
-      const user = await getUser();
-      if (!user.isAdmin) {
-        router.navigate('/login');
-        return false; // Bloquear navegação
-      }
-      return true;
-    },
-  },
-],
+await router.push('/dashboard/overview');     // pushState
+await router.replace('/users/42');             // replaceState — no history entry
+router.back();
+router.forward();
+
+router.currentPath;            // '/users/42'
+router.currentRoute?.params;   // { id: '42' }
+router.currentRoute?.query;    // parsed query object
+
+router.match('/some/path');    // → MatchedRoute | null without navigating
+router.getActiveApps();        // app names matching the current path
 ```
 
-## Navegação Programática
+## Navigation Guards
+
+Guards run before every navigation — programmatic and browser-initiated
+back/forward. Return `false` to cancel; the URL is restored automatically.
 
 ```ts
-// Navegar para um caminho
-router.navigate('/dashboard');
+const off = router.beforeEach(async ({ from, to, toRoute }) => {
+  if (to.startsWith('/admin') && !(await isAdmin())) {
+    return false;
+  }
+});
 
-// Navegar com parâmetros de consulta
-router.navigate('/search?q=tuvix');
-
-// Substituir entrada atual do histórico (sem botão voltar)
-router.replace('/dashboard');
-
-// Voltar / Avançar
-router.go(-1);
+off(); // unsubscribe a single guard
 ```
 
-## Modo Hash
+A throwing guard is treated as `false` and logged.
 
-Use o modo hash para ambientes sem reescrita de URL do lado do servidor (ex: hospedagem estática sem fallback SPA):
+## Listening for Changes
 
 ```ts
-const router = createRouter({
-  orchestrator,
+router.onChange(({ from, to, fromRoute, toRoute }) => {
+  analytics.page(to);
+});
+```
+
+Pair the orchestrator with a guard to do per-route data prefetching:
+
+```ts
+router.beforeEach(async ({ toRoute }) => {
+  if (toRoute?.route.app === 'dashboard') {
+    await preloadDashboardData();
+  }
+});
+```
+
+## Hash Mode
+
+Use hash mode for static hosting without SPA fallback:
+
+```ts
+createRouter({
   mode: 'hash',
   routes: [
     { path: '/', app: 'home' },
@@ -97,13 +168,27 @@ const router = createRouter({
 // URLs: /#/, /#/about
 ```
 
-## Rota Ativa
+## Bridging an External Router
+
+If your shell already uses TanStack Router, Next.js App Router, or React
+Router, skip `config.router` entirely and let your existing router drive
+Tuvix.js:
 
 ```ts
-const currentRoute = router.currentRoute;
-// { path: '/dashboard', app: 'dashboard', params: {} }
+const orchestrator = createOrchestrator(); // no router config
 
-router.onRouteChange((route) => {
-  console.log('Navigated to:', route.path);
+await orchestrator.start();
+
+externalRouter.subscribe('onLoad', () => {
+  orchestrator.reconcile(window.location.pathname);
 });
+```
+
+`reconcile(path?)` mounts/unmounts apps based on the supplied path (or
+`window.location.pathname` when omitted).
+
+## Cleanup
+
+```ts
+router.destroy(); // remove window listeners and clear all subscribers
 ```

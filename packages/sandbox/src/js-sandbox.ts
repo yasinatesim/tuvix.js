@@ -183,8 +183,12 @@ export class JsSandbox implements IJsSandbox {
 
       set(_target: Window, prop: PropertyKey, value: unknown): boolean {
         if (!sandbox._active) {
-          // When inactive, write to real window
-          Reflect.set(rawWindow, prop, value);
+          // When inactive, writes are still isolated to fakeWindow.
+          // Writing to the real window here would defeat the sandbox's purpose:
+          // any code that obtained a reference to proxyWindow could pollute
+          // the host page's globals after deactivate().
+          sandbox.fakeWindow.set(prop, value);
+          sandbox.addedProperties.add(prop);
           return true;
         }
 
@@ -215,7 +219,10 @@ export class JsSandbox implements IJsSandbox {
           sandbox.addedProperties.delete(prop);
           return true;
         }
-        return true;
+        // Do not allow sandboxed code to delete properties from the real
+        // window. Returning true silently would falsely indicate success
+        // while leaving the host global intact, masking errors in strict mode.
+        return false;
       },
 
       getOwnPropertyDescriptor(

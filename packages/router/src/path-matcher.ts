@@ -57,9 +57,18 @@ export function parseQuery(queryString: string): Record<string, string> {
 
   const pairs = cleaned.split('&');
   for (const pair of pairs) {
-    const [key, value] = pair.split('=');
+    // Split on the first '=' only so values containing '=' (e.g. base64
+    // payloads, JWTs) survive intact instead of being truncated.
+    const eqIndex = pair.indexOf('=');
+    const key = eqIndex === -1 ? pair : pair.slice(0, eqIndex);
+    const value = eqIndex === -1 ? '' : pair.slice(eqIndex + 1);
     if (key) {
-      query[decodeURIComponent(key)] = value ? decodeURIComponent(value) : '';
+      try {
+        query[decodeURIComponent(key)] = value ? decodeURIComponent(value) : '';
+      } catch {
+        // Malformed percent-encoding — keep raw value rather than throwing.
+        query[key] = value;
+      }
     }
   }
 

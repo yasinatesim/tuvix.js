@@ -99,26 +99,146 @@ orchestrator.start();
 ```ts
 import { defineMicroApp } from 'tuvix.js';
 
+let titleEl: HTMLHeadingElement | null = null;
+
 export default defineMicroApp({
   name: 'dashboard',
 
   bootstrap() {
+    // Einmaliges Setup vor dem ersten Mount (z. B. Daten vorladen)
     console.log('Dashboard initialisiert');
   },
 
   mount({ container, props }) {
-    container.innerHTML = `<h1>Willkommen, ${props?.user}!</h1>`;
+    container.innerHTML = `<h1>Willkommen, ${props?.user ?? 'Gast'}!</h1>`;
+    titleEl = container.querySelector('h1');
   },
 
   unmount({ container }) {
+    titleEl = null;
     container.innerHTML = '';
   },
 
+  // Wird ausgelöst, wenn der Shell orchestrator.updateAppProps(name, props) aufruft.
+  // DOM in-place patchen — kein Remount, kein Flackern.
   update({ props }) {
-    console.log('Props aktualisiert:', props);
+    if (titleEl) {
+      titleEl.textContent = `Willkommen, ${props?.user ?? 'Gast'}!`;
+    }
   },
 });
 ```
+
+---
+
+## 🔄 Props zur Laufzeit aktualisieren
+
+Übergib einer gemounteten Micro-App neue Props, ohne sie neu zu mounten:
+
+```ts
+// Aktualisierte Props vom Shell pushen — ruft den update()-Hook der Micro-App auf
+await orchestrator.updateAppProps('dashboard', {
+  user: 'Yasin',
+  theme: 'dark',
+});
+```
+
+Die Props werden mit den ursprünglichen Config-Props zusammengeführt. Wenn die
+App keinen `update()`-Hook implementiert, werden die neuen Props gespeichert
+und beim nächsten Mount angewendet.
+
+---
+
+## 🧭 Manuelle Lifecycle-Steuerung
+
+```ts
+// Manuelles Mount / Unmount außerhalb der Routen-Reconciliation
+await orchestrator.mountApp('dashboard');
+await orchestrator.unmountApp('dashboard');
+
+// Aktuellen Zustand abfragen
+orchestrator.getAppStatus('dashboard');     // 'mounted' | 'mounting' | 'error' | ...
+orchestrator.getMountedApps();              // ['dashboard']
+orchestrator.getRegisteredApps();           // ['dashboard', 'settings']
+
+// Alles abbauen (idempotent — sicher mehrfach aufrufbar)
+await orchestrator.destroy();
+```
+
+---
+
+## 🌉 Externen Router anbinden
+
+Wenn du bereits TanStack Router, Next.js App Router oder React Router nutzt,
+überspring `config.router` komplett und lass deinen vorhandenen Router
+Tuvix.js per `reconcile(path)` steuern:
+
+```ts
+const orchestrator = createOrchestrator(); // keine Router-Config
+
+orchestrator.register({
+  name: 'dashboard',
+  entry: '/dashboard.js',
+  container: '#main',
+  activeWhen: '/dashboard/*',
+});
+
+await orchestrator.start();
+
+// Nach jeder Navigation tuvix.js den aktuellen Pfad mitteilen
+tanstackRouter.subscribe('onLoad', () => {
+  orchestrator.reconcile(window.location.pathname);
+});
+```
+
+---
+
+## 👁️ Lazy Mounting (Viewport)
+
+Aufwendige Micro-Apps erst mounten, wenn ihr Container ins Viewport scrollt:
+
+```ts
+orchestrator.register({
+  name: 'comments',
+  entry: '/comments.js',
+  container: '#comments-section',
+  mountWhenVisible: true, // mountet beim ersten IntersectionObserver-Treffer
+});
+```
+
+---
+
+## 🛟 Fallback-HTML bei Ladefehler
+
+```ts
+orchestrator.register({
+  name: 'reports',
+  entry: '/reports.js',
+  container: '#reports',
+  activeWhen: '/reports/*',
+  fallback: '<p class="error">Reports vorübergehend nicht verfügbar.</p>',
+});
+```
+
+---
+
+## ⚡ Prefetching-Strategien
+
+```ts
+const orchestrator = createOrchestrator({
+  router: { /* ... */ },
+  prefetch: {
+    strategy: 'idle', // 'immediate' | 'idle' | 'hover' | 'none' (Standard)
+  },
+});
+```
+
+| Strategie | Wann werden Bundles geladen |
+| --- | --- |
+| `immediate` | Direkt nach `start()` |
+| `idle` | Im nächsten Browser-Idle-Fenster (`requestIdleCallback`) |
+| `hover` | Beim ersten `mouseover` des Nutzers irgendwo auf der Seite |
+| `none` | Nie (Standard) — nur on demand |
 
 ---
 
@@ -129,14 +249,26 @@ import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus();
 
-// App A - Event senden
+// App A — Event senden
 bus.emit('user:login', { userId: 42, name: 'Ahmet' });
 
-// App B - auf Event lauschen
-bus.on('user:login', (data) => {
+// App B — abonnieren (gibt eine Unsubscribe-Funktion zurück)
+const unsubscribe = bus.on('user:login', (data) => {
   console.log(`${data.name} hat sich angemeldet!`);
 });
+
+// Einmal feuern und automatisch abmelden
+bus.once('app:ready', () => console.log('bereit'));
+
+// Alle Events zum Debuggen mithören
+bus.onAny((event, data) => console.log('[bus]', event, data));
+
+// Aufräumen
+unsubscribe();
 ```
+
+Der Orchestrator bietet seinen eigenen Bus über `orchestrator.getEventBus()`,
+sodass alle registrierten Apps automatisch denselben Kanal teilen.
 
 ---
 
@@ -146,13 +278,32 @@ bus.on('user:login', (data) => {
 import { createRouter } from 'tuvix.js';
 
 const router = createRouter({
-  mode: 'history',
+  mode: 'history', // oder 'hash'
+  base: '/',       // optionaler Base-Pfad
   routes: [
     { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/settings/*', app: 'settings' },
-    { path: '/profile/*', app: 'profile' },
+    { path: '/users/:id', app: 'users' },
+    { path: '/settings', app: 'settings', exact: true },
   ],
 });
+
+// Programmatische Navigation
+await router.push('/dashboard/overview');
+await router.replace('/users/42');
+router.back();
+
+// Navigation Guards (false zurückgeben zum Abbrechen)
+const off = router.beforeEach(async ({ from, to }) => {
+  if (to.startsWith('/admin') && !isAdmin()) return false;
+});
+
+// Auf Änderungen reagieren
+router.onChange(({ from, to, toRoute }) => {
+  console.log(`navigiert ${from} → ${to}`, toRoute?.params);
+});
+
+// Oder den Navigations-Helper des Orchestrators nutzen
+await orchestrator.navigateTo('/settings');
 ```
 
 ---
