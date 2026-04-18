@@ -1,5 +1,13 @@
 # with-react-router
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [e8f0731]
+  - @tuvix.js/router@0.4.4
+  - @tuvix.js/core@0.4.4
+
 ## 0.1.5
 
 ### Patch Changes
