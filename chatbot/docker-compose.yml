@@ -51,7 +51,7 @@ services:
   # ChromaDB vector database
   # Pinned to 0.6.3 — compatible with chromadb@1.9.x npm client (1.x server changed the API)
   chromadb:
-    image: chromadb/chroma:0.6.3
+    image: chromadb/chroma:1.5.9
     volumes:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
