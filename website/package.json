@@ -27,7 +27,7 @@
     "dompurify": "^3.3.3",
     "esbuild-wasm": "^0.24.0",
     "highlight.js": "^11.11.1",
-    "marked": "^14.0.0",
+    "marked": "^18.0.0",
     "sass": "^1.99.0"
   }
 }

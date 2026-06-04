@@ -18,7 +18,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "helmet": "^8.1.0",
-    "marked": "^14.0.0"
+    "marked": "^18.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
