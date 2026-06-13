@@ -31,7 +31,7 @@
     "esbuild": "^0.28.0",
     "eslint": "^9.15.0",
     "husky": "^9.1.7",
-    "jsdom": "22",
+    "jsdom": "29",
     "markdownlint-cli2": "^0.22.0",
     "prettier": "^3.4.1",
     "tsup": "^8.3.5",
