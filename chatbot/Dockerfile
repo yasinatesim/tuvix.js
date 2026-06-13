@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY chatbot/package.json ./chatbot/
@@ -7,7 +7,7 @@ COPY chatbot/ ./chatbot/
 RUN pnpm --filter chatbot build
 RUN pnpm --filter @tuvix.js/chatbot deploy --prod /app/deploy
 
-FROM node:20-alpine
+FROM node:24-alpine
 RUN corepack enable
 WORKDIR /app
 COPY --from=builder /app/deploy .
