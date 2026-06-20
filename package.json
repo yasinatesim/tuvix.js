@@ -27,7 +27,7 @@
     "@github/markdownlint-github": "^0.8.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^22.10.0",
-    "@vitest/coverage-v8": "^2.1.6",
+    "@vitest/coverage-v8": "^4.0.0",
     "esbuild": "^0.28.0",
     "eslint": "^9.15.0",
     "husky": "^9.1.7",
@@ -38,7 +38,7 @@
     "tsx": "^4.21.0",
     "turbo": "^2.3.1",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.6"
+    "vitest": "^4.0.0"
   },
   "packageManager": "pnpm@9.14.2",
   "engines": {
