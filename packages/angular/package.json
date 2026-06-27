@@ -50,10 +50,10 @@
 	"license": "MIT",
 	"sideEffects": false,
 	"devDependencies": {
-		"@angular/core": "^16.2.0",
-		"@angular/platform-browser": "^16.2.0",
-		"@angular/platform-browser-dynamic": "^16.2.0",
-		"@angular/platform-server": "^16.2.0"
+		"@angular/core": "^22.0.0",
+		"@angular/platform-browser": "^22.0.0",
+		"@angular/platform-browser-dynamic": "^22.0.0",
+		"@angular/platform-server": "^22.0.0"
 	},
 	"dependencies": {
 		"@tuvix.js/loader": "workspace:^"
