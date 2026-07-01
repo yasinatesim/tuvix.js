@@ -14,7 +14,7 @@
     "seed:clear": "tsx data/seed-clear.ts"
   },
   "dependencies": {
-    "chromadb": "^1.9.2",
+    "chromadb": "^3.0.0",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "helmet": "^8.1.0",
