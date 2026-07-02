@@ -70,7 +70,7 @@ importers:
         version: 4.22.1
       helmet:
         specifier: ^8.1.0
-        version: 8.1.0
+        version: 8.2.0
       marked:
         specifier: ^14.0.0
         version: 14.1.4
@@ -5196,8 +5196,8 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  helmet@8.1.0:
-    resolution: {integrity: sha512-jOiHyAZsmnr8LqoPGmCjYAaiuWwjAPLgY8ZX2XrmHawt99/u1y6RgrZMTeoPfpUbV96HOalYgz1qzkRbw54Pmg==}
+  helmet@8.2.0:
+    resolution: {integrity: sha512-DRgTIUgnWcJ62KyarxxziuqYxKGnR6Rgg19BlbucN/dpmJbl1XOit6qvoOX0ZT+HhWe5OUVhU/a1zpGyc1xA0Q==}
     engines: {node: '>=18.0.0'}
 
   highlight.js@11.11.1:
@@ -10917,7 +10917,7 @@ snapshots:
 
   '@types/helmet@4.0.0':
     dependencies:
-      helmet: 8.1.0
+      helmet: 8.2.0
 
   '@types/html-minifier-terser@6.1.0': {}
 
@@ -13159,7 +13159,7 @@ snapshots:
 
   he@1.2.0: {}
 
-  helmet@8.1.0: {}
+  helmet@8.2.0: {}
 
   highlight.js@11.11.1: {}
 
