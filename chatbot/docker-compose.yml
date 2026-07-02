@@ -7,7 +7,7 @@ services:
       dockerfile: chatbot/Dockerfile
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - MODEL_NAME=${MODEL_NAME:-minimax/minimax-m2.5:free}
+      - MODEL_NAME=${MODEL_NAME:-meta-llama/llama-3.3-70b-instruct:free}
       - EMBED_MODEL=${EMBED_MODEL:-nvidia/llama-nemotron-embed-vl-1b-v2:free}
       - CHROMA_URL=http://chromadb:8000
       - PORT=3001

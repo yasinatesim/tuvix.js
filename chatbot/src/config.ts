@@ -1,7 +1,7 @@
 export const CONFIG = {
   openRouterApiKey: process.env.OPENROUTER_API_KEY ?? '',
   chromaUrl: process.env.CHROMA_URL ?? 'http://localhost:8000',
-  modelName: process.env.MODEL_NAME ?? 'minimax/minimax-m2.5:free',
+  modelName: process.env.MODEL_NAME ?? 'meta-llama/llama-3.3-70b-instruct:free',
   embedModel: process.env.EMBED_MODEL ?? 'nvidia/llama-nemotron-embed-vl-1b-v2:free',
   port: parseInt(process.env.PORT ?? '3001', 10),
   corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',

@@ -1,5 +1,5 @@
 #!/bin/sh
-# tuvix.js pre-commit hook — mirrors ci.yml exactly
+# tuvix.js pre-commit hook — mirrors ci.yml (except e2e, which runs in CI only)
 set -e
 
 echo "Running pre-commit checks (mirrors CI)..."
@@ -12,8 +12,11 @@ pnpm --filter @tuvix.js/website lint
 pnpm validate-docs
 pnpm validate-i18n
 pnpm lint:md
-pnpm exec playwright test
 pnpm --filter chatbot test
-pnpm --filter chatbot test:e2e
 
-echo "All checks passed."
+# NOTE: Playwright/chromium e2e runs in GitHub CI only, not locally.
+# `pnpm exec playwright test` and `pnpm --filter chatbot test:e2e` are
+# intentionally omitted here so commits don't require local browser binaries.
+# The e2e-test and chatbot e2e jobs in ci.yml still gate every push/PR.
+
+echo "All checks passed (e2e runs in CI)."
