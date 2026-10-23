@@ -5,8 +5,7 @@
 <h1 align="center">Tuvix.js</h1>
 
 <p align="center">
-  一个轻量且灵活的<strong>微前端框架</strong>，用于构建可扩展、可独立部署的前端应用。<br/>
-  Tuvix.js 将多个前端应用融合为无缝统一的用户体验 - 正如其名所示。
+  一个微前端工具包：加载、挂载并连接用 React、Vue、Svelte、Angular 或纯 TypeScript 编写、独立部署的应用，既可在浏览器中运行，也可作为 React 页面中在服务端渲染的 island。
 </p>
 
 <p align="center">
@@ -26,455 +25,291 @@
 
 ## ✨ 特性
 
-- 🧩 **框架无关** - 支持 React、Vue、Svelte、Angular 或原生 JS
-- 📦 **独立Deployment** - 每个微应用可单独部署
-- 🔗 **动态模块加载** - 按需加载微前端
-- 🛣️ **内置路由** - 微应用间的无缝路由
-- 📡 **应用间通信** - 用于跨应用消息传递的事件总线
-- ⚡ **Lightweight** - 零运行时依赖，核心极简
-- 🔄 **Lifecycle管理** - 挂载、卸载、更新钩子
-- 🔒 **Type-Safe** - 完整的 TypeScript 支持与严格类型
+- 🧩 **框架适配器**，支持 React 18/19、Vue 3、Svelte 3-5 和 Angular 15+。每个适配器把根组件变成带有 `mount`、`update` 和 `unmount` 的微应用模块，每个容器一个实例。
+- 🛣️ **基于路径的激活。** `activeWhen: '/users/:id'` 在匹配的路径上挂载应用。查询字符串和 hash 永远不会让它卸载。编排器、路由器和 server 包共用同一个匹配器（`matchPath`）。
+- 🔁 **有序挂载。** 路由变化逐个协调；非激活的应用先卸载，新应用再挂载，因此快速的 A → B → A 导航后页面上只剩 A。
+- 🔗 **外部路由器。** `orchestrator.connectRouter()` 跟随 TanStack Router 或 React Router。`interceptLinks()` 把普通的 `<a href>` 点击变成客户端导航。
+- 🏝️ **SSR islands。** `TuvixIsland` 在服务端渲染的 React 页面中承载 Vue、Svelte、Angular 和 React 微应用，原地水合它们，并且重新渲染时从不改写它们的 DOM。
+- 🎨 **带样式的首次绘制。** `@tuvix.js/vite` 告诉你的服务器每个 island 需要哪些样式表，让你在 `<head>` 中链接它们。
+- 📦 **灵活的入口（entry）。** 脚本 URL、`{ scripts, styles, type }`，或 `() => import('./app')` 这样的加载函数。支持并行加载、重试、超时和 SRI 哈希。
+- 📡 **共享事件总线。** `getGlobalBus()` 为每个页面返回一个总线，即使应用分别打包也是同一个。
+- 🔔 **生命周期事件。** `tuvix:mounted`、`tuvix:unmounted`、`tuvix:error`，以及 `whenMounted(name)` 和 `onLifecycle()`。
+- 🔒 **按需 CSS 隔离。** `sandbox: true` 把应用渲染在一个带有独立样式表的 shadow root 中。
+- 🟦 **TypeScript。** 每个库包都提供 ESM 和 CommonJS 构建以及类型声明。
+
+Tuvix.js 不在应用之间隔离 JavaScript：每个应用都运行在页面的 `window` 中。不受信任的代码请使用 `<iframe>`。
 
 ---
 
 ## 🤖 AI 组件生成器
 
-使用我们内置的 AI 聊天机器人，通过自然语言生成 tuvix.js 组件。
+在文档站点上用聊天机器人从自然语言生成 tuvix.js 组件。
 
-- **对话模型：** MiniMax M2.5 通过 OpenRouter（免费 API，无需自托管）
-- **嵌入模型：** NVIDIA Nemotron Embed 1B 通过 OpenRouter（RAG 检索）
+- **对话模型：** MiniMax M2.5，通过 OpenRouter
+- **嵌入模型：** NVIDIA Nemotron Embed 1B，通过 OpenRouter（RAG 检索）
 - **支持：** React、Vue、Svelte、Angular
 - **数据集：** HuggingFace 上的 [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+> 试一试：文档站点上的 [AI 生成器](https://tuvix.js.org/zh/chatbot)
 
 ---
 
 ## 📦 安装
 
 ```bash
-# 全家桶包
-npm install tuvix.js
+# 编排器、路由器、加载器、事件总线和沙箱
+pnpm add tuvix.js
 
-# 或单独安装各个包
-npm install @tuvix.js/core @tuvix.js/router
+# 适配器，按需安装
+pnpm add @tuvix.js/react @tuvix.js/vue @tuvix.js/svelte @tuvix.js/angular
+
+# 或者用脚手架创建项目
+npx create-tuvix-app my-app --template shell
 ```
 
 ---
 
 ## 🚀 快速开始
 
-### 宿主（Shell）应用
+### Shell
 
 ```ts
-import { createOrchestrator } from 'tuvix.js';
+import { createOrchestrator, interceptLinks } from 'tuvix.js';
 
 const orchestrator = createOrchestrator({
-  router: {
-    mode: 'history',
-    routes: [
-      { path: '/dashboard/*', app: 'dashboard' },
-      { path: '/settings/*', app: 'settings' },
-    ],
-  },
+  router: { mode: 'history', routes: [] },
 });
 
 orchestrator.register({
   name: 'dashboard',
-  entry: 'https://cdn.example.com/dashboard/main.js',
+  entry: {
+    scripts: ['https://cdn.example.com/dashboard/main.js'],
+    styles: ['https://cdn.example.com/dashboard/main.css'],
+    type: 'module',
+  },
   container: '#main-content',
   activeWhen: '/dashboard/*',
+  props: { user: 'Guest' },
+  fallback: '<p>Dashboard is unavailable.</p>',
 });
 
 orchestrator.register({
   name: 'settings',
-  entry: 'https://cdn.example.com/settings/main.js',
+  entry: () => import('./apps/settings'),
   container: '#main-content',
   activeWhen: '/settings/*',
 });
 
-orchestrator.start();
+interceptLinks({ navigate: (path) => orchestrator.navigateTo(path) });
+
+await orchestrator.start();
 ```
 
-### 微前端应用
+### 微应用
+
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+
+function Dashboard({ user }: { user: string }) {
+  return <h1>Welcome, {user}</h1>;
+}
+
+// 以 "dashboard" 注册自身，shell 的脚本入口因此能找到它。
+export default createReactMicroApp({ name: 'dashboard', App: Dashboard });
+```
+
+不使用框架：
 
 ```ts
 import { defineMicroApp } from 'tuvix.js';
 
-let titleEl: HTMLHeadingElement | null = null;
-
 export default defineMicroApp({
-  name: 'dashboard',
-
-  bootstrap() {
-    // 首次挂载前的一次性设置（例如预加载数据）
-    console.log('Dashboard 已初始化');
-  },
-
+  name: 'settings',
   mount({ container, props }) {
-    container.innerHTML = `<h1>欢迎，${props?.user ?? '访客'}！</h1>`;
-    titleEl = container.querySelector('h1');
+    const title = document.createElement('h1');
+    title.textContent = `Settings for ${String(props?.user ?? 'Guest')}`;
+    container.replaceChildren(title);
   },
-
   unmount({ container }) {
-    titleEl = null;
-    container.innerHTML = '';
-  },
-
-  // 当 shell 调用 orchestrator.updateAppProps(name, props) 时触发。
-  // 原地修补 DOM — 无需重新挂载，无闪烁。
-  update({ props }) {
-    if (titleEl) {
-      titleEl.textContent = `欢迎，${props?.user ?? '访客'}！`;
-    }
+    container.replaceChildren();
   },
 });
 ```
 
----
-
-## 🔄 运行时更新 Props
-
-向已挂载的微应用传递新 props，无需重新挂载：
+### 更新 props
 
 ```ts
-// 从 shell 推送更新的 props — 调用微应用的 update() 钩子
-await orchestrator.updateAppProps('dashboard', {
-  user: 'Yasin',
-  theme: 'dark',
-});
+import { createOrchestrator } from 'tuvix.js';
+
+const orchestrator = createOrchestrator();
+await orchestrator.updateAppProps('dashboard', { user: 'Yasin' });
 ```
 
-Props 会与原始 config props 合并。如果应用未实现 `update()`，新 props 会被存储
-并在下次挂载时应用。
+已挂载且带有 `update` 的应用会原地重新渲染。否则编排器会保存合并后的 props，供下次挂载使用。
 
 ---
 
-## 🧭 手动生命周期控制
+## 🌉 跟随外部路由器
 
 ```ts
-// 路由调和之外的手动挂载/卸载
-await orchestrator.mountApp('dashboard');
-await orchestrator.unmountApp('dashboard');
+import { createOrchestrator } from 'tuvix.js';
+import { router } from './router'; // TanStack Router 实例
 
-// 检查当前状态
-orchestrator.getAppStatus('dashboard');     // 'mounted' | 'mounting' | 'error' | ...
-orchestrator.getMountedApps();              // ['dashboard']
-orchestrator.getRegisteredApps();           // ['dashboard', 'settings']
+const orchestrator = createOrchestrator(); // 没有内置路由器
 
-// 销毁一切（幂等 — 多次调用安全）
-await orchestrator.destroy();
-```
-
----
-
-## 🌉 桥接外部路由器
-
-如果你已经在使用 TanStack Router、Next.js App Router 或 React Router，可以完全
-跳过 `config.router`，让现有路由器通过 `reconcile(path)` 驱动 Tuvix.js：
-
-```ts
-const orchestrator = createOrchestrator(); // 无路由器配置
-
-orchestrator.register({
-  name: 'dashboard',
-  entry: '/dashboard.js',
-  container: '#main',
-  activeWhen: '/dashboard/*',
+orchestrator.connectRouter({
+  subscribe: (callback) => router.subscribe('onResolved', callback),
+  getPath: () => router.state.location.pathname,
 });
 
 await orchestrator.start();
-
-// 每次导航后，告知 tuvix.js 当前路径
-tanstackRouter.subscribe('onLoad', () => {
-  orchestrator.reconcile(window.location.pathname);
-});
 ```
 
 ---
 
-## 👁️ 延迟挂载（视口）
+## 🏝️ 服务端渲染的 Islands
 
-延迟挂载昂贵的微应用，直到其容器滚动进入视口：
+```tsx
+import { TuvixIsland } from '@tuvix.js/react';
+import { createSsrSvelteMicroApp } from '@tuvix.js/svelte';
+import Footer from './Footer.svelte';
+
+const footer = createSsrSvelteMicroApp({ name: 'footer', App: Footer });
+
+// `footerHtml` 来自仅在服务端运行的代码中的 renderSvelteToString()。
+export function Layout({ footerHtml }: { footerHtml?: string }) {
+  return <TuvixIsland name="footer" app={footer} props={{ year: 2026 }} ssrHtml={footerHtml} fallback={<footer>© 2026</footer>} />;
+}
+```
+
+水合期间，island 从页面读取自己的 HTML，因此客户端永远不需要 `footerHtml`。参阅 [SSR Islands 指南](https://tuvix.js.org/zh/guide/ssr-islands) 和 [`examples/with-ssr-islands`](./examples/with-ssr-islands)。
+
+---
+
+## 🔔 生命周期事件
 
 ```ts
-orchestrator.register({
-  name: 'comments',
-  entry: '/comments.js',
-  container: '#comments-section',
-  mountWhenVisible: true, // 在第一次 IntersectionObserver 命中时挂载
-});
+import { onLifecycle, whenMounted } from 'tuvix.js';
+
+onLifecycle('error', ({ name, error }) => console.error(name, error));
+
+const { container, hydrated } = await whenMounted('footer');
+container.classList.add(hydrated ? 'hydrated' : 'rendered');
 ```
 
 ---
 
-## 🛟 加载失败时的回退 HTML
+## 🔌 事件总线
 
 ```ts
-orchestrator.register({
-  name: 'reports',
-  entry: '/reports.js',
-  container: '#reports',
-  activeWhen: '/reports/*',
-  fallback: '<p class="error">Reports 暂时不可用。</p>',
-});
+import { getGlobalBus } from 'tuvix.js';
+
+const bus = getGlobalBus(); // 编排器传给 mount() 的就是这个总线
+
+const off = bus.on<{ userId: string }>('user:login', ({ userId }) => console.log(userId));
+bus.emit('user:login', { userId: '42' });
+off();
 ```
 
 ---
 
-## ⚡ 预取策略
+## 📦 包
 
-```ts
-const orchestrator = createOrchestrator({
-  router: { /* ... */ },
-  prefetch: {
-    strategy: 'idle', // 'immediate' | 'idle' | 'hover' | 'none' (默认)
-  },
-});
-```
-
-| 策略 | 何时获取 bundle |
+| 包 | 说明 |
 | --- | --- |
-| `immediate` | `start()` 之后立即 |
-| `idle` | 下一个浏览器空闲窗口（`requestIdleCallback`） |
-| `hover` | 用户在页面任何位置首次 `mouseover` 后 |
-| `none` | 从不（默认）— 仅按需加载 |
-
----
-
-## 🔌 应用间通信
-
-```ts
-import { createEventBus } from 'tuvix.js';
-
-const bus = createEventBus();
-
-// 应用 A — 发送事件
-bus.emit('user:login', { userId: 42, name: 'Ahmet' });
-
-// 应用 B — 订阅（返回取消订阅函数）
-const unsubscribe = bus.on('user:login', (data) => {
-  console.log(`${data.name} 已登录！`);
-});
-
-// 触发一次后自动取消订阅
-bus.once('app:ready', () => console.log('就绪'));
-
-// 监听所有事件用于调试
-bus.onAny((event, data) => console.log('[bus]', event, data));
-
-// 清理
-unsubscribe();
-```
-
-orchestrator 通过 `orchestrator.getEventBus()` 暴露自己的 bus，所有注册的应用
-自动共享同一个通道。
-
----
-
-## 🛣️ 路由
-
-```ts
-import { createRouter } from 'tuvix.js';
-
-const router = createRouter({
-  mode: 'history', // 或 'hash'
-  base: '/',       // 可选的基础路径
-  routes: [
-    { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/users/:id', app: 'users' },
-    { path: '/settings', app: 'settings', exact: true },
-  ],
-});
-
-// 程序化导航
-await router.push('/dashboard/overview');
-await router.replace('/users/42');
-router.back();
-
-// 导航守卫（返回 false 取消）
-const off = router.beforeEach(async ({ from, to }) => {
-  if (to.startsWith('/admin') && !isAdmin()) return false;
-});
-
-// 响应变更
-router.onChange(({ from, to, toRoute }) => {
-  console.log(`navigated ${from} → ${to}`, toRoute?.params);
-});
-
-// 或使用 orchestrator 的导航助手
-await orchestrator.navigateTo('/settings');
-```
-
----
-
-## 🏗️ 架构
-
-```
-┌─────────────────────────────────────────────┐
-│              Tuvix.js Shell                  │
-│  ┌─────────────────────────────────────────┐│
-│  │            Orchestrator                 ││
-│  │  ┌──────────┐ ┌──────────┐ ┌─────────┐ ││
-│  │  │ Router   │ │Event Bus │ │ Loader  │ ││
-│  │  └──────────┘ └──────────┘ └─────────┘ ││
-│  └─────────────────────────────────────────┘│
-│                                             │
-│  ┌───────┐  ┌───────┐  ┌───────┐          │
-│  │ App A │  │ App B │  │ App C │  ...      │
-│  │(React)│  │ (Vue) │  │(Svelte│          │
-│  └───────┘  └───────┘  └───────┘          │
-└─────────────────────────────────────────────┘
-```
-
----
-
-## 📦 包列表
-
-| 包名 | 描述 |
-| --- | --- |
-| [`tuvix.js`](./packages/tuvix) | 全家桶包 |
-| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
-| [`@tuvix.js/router`](./packages/router) | 基于 URL 的微应用路由 |
-| [`@tuvix.js/event-bus`](./packages/event-bus) | 应用间通信事件总线 |
-| [`@tuvix.js/loader`](./packages/loader) | 动态模块加载器 |
-| [`@tuvix.js/sandbox`](./packages/sandbox) | CSS/JS 隔离（Shadow DOM + Proxy） |
-| [`@tuvix.js/react`](./packages/react) | React 18+ 绑定与 Hooks |
-| [`@tuvix.js/vue`](./packages/vue) | Vue 3 绑定与组合式 API |
-| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5 绑定 |
-| [`@tuvix.js/angular`](./packages/angular) | Angular 15+ 绑定 |
-| [`create-tuvix-app`](./packages/cli) | CLI 脚手架工具 |
-| [`@tuvix.js/devtools`](./packages/devtools) | 页面内调试面板 |
-| [`@tuvix.js/server`](./packages/server) | 服务端组合 |
-| [`@tuvix.js/module-federation`](./packages/module-federation) | Webpack Module Federation 集成 |
+| [`tuvix.js`](./packages/tuvix) | 聚合包：core、router、loader、event bus、sandbox |
+| [`@tuvix.js/core`](./packages/core) | 编排器：注册、协调、props、`connectRouter` |
+| [`@tuvix.js/router`](./packages/router) | History/hash 路由器、`matchPath`、`interceptLinks` |
+| [`@tuvix.js/loader`](./packages/loader) | 入口加载和生命周期运行时 |
+| [`@tuvix.js/event-bus`](./packages/event-bus) | 发布/订阅总线，页面级的 `getGlobalBus()` |
+| [`@tuvix.js/sandbox`](./packages/sandbox) | `CssSandbox`（Shadow DOM）、`JsSandbox`（代理 window） |
+| [`@tuvix.js/react`](./packages/react) | React 适配器、`TuvixReactApp`、`TuvixIsland`、hooks |
+| [`@tuvix.js/vue`](./packages/vue) | Vue 3 适配器、`renderVueToString` |
+| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5 适配器、`renderSvelteToString` |
+| [`@tuvix.js/angular`](./packages/angular) | Angular 15+ 适配器（zoneless）、`renderAngularToString` |
+| [`@tuvix.js/vite`](./packages/vite) | Vite 插件：为服务端渲染的 `<head>` 生成 island 样式表链接 |
+| [`@tuvix.js/server`](./packages/server) | 在服务端组合 HTML 片段、流式输出、指标 |
+| [`@tuvix.js/module-federation`](./packages/module-federation) | 由 webpack Module Federation 远程模块提供的入口 |
+| [`@tuvix.js/devtools`](./packages/devtools) | 页内调试面板 |
+| [`create-tuvix-app`](./packages/cli) | 项目脚手架 |
 
 ---
 
 ## 📁 项目结构
 
-```
+```text
 tuvix.js/
-├── packages/
-│   ├── core/               # @tuvix.js/core
-│   ├── router/             # @tuvix.js/router
-│   ├── event-bus/          # @tuvix.js/event-bus
-│   ├── loader/             # @tuvix.js/loader
-│   ├── sandbox/            # @tuvix.js/sandbox
-│   ├── react/              # @tuvix.js/react
-│   ├── vue/                # @tuvix.js/vue
-│   ├── svelte/             # @tuvix.js/svelte
-│   ├── angular/            # @tuvix.js/angular
-│   ├── cli/                # create-tuvix-app
-│   ├── devtools/           # @tuvix.js/devtools
-│   ├── server/             # @tuvix.js/server
-│   ├── module-federation/  # @tuvix.js/module-federation
-│   └── tuvix/              # tuvix.js（总包）
-├── examples/
-│   ├── with-angular/              # Angular 15+ 示例
-│   ├── with-module-federation-react/ # Module Federation + React 示例
-│   ├── with-multiple-frameworks/  # 多框架示例
-│   ├── with-react/                # React 18+ 示例
-│   ├── with-react-devtools/       # React + DevTools 示例
-│   ├── with-react-event-bus/      # React + Event Bus 示例
-│   ├── with-react-router/         # React + Router 示例
-│   ├── with-react-sandbox/        # React + Sandbox 示例
-│   ├── with-ssr-react/            # SSR + React 示例
-│   ├── with-ssr-vanilla/          # SSR + 原生 JS 示例
-│   ├── with-svelte/               # Svelte 5 示例
-│   ├── with-vanilla/              # 原生 JS 示例
-│   └── with-vue/                  # Vue 3 示例
-├── website/                # 文档站点（VitePress，支持 10 种语言）
-├── .github/                # CI/CD 工作流
-├── package.json            # 根工作区配置
-├── pnpm-workspace.yaml
-├── tsconfig.base.json
-└── vitest.config.ts
+├── packages/        # the 15 packages above
+├── examples/        # runnable examples, see below
+├── website/         # documentation site (VitePress, 10 languages)
+├── scripts/         # docs and package validators
+└── .changeset/      # release notes for the next version
 ```
-
----
-
-## 🗺️ 路线图
-
-### ✅ 已完成
-
-- [x] Core Orchestrator
-- [x] Lifecycle管理
-- [x] 动态模块加载
-- [x] 事件总线
-- [x] 支持 history/hash 模式的 URL 路由
-- [x] CSS/JS 沙箱隔离
-- [x] CLI 脚手架工具（`npx create-tuvix-app`）
-- [x] DevTools 浏览器扩展
-- [x] 服务端组合
-- [x] Module Federation 支持
-- [x] 框架绑定（React、Vue、Svelte、Angular）
-- [x] i18n 文档（10 种语言）
-
-### 🔜 即将推出
-
-- [ ] 微应用间热模块重载
-- [ ] 共享状态管理适配器
-- [ ] 预加载与预取策略
-- [ ] 插件系统与中间件 API
-- [ ] DevTools 中的可视化依赖图
-- [ ] Testing utilities & mock Orchestrator
-- [ ] 原生 ESM / importmap 支持
-- [ ] Edge/CDN 感知的服务端组合
-- [ ] 用于 DevTools 集成的 VS Code 扩展
-- [ ] 用于微应用隔离的 Storybook 集成
 
 ---
 
 ## 🧪 示例
 
-每个支持的框架都有即用型示例，位于 [`examples/`](./examples) 目录中：
+| 示例 | 展示内容 |
+| --- | --- |
+| [`with-ssr-islands`](./examples/with-ssr-islands) | React 宿主，包含服务端渲染的 Vue、Svelte、Angular 和 React island |
+| [`with-react`](./examples/with-react) | React shell 和微应用 |
+| [`with-vue`](./examples/with-vue) | Vue 3 微应用 |
+| [`with-svelte`](./examples/with-svelte) | Svelte 微应用 |
+| [`with-angular`](./examples/with-angular) | Angular 微应用 |
+| [`with-vanilla`](./examples/with-vanilla) | 不使用框架 |
+| [`with-multiple-frameworks`](./examples/with-multiple-frameworks) | 一个 shell 中的 React 和 Vue |
+| [`with-react-router`](./examples/with-react-router) | 路由 |
+| [`with-react-event-bus`](./examples/with-react-event-bus) | 事件总线 |
+| [`with-react-sandbox`](./examples/with-react-sandbox) | CSS 沙箱 |
+| [`with-react-devtools`](./examples/with-react-devtools) | Devtools 面板 |
+| [`with-module-federation-react`](./examples/with-module-federation-react) | Module Federation |
+| [`with-ssr-react`](./examples/with-ssr-react) | 使用 `@tuvix.js/server` 在服务端组合 |
+| [`with-ssr-vanilla`](./examples/with-ssr-vanilla) | 不使用框架在服务端组合 |
 
-| 示例 | 框架 | 路径 |
-| --- | --- | --- |
-| [Angular 示例](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
-| [Module Federation + React 示例](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
-| [多框架示例](./examples/with-multiple-frameworks) | 混合 | `examples/with-multiple-frameworks/` |
-| [React 示例](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [React + DevTools 示例](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
-| [React + Event Bus 示例](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
-| [React + Router 示例](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
-| [React + Sandbox 示例](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
-| [SSR + React 示例](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
-| [SSR + 原生 JS 示例](./examples/with-ssr-vanilla) | 无框架 | `examples/with-ssr-vanilla/` |
-| [Svelte 示例](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
-| [原生 JS 示例](./examples/with-vanilla) | 无框架 | `examples/with-vanilla/` |
-| [Vue 示例](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+---
 
-每个示例演示了：
+## 🗺️ 路线图
 
-- 启动Orchestrator的**Shell (Host)**应用
-- 动态注册和加载的两个**微前端应用**
-- 通过事件总线进行的应用间通信
+已发布：
+
+- 编排器：串行协调、`connectRouter`、视口挂载和回退 HTML
+- React、Vue、Svelte 3-5 和 Angular（zoneless）适配器，支持 SSR 水合
+- `TuvixIsland`、生命周期事件、`@tuvix.js/vite` island 资源
+- 带流式输出和 Prometheus 指标的服务端组合（`@tuvix.js/server`）
+- Module Federation 入口、页内 devtools、CLI 脚手架
+- 10 种语言的文档
+
+计划中：
+
+- 跨微应用的热模块重载
+- 原生 ESM / import map 支持
+- 感知边缘环境的服务端组合，带 stale-while-revalidate 片段缓存
+- 测试工具和模拟编排器
+- 片段 A/B 测试
 
 ---
 
 ## 🤝 贡献
 
-欢迎贡献！提交 PR 之前，请阅读[贡献指南](./CONTRIBUTING.md)。
+提交 pull request 之前，请阅读 [贡献指南](./CONTRIBUTING.md)。
 
 ```bash
-# 克隆仓库
 git clone https://github.com/yasinatesim/tuvix.js.git
-
-# 安装依赖
+cd tuvix.js
 pnpm install
-
-# 构建所有包
 pnpm build
-
-# 运行测试
 pnpm test
 ```
+
+从 0.4 升级？请阅读 [迁移指南](https://tuvix.js.org/zh/guide/migration-0-5)。
 
 ---
 
 ## 🔑 许可证
 
-Copyright © 2026 - MIT 许可证。
-查看 [LICENSE](./LICENSE) 了解更多信息。
+Copyright © 2026 - MIT License.
+更多信息请参阅 [LICENSE](./LICENSE)。
 
 ---
 

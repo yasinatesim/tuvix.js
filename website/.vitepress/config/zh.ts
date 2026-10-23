@@ -3,12 +3,28 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: '指南', link: '/zh/guide/getting-started', activeMatch: '/zh/guide/' },
+      {
+        text: '指南',
+        link: '/zh/guide/getting-started',
+        activeMatch: '/zh/guide/',
+      },
       { text: '包', link: '/zh/packages/', activeMatch: '/zh/packages/' },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'AI 生成器', link: '/chatbot', activeMatch: '/chatbot' },
       { text: '贡献', link: '/zh/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: '贡献', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: '更新日志',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: '贡献',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
     sidebar: {
       '/zh/guide/': [
@@ -26,7 +42,9 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '微应用', link: '/zh/guide/micro-apps' },
             { text: '生命周期钩子', link: '/zh/guide/lifecycle' },
+            { text: '生命周期事件', link: '/zh/guide/lifecycle-events' },
             { text: '路由', link: '/zh/guide/routing' },
+            { text: '外部路由', link: '/zh/guide/external-router' },
             { text: '事件总线', link: '/zh/guide/event-bus' },
             { text: '沙箱', link: '/zh/guide/sandbox' },
           ],
@@ -38,6 +56,14 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: '使用 Vue', link: '/zh/guide/vue' },
             { text: '使用 Svelte', link: '/zh/guide/svelte' },
             { text: '使用 Angular', link: '/zh/guide/angular' },
+            { text: 'SSR Islands', link: '/zh/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: '帮助',
+          items: [
+            { text: '迁移到 0.5', link: '/zh/guide/migration-0-5' },
+            { text: '故障排查', link: '/zh/guide/troubleshooting' },
           ],
         },
       ],
@@ -67,6 +93,7 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/zh/packages/devtools' },
             { text: '@tuvix.js/server', link: '/zh/packages/server' },
+            { text: '@tuvix.js/vite', link: '/zh/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/zh/packages/module-federation',
@@ -78,7 +105,8 @@ export const zhConfig: LocaleConfig<DefaultTheme.Config>[string] = {
       ],
     },
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: '在 GitHub 上编辑此页',
     },
     lastUpdated: { text: '最后更新', formatOptions: { dateStyle: 'short' } },
