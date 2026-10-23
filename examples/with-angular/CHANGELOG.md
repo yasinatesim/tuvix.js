@@ -1,5 +1,15 @@
 # with-angular
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [a08ac5f]
+- Updated dependencies [5d40f9c]
+- Updated dependencies [c131086]
+  - @tuvix.js/angular@0.5.0
+  - @tuvix.js/core@0.5.0
+
 ## 0.1.6
 
 ### Patch Changes

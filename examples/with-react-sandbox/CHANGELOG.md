@@ -1,5 +1,17 @@
 # with-react-sandbox
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [5d40f9c]
+- Updated dependencies [c131086]
+- Updated dependencies [cfeba90]
+- Updated dependencies [1ec8e77]
+  - @tuvix.js/core@0.5.0
+  - @tuvix.js/sandbox@0.5.0
+  - @tuvix.js/react@0.5.0
+
 ## 0.1.6
 
 ### Patch Changes

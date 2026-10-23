@@ -1,5 +1,17 @@
 # shell
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [5d40f9c]
+- Updated dependencies [1ec8e77]
+- Updated dependencies [c131086]
+- Updated dependencies [cfeba90]
+  - @tuvix.js/core@0.5.0
+  - @tuvix.js/module-federation@0.5.0
+  - @tuvix.js/react@0.5.0
+
 ## 0.1.6
 
 ### Patch Changes

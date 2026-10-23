@@ -1,6 +1,6 @@
 {
   "name": "@tuvix.js/router",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Routing module for Tuvix.js microfrontend framework",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
