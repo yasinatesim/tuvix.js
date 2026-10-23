@@ -1,7 +1,7 @@
-import { createOrchestrator } from '@tuvix.js/core';
+import { createOrchestrator, interceptLinks } from '@tuvix.js/core';
 
-// createOrchestrator accepts a router config directly —
-// @tuvix.js/router powers the routing engine under the hood.
+// createOrchestrator builds a @tuvix.js/router instance from this config.
+// Each route names the app it mounts, so the apps need no activeWhen.
 const orchestrator = createOrchestrator({
   router: {
     mode: 'history',
@@ -16,40 +16,50 @@ const orchestrator = createOrchestrator({
   },
 });
 
+// All three apps share one container: the orchestrator unmounts the old app
+// before it mounts the new one.
 orchestrator.register({
   name: 'dashboard',
-  entry: '/src/apps/dashboard/main.tsx',
+  entry: () => import('./apps/dashboard/main'),
   container: '#app',
-  activeWhen: '/dashboard',
 });
 
 orchestrator.register({
   name: 'profile',
-  entry: '/src/apps/profile/main.tsx',
+  entry: () => import('./apps/profile/main'),
   container: '#app',
-  activeWhen: '/profile',
 });
 
 orchestrator.register({
   name: 'settings',
-  entry: '/src/apps/settings/main.tsx',
+  entry: () => import('./apps/settings/main'),
   container: '#app',
-  activeWhen: '/settings',
 });
 
-orchestrator.start();
+const maybeRouter = orchestrator.getRouter();
+if (!maybeRouter) throw new Error('[Shell] router config missing');
+const router = maybeRouter;
 
-// Highlight active nav link
-function syncNav() {
+// Same-origin link clicks become router.push() calls instead of page loads.
+interceptLinks({ navigate: (path) => router.push(path) });
+
+function syncNav(): void {
   document.querySelectorAll<HTMLAnchorElement>('nav a').forEach((a) => {
-    a.classList.toggle('active', window.location.pathname.startsWith(a.getAttribute('href') ?? ''));
+    const href = a.getAttribute('href') ?? '';
+    const active = window.location.pathname.startsWith(href);
+    a.classList.toggle('active', active);
+    if (active) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
   });
 }
-window.addEventListener('popstate', syncNav);
-syncNav();
+router.onChange(syncNav);
 
-// Default redirect
-if (window.location.pathname === '/') {
-  window.history.pushState({}, '', '/dashboard');
-  window.dispatchEvent(new PopStateEvent('popstate'));
+async function boot(): Promise<void> {
+  if (window.location.pathname === '/') {
+    await router.replace('/dashboard');
+  }
+  syncNav();
+  await orchestrator.start();
 }
+
+boot().catch((error) => console.error('[Shell] start failed:', error));

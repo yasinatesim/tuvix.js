@@ -1,43 +1,34 @@
-import { createEventBus } from '@tuvix.js/event-bus';
 import { createOrchestrator } from '@tuvix.js/core';
 
-// Create a shared event bus — in a real multi-repo setup,
-// this would be a singleton shared via an npm package or CDN global.
-export const bus = createEventBus();
-
-// Expose on window so micro apps can import it in dev mode
-(window as unknown as Record<string, unknown>).__TUVIX_BUS__ = bus;
-
+// The orchestrator's bus is getGlobalBus() from @tuvix.js/event-bus. It lives
+// on window, so every app that calls getGlobalBus() talks to the same bus,
+// even when each app ships its own copy of the package.
 const orchestrator = createOrchestrator({
   onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
 
-// All three apps are always mounted (no route-based activation in this example)
+// All three apps stay mounted on every path.
 orchestrator.register({
   name: 'header',
-  entry: '/src/apps/header/main.tsx',
+  entry: () => import('./apps/header/main'),
   container: '#header',
-  activeWhen: () => true,
-  props: { bus },
+  activeWhen: '/',
 });
 
 orchestrator.register({
   name: 'sidebar',
-  entry: '/src/apps/sidebar/main.tsx',
+  entry: () => import('./apps/sidebar/main'),
   container: '#sidebar',
-  activeWhen: () => true,
-  props: { bus },
+  activeWhen: '/',
 });
 
 orchestrator.register({
   name: 'content',
-  entry: '/src/apps/content/main.tsx',
+  entry: () => import('./apps/content/main'),
   container: '#content',
-  activeWhen: () => true,
-  props: { bus },
+  activeWhen: '/',
 });
 
 orchestrator.start();
-console.log('🚀 Tuvix.js shell started (with-react-event-bus)');

@@ -1,36 +1,30 @@
-import { createOrchestrator, createEventBus } from '@tuvix.js/core';
+import { createOrchestrator } from '@tuvix.js/core';
 import { installDevTools } from '@tuvix.js/devtools';
 
-const bus = createEventBus();
 const orchestrator = createOrchestrator({
   onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
 
-// Initialize the DevTools panel!
-// This reads the orchestrator state and mounts a floating debugger.
+// The panel polls the orchestrator once per second for registered and mounted
+// apps and logs every event on the orchestrator's bus.
 installDevTools(orchestrator);
 
 orchestrator.register({
   name: 'app1',
-  entry: '/src/apps/app1/main.tsx',
+  entry: () => import('./apps/app1/main'),
   container: '#app1',
-  activeWhen: () => true,
-  props: { bus, title: 'Left App' },
+  activeWhen: '/',
+  props: { title: 'Left App' },
 });
 
 orchestrator.register({
   name: 'app2',
-  entry: '/src/apps/app2/main.tsx',
+  entry: () => import('./apps/app2/main'),
   container: '#app2',
-  activeWhen: () => true,
-  props: { bus, title: 'Right App' },
+  activeWhen: '/',
+  props: { title: 'Right App' },
 });
 
-// Expose to window for manual testing in browser console
-(window as any).orchestrator = orchestrator;
-(window as any).bus = bus;
-
 orchestrator.start();
-console.log('🚀 Tuvix.js shell started (with-react-devtools)');

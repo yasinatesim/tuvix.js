@@ -13,17 +13,16 @@
 
 # with-react-devtools
 
-Demonstrates the **In-page DevTools panel** (`@tuvix.js/devtools`).
-
-The DevTools panel provides real-time visibility into the Tuvix.js orchestrator instance, allowing developers to inspect registered applications, view active mounted apps, track lifecycle events, and monitor the event bus.
+The in-page debug panel from `@tuvix.js/devtools` attached to a shell with two React apps.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
 | `@tuvix.js/core` | Shell orchestrator |
-| `@tuvix.js/devtools` | `initDevtools` function |
-| `@tuvix.js/react` | React bindings |
+| `@tuvix.js/devtools` | `installDevTools(orchestrator)` |
+| `@tuvix.js/event-bus` | `getGlobalBus()` for the demo event |
+| `@tuvix.js/react` | `createReactMicroApp` |
 
 ## Get started
 
@@ -41,13 +40,14 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-react-devtools
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173). You will see a floating **Tuvix logo** in the bottom right corner. Click it to open the debug panel.
+Open [http://localhost:5173](http://localhost:5173). The panel sits in the bottom-right corner; the button above it hides and shows it.
 
 ## Key concepts
 
-- **`initDevtools(orchestrator)`** - Imports the devtools bundle and injects a floating UI onto the page. Safe to leave in code (it is typically tree-shaken away in production builds if wrapped in `process.env.NODE_ENV !== 'production'`).
-- **Simulate Error button** - App 2 has a button that throws an error. Click it and check the DevTools "Errors" tab to see how the orchestrator catches and logs it.
+- **`installDevTools(orchestrator, options?)`** appends `#tuvix-devtools` to `<body>`. Once per second (`updateInterval`) it lists every registered app, marks mounted ones with a green dot, and shows the current route. It returns a function that removes the panel.
+- **Event log:** the panel subscribes to the orchestrator's bus with `onAny`. Click **Emit app1:ping** in the left app and the event shows up in the log. The orchestrator's bus is `getGlobalBus()`, so an app that emits on the global bus reaches the panel.
+- **What it does not do:** the panel has no error tab and does not show props or timings. Leave it out of production builds by calling `installDevTools` behind your own environment check.

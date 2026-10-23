@@ -13,29 +13,15 @@
 
 # with-react-router
 
-Demonstrates **URL-based micro app routing** powered by `@tuvix.js/router`. Three independent React micro apps - Dashboard, Profile, and Settings - are registered to specific routes and mounted/unmounted automatically as the user navigates.
+Three React apps on three routes. Nav links switch apps on the client, without a page load.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
-| `@tuvix.js/core` | Shell orchestrator (embeds router engine) |
-| `@tuvix.js/router` | History/hash mode routing |
-| `@tuvix.js/react` | `createReactMicroApp` factory |
-
-## What's inside
-
-```
-with-react-router/
-├── index.html          ← nav bar with active-link highlight
-├── vite.config.ts
-├── src/
-│   ├── shell.ts        ← registers 3 routes, syncs active nav class
-│   └── apps/
-│       ├── dashboard/  ← active at /dashboard
-│       ├── profile/    ← active at /profile
-│       └── settings/   ← active at /settings
-```
+| `@tuvix.js/core` | Shell orchestrator; builds the router from `router` config and re-exports `interceptLinks` |
+| `@tuvix.js/router` | History-mode router, `interceptLinks` |
+| `@tuvix.js/react` | `createReactMicroApp` |
 
 ## Get started
 
@@ -53,14 +39,29 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-react-router
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:5173/dashboard](http://localhost:5173/dashboard) and use the nav links.
+Open [http://localhost:5173](http://localhost:5173). The shell redirects `/` to `/dashboard`.
+
+## What's inside
+
+```text
+with-react-router/
+├── index.html          ← nav with plain <a href> links
+└── src/
+    ├── shell.ts        ← routes, interceptLinks, aria-current sync
+    └── apps/
+        ├── dashboard/  ← /dashboard/*
+        ├── profile/    ← /profile/*
+        └── settings/   ← /settings/* (local state)
+```
 
 ## Key concepts
 
-- **Route matching** - each `activeWhen` pattern is matched against `window.location.pathname`. Glob patterns (`/dashboard/*`) let micro apps control their own sub-routes.
-- **History mode** - uses the HTML5 History API for clean URLs without `#`.
-- **Zero bundle duplication** - only the active micro app's code runs at any given time.
+- **Routes name their app:** `{ path: '/dashboard/*', app: 'dashboard' }`. The apps need no `activeWhen`; the orchestrator mounts the app the current route names.
+- **`interceptLinks({ navigate })`** turns same-origin left clicks on `<a href>` into `router.push(path)`. It leaves modified clicks, `target="_blank"`, `download`, `rel="external"`, `data-tuvix-reload` and other origins to the browser.
+- **One container, one app:** all three apps render into `#app`. The orchestrator unmounts the old app before it mounts the new one, and only the newest route runs when you click fast.
+- **Back and forward** go through the router's `popstate` listener and re-mount the previous app.
+- **Code splitting:** each `entry` is a loader function such as `() => import('./apps/dashboard/main')`, so Vite emits one chunk per app.

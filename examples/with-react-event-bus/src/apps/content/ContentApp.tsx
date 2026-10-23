@@ -24,7 +24,15 @@ export default function ContentApp({ bus }: Props) {
         minHeight: '100%',
       }}
     >
-      <h3 style={{ margin: '0 0 16px', fontSize: '14px', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
+      <h3
+        style={{
+          margin: '0 0 16px',
+          fontSize: '14px',
+          opacity: 0.6,
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+        }}
+      >
         Content — 📡 listens to user:login
       </h3>
       {user ? (
@@ -36,7 +44,9 @@ export default function ContentApp({ bus }: Props) {
             textAlign: 'center',
           }}
         >
-          <div style={{ fontSize: '64px', marginBottom: '12px' }}>{user.avatar}</div>
+          <div style={{ fontSize: '64px', marginBottom: '12px' }}>
+            {user.avatar}
+          </div>
           <h2 style={{ margin: '0 0 8px' }}>Welcome, {user.username}!</h2>
           <p style={{ opacity: 0.7, margin: 0 }}>User ID: {user.userId}</p>
         </div>
@@ -50,7 +60,10 @@ export default function ContentApp({ bus }: Props) {
             opacity: 0.5,
           }}
         >
-          <p>Pick a user from the header to see cross-app event broadcasting in action.</p>
+          <p>
+            Pick a user from the header to see cross-app event broadcasting in
+            action.
+          </p>
         </div>
       )}
     </div>

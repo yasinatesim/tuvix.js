@@ -39,7 +39,9 @@ export default function HeaderApp({ bus }: Props) {
       }}
     >
       <span style={{ fontWeight: 700, fontSize: '18px' }}>⬡ Tuvix.js</span>
-      <span style={{ opacity: 0.5, fontSize: '12px' }}>Header App → publishes user:login</span>
+      <span style={{ opacity: 0.5, fontSize: '12px' }}>
+        Header App → publishes user:login
+      </span>
       <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
         {users.map((u) => (
           <button

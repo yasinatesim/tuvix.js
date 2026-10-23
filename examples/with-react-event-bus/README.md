@@ -13,29 +13,15 @@
 
 # with-react-event-bus
 
-Demonstrates **cross-app event communication** using `@tuvix.js/event-bus` and the `useTuvixBus` React hook. Three independent micro apps share a single bus instance: the **Header** publishes `user:login` events; the **Sidebar** and **Content** apps react in real time without any direct coupling.
+Three React apps that talk over one event bus: the header publishes `user:login`, the sidebar and the content app react to it.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
 | `@tuvix.js/core` | Shell orchestrator |
-| `@tuvix.js/event-bus` | `createEventBus` - shared singleton |
-| `@tuvix.js/react` | `createReactMicroApp`, `useTuvixBus` hook |
-
-## What's inside
-
-```
-with-react-event-bus/
-├── index.html
-├── vite.config.ts
-├── src/
-│   ├── shell.ts              ← creates bus, registers 3 apps, passes bus as prop
-│   └── apps/
-│       ├── header/           ← publishes user:login on button click
-│       ├── sidebar/          ← subscribes via useTuvixBus, shows event log
-│       └── content/          ← subscribes via useTuvixBus, shows welcome card
-```
+| `@tuvix.js/event-bus` | `getGlobalBus()` |
+| `@tuvix.js/react` | `createReactMicroApp`, `useTuvixBus` |
 
 ## Get started
 
@@ -53,14 +39,27 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-react-event-bus
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) and click "Login as Alice / Bob / Charlie".
+Open [http://localhost:5173](http://localhost:5173) and click **Login as Alice / Bob / Charlie**.
+
+## What's inside
+
+```text
+with-react-event-bus/
+└── src/
+    ├── shell.ts          ← registers the 3 apps; passes no bus
+    └── apps/
+        ├── header/       ← bus.emit('user:login', user)
+        ├── sidebar/      ← useTuvixBus(bus, 'user:login', …) → event log
+        └── content/      ← useTuvixBus(bus, 'user:login', …) → welcome card
+```
 
 ## Key concepts
 
-- **`createEventBus()`** - creates a typed pub/sub channel. Instantiated once in the shell and passed as a prop to every micro app.
-- **`useTuvixBus(bus, event, handler)`** - React hook that auto-subscribes on mount and unsubscribes on unmount, preventing memory leaks.
-- **Zero coupling** - apps communicate via string event names only; no shared module references or global state mutations.
+- **`getGlobalBus()`** returns one bus per page. It is stored on `window.__TUVIX_GLOBAL_BUS__`, so apps that each bundle their own copy of `@tuvix.js/event-bus` still share it. The orchestrator uses the same bus unless you pass `eventBus` options to `createOrchestrator`.
+- **No wiring in the shell:** each app's `main.tsx` reads `getGlobalBus()` and hands it to its component as the `bus` prop, which keeps the components easy to test with a private bus from `createEventBus()`.
+- **`useTuvixBus(bus, event, handler)`** subscribes when the component mounts and unsubscribes when it unmounts.
+- **Coupling:** apps share event names and payload types (`UserLoginEvent`), nothing else.

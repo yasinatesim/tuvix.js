@@ -9,7 +9,9 @@ interface Props {
 }
 
 export default function SidebarApp({ bus }: Props) {
-  const [events, setEvents] = useState<Array<UserLoginEvent & { ts: string }>>([]);
+  const [events, setEvents] = useState<Array<UserLoginEvent & { ts: string }>>(
+    []
+  );
 
   useTuvixBus<UserLoginEvent>(bus, 'user:login', (data) => {
     setEvents((prev) => [
@@ -28,11 +30,21 @@ export default function SidebarApp({ bus }: Props) {
         borderRight: '1px solid #0f3460',
       }}
     >
-      <h3 style={{ margin: '0 0 16px', fontSize: '14px', opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
+      <h3
+        style={{
+          margin: '0 0 16px',
+          fontSize: '14px',
+          opacity: 0.6,
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+        }}
+      >
         Sidebar — 📡 listens to user:login
       </h3>
       {events.length === 0 && (
-        <p style={{ opacity: 0.4, fontSize: '13px' }}>No events yet — click "Login as…" in the header</p>
+        <p style={{ opacity: 0.4, fontSize: '13px' }}>
+          No events yet — click "Login as…" in the header
+        </p>
       )}
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {events.map((ev, i) => (
@@ -46,9 +58,13 @@ export default function SidebarApp({ bus }: Props) {
               fontSize: '13px',
             }}
           >
-            <span style={{ fontSize: '20px', marginRight: '8px' }}>{ev.avatar}</span>
+            <span style={{ fontSize: '20px', marginRight: '8px' }}>
+              {ev.avatar}
+            </span>
             <strong>{ev.username}</strong>
-            <span style={{ opacity: 0.5, marginLeft: '8px', fontSize: '11px' }}>{ev.ts}</span>
+            <span style={{ opacity: 0.5, marginLeft: '8px', fontSize: '11px' }}>
+              {ev.ts}
+            </span>
           </li>
         ))}
       </ul>
