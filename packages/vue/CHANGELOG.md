@@ -1,5 +1,47 @@
 # @tuvix.js/vue
 
+## 0.5.0
+
+### Minor Changes
+
+- cfeba90: Vue adapter: reactive props, per-container apps, lifecycle events and server-only rendering.
+
+  - `update({ props })` now re-renders your component. The adapter keeps props in a `shallowReactive` object, passes them through a render function, and `inject('tuvixProps')` (or `inject(TUVIX_PROPS_KEY)`) returns that same object. Keys missing from the new props are removed.
+  - One module can mount into several containers. Each container gets its own Vue app and props; `update` updates every mount, or only `context.container` when the caller passes one. Mounting into a container that already holds this app unmounts the old instance first.
+  - `createVueMicroApp` accepts `ssr: true`. With it, the adapter hydrates server markup through `createSSRApp` and keeps the server DOM nodes. An empty container gets a `createApp` render, so Vue no longer warns about hydrating an empty container. `createSsrVueMicroApp(config)` is now `createVueMicroApp({ ...config, ssr: true })`.
+  - Mount dispatches `tuvix:mounted` (with `hydrated`), unmount dispatches `tuvix:unmounted`, and a failure dispatches `tuvix:error` and rejects. Setup, render and hook errors reject in production builds as well; a plugin's `app.config.errorHandler` still runs. When a component throws during unmount, the adapter still clears the container and dispatches `tuvix:error` then `tuvix:unmounted` before rejecting, so `isMounted(name)` turns `false`.
+  - The adapter registers through `registerModule` from `@tuvix.js/loader` instead of writing `window.__TUVIX_MODULES__` itself.
+  - `plugins` entries can be `[plugin, ...options]` tuples, passed to `app.use(plugin, ...options)`.
+  - `renderVueToString(App, props, plugins, ssrContext)` takes an optional `ssrContext`. Read `ssrContext.teleports` and `ssrContext.modules` after the promise resolves. The server output uses the same root wrapper as the client, so `inject('tuvixProps')` works during SSR.
+  - JSDoc for `renderVueToString` now says to call it from a server function. In an isomorphic route loader the browser guard returns `''` and your bundler still ships the Vue server renderer to the client.
+
+  Breaking:
+
+  - `update()` no longer writes `app.config.globalProperties.$tuvixProps`. Read props from component props or `inject('tuvixProps')`.
+  - `unmount()` on a container this module never mounted does nothing. Before, it cleared the container.
+  - `VueSsrMicroAppConfig` no longer accepts `ssr`.
+
+### Patch Changes
+
+- c131086: Fix `require()` for five packages and give every package the same `dist/` layout.
+
+  In 0.4, `tuvix.js`, `@tuvix.js/core`, `@tuvix.js/event-bus`, `@tuvix.js/loader` and `@tuvix.js/router` pointed `main` and `exports.require` at `dist/index.cjs` and `dist/index.d.cts`, but the build wrote `dist/index.js` and `dist/index.d.ts`. `require('@tuvix.js/core')` threw `Cannot find module`, and TypeScript projects using CommonJS resolution got no types.
+
+  Every package now ships the same layout:
+
+  - `dist/<entry>.cjs` with `dist/<entry>.d.ts` for `require`
+  - `dist/<entry>.mjs` with `dist/<entry>.d.mts` for `import`
+
+  `@tuvix.js/vue`, `@tuvix.js/svelte` and `@tuvix.js/angular` use the same layout for their `./server` entry and add `typesVersions`, so TypeScript with `moduleResolution: "node"` finds `@tuvix.js/<adapter>/server` types. Each package also exports `./package.json`.
+
+- Updated dependencies [5d40f9c]
+- Updated dependencies [5d40f9c]
+- Updated dependencies [1ec8e77]
+- Updated dependencies [1ec8e77]
+- Updated dependencies [c131086]
+  - @tuvix.js/event-bus@0.5.0
+  - @tuvix.js/loader@0.5.0
+
 ## 0.4.2
 
 ### Patch Changes
