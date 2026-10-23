@@ -181,8 +181,10 @@ describe('ModuleLoader: loader-function entries', () => {
   it('passes a signal that aborts when the attempt times out, then retries', async () => {
     const app = fakeApp();
     const signals: AbortSignal[] = [];
+    // The first attempt hangs until the timeout; the retry must finish inside
+    // one, so keep the window wide enough for a loaded CI runner.
     const loader = new lib.ModuleLoader({
-      timeout: 20,
+      timeout: 250,
       retries: 1,
       retryDelay: 0,
     });
@@ -318,8 +320,10 @@ describe('ModuleLoader: script entries', () => {
         lib.registerModule('hang', app);
       },
     });
+    // Wide enough that the retry, which answers at once, never times out on a
+    // loaded CI runner (20 ms failed there).
     const loader = new lib.ModuleLoader({
-      timeout: 20,
+      timeout: 250,
       retries: 1,
       retryDelay: 0,
     });
