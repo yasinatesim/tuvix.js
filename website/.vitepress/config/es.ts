@@ -3,12 +3,28 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const esConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: 'Guía', link: '/es/guide/getting-started', activeMatch: '/es/guide/' },
+      {
+        text: 'Guía',
+        link: '/es/guide/getting-started',
+        activeMatch: '/es/guide/',
+      },
       { text: 'Paquetes', link: '/es/packages/', activeMatch: '/es/packages/' },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'Generador IA', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Contribuir', link: '/es/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Contribuir', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'Contribuir',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
     sidebar: {
       '/es/guide/': [
@@ -22,22 +38,38 @@ export const esConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           ],
         },
         {
-          text: 'Conceptos Principales',
+          text: 'Conceptos principales',
           items: [
-            { text: 'Micro Apps', link: '/es/guide/micro-apps' },
-            { text: 'Lifecycle Hooks', link: '/es/guide/lifecycle' },
+            { text: 'Micro apps', link: '/es/guide/micro-apps' },
+            { text: 'Hooks de ciclo de vida', link: '/es/guide/lifecycle' },
+            {
+              text: 'Eventos de ciclo de vida',
+              link: '/es/guide/lifecycle-events',
+            },
             { text: 'Enrutamiento', link: '/es/guide/routing' },
-            { text: 'Event Bus', link: '/es/guide/event-bus' },
-            { text: 'Sandbox', link: '/es/guide/sandbox' },
+            { text: 'Router externo', link: '/es/guide/external-router' },
+            { text: 'Event bus', link: '/es/guide/event-bus' },
+            { text: 'Sandboxing', link: '/es/guide/sandbox' },
           ],
         },
         {
-          text: 'Guías de Framework',
+          text: 'Guías por framework',
           items: [
             { text: 'Con React', link: '/es/guide/react' },
             { text: 'Con Vue', link: '/es/guide/vue' },
             { text: 'Con Svelte', link: '/es/guide/svelte' },
             { text: 'Con Angular', link: '/es/guide/angular' },
+            { text: 'Islas SSR', link: '/es/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'Ayuda',
+          items: [
+            { text: 'Migrar a 0.5', link: '/es/guide/migration-0-5' },
+            {
+              text: 'Solución de problemas',
+              link: '/es/guide/troubleshooting',
+            },
           ],
         },
       ],
@@ -54,7 +86,7 @@ export const esConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           ],
         },
         {
-          text: 'Bindings de Framework',
+          text: 'Bindings de framework',
           items: [
             { text: '@tuvix.js/react', link: '/es/packages/react' },
             { text: '@tuvix.js/vue', link: '/es/packages/vue' },
@@ -67,21 +99,26 @@ export const esConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/es/packages/devtools' },
             { text: '@tuvix.js/server', link: '/es/packages/server' },
+            { text: '@tuvix.js/vite', link: '/es/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/es/packages/module-federation',
             },
             { text: 'create-tuvix-app', link: '/es/packages/create-tuvix-app' },
-            { text: 'tuvix.js (paquete completo)', link: '/es/packages/tuvix' },
+            { text: 'tuvix.js (paquete paraguas)', link: '/es/packages/tuvix' },
           ],
         },
       ],
     },
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: 'Editar esta página en GitHub',
     },
-    lastUpdated: { text: 'Última actualización', formatOptions: { dateStyle: 'short' } },
+    lastUpdated: {
+      text: 'Última actualización',
+      formatOptions: { dateStyle: 'short' },
+    },
     docFooter: { prev: 'Anterior', next: 'Siguiente' },
     outline: { label: 'En esta página' },
   },
