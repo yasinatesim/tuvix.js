@@ -1,198 +1,182 @@
-# Getting Started
+# Primeiros passos
 
-## Installation
+Esta página monta um shell com dois micro apps: uma página inicial e um dashboard. Você vai registrar os apps, deixar o roteador montá-los e enviar novas props para um app montado.
 
-Install the umbrella package (everything in one):
+## Instalação
+
+Instale o pacote guarda-chuva. Ele contém o orquestrador, o roteador, o loader, o event bus e o sandbox:
 
 ```bash
-npm install tuvix.js
-# or
 pnpm add tuvix.js
-# or
-yarn add tuvix.js
 ```
 
-Or install only the packages you need:
+Adicione um adaptador para cada framework que seus micro apps usam:
 
 ```bash
-npm install @tuvix.js/core @tuvix.js/router @tuvix.js/event-bus @tuvix.js/loader
+pnpm add @tuvix.js/react react react-dom
+pnpm add @tuvix.js/vue vue
+pnpm add @tuvix.js/svelte svelte
+pnpm add @tuvix.js/angular @angular/core @angular/common @angular/platform-browser
 ```
 
-## Scaffold with the CLI
+## Criar um projeto
 
-The fastest way to get started is `create-tuvix-app`:
+`create-tuvix-app` gera um projeto de shell ou de micro app que depende dos pacotes 0.5:
 
 ```bash
-npx create-tuvix-app my-app
-cd my-app
-pnpm install
-pnpm dev
+npx create-tuvix-app my-shell --template shell
+npx create-tuvix-app my-dashboard --template react-app
 ```
 
-## Basic Setup
+Templates: `shell`, `react-app`, `vue-app`, `svelte-app`, `angular-app`, `vanilla-app`. Passe `--example <name>` para copiar um dos exemplos do repositório no lugar de um template.
 
-### 1. Create the Shell Application
+## Montar um shell
 
-The **shell** (also called the host) is the root application that orchestrates
-all micro apps.
+O shell controla o layout da página e decide qual app vai em qual lugar. Dê a ele um elemento container:
+
+```html
+<nav>
+  <a href="/">Home</a>
+  <a href="/dashboard">Dashboard</a>
+</nav>
+<main id="app"></main>
+<script type="module" src="/src/main.ts"></script>
+```
+
+Depois crie o orquestrador, registre os apps e inicie-o:
 
 ```ts
-// shell/main.ts
-import { createOrchestrator } from '@tuvix.js/core';
+// src/main.ts
+import { createOrchestrator, interceptLinks, matchPath } from 'tuvix.js';
 
 const orchestrator = createOrchestrator({
-  router: {
-    mode: 'history',
-    routes: [
-      { path: '/', app: 'home' },
-      { path: '/dashboard/*', app: 'dashboard' },
-      { path: '/profile/*', app: 'profile' },
-    ],
-  },
+  router: { mode: 'history', routes: [] },
 });
 
 orchestrator.register({
   name: 'home',
-  entry: 'https://cdn.example.com/home/main.js',
+  entry: () => import('./apps/home'),
   container: '#app',
-  activeWhen: '/',
+  // '/' alone would match every path; `end: true` makes it exact.
+  activeWhen: (path) => matchPath('/', path, { end: true }).matched,
 });
 
 orchestrator.register({
   name: 'dashboard',
-  entry: 'https://cdn.example.com/dashboard/main.js',
+  entry: {
+    scripts: ['https://cdn.example.com/dashboard/main.js'],
+    styles: ['https://cdn.example.com/dashboard/main.css'],
+    type: 'module',
+  },
   container: '#app',
   activeWhen: '/dashboard/*',
-  props: { theme: 'dark' },
+  props: { user: 'Guest' },
 });
+
+// Turn <a href> clicks into router navigations instead of page loads.
+interceptLinks({ navigate: (path) => orchestrator.navigateTo(path) });
 
 await orchestrator.start();
 ```
 
-### 2. Create a Micro App
+O que acontece:
 
-Each micro app exports a module that implements the lifecycle interface. The
-helper `defineMicroApp` is purely a typed identity function — you can also
-construct the object by hand.
+1. `start()` lê o path atual e monta todos os apps cujo `activeWhen` corresponde a ele.
+2. Um clique em `<a href="/dashboard">` chama `navigateTo('/dashboard')`. O roteador adiciona a URL ao histórico, e o orquestrador desmonta `home` e depois monta `dashboard`.
+3. A primeira montagem de `dashboard` carrega seu script e sua folha de estilo. As montagens seguintes reutilizam o módulo já carregado.
+
+O roteador nunca intercepta cliques por conta própria. Sem `interceptLinks`, um clique em um link recarrega a página, e o orquestrador monta o app certo no novo carregamento da página.
+
+## Escrever um micro app
+
+Um micro app é um objeto com `mount` e `unmount`. `defineMicroApp` verifica o formato e registra o módulo com o nome dele, para que o loader possa encontrá-lo depois que o script for executado:
 
 ```ts
-// dashboard/main.ts
-import { defineMicroApp } from '@tuvix.js/core';
-
-let titleEl: HTMLHeadingElement | null = null;
+// apps/home.ts
+import { defineMicroApp } from 'tuvix.js';
 
 export default defineMicroApp({
-  name: 'dashboard',
-
-  bootstrap() {
-    // One-time setup before the first mount
-  },
+  name: 'home',
 
   mount({ container, props }) {
-    container.innerHTML = `
-      <div>
-        <h1>Welcome, ${props?.user ?? 'Guest'}!</h1>
-      </div>
-    `;
-    titleEl = container.querySelector('h1');
+    const title = document.createElement('h1');
+    title.textContent = `Welcome, ${String(props?.user ?? 'Guest')}`;
+    container.replaceChildren(title);
+  },
+
+  update({ props, container }) {
+    const title = container?.querySelector('h1');
+    if (title) title.textContent = `Welcome, ${String(props.user ?? 'Guest')}`;
   },
 
   unmount({ container }) {
-    titleEl = null;
-    container.innerHTML = '';
-  },
-
-  // Triggered by orchestrator.updateAppProps('dashboard', { user: 'Yasin' }).
-  update({ props }) {
-    if (titleEl) {
-      titleEl.textContent = `Welcome, ${props?.user ?? 'Guest'}!`;
-    }
+    container.replaceChildren();
   },
 });
 ```
 
-> Apps must register themselves on `window.__TUVIX_MODULES__[name]` so the
-> loader can resolve them. The `defineMicroApp` helper does **not** do this
-> for you in pure TypeScript — but the framework adapters
-> (`createReactMicroApp`, `createVueMicroApp`, etc.) do.
+O `name` que você passa para `defineMicroApp` deve ser igual ao nome que você registra no shell. O loader procura o módulo por esse nome.
 
-### 3. Build and Deploy Independently
+## Usar um adaptador de framework
 
-Each micro app is built and deployed independently. The shell only references
-their entry URLs:
-
-```bash
-cd packages/dashboard
-pnpm build
-# → upload dist/ to your CDN
-```
-
-## With React
+Os adaptadores criam o mesmo módulo a partir de um componente raiz. Eles registram o módulo, mantêm uma instância do framework por container e disparam eventos de ciclo de vida.
 
 ```tsx
-// dashboard/main.tsx
+// dashboard/src/main.tsx
 import { createReactMicroApp } from '@tuvix.js/react';
 
 function Dashboard({ user }: { user: string }) {
-  return <h1>Welcome, {user}!</h1>;
+  return <h1>Dashboard for {user}</h1>;
 }
 
-export default createReactMicroApp({
-  name: 'dashboard',
-  App: Dashboard,
-});
+export default createReactMicroApp({ name: 'dashboard', App: Dashboard });
 ```
 
-## With Vue
-
 ```ts
-// dashboard/main.ts
+// settings/src/main.ts
 import { createVueMicroApp } from '@tuvix.js/vue';
-import Dashboard from './Dashboard.vue';
+import Settings from './Settings.vue';
 
-export default createVueMicroApp({
-  name: 'dashboard',
-  App: Dashboard,
+export default createVueMicroApp({ name: 'settings', App: Settings });
+```
+
+Páginas dos frameworks: [React](/pt/guide/react), [Vue](/pt/guide/vue), [Svelte](/pt/guide/svelte), [Angular](/pt/guide/angular).
+
+Faça o build de cada micro app como um bundle ES module e publique-o. Um build de biblioteca do Vite funciona:
+
+```ts
+// dashboard/vite.config.ts
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  build: {
+    lib: { entry: 'src/main.tsx', formats: ['es'], fileName: 'main' },
+  },
 });
 ```
 
-## With Svelte
+A saída ES do Vite termina em `.js`, que o loader trata como script clássico, a menos que a entry indique `type: 'module'`. Mantenha `type: 'module'` na entry do shell, como acima.
+
+## Atualizar props em tempo de execução
 
 ```ts
-// dashboard/main.ts
-import { createSvelteMicroApp } from '@tuvix.js/svelte';
-import Dashboard from './Dashboard.svelte';
+import { createOrchestrator } from 'tuvix.js';
 
-export default createSvelteMicroApp({
-  name: 'dashboard',
-  App: Dashboard,
-});
-```
-
-## With Angular (standalone, 17+)
-
-```ts
-import { createSsrAngularMicroApp } from '@tuvix.js/angular';
-import { DashboardComponent } from './dashboard.component';
-
-export default createSsrAngularMicroApp({
-  name: 'dashboard',
-  component: DashboardComponent,
-});
-```
-
-## Updating Props at Runtime
-
-```ts
+const orchestrator = createOrchestrator();
 await orchestrator.updateAppProps('dashboard', { user: 'Yasin' });
 ```
 
-If the app implements `update()`, it receives the merged props in place. If
-not, the new props are stored and applied at the next mount.
+`updateAppProps` mescla as novas props com as registradas. Se o app estiver montado e tiver `update`, o orquestrador o chama com as props mescladas e o app é renderizado de novo no lugar. Se o app não estiver montado, o orquestrador guarda as props para a próxima montagem.
 
-## Next Steps
+## O que o shell não faz
 
-- Read the [Architecture Overview](/guide/architecture) for the design
-- Explore [Lifecycle Hooks](/guide/lifecycle) for fine-grained control
-- Set up the [Event Bus](/guide/event-bus) for cross-app communication
-- Learn about [Sandboxing](/guide/sandbox) for style and script isolation
+- Ele não renderiza o seu layout. O HTML do próprio shell contém os containers.
+- Ele não compartilha instâncias de framework entre apps. Dois apps React recebem duas raízes React.
+- Ele não isola JavaScript em sandbox. Todos os apps rodam no `window` da página.
+
+## Próximos passos
+
+- [Arquitetura](/pt/guide/architecture): o caminho da navegação até `mount`.
+- [Roteamento](/pt/guide/routing): padrões de `activeWhen`, o roteador embutido, guards.
+- [Roteador externo](/pt/guide/external-router): acompanhe o TanStack Router ou o React Router.
+- [Ilhas SSR](/pt/guide/ssr-islands): renderize micro apps no servidor dentro de uma página React.

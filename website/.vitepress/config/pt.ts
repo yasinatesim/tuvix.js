@@ -3,12 +3,28 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const ptConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: 'Guia', link: '/pt/guide/getting-started', activeMatch: '/pt/guide/' },
+      {
+        text: 'Guia',
+        link: '/pt/guide/getting-started',
+        activeMatch: '/pt/guide/',
+      },
       { text: 'Pacotes', link: '/pt/packages/', activeMatch: '/pt/packages/' },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'Gerador IA', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Contribuir', link: '/pt/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Contribuir', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'Contribuir',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
     sidebar: {
       '/pt/guide/': [
@@ -22,22 +38,35 @@ export const ptConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           ],
         },
         {
-          text: 'Conceitos Principais',
+          text: 'Conceitos principais',
           items: [
             { text: 'Micro Apps', link: '/pt/guide/micro-apps' },
-            { text: 'Lifecycle Hooks', link: '/pt/guide/lifecycle' },
+            { text: 'Hooks de ciclo de vida', link: '/pt/guide/lifecycle' },
+            {
+              text: 'Eventos de ciclo de vida',
+              link: '/pt/guide/lifecycle-events',
+            },
             { text: 'Roteamento', link: '/pt/guide/routing' },
+            { text: 'Roteador externo', link: '/pt/guide/external-router' },
             { text: 'Event Bus', link: '/pt/guide/event-bus' },
             { text: 'Sandbox', link: '/pt/guide/sandbox' },
           ],
         },
         {
-          text: 'Guias de Framework',
+          text: 'Guias de framework',
           items: [
             { text: 'Com React', link: '/pt/guide/react' },
             { text: 'Com Vue', link: '/pt/guide/vue' },
             { text: 'Com Svelte', link: '/pt/guide/svelte' },
             { text: 'Com Angular', link: '/pt/guide/angular' },
+            { text: 'Ilhas SSR', link: '/pt/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'Ajuda',
+          items: [
+            { text: 'Migração para a 0.5', link: '/pt/guide/migration-0-5' },
+            { text: 'Solução de problemas', link: '/pt/guide/troubleshooting' },
           ],
         },
       ],
@@ -67,21 +96,29 @@ export const ptConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/pt/packages/devtools' },
             { text: '@tuvix.js/server', link: '/pt/packages/server' },
+            { text: '@tuvix.js/vite', link: '/pt/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/pt/packages/module-federation',
             },
             { text: 'create-tuvix-app', link: '/pt/packages/create-tuvix-app' },
-            { text: 'tuvix.js (pacote completo)', link: '/pt/packages/tuvix' },
+            {
+              text: 'tuvix.js (pacote guarda-chuva)',
+              link: '/pt/packages/tuvix',
+            },
           ],
         },
       ],
     },
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: 'Editar esta página no GitHub',
     },
-    lastUpdated: { text: 'Última atualização', formatOptions: { dateStyle: 'short' } },
+    lastUpdated: {
+      text: 'Última atualização',
+      formatOptions: { dateStyle: 'short' },
+    },
     docFooter: { prev: 'Anterior', next: 'Próximo' },
     outline: { label: 'Nesta página' },
   },
