@@ -1,28 +1,28 @@
 import { createOrchestrator } from '@tuvix.js/core';
 
-
 const orchestrator = createOrchestrator({
   onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
 
-// App 1: Uses the sandbox to isolate its CSS from the global scope
+// sandbox: true renders app1 inside an open shadow root on #app1. Page CSS
+// cannot select its elements and the <style> it renders stays inside.
 orchestrator.register({
   name: 'app1',
-  entry: '/src/apps/app1/main.tsx',
+  entry: () => import('./apps/app1/main'),
   container: '#app1',
-  activeWhen: () => true,
+  activeWhen: '/',
   sandbox: true,
 });
 
-// App 2: Does NOT use a sandbox, so its CSS bleeds out
+// app2 renders into the light DOM, so the <style> it renders applies to the
+// whole page. It is the control case.
 orchestrator.register({
   name: 'app2',
-  entry: '/src/apps/app2/main.tsx',
+  entry: () => import('./apps/app2/main'),
   container: '#app2',
-  activeWhen: () => true,
+  activeWhen: '/',
 });
 
 orchestrator.start();
-console.log('🚀 Tuvix.js shell started (with-react-sandbox)');

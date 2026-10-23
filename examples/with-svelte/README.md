@@ -13,9 +13,7 @@
 
 # with-svelte
 
-Demonstrates basic **Svelte 4 integration** using `@tuvix.js/svelte`.
-
-Two Svelte components (`.svelte`) are compiled by Vite, exported as Tuvix.js compatible modules via `createSvelteMicroApp`, and mounted by the core shell orchestrator.
+Two Svelte 4 components mounted by one Tuvix.js shell. This example is the bundled Svelte 4 check for `@tuvix.js/svelte`, which also supports Svelte 5.
 
 ## Packages used
 
@@ -40,13 +38,15 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-svelte
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173).
 
 ## Key concepts
 
-- **`createSvelteMicroApp(App, config)`** - Wraps a Svelte component into the Tuvix lifecycle.
-- **Props injection** - `@tuvix.js/svelte` utilizes the Svelte Context API to inject `props` passed from the shell. Inside the component, use `getContext('propName')` to retrieve them.
+- **`createSvelteMicroApp({ name, App })`** wraps a compiled Svelte component. On first mount it checks the installed Svelte: with Svelte 5 it uses `mount`/`hydrate`, with Svelte 3/4 the class API (`new App({ target, props })`).
+- **Props are component props:** the shell's `props` arrive as `export let name` / `export let theme`. On Svelte 3/4 an orchestrator `updateAppProps` call goes through `$set`; on Svelte 5 the component updates in place.
+- **Local state:** the Home app's counter is ordinary Svelte state; the adapter does not touch it.
+- **One instance per container:** mounting the same module into two containers creates two independent components.

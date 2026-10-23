@@ -1,18 +1,21 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
-  
-  // In Svelte 4, we use context to receive Tuvix props injected by the wrapper.
-  const name = getContext('name');
+  // The adapter passes the shell's props as component props.
+  export let name = '';
+
+  let count = 0;
 </script>
 
 <div class="home-card">
-  <h2>🏠 Home App</h2>
+  <h2>Home App</h2>
   <p>This is a Svelte 4 Micro App mounted via <code>@tuvix.js/svelte</code>.</p>
   {#if name}
-    <div class="prop-badge">
+    <div class="prop-badge" data-testid="home-greeting">
       Hello, {name} (prop received from shell)
     </div>
   {/if}
+  <button type="button" data-testid="home-counter" on:click={() => (count += 1)}>
+    Clicked {count} times
+  </button>
 </div>
 
 <style>
@@ -30,5 +33,13 @@
     border-radius: 6px;
     font-size: 14px;
     color: #a7f3d0;
+  }
+  button {
+    display: block;
+    margin-top: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
   }
 </style>

@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
-  const theme = getContext('theme');
+  export let theme = '';
 </script>
 
 <div class="profile-card">
-  <h2>👤 Profile App</h2>
+  <h2>Profile App</h2>
   <p>Two separate Svelte apps instantiated independently within the same window.</p>
-  <div class="prop-badge">
+  <div class="prop-badge" data-testid="profile-theme">
     Theme prop: {theme || 'default'}
   </div>
 </div>

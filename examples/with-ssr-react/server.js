@@ -4,7 +4,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 
 const app = express();
-const port = 3000;
+const port = Number(process.env.PORT) || 3000;
 
 // Basic html shell template
 // Notice the `<tuvix-slot name="app-name">` elements. The server renderer will inject matched fragments here.
@@ -52,16 +52,36 @@ const shellTemplate = `
 
 // Simple React components that represent our "services"
 function LeftApp() {
-  return React.createElement('div', { style: { padding: '24px', background: '#30475e', borderRadius: '8px' } },
-    React.createElement('h2', { style: { marginTop: 0, color: '#f05454' } }, 'Left Service (React)'),
-    React.createElement('p', null, 'This chunk of HTML was rendered by React on the server and injected into the Tuvix template stream.')
+  return React.createElement(
+    'div',
+    { style: { padding: '24px', background: '#30475e', borderRadius: '8px' } },
+    React.createElement(
+      'h2',
+      { style: { marginTop: 0, color: '#f05454' } },
+      'Left Service (React)'
+    ),
+    React.createElement(
+      'p',
+      null,
+      'This chunk of HTML was rendered by React on the server and injected into the Tuvix template stream.'
+    )
   );
 }
 
 function RightApp() {
-  return React.createElement('div', { style: { padding: '24px', background: '#222831', borderRadius: '8px' } },
-    React.createElement('h2', { style: { marginTop: 0, color: '#f2a365' } }, 'Right Service (React)'),
-    React.createElement('p', null, 'This chunk of HTML was also rendered server-side in a separate fragment.')
+  return React.createElement(
+    'div',
+    { style: { padding: '24px', background: '#222831', borderRadius: '8px' } },
+    React.createElement(
+      'h2',
+      { style: { marginTop: 0, color: '#f2a365' } },
+      'Right Service (React)'
+    ),
+    React.createElement(
+      'p',
+      null,
+      'This chunk of HTML was also rendered server-side in a separate fragment.'
+    )
   );
 }
 

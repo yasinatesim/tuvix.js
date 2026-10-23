@@ -13,48 +13,37 @@
 
 # with-ssr-react
 
-Demonstrates **Server-Side Rendering (SSR) Fragment Composition** using `@tuvix.js/server`.
-
-In a micro-frontend architecture, client-side only rendering leads to poor SEO and slow Time-to-Interactive. The Tuvix.js Server package allows an Express (or Fastify) shell to concurrently fetch pre-rendered HTML fragments from your micro apps and stitch them into a single coherent HTTP response before it hits the browser.
+An Express server that renders two React components to HTML and stitches them into a page template with `composeHTML` from `@tuvix.js/server`. The page is complete without client JavaScript.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
-| `@tuvix.js/server` | `createServerRenderer` utility |
-| `express` | Web server framework |
-| `react-dom/server` | Serverside React rendering |
-
-## What's inside
-
-```
-with-ssr-react/
-└── server.js     ← starts Express on :3000, runs rendering logic
-```
+| `@tuvix.js/server` | `composeHTML(template, slots)` |
+| `express` | HTTP server |
+| `react-dom/server` | `renderToString` |
 
 ## Get started
-
-### Via npx (recommended)
-
-```bash
-npx create-tuvix-app@latest --example with-ssr-react my-app
-cd my-app
-npm install
-npm start
-```
-
-### Manual clone
 
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-ssr-react
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Upon inspecting the network tab, you will see that the initial document payload contains the fully rendered React output, not empty divs.
+Open [http://localhost:3000](http://localhost:3000). Set `PORT` to use another port. View the page source: both fragments are in the HTML the server sent.
+
+## What's inside
+
+```text
+with-ssr-react/
+├── server.js                 ← template, two React components, GET /
+└── src/__tests__/server.test.js
+```
 
 ## Key concepts
 
-- **`<tuvix-slot id="name">`** - You define an HTML shell string containing these placeholder slots.
-- **`renderer.render(fragments)`** - The Express handler passes a map of fragment IDs to their HTML strings (rendered by React's `renderToString` or fetched via `fetch()`). Tuvix safely stitches the slots together.
+- **Slots:** the template contains `<tuvix-slot name="left-service">fallback</tuvix-slot>`. `composeHTML` replaces each slot element, fallback included, with the HTML you pass for that name. Slots without an entry keep their fallback.
+- **Literal output:** fragments go in as written. `$&`, `$1` and a `<tuvix-slot>` inside a fragment are not expanded.
+- **What it does not do:** this example sends static HTML only; nothing hydrates in the browser. See `with-ssr-islands` for server-rendered islands that hydrate on the client. To fetch fragments from separate services per route, use `createServerRenderer` from `@tuvix.js/server`.

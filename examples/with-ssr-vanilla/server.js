@@ -2,7 +2,7 @@ import express from 'express';
 import { composeHTML } from '@tuvix.js/server';
 
 const app = express();
-const port = 3001;
+const port = Number(process.env.PORT) || 3001;
 
 // Basic html shell template
 // Notice the `<tuvix-slot name="app-name">` elements. The server renderer will inject matched fragments here.

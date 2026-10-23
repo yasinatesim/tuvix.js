@@ -13,20 +13,14 @@
 
 # with-react-sandbox
 
-Demonstrates **CSS and JavaScript isolation** using `@tuvix.js/sandbox`.
-
-Two React micro apps run side-by-side:
-
-1. **App 1 (Sandboxed)** is wrapped in a Shadow DOM. Its CSS is strictly scoped and cannot break the shell or other apps.
-2. **App 2 (Unsandboxed)** is injected normally. Its CSS bleeds out and overwrites the shell's global styles.
+CSS isolation with `sandbox: true`. App 1 renders inside a shadow root; App 2 renders in the page and its CSS leaks, as a control.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
-| `@tuvix.js/core` | Shell orchestrator |
-| `@tuvix.js/sandbox` | `createSandbox` isolation factory |
-| `@tuvix.js/react` | React bindings |
+| `@tuvix.js/core` | Shell orchestrator; `sandbox: true` uses `CssSandbox` from `@tuvix.js/sandbox` |
+| `@tuvix.js/react` | `createReactMicroApp` |
 
 ## Get started
 
@@ -44,13 +38,24 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-react-sandbox
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173). You will see App 2's CSS breaking the global shell styling!
+Open [http://localhost:5173](http://localhost:5173).
+
+## What you should see
+
+| Element | Color | Why |
+|---|---|---|
+| Shell paragraph | light blue | page rule `p { color: #93c5fd }`; App 1's red `p` rule stays in its shadow root |
+| App 1 paragraphs | red | App 1's own `<style>` inside the shadow root |
+| App 1 `.global-card` box | no shell background | the page's `.global-card` rule cannot select elements in the shadow root |
+| Shell note | orange | App 2 has no sandbox, so its `.shell-note` rule applies to the whole page |
 
 ## Key concepts
 
-- **Shadow DOM** (`cssIsolation: true`) - attaches the micro app to an open ShadowRoot instead of a normal div, ensuring full CSS encapsulation.
-- **Proxy Sandbox** (`jsIsolation`) - (optional) proxies the global `window` object to prevent globals leaks.
+- **`sandbox: true`** (or `{ css: true }`) attaches an open shadow root to the container and mounts the app into an element inside it. A remount reuses the same shadow root.
+- **Styles that stay inside:** `<style>` elements the app renders, and stylesheets listed in an `entry` object's `styles`, which the orchestrator adopts into the shadow root.
+- **Styles that do not:** CSS a bundler injects into `document.head` (for example `import './app.css'` under Vite) still applies to the page. Inherited properties such as `color` and `font-family` also flow into the shadow root from its host.
+- **No JS isolation:** `sandbox: true` isolates CSS only. The proxy-based JS sandbox is a separate utility in `@tuvix.js/sandbox`.
