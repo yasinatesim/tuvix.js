@@ -4,11 +4,11 @@
 
 # Exemples Tuvix.js
 
-Ce répertoire contient des exemples de projets autonomes et entièrement fonctionnels démontrant diverses fonctionnalités et intégrations de frameworks de l'orchestrateur **Tuvix.js**.
+Des projets exécutables, un par fonctionnalité ou par framework. Chaque exemple a une spec Playwright dans son dossier `e2e/`, exécutée en CI.
 
-## Démarrage Rapide
+## Démarrage rapide
 
-La façon la plus simple de commencer un exemple est d'utiliser le CLI `create-tuvix-app` avec le drapeau `--example`:
+Lancez n'importe quel exemple avec la CLI `create-tuvix-app` :
 
 ```bash
 npx create-tuvix-app@latest --example <example-name> my-app
@@ -16,24 +16,27 @@ cd my-app
 npm install && npm run dev
 ```
 
-*(Vous pouvez également cloner ce référentiel et exécuter manuellement `npm install` et `npm run dev` dans le dossier de n'importe quel exemple).*
+Dans un clone de ce dépôt, lancez `pnpm install` à la racine, puis `pnpm dev` (ou `pnpm start` pour les exemples serveur) dans le dossier de l'exemple.
 
-## Exemples Disponibles
+## Exemples disponibles
 
-| Nom de l'Exemple | Framework | Fonctionnalité Clé Démontrée |
-|--------------|-----------|--------------------------|
-| [`with-react`](./with-react/) | React 18 | Basic Shell, Routing, and Prop passing via `@tuvix.js/react` |
-| [`with-react-event-bus`](./with-react-event-bus/) | React 18 | Cross-app pub/sub communication using `@tuvix.js/event-bus` |
-| [`with-react-router`](./with-react-router/) | React 18 | URL-based active routing using `@tuvix.js/router` |
-| [`with-react-sandbox`](./with-react-sandbox/) | React 18 | Strict Shadow DOM CSS isolation via `@tuvix.js/sandbox` |
-| [`with-react-devtools`](./with-react-devtools/) | React 18 | In-page orchestrator debugging via `@tuvix.js/devtools` |
-| [`with-module-federation-react`](./with-module-federation-react/) | React (Webpack 5) | Dynamic remote module loading via `@tuvix.js/module-federation` |
-| [`with-ssr-react`](./with-ssr-react/) | React (Express) | Asynchronous SSR HTML fragment composition via `@tuvix.js/server` |
-| [`with-vue`](./with-vue/) | Vue 3 | Vue 3 composition API integration via `@tuvix.js/vue` |
-| [`with-svelte`](./with-svelte/) | Svelte 4 | Svelte integration and Context API props via `@tuvix.js/svelte` |
-| [`with-angular`](./with-angular/) | Angular 15+ | Angular CLI setup and `@Input()` injection via `@tuvix.js/angular` |
-| [`with-multiple-frameworks`](./with-multiple-frameworks/) | React & Vue 3 | Polyglot architecture (sharing a single shell across frameworks) |
+| Exemple | Framework | Ce qu'il montre |
+|---------|-----------|---------------|
+| [`with-vanilla`](./with-vanilla/) | JS pur | `defineMicroApp`, routage et `interceptLinks` sans framework |
+| [`with-react`](./with-react/) | React 18 | Shell, routes, props via `@tuvix.js/react` |
+| [`with-react-event-bus`](./with-react-event-bus/) | React 18 | Apps qui publient et reçoivent des événements sur `getGlobalBus()` |
+| [`with-react-router`](./with-react-router/) | React 18 | Association route-app et navigation par liens côté client |
+| [`with-react-sandbox`](./with-react-sandbox/) | React 18 | Isolation CSS par shadow root avec `sandbox: true`, et une app témoin sans sandbox |
+| [`with-react-devtools`](./with-react-devtools/) | React 18 | Panneau de débogage intégré à la page de `@tuvix.js/devtools` |
+| [`with-module-federation-react`](./with-module-federation-react/) | React (webpack 5) | Apps distantes chargées avec `createFederatedEntry` |
+| [`with-ssr-vanilla`](./with-ssr-vanilla/) | Express | Composition de fragments côté serveur avec `composeHTML` |
+| [`with-ssr-react`](./with-ssr-react/) | React (Express) | Fragments React `renderToString` composés avec `composeHTML` |
+| [`with-ssr-islands`](./with-ssr-islands/) | Shell React 19, Vue 3, Svelte 5, Angular 20 (Express + Vite) | Îlots rendus côté serveur qui s'hydratent côté client, un `TuvixReactApp` inline, et un îlot en échec qui se rabat sur son fallback sans casser la page |
+| [`with-vue`](./with-vue/) | Vue 3 | `createVueMicroApp` avec des props via `defineProps` |
+| [`with-svelte`](./with-svelte/) | Svelte 4 | `createSvelteMicroApp` avec des props `export let` |
+| [`with-angular`](./with-angular/) | Angular 16 | Composants standalone, sans zone.js, `createAngularMicroApp` |
+| [`with-multiple-frameworks`](./with-multiple-frameworks/) | React et Vue 3 | Deux frameworks sur une même page qui partagent l'event bus |
 
-## Support Multilingue
+## Traductions
 
-Chaque exemple fournit une documentation en **10 langues** (anglais, turc, espagnol, allemand, français, japonais, chinois, italien, portugais et hindi). Ouvrez le répertoire de n'importe quel exemple pour voir les fichiers README localisés.
+Les exemples qui ont un `README.md` le fournissent aussi en turc, espagnol, allemand, français, japonais, chinois, italien, portugais et hindi. Le README anglais fait référence en cas de divergence.
