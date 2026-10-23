@@ -3,41 +3,78 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const itConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: 'Guida', link: '/it/guide/getting-started', activeMatch: '/it/guide/' },
-      { text: 'Pacchetti', link: '/it/packages/', activeMatch: '/it/packages/' },
+      {
+        text: 'Guida',
+        link: '/it/guide/getting-started',
+        activeMatch: '/it/guide/',
+      },
+      {
+        text: 'Pacchetti',
+        link: '/it/packages/',
+        activeMatch: '/it/packages/',
+      },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'Generatore IA', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Contribuire', link: '/it/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Contribuire', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'Contribuire',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
+
     sidebar: {
       '/it/guide/': [
         {
           text: 'Introduzione',
           items: [
-            { text: 'Cos\'è Tuvix.js?', link: '/it/guide/what-is-tuvix' },
+            { text: "Cos'è Tuvix.js?", link: '/it/guide/what-is-tuvix' },
             { text: 'Per iniziare', link: '/it/guide/getting-started' },
             { text: 'Configurazione', link: '/it/guide/configuration' },
             { text: 'Architettura', link: '/it/guide/architecture' },
           ],
         },
         {
-          text: 'Concetti Principali',
+          text: 'Concetti fondamentali',
           items: [
-            { text: 'Micro App', link: '/it/guide/micro-apps' },
-            { text: 'Lifecycle Hooks', link: '/it/guide/lifecycle' },
+            { text: 'Micro app', link: '/it/guide/micro-apps' },
+            { text: 'Hook del ciclo di vita', link: '/it/guide/lifecycle' },
+            {
+              text: 'Eventi del ciclo di vita',
+              link: '/it/guide/lifecycle-events',
+            },
             { text: 'Routing', link: '/it/guide/routing' },
-            { text: 'Event Bus', link: '/it/guide/event-bus' },
-            { text: 'Sandbox', link: '/it/guide/sandbox' },
+            { text: 'Router esterno', link: '/it/guide/external-router' },
+            { text: 'Event bus', link: '/it/guide/event-bus' },
+            { text: 'Sandboxing', link: '/it/guide/sandbox' },
           ],
         },
         {
-          text: 'Guide Framework',
+          text: 'Guide ai framework',
           items: [
             { text: 'Con React', link: '/it/guide/react' },
             { text: 'Con Vue', link: '/it/guide/vue' },
             { text: 'Con Svelte', link: '/it/guide/svelte' },
             { text: 'Con Angular', link: '/it/guide/angular' },
+            { text: 'Island SSR', link: '/it/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'Aiuto',
+          items: [
+            { text: 'Migrazione alla 0.5', link: '/it/guide/migration-0-5' },
+            {
+              text: 'Risoluzione dei problemi',
+              link: '/it/guide/troubleshooting',
+            },
           ],
         },
       ],
@@ -54,7 +91,7 @@ export const itConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           ],
         },
         {
-          text: 'Binding Framework',
+          text: 'Binding per framework',
           items: [
             { text: '@tuvix.js/react', link: '/it/packages/react' },
             { text: '@tuvix.js/vue', link: '/it/packages/vue' },
@@ -67,22 +104,42 @@ export const itConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/it/packages/devtools' },
             { text: '@tuvix.js/server', link: '/it/packages/server' },
+            { text: '@tuvix.js/vite', link: '/it/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/it/packages/module-federation',
             },
-            { text: 'create-tuvix-app', link: '/it/packages/create-tuvix-app' },
-            { text: 'tuvix.js (pacchetto completo)', link: '/it/packages/tuvix' },
+            {
+              text: 'create-tuvix-app',
+              link: '/it/packages/create-tuvix-app',
+            },
+            {
+              text: 'tuvix.js (pacchetto ombrello)',
+              link: '/it/packages/tuvix',
+            },
           ],
         },
       ],
     },
+
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: 'Modifica questa pagina su GitHub',
     },
-    lastUpdated: { text: 'Ultimo aggiornamento', formatOptions: { dateStyle: 'short' } },
-    docFooter: { prev: 'Precedente', next: 'Successivo' },
-    outline: { label: 'In questa pagina' },
+
+    lastUpdated: {
+      text: 'Ultimo aggiornamento',
+      formatOptions: { dateStyle: 'short' },
+    },
+
+    docFooter: {
+      prev: 'Precedente',
+      next: 'Successivo',
+    },
+
+    outline: {
+      label: 'In questa pagina',
+    },
   },
 };

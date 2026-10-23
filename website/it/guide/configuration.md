@@ -1,188 +1,168 @@
-# Configuration
+# Configurazione
 
-## Orchestrator Options
+Tutta la configurazione avviene nel codice. Tuvix.js non legge variabili d'ambiente né file di configurazione.
+
+## Opzioni dell'orchestratore
 
 ```ts
-import { createOrchestrator } from '@tuvix.js/core';
+import { createOrchestrator } from 'tuvix.js';
+
+declare function reportError(error: Error, app: string): void;
 
 const orchestrator = createOrchestrator({
-  /**
-   * Inline router config — pass this to use the built-in @tuvix.js/router.
-   * Omit when bridging to an external router via orchestrator.reconcile().
-   */
+  // Built-in router. Omit it when you follow an external router with connectRouter().
   router: {
     mode: 'history', // or 'hash'
     base: '/',
-    routes: [
-      { path: '/dashboard/*', app: 'dashboard' },
-    ],
+    routes: [{ path: '/dashboard/*', app: 'dashboard' }],
   },
 
-  /**
-   * Event bus options forwarded to the internal EventBus instance.
-   */
-  eventBus: {
-    maxListeners: 50,    // 0 = unlimited (default 0)
-    debug: false,
-    logger: console.log, // custom logger sink
-  },
+  // Passing eventBus options gives this orchestrator a private bus.
+  // Omit it to share getGlobalBus() with every app on the page.
+  eventBus: { maxListeners: 50, debug: false },
 
-  /**
-   * Prefetch micro app bundles on a schedule.
-   * 'immediate' = right after start(); 'idle' = next requestIdleCallback;
-   * 'hover' = first mouseover anywhere on the page; 'none' = on demand only.
-   */
-  prefetch: { strategy: 'idle' },
+  // Forwarded to the module loader.
+  loader: { timeout: 10000, retries: 2, retryDelay: 1000, globals: {} },
 
-  /**
-   * Called when any app throws during mount/unmount/update.
-   * Receives the error and the app's name.
-   */
-  onError: (error, name) => reportToSentry(error, { app: name }),
+  // 'immediate' | 'idle' | 'hover' | 'none' (default)
+  prefetch: { strategy: 'hover' },
 
-  /**
-   * Called on every status transition.
-   */
-  onStatusChange: (name, status) => console.log(name, status),
+  onError: (error, appName) => reportError(error, appName),
+  onStatusChange: (appName, status) => console.debug(appName, status),
 });
 ```
 
-## Registering Micro Apps
+| Opzione | Default | Effetto |
+| --- | --- | --- |
+| `router` | nessuno | Crea il router integrato. Vedi [Routing](/it/guide/routing). |
+| `eventBus` | nessuno (bus globale) | Bus privato con queste opzioni. `destroy()` distrugge un bus privato e lascia attivo quello globale. |
+| `loader.timeout` | `10000` | Millisecondi prima che un tentativo di caricamento venga interrotto. Limita anche l'attesa dei fogli di stile in sandbox. |
+| `loader.retries` | `2` | Tentativi aggiuntivi dopo il primo fallimento. |
+| `loader.retryDelay` | `1000` | Millisecondi tra un tentativo e l'altro. |
+| `loader.globals` | `{}` | Proprietà scritte su `window` prima che vengano eseguiti gli script di una entry. |
+| `prefetch.strategy` | `'none'` | Quando scaricare le entry prima del loro mount. Vedi la tabella sotto. |
+| `onError` | nessuno | Chiamato con `(error, appName)` quando falliscono load, bootstrap, mount, update o unmount. |
+| `onStatusChange` | nessuno | Chiamato con `(appName, status)` a ogni cambio di stato. |
+
+Per condividere dipendenze come React tra le app, usa `@tuvix.js/module-federation` o le import map. L'orchestratore non ha un'opzione per farlo.
+
+### Strategie di prefetch
+
+| Strategia | Quando vengono scaricate le entry |
+| --- | --- |
+| `none` | Solo quando un'app viene montata. |
+| `immediate` | Tutte le entry registrate, subito dopo `start()`. |
+| `idle` | Tutte le entry registrate, nel primo `requestIdleCallback` dopo `start()` (timeout di 200 ms dove l'API manca). |
+| `hover` | Quando il puntatore entra in un link dello stesso origin, o il focus ci arriva, e il suo path attiverebbe un'app. Ogni app viene scaricata una sola volta. |
+
+Il prefetch aggiunge `<link rel="modulepreload">` per gli script module e `<link rel="prefetch">` per gli script classici e gli stili. Salta le entry di tipo funzione loader, perché chiamare la funzione eseguirebbe il modulo.
+
+## Registrare una micro app
 
 ```ts
+import { createOrchestrator } from 'tuvix.js';
+
+const orchestrator = createOrchestrator();
+
 orchestrator.register({
-  /**
-   * Unique app name. Required.
-   */
   name: 'dashboard',
-
-  /**
-   * Entry point — either a single script URL, or an object
-   * { scripts: [...], styles: [...], html?: '...' }.
-   */
-  entry: 'https://cdn.example.com/dashboard/main.js',
-
-  /**
-   * Where to mount the app — a CSS selector or an HTMLElement.
-   * Resolved at mount time, so the element only needs to exist by then.
-   */
+  entry: {
+    scripts: ['https://cdn.example.com/dashboard/main.js'],
+    styles: ['https://cdn.example.com/dashboard/main.css'],
+    type: 'module',
+  },
   container: '#main',
-
-  /**
-   * URL pattern for automatic activation. String pattern (supports ":param"
-   * and trailing "/*"), or a (path) => boolean predicate for custom rules.
-   */
   activeWhen: '/dashboard/*',
-
-  /**
-   * Initial props passed to the app's mount() context.
-   * Merge-updated by orchestrator.updateAppProps(name, partial).
-   */
-  props: { theme: 'dark', apiUrl: 'https://api.example.com' },
-
-  /**
-   * HTML rendered into the container if the app fails to load or mount.
-   */
-  fallback: '<p>Dashboard temporarily unavailable.</p>',
-
-  /**
-   * Defer mounting until the container scrolls into view.
-   * When true, activeWhen / route reconciliation is bypassed.
-   */
+  props: { theme: 'dark' },
+  fallback: '<p>Dashboard is unavailable.</p>',
+  sandbox: false,
   mountWhenVisible: false,
 });
 ```
 
-## Router Options
+| Campo | Tipo | Effetto |
+| --- | --- | --- |
+| `name` | `string` | Univoco. Deve corrispondere al nome con cui si registra il modulo. |
+| `entry` | `string \| EntryConfig \| EntryLoader` | Da dove arriva il codice. Vedi sotto. |
+| `container` | `string \| HTMLElement` | Selettore o elemento. Viene risolto al momento del mount, quindi l'elemento deve esistere solo da quel momento. |
+| `activeWhen` | `string \| (path) => boolean` | Pattern di route o predicato. Senza di esso, l'app segue le `routes` del router che la nominano, oppure la monti tu. |
+| `props` | `Record<string, unknown>` | Props iniziali. `updateAppProps` le unisce a queste. |
+| `fallback` | `string` | HTML scritto nel container quando load, bootstrap o mount falliscono. |
+| `sandbox` | `boolean \| { css?: boolean }` | `true` renderizza l'app in uno shadow root. Vedi [Sandboxing](/it/guide/sandbox). |
+| `mountWhenVisible` | `boolean` | Monta l'app quando il container è visibile al 10%. Da quel momento i cambi di route non la toccano. |
+
+### Forme della entry
 
 ```ts
-import { createRouter } from '@tuvix.js/router';
+import type { Entry } from 'tuvix.js';
+
+// One classic script (UMD or IIFE bundle).
+const classic: Entry = 'https://cdn.example.com/legacy/app.js';
+
+// Scripts and styles. `type: 'module'` for ES module bundles such as Vite's `.js` output.
+const esm: Entry = {
+  scripts: ['https://cdn.example.com/cart/main.js'],
+  styles: ['https://cdn.example.com/cart/main.css'],
+  type: 'module',
+  integrity: { 'https://cdn.example.com/cart/main.js': 'sha384-...' },
+};
+
+// A loader function. Your bundler code-splits it; the loader passes an AbortSignal.
+const lazy: Entry = () => import('./apps/profile');
+```
+
+Senza `type`, gli URL che terminano in `.mjs`, `.mts`, `.ts`, `.tsx` o `.jsx` vengono caricati come moduli e tutto il resto come script classico. Un browser esegue uno script module una sola volta per URL, quindi un'app con `type: 'module'` che rimuovi dalla pagina (unload) non può essere caricata di nuovo dallo stesso URL. Usa una funzione loader quando devi rimuovere e ricaricare un'app.
+
+### Cose da sapere sulla registrazione
+
+- `register` lancia un errore per un nome duplicato, una `entry` mancante o un `container` mancante.
+- `register` dopo `start()` ha effetto subito: un'app gestita dalle route viene montata se il path corrente la attiva, e un'app con `mountWhenVisible` viene osservata. Prima di `start()`, `register` si limita a salvare la configurazione.
+- Un'app legata al viewport resta montata dopo essere uscita dalla vista. Smontala con `unmountApp(name)`.
+- Un'app senza `activeWhen` né una route del router resta come la lasci. Chiama tu `mountApp(name)` e `unmountApp(name)`.
+- `fallback` è HTML grezzo. Non costruirlo a partire dall'input dell'utente.
+
+## Opzioni del router
+
+```ts
+import { createRouter } from 'tuvix.js';
 
 const router = createRouter({
-  /**
-   * 'history' uses the History API (default).
-   * 'hash' uses URL hashes (#/path).
-   */
-  mode: 'history',
-
-  /**
-   * Optional base path stripped from the URL before matching.
-   */
-  base: '/',
-
-  /**
-   * Route definitions, evaluated in order. First match wins.
-   */
+  mode: 'history', // 'hash' reads the path from location.hash
+  base: '/app', // stripped before matching, added by push() and replace()
   routes: [
-    { path: '/', app: 'home', exact: true },
-    { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/users/:id', app: 'user-profile' },
+    { path: '/users/:id', app: 'users', meta: { title: 'User' } },
+    { path: '/settings/*', app: 'settings' },
   ],
 });
 
-// Add navigation guards programmatically — not via the route config:
-router.beforeEach(async ({ to }) => {
-  if (to.startsWith('/admin') && !(await isAdmin())) return false;
-});
+router.beforeEach(async ({ to }) => !to.startsWith('/admin'));
 ```
 
-## Loader Options
+I path delle route corrispondono all'intero path, quindi `/settings` corrisponde solo a `/settings` e `/settings/`, e `'/'` corrisponde solo a `/`. Termina un path con `/*` per far corrispondere anche i sotto-path; `'/*'` corrisponde a ogni path.
 
-`@tuvix.js/loader` is normally used internally by the orchestrator, but you
-can construct a `ModuleLoader` directly for advanced scenarios:
-
-```ts
-import { ModuleLoader } from '@tuvix.js/loader';
-
-const loader = new ModuleLoader({
-  timeout: 10000,    // ms before a load attempt aborts
-  retries: 2,        // additional retry attempts after the first failure
-  retryDelay: 1000,  // ms between retries
-  fetch: globalThis.fetch.bind(globalThis), // custom fetch implementation
-  globals: {},       // reserved
-});
-```
-
-## Sandbox Options
+## Opzioni della sandbox
 
 ```ts
-import { createSandbox } from '@tuvix.js/sandbox';
+import { createSandbox } from 'tuvix.js';
 
 const sandbox = createSandbox({
-  css: true,                       // Shadow DOM CSS isolation
-  js: true,                        // Proxy-based JS isolation
-  allowedGlobals: ['gtag'],        // extra globals exempt from strict warnings
-  strict: false,                   // warn when sandboxed code touches non-allowed globals
+  css: true, // shadow root on activate()
+  js: true, // proxy window for execScript()
+  allowedGlobals: ['gtag'], // extra globals strict mode lets you write
+  strict: false, // true: writing any other global throws a TypeError
 });
 ```
 
-> The sandbox is **not** auto-applied per app. Wrap your `mount` / `unmount`
-> hooks manually — see [Sandboxing](/guide/sandbox).
+L'orchestratore applica l'isolamento CSS alle app registrate con `sandbox: true`. Non applica mai `JsSandbox`. Vedi [Sandboxing](/it/guide/sandbox).
 
-## EventBus Options
+## Opzioni dell'event bus
 
 ```ts
-import { createEventBus } from '@tuvix.js/event-bus';
+import { createEventBus } from 'tuvix.js';
 
 const bus = createEventBus({
-  maxListeners: 0,            // 0 = unlimited (default)
-  debug: false,
+  maxListeners: 0, // 0 = unlimited; past the limit, `on` still adds the listener and warns once per event
+  debug: false, // log every emit and subscription
   logger: console.log,
 });
-```
-
-## Environment Variables
-
-Tuvix.js itself has no required environment variables. All configuration is
-done in code.
-
-For runtime values, use your bundler's define/replace plugin:
-
-```ts
-// vite.config.ts
-export default {
-  define: {
-    __TUVIX_DEBUG__: JSON.stringify(process.env.NODE_ENV !== 'production'),
-  },
-};
 ```

@@ -1,140 +1,109 @@
-# Architecture
+# Architettura
 
-## Overview
+Tuvix.js è diviso in pacchetti piccoli. L'orchestratore di `@tuvix.js/core` li tiene insieme; ogni altro pacchetto funziona anche da solo.
 
-Tuvix.js is structured as a monorepo of small, composable packages. You only
-import what you use.
+## I pacchetti e i loro compiti
 
-```
-@tuvix.js/core          ← Orchestrator, lifecycle, registration
-@tuvix.js/router        ← URL-based routing
-@tuvix.js/event-bus     ← Inter-app pub/sub
-@tuvix.js/loader        ← Dynamic bundle loading
-@tuvix.js/sandbox       ← CSS (Shadow DOM) + JS (Proxy) isolation
-@tuvix.js/react         ← React bindings
-@tuvix.js/vue           ← Vue bindings
-@tuvix.js/svelte        ← Svelte bindings
-@tuvix.js/angular       ← Angular bindings
-@tuvix.js/devtools      ← Debug panel
-@tuvix.js/server        ← SSR composition
-@tuvix.js/module-federation  ← Webpack 5 integration
-create-tuvix-app        ← CLI scaffolding
-tuvix.js                ← Umbrella (all-in-one)
-```
-
-## Request Flow
-
-```
-URL change (or orchestrator.reconcile)
-    │
-    ▼
-@tuvix.js/router         ← Matches the path against route patterns
-    │
-    ▼
-@tuvix.js/core           ← Orchestrator decides what to mount / unmount
-    │
-    ▼
-@tuvix.js/loader         ← Fetches and executes the micro app bundle (cached)
-    │
-    ▼
-window.__TUVIX_MODULES__[name]   ← Bundle self-registers here
-    │
-    ▼
-module.bootstrap()  →  module.mount({ container, props })
+```text
+@tuvix.js/core          createOrchestrator, defineMicroApp: registry, reconcile, props
+@tuvix.js/router        createRouter, matchPath, interceptLinks
+@tuvix.js/loader        ModuleLoader, registerModule, lifecycle runtime
+@tuvix.js/event-bus     createEventBus, getGlobalBus
+@tuvix.js/sandbox       CssSandbox (shadow DOM), JsSandbox (proxy window)
+@tuvix.js/react         createReactMicroApp, TuvixReactApp, TuvixIsland
+@tuvix.js/vue           createVueMicroApp, renderVueToString (/server)
+@tuvix.js/svelte        createSvelteMicroApp, renderSvelteToString (/server)
+@tuvix.js/angular       createAngularMicroApp, renderAngularToString (/server)
+@tuvix.js/vite          Vite plugin: island CSS links for the server-rendered <head>
+@tuvix.js/server        Server-side composition of HTML fragments
+@tuvix.js/module-federation  Entries backed by webpack remotes
+@tuvix.js/devtools      In-page debug panel
+tuvix.js                Umbrella: core, router, loader, event bus, sandbox
+create-tuvix-app        Project scaffolding
 ```
 
-## The MicroAppModule Interface
+## Dalla navigazione al mount
 
-Every micro app must expose this shape (the framework adapters do it for you):
+```text
+URL changes (router.push, popstate, connectRouter callback, or reconcile(path))
+  │
+  ▼
+orchestrator queues a reconcile for the path
+  │  (only the newest queued path runs next)
+  ▼
+for each app: should it be mounted?  activeWhen string → matchPath
+  │                                   activeWhen function → your code
+  │                                   no activeWhen → router routes naming it
+  ▼
+phase 1: unmount every app that turned inactive
+phase 2: mount every app that turned active
+  │
+  ▼
+loader.load(name, entry)   function entry → await it
+  │                        URL entry → <script>/<link> tags, then registry lookup
+  ▼
+module.bootstrap()  (first load only)
+module.mount({ container, props, name, bus })
+```
+
+La fase 1 termina prima che inizi la fase 2, quindi due app che condividono `#app` non vi si trovano mai nello stesso momento. Se arriva un nuovo path mentre è in corso un reconcile, l'orchestratore completa il passo corrente e poi esegue il reconcile del path più recente. Navigare A → B → A in rapida successione lascia montata solo A.
+
+## Il contratto del modulo
+
+Ogni micro app, scritta a mano o prodotta da un adapter, ha questa forma (`MicroAppModule` di `@tuvix.js/loader`):
 
 ```ts
-interface MicroAppModule {
-  bootstrap?: () => void | Promise<void>;
-  mount: ({ container, props }: { container: HTMLElement; props?: Record<string, unknown> })
-    => void | Promise<void>;
-  unmount: ({ container }: { container: HTMLElement }) => void | Promise<void>;
-  update?: ({ props }: { props: Record<string, unknown> }) => void | Promise<void>;
-}
+import type { MicroAppModule } from '@tuvix.js/loader';
+
+const app: MicroAppModule = {
+  async bootstrap() {
+    // once, before the first mount
+  },
+  async mount({ container, props, name, bus }) {
+    container.textContent = `${name ?? ''}: ${JSON.stringify(props ?? {})}`;
+    bus?.emit('app:ready', { name });
+  },
+  async update({ props, container }) {
+    if (container) container.textContent = JSON.stringify(props);
+  },
+  async unmount({ container }) {
+    container.replaceChildren();
+  },
+};
 ```
 
-The orchestrator calls each hook at the right time:
+- `bootstrap` viene eseguito una volta per ogni modulo caricato.
+- `mount` riceve il container, le props correnti, il nome dell'app e l'event bus dell'orchestratore.
+- `update` riceve le props unite quando la shell chiama `updateAppProps`. `container` indica a un modulo montato in più punti quale mount aggiornare.
+- `unmount` deve rimuovere tutto ciò che `mount` ha creato.
 
-1. **`bootstrap`** — once, before the first mount
-2. **`mount`** — when the route activates (or on `mountApp(name)`)
-3. **`update`** — when the shell calls `updateAppProps(name, props)`
-4. **`unmount`** — when the route deactivates (or on `unmountApp(name)`)
+## Come il loader trova un modulo
 
-## How Apps Register Themselves
+1. **Entry funzione loader** (`() => import('./app')`): il loader usa il modulo risolto, altrimenti il suo export `default`, altrimenti il modulo registrato con il nome dell'app.
+2. **Entry URL**: il loader aggiunge i tag `<script>` e `<link>`, li attende e legge il modulo dal registro che `registerModule(name, module)` popola. Gli adapter e `defineMicroApp` chiamano `registerModule` al posto tuo.
+3. **Fallback UMD**: se non si è registrato nulla, il loader sceglie una nuova variabile globale di `window` che abbia una funzione `mount`. Se ne sono comparse diverse, sceglie quella il cui nome corrisponde al nome dell'app, altrimenti fallisce.
 
-When the loader finishes executing a bundle, it looks for the module in this
-priority order:
+Il registro e lo stato del ciclo di vita risiedono in `window.__TUVIX_RUNTIME__`, quindi le micro app con bundle separati, ognuna con la propria copia di `@tuvix.js/loader`, vedono comunque un unico registro.
 
-1. `window.__TUVIX_MODULES__[name]` — recommended pattern, used by all
-   framework adapters.
-2. New keys appended to `window` after the bundle runs (UMD / IIFE fallback,
-   for legacy bundles).
+Gli script vengono caricati come `type="module"` quando la entry imposta `type: 'module'` o l'URL termina in `.mjs`, `.mts`, `.ts`, `.tsx` o `.jsx`. Gli altri URL vengono caricati come script classici.
 
-ES module bundles (`.mjs`, `.mts`, `.tsx`, `.jsx`) are loaded with
-`type="module"` — they cannot rely on the UMD fallback because module scope
-does not pollute `window`. **Always self-register via `window.__TUVIX_MODULES__`
-when shipping ESM.**
+## Stato condiviso del runtime
 
-## Isolation Model
+| Stato | Dove risiede | Perché |
+| --- | --- | --- |
+| Registro dei moduli | `window.__TUVIX_RUNTIME__` (anche `window.__TUVIX_MODULES__`) | Il loader trova le app di qualsiasi bundle |
+| App montate e attese in corso | `window.__TUVIX_RUNTIME__` | `whenMounted` funziona tra bundle diversi |
+| Event bus globale | `window.__TUVIX_GLOBAL_BUS__` | `getGlobalBus()` restituisce un solo bus per pagina |
 
-### CSS Isolation (Shadow DOM)
+Sul server, senza `window`, ognuno di questi ha scope di modulo.
 
-`@tuvix.js/sandbox`'s `CssSandbox` wraps a container in a Shadow DOM root, so
-styles written inside cannot bleed out and global styles cannot bleed in:
+## Modello di isolamento
 
-```ts
-import { CssSandbox } from '@tuvix.js/sandbox';
+- **CSS**: `sandbox: true` su `register` renderizza l'app dentro uno shadow root e vi carica gli `styles` della sua entry. Vedi [Sandboxing](/it/guide/sandbox).
+- **JavaScript**: nessuno per impostazione predefinita. Tutte le app condividono `window`, `document` e le variabili globali. `JsSandbox` isola solo il codice che esegui tramite il suo proxy.
 
-const css = new CssSandbox();
-const shadow = css.wrap(container);
-css.addStyle(shadow, '.btn { color: red }');
-// later
-css.unwrap(container);
-```
+## Dove guardare dopo
 
-### JS Isolation (Proxy Scope)
-
-`JsSandbox` produces a proxy `window` whose writes go to a per-instance
-`fakeWindow` map instead of the real global. Reads pass through to the real
-window unless they were shadowed by a write.
-
-```ts
-import { JsSandbox } from '@tuvix.js/sandbox';
-
-const js = new JsSandbox(['gtag'], /* strict */ true);
-js.activate();
-js.execScript('window.myVar = 42'); // stored in fakeWindow, not real window
-js.deactivate();
-js.reset();
-```
-
-## Event Bus
-
-The bus is a decoupled pub/sub channel. Use the orchestrator's bus when you
-have one — it is automatically shared with every registered app:
-
-```ts
-const bus = orchestrator.getEventBus();
-
-const off = bus.on('user:login', ({ userId }) => {
-  console.log('User logged in:', userId);
-});
-
-bus.emit('user:login', { userId: '42' });
-off();
-```
-
-For standalone or multi-orchestrator pages, `getGlobalBus()` from
-`@tuvix.js/event-bus` returns a lazy singleton.
-
-## Where to Look Next
-
-- [Getting Started](/guide/getting-started) — the 60-second tour
-- [Lifecycle Hooks](/guide/lifecycle) — the contract every app implements
-- [Routing](/guide/routing) — patterns, params, guards
-- [Event Bus](/guide/event-bus) — pub/sub patterns and pitfalls
-- [Sandbox](/guide/sandbox) — when (and when not) to isolate
+- [Hook del ciclo di vita](/it/guide/lifecycle): il contratto in dettaglio.
+- [Eventi del ciclo di vita](/it/guide/lifecycle-events): scopri quando un'app è sulla pagina.
+- [Routing](/it/guide/routing): le regole dei pattern.
