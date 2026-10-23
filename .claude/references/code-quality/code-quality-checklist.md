@@ -1,5 +1,7 @@
 # Code Quality Checklist
 
+> Source: [sanyuan0704/sanyuan-skills](https://github.com/sanyuan0704/sanyuan-skills) `code-review-expert` (MIT), moved here from `.claude/skills/code-review-expert/references/`.
+
 ## Error Handling
 
 ### Anti-patterns to Flag

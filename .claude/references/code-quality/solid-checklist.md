@@ -1,5 +1,7 @@
 # SOLID Smell Prompts
 
+> Source: [sanyuan0704/sanyuan-skills](https://github.com/sanyuan0704/sanyuan-skills) `code-review-expert` (MIT), moved here from `.claude/skills/code-review-expert/references/`.
+
 ## SRP (Single Responsibility)
 
 - File owns unrelated concerns (e.g., HTTP + DB + domain rules in one file)

@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: Use when implementing any feature or bugfix, before writing implementation code. Also covers how to write a test that can fail (assert behaviour, boundaries, no weakened assertions).
 ---
 
 # Test-Driven Development (TDD)
@@ -115,7 +115,7 @@ Vague name, tests mock not code
 **MANDATORY. Never skip.**
 
 ```bash
-npm test path/to/test.test.ts
+pnpm --filter @tuvix.js/<pkg> exec vitest run src/__tests__/<name>.test.ts
 ```
 
 Confirm:
@@ -170,7 +170,7 @@ Don't add features, refactor other code, or "improve" beyond the test.
 **MANDATORY.**
 
 ```bash
-npm test path/to/test.test.ts
+pnpm --filter @tuvix.js/<pkg> exec vitest run src/__tests__/<name>.test.ts
 ```
 
 Confirm:
@@ -202,6 +202,46 @@ Next failing test for next feature.
 | **Minimal** | One thing. "and" in name? Split it. | `test('validates email and domain and whitespace')` |
 | **Clear** | Name describes behavior | `test('test1')` |
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
+
+## Test Quality: Write a Test That Can Fail
+
+### The one question
+
+Before you write the assertion, name the broken version of the code that must not pass it. Write that name down (a comment in the PR or your report is enough). If you cannot name one, you do not know what you are testing yet.
+
+Tuvix examples of a named broken implementation:
+
+- `unmount` forgets `container.replaceChildren()`: the test must assert the container is empty.
+- The adapter registers the wrong object under `config.name`: the test must assert `getRegisteredModule(name)` is the returned module, not that it is defined.
+- A second `mount` into another container overwrites the first instance: the test must mount twice and assert both containers render.
+- `mount` never emits `tuvix:mounted`: the test must listen for the event and assert its `detail`.
+
+### Rules
+
+1. **Assert behaviour, not shape.** `toBeDefined()`, `not.toThrow()` alone, `toBeTruthy()` on an object and whole-object snapshots prove the code ran. Assert the value that would be wrong if the logic were wrong: rendered DOM text, the event detail, the registry entry, the call arguments.
+2. **Take expected values from the source of truth**: the adapter contract in `CLAUDE.md`, the docs page, the issue text, the user's sentence. Never run the implementation and paste its output into `toEqual`.
+3. **Test the boundary, not the middle.** Empty, one, exactly at the limit, one over, the error path, the second call. Off-by-one lives at the boundary.
+4. **A regression test must fail on the old code.** Run it once against the pre-fix code and watch it go red.
+5. **Mock at the boundary only**: network, timers, `fetch`, the DOM APIs jsdom lacks. A mock inside the unit under test asserts your own mock. See @testing-anti-patterns.md.
+6. **One behaviour per test, and the name states it.** The test file should read back as the requirement list.
+7. **Never weaken an assertion to reach green.** If the assertion matches the spec and the code is red, the code is wrong.
+8. **Run runtime code for real.** Code that runs in another environment (browser, CDN, iframe) or gets compiled must be compiled or executed inside the test: `esbuild.transform()` for playground examples, `createProject()` into a temp dir for CLI templates, a real `mount` into a jsdom container for adapters. `source.includes('createVueMicroApp')` proves nothing.
+9. **Pick the environment on purpose.** Tests that use esbuild, `child_process` or other Node-native APIs start with `// @vitest-environment node`; jsdom breaks them.
+
+### Mutation survivors
+
+When you break the code on paper (or with a mutation tool) and a test still passes, classify the survivor before writing anything:
+
+- **Real gap**: a scenario nobody exercised. Add the case.
+- **Equivalent mutant**: the change does not alter behaviour, so no test can catch it. Say so and move on.
+
+Never write a test whose only purpose is to kill a mutant.
+
+### Coverage
+
+Coverage is a floor, never the goal. Coverage that rises with no new behaviour asserted is padding, and the reviewer treats padding as a Major finding.
+
+After you write or change tests, dispatch the `test-verifier` agent (`.claude/agents/test-verifier.md`).
 
 ## Why Order Matters
 
@@ -301,7 +341,7 @@ test('rejects empty email', async () => {
 
 **Verify RED**
 ```bash
-$ npm test
+$ pnpm --filter @tuvix.js/<pkg> test
 FAIL: expected 'Email required', got undefined
 ```
 
@@ -317,7 +357,7 @@ function submitForm(data: FormData) {
 
 **Verify GREEN**
 ```bash
-$ npm test
+$ pnpm --filter @tuvix.js/<pkg> test
 PASS
 ```
 
@@ -369,3 +409,7 @@ Otherwise → not TDD
 ```
 
 No exceptions without your human partner's permission.
+
+## Credit
+
+The TDD cycle, Iron Law and anti-patterns file come from [obra/superpowers](https://github.com/obra/superpowers) (MIT, Jesse Vincent). The test-quality rules follow the yasinatesim agent bootstrap gist. See `.claude/CREDITS.md`.

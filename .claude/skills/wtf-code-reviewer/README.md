@@ -1,44 +1,17 @@
 # WTF/minute Code Reviewer
 
-A strict senior architect reviewer for completed work. It goes beyond simple linting to check for functionality, architecture (Single Responsibility, Layering), complexity, maintainability, and domain model correctness. It holds code to high standards, ensuring it's readable and robust.
+Dispatcher for the `wtf-code-reviewer` agent. The agent reads `.claude/references/code-quality/*` and `CONTRIBUTING.md` as rejection criteria and spends the review on what lint, Prettier and `tsc` cannot see: scope creep, duplicated concepts, parity across the four framework adapters, impact radius, error and async paths, and the adapter contract in `CLAUDE.md`.
 
-## Features
+## Files
 
-- **Functional Verification** - Ensures syntax correctness and requirement fulfillment.
-- **Architecture Integrity** - Enforces Single Responsibility, layering, and dependency direction.
-- **Data Modeling** - Checks for single source of truth and proper entity relationships.
-- **Complexity Control** - Minimizes branching and nesting; ensures code is understandable on first read.
-- **Maintainability** - Validates naming, error messages, and documentation.
-- **Security Check** - Scans for vulnerabilities, bugs, and breaking changes.
-
-## When to Use
-
-Run this reviewer after:
-- Feature completion
-- Bug fixes
-- Multi-file changes
-- Refactoring
-
-## Usage
-
-Use the task tool to trigger the reviewer with specific implementation details.
-
-```typescript
-Task({
-  subagent_type: 'WTF/minute Code Reviewer',
-  description: 'Verify [your feature] implementation',
-  prompt: `Verify the [feature]...`,
-  readonly: true
-})
+```text
+.claude/skills/wtf-code-reviewer/SKILL.md     when to dispatch, how to apply findings
+.claude/agents/wtf-code-reviewer.md           the reviewer itself
+.claude/agents/test-verifier.md               adversarial review of changed tests
+.claude/references/code-quality/              universal, js-ts, security, SOLID, quality, removal checklists
 ```
 
-## Structure
-
-```
-wtf-code-reviewer/
-├── SKILL.md                 # Main skill definition
-└── README.md                # Skill overview and standards
-```
+The former `code-review-expert` skill was merged into this agent; its checklists live in `.claude/references/code-quality/`.
 
 ## License
 

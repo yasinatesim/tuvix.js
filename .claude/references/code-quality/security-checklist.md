@@ -1,5 +1,7 @@
 # Security and Reliability Checklist
 
+> Source: [sanyuan0704/sanyuan-skills](https://github.com/sanyuan0704/sanyuan-skills) `code-review-expert` (MIT), moved here from `.claude/skills/code-review-expert/references/`.
+
 ## Input/Output Safety
 
 - **XSS**: Unsafe HTML injection, `dangerouslySetInnerHTML`, unescaped templates, innerHTML assignments
@@ -116,3 +118,12 @@ if user.balance >= amount:  # Check-then-act
 - Weak validation before persistence (type coercion issues)
 - Missing idempotency for retryable operations
 - Lost updates due to concurrent modifications
+
+## Microfrontend-specific (tuvix.js)
+
+- **SSR HTML injection**: `@tuvix.js/server` and the `render*ToString` helpers concatenate HTML. Any value that reaches the page outside a framework renderer (app name, props serialised into a script tag, `ssrHtml`) must be escaped. JSON in `<script>` needs `<` escaped as `\u003c`.
+- **Island DOM ownership**: `TuvixIsland` writes `dangerouslySetInnerHTML` once. A change that recomputes `{ __html }` on re-render lets the parent overwrite the island DOM.
+- **Sandbox claims**: `@tuvix.js/sandbox` and `sandbox: true | { css: true }` must isolate what the docs say. A JS sandbox that leaks `window` writes, or a CSS sandbox that injects entry styles into `document.head`, is a security finding when the docs promise isolation.
+- **Loader input**: `@tuvix.js/loader` fetches and executes remote entries. Flag any change that builds a script URL from user input, drops a timeout, or retries without removing the failed `<script>`.
+- **Shared globals**: `window.__TUVIX_MODULES__` and `window.__TUVIX_RUNTIME__` are readable by every script on the page. Do not store secrets or tokens there.
+- **Global-patching polyfills**: an adapter that imports zone.js (or any library that patches `fetch`, `Promise` or timers globally) breaks the host page. Treat it as Critical.

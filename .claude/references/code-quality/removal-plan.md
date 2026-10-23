@@ -1,5 +1,7 @@
 # Removal and Iteration Plan Template
 
+> Source: [sanyuan0704/sanyuan-skills](https://github.com/sanyuan0704/sanyuan-skills) `code-review-expert` (MIT), moved here from `.claude/skills/code-review-expert/references/`.
+
 ## Priority Levels
 
 - [ ] **P0**: Immediate removal needed (security risk, significant cost, blocking other work)
