@@ -3,7 +3,8 @@ import type { ComponentTemplate } from '../../generate-dataset';
 const templates: ComponentTemplate[] = [
   {
     variant: 'dashboard',
-    description: 'Dashboard layout with sidebar, topbar, and main content area with grid widgets',
+    description:
+      'Dashboard layout with sidebar, topbar, and main content area with grid widgets',
     tags: ['layout', 'dashboard', 'admin'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -49,7 +50,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'blog',
-    description: 'Blog layout with header, article content area, and right sidebar',
+    description:
+      'Blog layout with header, article content area, and right sidebar',
     tags: ['layout', 'blog', 'content'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -215,7 +217,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'admin',
-    description: 'Admin panel layout with collapsible sidebar, breadcrumb, and content area',
+    description:
+      'Admin panel layout with collapsible sidebar, breadcrumb, and content area',
     tags: ['layout', 'admin', 'panel'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -269,7 +272,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'e-commerce',
-    description: 'E-commerce layout with category sidebar, product grid, and cart summary',
+    description:
+      'E-commerce layout with category sidebar, product grid, and cart summary',
     tags: ['layout', 'e-commerce', 'shop'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -328,7 +332,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'docs',
-    description: 'Documentation layout with left nav, content area, and table of contents',
+    description:
+      'Documentation layout with left nav, content area, and table of contents',
     tags: ['layout', 'docs', 'documentation'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -381,7 +386,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'saas-app',
-    description: 'SaaS application layout with top nav, sidebar, and main workspace',
+    description:
+      'SaaS application layout with top nav, sidebar, and main workspace',
     tags: ['layout', 'saas', 'app'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -495,7 +501,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'three-column',
-    description: 'Three-column layout with navigation, content, and detail panels',
+    description:
+      'Three-column layout with navigation, content, and detail panels',
     tags: ['layout', 'three-column', 'master-detail'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -623,7 +630,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'sticky-header',
-    description: 'Layout with sticky header, scrollable content, and fixed footer',
+    description:
+      'Layout with sticky header, scrollable content, and fixed footer',
     tags: ['layout', 'sticky-header', 'fixed-footer'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -707,7 +715,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'grid',
-    description: 'CSS grid layout with configurable rows and columns for widget placement',
+    description:
+      'CSS grid layout with configurable rows and columns for widget placement',
     tags: ['layout', 'grid', 'widgets'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

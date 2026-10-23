@@ -127,7 +127,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'corporate',
-    description: 'Corporate footer with logo, legal links, and regulatory disclaimers',
+    description:
+      'Corporate footer with logo, legal links, and regulatory disclaimers',
     tags: ['footer', 'corporate', 'legal'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -500,7 +501,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-app-links',
-    description: 'Footer with mobile app download links and QR code placeholder',
+    description:
+      'Footer with mobile app download links and QR code placeholder',
     tags: ['footer', 'app-links', 'download'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -628,7 +630,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-payment',
-    description: 'Footer with accepted payment methods and secure checkout badge',
+    description:
+      'Footer with accepted payment methods and secure checkout badge',
     tags: ['footer', 'payment', 'e-commerce'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

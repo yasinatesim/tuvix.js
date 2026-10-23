@@ -334,7 +334,8 @@ const templates: ComponentTemplate[] = [
   },
   {
     variant: 'responsive',
-    description: 'Responsive sidebar that transforms to overlay on small screens',
+    description:
+      'Responsive sidebar that transforms to overlay on small screens',
     tags: ['sidebar', 'responsive', 'overlay'],
     code: `<script>
   let open = false;

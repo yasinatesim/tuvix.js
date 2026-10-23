@@ -564,7 +564,8 @@ const templates: ComponentTemplate[] = [
   },
   {
     variant: 'search',
-    description: 'Search modal with input, results, and keyboard navigation hints',
+    description:
+      'Search modal with input, results, and keyboard navigation hints',
     tags: ['modal', 'search', 'command'],
     code: `<script>
   let open = false;

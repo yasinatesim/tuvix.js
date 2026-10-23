@@ -47,7 +47,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'sortable',
-    description: 'Sortable table with click-to-sort column headers and direction indicators',
+    description:
+      'Sortable table with click-to-sort column headers and direction indicators',
     tags: ['table', 'sortable', 'interactive'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -110,7 +111,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'paginated',
-    description: 'Paginated table with page navigation and rows-per-page selector',
+    description:
+      'Paginated table with page navigation and rows-per-page selector',
     tags: ['table', 'paginated', 'navigation'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -497,7 +499,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'virtualized',
-    description: 'Virtualized table that renders only visible rows for large datasets',
+    description:
+      'Virtualized table that renders only visible rows for large datasets',
     tags: ['table', 'virtualized', 'performance'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -551,7 +554,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'grouped',
-    description: 'Table with grouped rows by category and collapsible group headers',
+    description:
+      'Table with grouped rows by category and collapsible group headers',
     tags: ['table', 'grouped', 'categories'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -709,7 +713,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'responsive',
-    description: 'Responsive table that converts to card layout on small screens',
+    description:
+      'Responsive table that converts to card layout on small screens',
     tags: ['table', 'responsive', 'mobile'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

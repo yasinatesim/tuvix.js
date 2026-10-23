@@ -22,11 +22,18 @@ export interface QueryResult {
 export interface VectorStore {
   init(): Promise<void>;
   upsert(records: ComponentRecord[], embeddings: number[][]): Promise<void>;
-  query(embedding: number[], nResults: number, framework?: string): Promise<QueryResult[]>;
+  query(
+    embedding: number[],
+    nResults: number,
+    framework?: string
+  ): Promise<QueryResult[]>;
   count(): Promise<number>;
 }
 
-export function createVectorStore(chromaUrl: string, collectionName: string): VectorStore {
+export function createVectorStore(
+  chromaUrl: string,
+  collectionName: string
+): VectorStore {
   const client = new ChromaClient({ path: chromaUrl });
   let collection: Awaited<ReturnType<typeof client.getOrCreateCollection>>;
 
@@ -50,7 +57,11 @@ export function createVectorStore(chromaUrl: string, collectionName: string): Ve
       });
     },
 
-    async query(embedding: number[], nResults: number, framework?: string): Promise<QueryResult[]> {
+    async query(
+      embedding: number[],
+      nResults: number,
+      framework?: string
+    ): Promise<QueryResult[]> {
       const total = await collection.count();
       if (total === 0) return [];
       const queryParams: Parameters<typeof collection.query>[0] = {
@@ -66,7 +77,10 @@ export function createVectorStore(chromaUrl: string, collectionName: string): Ve
 
       return (results.ids[0] ?? []).map((id, i) => {
         const meta = results.metadatas[0]?.[i];
-        const metaStr = (meta != null && typeof meta === 'object') ? meta as Record<string, string> : {};
+        const metaStr =
+          meta != null && typeof meta === 'object'
+            ? (meta as Record<string, string>)
+            : {};
         return {
           id,
           description: results.documents[0]?.[i] ?? '',

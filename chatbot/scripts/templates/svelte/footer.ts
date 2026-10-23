@@ -119,7 +119,8 @@ const templates: ComponentTemplate[] = [
   },
   {
     variant: 'corporate',
-    description: 'Corporate footer with company info and multiple link sections',
+    description:
+      'Corporate footer with company info and multiple link sections',
     tags: ['footer', 'corporate', 'business'],
     code: `<script>
   let sections = [

@@ -469,7 +469,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'countdown',
-    description: 'Countdown timer notification with days, hours, minutes, seconds',
+    description:
+      'Countdown timer notification with days, hours, minutes, seconds',
     tags: ['notification', 'countdown', 'timer', 'deadline'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed, onUnmounted } from 'vue';

@@ -465,7 +465,8 @@ const templates: ComponentTemplate[] = [
   },
   {
     variant: 'virtualized',
-    description: 'Virtualized table rendering only visible rows for performance',
+    description:
+      'Virtualized table rendering only visible rows for performance',
     tags: ['table', 'virtualized', 'performance'],
     code: `<script>
   let allRows = Array.from({ length: 1000 }, (_, i) => ({ id: i + 1, value: 'Row ' + (i + 1), score: Math.floor(Math.random() * 100) }));

@@ -54,7 +54,9 @@ export function createApp(deps: AppDependencies): AppInstance {
     } else if (limit.count >= 10) {
       const retryAfter = Math.ceil((limit.resetAt - now) / 1000);
       res.setHeader('Retry-After', retryAfter);
-      res.status(429).json({ error: 'Rate limit exceeded. Please wait before sending more requests.' });
+      res.status(429).json({
+        error: 'Rate limit exceeded. Please wait before sending more requests.',
+      });
     } else {
       limit.count++;
       next();
@@ -71,7 +73,11 @@ export function createApp(deps: AppDependencies): AppInstance {
   };
 }
 
-async function waitForChromaDb(store: ReturnType<typeof createVectorStore>, maxAttempts = 30, delayMs = 3000): Promise<void> {
+async function waitForChromaDb(
+  store: ReturnType<typeof createVectorStore>,
+  maxAttempts = 30,
+  delayMs = 3000
+): Promise<void> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       await store.init();
@@ -79,8 +85,11 @@ async function waitForChromaDb(store: ReturnType<typeof createVectorStore>, maxA
       return;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.log(`⏳ Waiting for ChromaDB (attempt ${attempt}/${maxAttempts}): ${msg}`);
-      if (attempt === maxAttempts) throw new Error(`ChromaDB not reachable after ${maxAttempts} attempts`);
+      console.log(
+        `⏳ Waiting for ChromaDB (attempt ${attempt}/${maxAttempts}): ${msg}`
+      );
+      if (attempt === maxAttempts)
+        throw new Error(`ChromaDB not reachable after ${maxAttempts} attempts`);
       await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
   }
@@ -91,7 +100,11 @@ async function main() {
     throw new Error('OPENROUTER_API_KEY environment variable is required');
   }
 
-  const llm = createOpenRouterClient(CONFIG.openRouterApiKey, CONFIG.embedModel, CONFIG.timeoutMs);
+  const llm = createOpenRouterClient(
+    CONFIG.openRouterApiKey,
+    CONFIG.embedModel,
+    CONFIG.timeoutMs
+  );
   const store = createVectorStore(CONFIG.chromaUrl, CONFIG.collectionName);
 
   await waitForChromaDb(store);

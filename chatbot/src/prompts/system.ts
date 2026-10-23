@@ -8,7 +8,10 @@ export function formatExamples(examples: ExampleSnippet[]): string {
     return 'No reference examples available. Use standard tuvix.js patterns.';
   }
   return examples
-    .map((ex, i) => `### Example ${i + 1}: ${ex.description}\n\`\`\`\n${ex.code}\n\`\`\``)
+    .map(
+      (ex, i) =>
+        `### Example ${i + 1}: ${ex.description}\n\`\`\`\n${ex.code}\n\`\`\``
+    )
     .join('\n\n---\n\n');
 }
 
@@ -248,7 +251,6 @@ Reference examples showing correct tuvix.js vanilla patterns:
 ${examples}`;
 }
 
-
 const PROMPT_BUILDERS: Record<string, (examples: string) => string> = {
   react: reactPrompt,
   vue: vuePrompt,
@@ -256,8 +258,13 @@ const PROMPT_BUILDERS: Record<string, (examples: string) => string> = {
   angular: angularPrompt,
 };
 
-export function buildSystemPrompt(framework: string | null, examples: ExampleSnippet[]): string {
+export function buildSystemPrompt(
+  framework: string | null,
+  examples: ExampleSnippet[]
+): string {
   const formattedExamples = formatExamples(examples);
   const builder = framework ? PROMPT_BUILDERS[framework] : null;
-  return builder ? builder(formattedExamples) : vanillaPrompt(formattedExamples);
+  return builder
+    ? builder(formattedExamples)
+    : vanillaPrompt(formattedExamples);
 }

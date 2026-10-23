@@ -347,7 +347,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'transparent',
-    description: 'Transparent header designed for hero sections with overlay text',
+    description:
+      'Transparent header designed for hero sections with overlay text',
     tags: ['header', 'transparent', 'hero'],
     code: `import { createReactMicroApp } from '@tuvix.js/react';
 import React from 'react';

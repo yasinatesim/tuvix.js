@@ -10,45 +10,71 @@ export interface LLMClient {
 
 const BASE_URL = 'https://openrouter.ai/api/v1';
 
-function fetchWithTimeout(url: string, options: RequestInit, ms = 60_000): Promise<Response> {
+function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  ms = 60_000
+): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
-  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+  return fetch(url, { ...options, signal: controller.signal }).finally(() =>
+    clearTimeout(timer)
+  );
 }
 
-export function createOpenRouterClient(apiKey: string, embedModel: string, timeoutMs = 60_000): LLMClient {
+export function createOpenRouterClient(
+  apiKey: string,
+  embedModel: string,
+  timeoutMs = 60_000
+): LLMClient {
   const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey}`,
   };
 
   return {
     async embed(text: string): Promise<number[]> {
-      const res = await fetchWithTimeout(`${BASE_URL}/embeddings`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ model: embedModel, input: text }),
-      }, timeoutMs);
+      const res = await fetchWithTimeout(
+        `${BASE_URL}/embeddings`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ model: embedModel, input: text }),
+        },
+        timeoutMs
+      );
 
       if (!res.ok) {
-        throw new Error(`OpenRouter embedding failed (${res.status}): ${await res.text()}`);
+        throw new Error(
+          `OpenRouter embedding failed (${res.status}): ${await res.text()}`
+        );
       }
 
       const data = await res.json();
       const embedding = data.data?.[0]?.embedding;
-      if (!embedding) throw new Error('OpenRouter embed: unexpected response shape');
+      if (!embedding)
+        throw new Error('OpenRouter embed: unexpected response shape');
       return embedding;
     },
 
-    async *chat(model: string, messages: ChatMessage[]): AsyncGenerator<string> {
-      const res = await fetchWithTimeout(`${BASE_URL}/chat/completions`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ model, messages, stream: true }),
-      }, timeoutMs);
+    async *chat(
+      model: string,
+      messages: ChatMessage[]
+    ): AsyncGenerator<string> {
+      const res = await fetchWithTimeout(
+        `${BASE_URL}/chat/completions`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ model, messages, stream: true }),
+        },
+        timeoutMs
+      );
 
       if (!res.ok) {
-        throw new Error(`OpenRouter chat failed (${res.status}): ${await res.text()}`);
+        throw new Error(
+          `OpenRouter chat failed (${res.status}): ${await res.text()}`
+        );
       }
 
       if (!res.body) throw new Error('OpenRouter chat: response body is null');
@@ -68,7 +94,12 @@ export function createOpenRouterClient(apiKey: string, embedModel: string, timeo
           if (!line.startsWith('data: ')) continue;
           const payload = line.slice(6).trim();
           if (payload === '[DONE]') return;
-          let parsed: { choices?: Array<{ delta?: { content?: string }; finish_reason?: string | null }> };
+          let parsed: {
+            choices?: Array<{
+              delta?: { content?: string };
+              finish_reason?: string | null;
+            }>;
+          };
           try {
             parsed = JSON.parse(payload);
           } catch {

@@ -417,7 +417,8 @@ const templates: ComponentTemplate[] = [
   },
   {
     variant: 'transparent',
-    description: 'Transparent header designed for hero sections with overlay text',
+    description:
+      'Transparent header designed for hero sections with overlay text',
     tags: ['header', 'transparent', 'hero'],
     code: `<script>
   let links = ['Home', 'Gallery', 'About', 'Contact'];

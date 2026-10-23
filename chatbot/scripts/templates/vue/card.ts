@@ -3,7 +3,8 @@ import type { ComponentTemplate } from '../../generate-dataset';
 const templates: ComponentTemplate[] = [
   {
     variant: 'product',
-    description: 'Product card with image placeholder, price, and add-to-cart button',
+    description:
+      'Product card with image placeholder, price, and add-to-cart button',
     tags: ['card', 'product', 'e-commerce'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -95,7 +96,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'stats',
-    description: 'Statistics card with metric value, label, trend indicator, and icon',
+    description:
+      'Statistics card with metric value, label, trend indicator, and icon',
     tags: ['card', 'stats', 'dashboard'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -184,7 +186,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'media',
-    description: 'Media card with video/audio placeholder, title, and playback controls',
+    description:
+      'Media card with video/audio placeholder, title, and playback controls',
     tags: ['card', 'media', 'player'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, onUnmounted } from 'vue';
@@ -238,7 +241,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'blog',
-    description: 'Blog post card with featured image area, title, excerpt, and read more',
+    description:
+      'Blog post card with featured image area, title, excerpt, and read more',
     tags: ['card', 'blog', 'article'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -281,7 +285,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'testimonial',
-    description: 'Testimonial card with quote, author avatar, name, and company',
+    description:
+      'Testimonial card with quote, author avatar, name, and company',
     tags: ['card', 'testimonial', 'review'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -323,7 +328,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'feature',
-    description: 'Feature highlight card with icon, title, description, and learn-more link',
+    description:
+      'Feature highlight card with icon, title, description, and learn-more link',
     tags: ['card', 'feature', 'marketing'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -357,7 +363,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'notification',
-    description: 'Notification card with type indicator, message, timestamp, and dismiss',
+    description:
+      'Notification card with type indicator, message, timestamp, and dismiss',
     tags: ['card', 'notification', 'alert'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -487,7 +494,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'job-listing',
-    description: 'Job listing card with company, position, tags, and apply button',
+    description:
+      'Job listing card with company, position, tags, and apply button',
     tags: ['card', 'job', 'listing'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -539,7 +547,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'recipe',
-    description: 'Recipe card with cooking time, servings, ingredients preview, and difficulty',
+    description:
+      'Recipe card with cooking time, servings, ingredients preview, and difficulty',
     tags: ['card', 'recipe', 'food'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -634,7 +643,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'announcement',
-    description: 'Announcement card with type badge, message, CTA, and dismiss option',
+    description:
+      'Announcement card with type badge, message, CTA, and dismiss option',
     tags: ['card', 'announcement', 'banner'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

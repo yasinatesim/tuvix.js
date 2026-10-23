@@ -3,7 +3,8 @@ import type { ComponentTemplate } from '../../generate-dataset';
 const templates: ComponentTemplate[] = [
   {
     variant: 'confirmation',
-    description: 'Confirmation dialog with title, message, and confirm/cancel buttons',
+    description:
+      'Confirmation dialog with title, message, and confirm/cancel buttons',
     tags: ['modal', 'confirmation', 'dialog'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -191,7 +192,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'settings',
-    description: 'Settings modal with tabbed sections for different preference groups',
+    description:
+      'Settings modal with tabbed sections for different preference groups',
     tags: ['modal', 'settings', 'tabs'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, reactive } from 'vue';
@@ -328,7 +330,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'terms',
-    description: 'Terms and conditions modal with scrollable content and accept button',
+    description:
+      'Terms and conditions modal with scrollable content and accept button',
     tags: ['modal', 'terms', 'legal'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -534,7 +537,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'cookie-consent',
-    description: 'Cookie consent modal with category toggles and accept/reject buttons',
+    description:
+      'Cookie consent modal with category toggles and accept/reject buttons',
     tags: ['modal', 'cookie', 'consent'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, reactive } from 'vue';
@@ -635,7 +639,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'command-palette',
-    description: 'Command palette modal with keyboard shortcut hints and categorized actions',
+    description:
+      'Command palette modal with keyboard shortcut hints and categorized actions',
     tags: ['modal', 'command-palette', 'keyboard'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';

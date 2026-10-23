@@ -268,7 +268,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-user-profile',
-    description: 'Sidebar with user profile section at the top including avatar and role',
+    description:
+      'Sidebar with user profile section at the top including avatar and role',
     tags: ['sidebar', 'user-profile', 'avatar'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -353,7 +354,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'responsive',
-    description: 'Responsive sidebar that converts to bottom navigation on mobile',
+    description:
+      'Responsive sidebar that converts to bottom navigation on mobile',
     tags: ['sidebar', 'responsive', 'adaptive'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -457,7 +459,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-footer',
-    description: 'Sidebar with bottom footer section containing version and help link',
+    description:
+      'Sidebar with bottom footer section containing version and help link',
     tags: ['sidebar', 'footer', 'version'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -608,7 +611,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-toggle',
-    description: 'Sidebar with smooth expand/collapse toggle and animated transitions',
+    description:
+      'Sidebar with smooth expand/collapse toggle and animated transitions',
     tags: ['sidebar', 'toggle', 'animated'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

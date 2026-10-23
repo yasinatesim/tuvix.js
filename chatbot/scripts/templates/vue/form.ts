@@ -56,7 +56,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'signup',
-    description: 'Signup form with name, email, password confirmation, and terms acceptance',
+    description:
+      'Signup form with name, email, password confirmation, and terms acceptance',
     tags: ['form', 'signup', 'registration'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -192,7 +193,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'search',
-    description: 'Search form with filters, category select, and instant results',
+    description:
+      'Search form with filters, category select, and instant results',
     tags: ['form', 'search', 'filter'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -242,7 +244,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'multi-step',
-    description: 'Multi-step form wizard with progress indicators and validation',
+    description:
+      'Multi-step form wizard with progress indicators and validation',
     tags: ['form', 'multi-step', 'wizard'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, reactive } from 'vue';
@@ -484,7 +487,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'profile',
-    description: 'Profile edit form with avatar upload, bio textarea, and social links',
+    description:
+      'Profile edit form with avatar upload, bio textarea, and social links',
     tags: ['form', 'profile', 'edit'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, reactive, computed } from 'vue';
@@ -542,7 +546,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'filter',
-    description: 'Filter form with checkboxes, range slider, and apply/reset buttons',
+    description:
+      'Filter form with checkboxes, range slider, and apply/reset buttons',
     tags: ['form', 'filter', 'range'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -606,7 +611,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'newsletter',
-    description: 'Newsletter subscription form with email input and inline success state',
+    description:
+      'Newsletter subscription form with email input and inline success state',
     tags: ['form', 'newsletter', 'subscription'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -641,7 +647,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'survey',
-    description: 'Survey form with radio buttons, rating scale, and optional comment',
+    description:
+      'Survey form with radio buttons, rating scale, and optional comment',
     tags: ['form', 'survey', 'feedback'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -700,7 +707,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'address',
-    description: 'Address form with street, city, state, zip, and country fields',
+    description:
+      'Address form with street, city, state, zip, and country fields',
     tags: ['form', 'address', 'location'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, reactive } from 'vue';
@@ -769,7 +777,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'payment',
-    description: 'Payment method form with card type selection and saved cards list',
+    description:
+      'Payment method form with card type selection and saved cards list',
     tags: ['form', 'payment', 'credit-card'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, reactive } from 'vue';
@@ -840,7 +849,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'file-upload',
-    description: 'File upload form with drag-and-drop zone and file list preview',
+    description:
+      'File upload form with drag-and-drop zone and file list preview',
     tags: ['form', 'file-upload', 'drag-drop'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

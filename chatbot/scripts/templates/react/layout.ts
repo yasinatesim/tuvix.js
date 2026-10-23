@@ -155,7 +155,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'admin',
-    description: 'Admin panel layout with top nav, sidebar, and data table area',
+    description:
+      'Admin panel layout with top nav, sidebar, and data table area',
     tags: ['layout', 'admin', 'panel'],
     code: `import { createReactMicroApp } from '@tuvix.js/react';
 import React from 'react';
@@ -287,7 +288,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'saas-app',
-    description: 'SaaS application layout with top bar, sidebar, and main workspace',
+    description:
+      'SaaS application layout with top bar, sidebar, and main workspace',
     tags: ['layout', 'saas', 'application'],
     code: `import { createReactMicroApp } from '@tuvix.js/react';
 import React from 'react';

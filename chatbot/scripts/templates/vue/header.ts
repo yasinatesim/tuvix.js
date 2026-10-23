@@ -34,7 +34,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-search',
-    description: 'Header with integrated search bar and autocomplete suggestions',
+    description:
+      'Header with integrated search bar and autocomplete suggestions',
     tags: ['header', 'search', 'interactive'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';

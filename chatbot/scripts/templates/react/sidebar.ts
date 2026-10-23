@@ -371,7 +371,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'with-footer',
-    description: 'Sidebar with a footer section containing links and version info',
+    description:
+      'Sidebar with a footer section containing links and version info',
     tags: ['sidebar', 'footer', 'info'],
     code: `import { createReactMicroApp } from '@tuvix.js/react';
 import React from 'react';

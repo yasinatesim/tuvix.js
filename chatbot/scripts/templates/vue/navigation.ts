@@ -39,7 +39,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'tabs',
-    description: 'Horizontal tab navigation with active state and panel content',
+    description:
+      'Horizontal tab navigation with active state and panel content',
     tags: ['navigation', 'tabs', 'panels'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref, computed } from 'vue';
@@ -297,7 +298,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'mega-menu',
-    description: 'Full-width mega menu with grouped links and feature highlights',
+    description:
+      'Full-width mega menu with grouped links and feature highlights',
     tags: ['navigation', 'mega-menu', 'dropdown', 'categories'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';
@@ -572,7 +574,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'anchor-nav',
-    description: 'In-page anchor navigation that highlights active section on scroll',
+    description:
+      'In-page anchor navigation that highlights active section on scroll',
     tags: ['navigation', 'anchor', 'scroll', 'in-page'],
     code: `import { createVueMicroApp } from '@tuvix.js/vue';
 import { defineComponent, ref } from 'vue';

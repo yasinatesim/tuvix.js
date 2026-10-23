@@ -3,7 +3,8 @@ import type { ComponentTemplate } from '../../generate-dataset';
 const templates: ComponentTemplate[] = [
   {
     variant: 'product',
-    description: 'Product card with image, title, price, and add-to-cart button',
+    description:
+      'Product card with image, title, price, and add-to-cart button',
     tags: ['card', 'product', 'e-commerce'],
     code: `<script>
   let added = false;
@@ -263,7 +264,8 @@ const templates: ComponentTemplate[] = [
   },
   {
     variant: 'notification',
-    description: 'Notification card with icon, message, time, and dismiss button',
+    description:
+      'Notification card with icon, message, time, and dismiss button',
     tags: ['card', 'notification', 'alert'],
     code: `<script>
   let visible = true;

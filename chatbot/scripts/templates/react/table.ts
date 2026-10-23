@@ -424,7 +424,8 @@ app.mount({ container: document.getElementById('app') as HTMLElement });`,
   },
   {
     variant: 'virtualized',
-    description: 'Virtualized table rendering only visible rows for performance',
+    description:
+      'Virtualized table rendering only visible rows for performance',
     tags: ['table', 'virtualized', 'performance'],
     code: `import { createReactMicroApp } from '@tuvix.js/react';
 import React, { useState, useRef, useEffect } from 'react';
