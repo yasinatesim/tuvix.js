@@ -1,5 +1,18 @@
-import type { Component, App, Plugin, ShallowRef } from 'vue';
-import { onMounted, onUnmounted, shallowRef } from 'vue';
+import type { Component, App, ShallowRef } from 'vue';
+import {
+  createApp,
+  createSSRApp,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  shallowReactive,
+  shallowRef,
+} from 'vue';
+import {
+  emitLifecycle,
+  hasServerMarkup,
+  registerModule,
+} from '@tuvix.js/loader';
 import type {
   MicroAppModule,
   MountContext,
@@ -7,6 +20,11 @@ import type {
   UpdateContext,
 } from '@tuvix.js/loader';
 import type { IEventBus, EventHandler, Unsubscribe } from '@tuvix.js/event-bus';
+import { TUVIX_PROPS_KEY, createRootComponent, installPlugins } from './root';
+import type { VuePluginEntry } from './root';
+
+export { TUVIX_PROPS_KEY };
+export type { VuePluginEntry };
 
 // ─── Types ──────────────────────────────────────────
 
@@ -17,28 +35,87 @@ export interface VueMicroAppConfig {
   /** Root Vue component */
   App: Component;
 
-  /** Vue plugins to install */
-  plugins?: Plugin[];
+  /**
+   * Vue plugins to install. Each container gets its own Vue app, so every
+   * mount runs each plugin's `install` again.
+   */
+  plugins?: VuePluginEntry[];
 
   /** Optional one-time setup */
   bootstrap?: () => void | Promise<void>;
+
+  /**
+   * Hydrate server-rendered markup with `createSSRApp` when the container has
+   * any. An empty container always gets a fresh `createApp` render.
+   * Defaults to `false`; `createSsrVueMicroApp` sets it to `true`.
+   */
+  ssr?: boolean;
 }
 
-/** Extended config for SSR-enabled Vue micro apps (same shape, alias for clarity) */
-export type VueSsrMicroAppConfig = VueMicroAppConfig;
+/** Config for {@link createSsrVueMicroApp}. `ssr` is always on. */
+export type VueSsrMicroAppConfig = Omit<VueMicroAppConfig, 'ssr'>;
+
+interface VueInstance {
+  app: App;
+  props: Record<string, unknown>;
+  hydrated: boolean;
+}
+
+/**
+ * Mount `app` and throw the first error raised during the mount. Production
+ * builds of Vue only log setup, render and hook errors; this makes them reach
+ * the caller in every build. A user `errorHandler` still runs. A failed app is
+ * unmounted again.
+ */
+function mountStrict(app: App, container: HTMLElement): void {
+  const userHandler = app.config.errorHandler;
+  let failed = false;
+  let firstError: unknown;
+  app.config.errorHandler = (error, instance, info) => {
+    if (!failed) {
+      failed = true;
+      firstError = error;
+    }
+    userHandler?.(error, instance, info);
+  };
+  try {
+    app.mount(container);
+  } finally {
+    app.config.errorHandler = userHandler;
+  }
+  if (failed) {
+    app.unmount();
+    throw firstError;
+  }
+}
+
+function replaceProps(
+  target: Record<string, unknown>,
+  next: Record<string, unknown>
+): void {
+  for (const key of Object.keys(target)) {
+    if (!(key in next)) delete target[key];
+  }
+  Object.assign(target, next);
+}
 
 // ─── createVueMicroApp ──────────────────────────────
 
 /**
  * Create a Tuvix.js micro app module from a Vue 3 component.
  *
- * Handles `createApp` / `app.mount` / `app.unmount` lifecycle automatically.
+ * Every container gets its own Vue app, so one module can mount in several
+ * places at once. Props live in a `shallowReactive` object: `update({ props })`
+ * re-renders `App` with the new values, and `inject('tuvixProps')` returns the
+ * same reactive object. With `ssr: true`, Vue hydrates server markup found in
+ * the container. Mount, unmount and failures dispatch `tuvix:mounted`,
+ * `tuvix:unmounted` and `tuvix:error` on the container.
  *
  * @example
  * ```ts
  * import { createVueMicroApp } from '@tuvix.js/vue';
- * import App from './App.vue';
  * import { createPinia } from 'pinia';
+ * import App from './App.vue';
  *
  * export default createVueMicroApp({
  *   name: 'settings',
@@ -48,7 +125,34 @@ export type VueSsrMicroAppConfig = VueMicroAppConfig;
  * ```
  */
 export function createVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
-  let app: App | null = null;
+  const { name } = config;
+  const instances = new WeakMap<HTMLElement, VueInstance>();
+  // A WeakMap cannot be iterated; `update` without a container reaches every live instance.
+  const live = new Set<VueInstance>();
+
+  function teardown(container: HTMLElement, instance: VueInstance): void {
+    instances.delete(container);
+    live.delete(instance);
+    try {
+      instance.app.unmount();
+    } catch (error) {
+      emitLifecycle('error', {
+        name,
+        container,
+        hydrated: instance.hydrated,
+        error,
+      });
+      throw error;
+    } finally {
+      // The instance is gone either way, so the app must not stay counted as mounted.
+      container.replaceChildren();
+      emitLifecycle('unmounted', {
+        name,
+        container,
+        hydrated: instance.hydrated,
+      });
+    }
+  }
 
   const module: MicroAppModule = {
     async bootstrap() {
@@ -58,45 +162,60 @@ export function createVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
     },
 
     async mount({ container, props }: MountContext) {
-      const { createApp } = await import('vue');
+      // Mounting runs synchronously after this point, so no unmount can
+      // interleave and leave an orphan app behind.
+      const previous = instances.get(container);
+      if (previous) teardown(container, previous);
 
-      app = createApp(config.App, { ...props });
+      const hydrated = config.ssr === true && hasServerMarkup(container);
 
-      if (config.plugins) {
-        for (const plugin of config.plugins) {
-          app.use(plugin);
-        }
+      try {
+        const reactiveProps = shallowReactive<Record<string, unknown>>({
+          ...props,
+        });
+        const root = createRootComponent(config.App, reactiveProps);
+        const app = hydrated ? createSSRApp(root) : createApp(root);
+        installPlugins(app, config.plugins);
+        mountStrict(app, container);
+
+        const instance: VueInstance = {
+          app,
+          props: reactiveProps,
+          hydrated,
+        };
+        instances.set(container, instance);
+        live.add(instance);
+      } catch (error) {
+        emitLifecycle('error', { name, container, hydrated, error });
+        throw error;
       }
 
-      // Provide orchestrator props globally
-      if (props) {
-        app.provide('tuvixProps', props);
-      }
-
-      app.mount(container);
+      emitLifecycle('mounted', { name, container, hydrated });
     },
 
     async unmount({ container }: UnmountContext) {
-      app?.unmount();
-      app = null;
-      container.innerHTML = '';
+      const instance = instances.get(container);
+      if (instance) teardown(container, instance);
     },
 
-    async update({ props }: UpdateContext) {
-      if (app) {
-        // Update global properties for reactive access
-        app.config.globalProperties.$tuvixProps = props;
+    async update({ props, container }: UpdateContext) {
+      // Update only that container when the caller names one, else every mount.
+      let targets: VueInstance[];
+      if (container) {
+        const instance = instances.get(container);
+        targets = instance ? [instance] : [];
+      } else {
+        targets = Array.from(live);
       }
+      for (const instance of targets) {
+        replaceProps(instance.props, props);
+      }
+      // Resolve after Vue has flushed the re-render.
+      await nextTick();
     },
   };
 
-  // Register in global module registry
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    win.__TUVIX_MODULES__ = win.__TUVIX_MODULES__ ?? {};
-    win.__TUVIX_MODULES__[config.name] = module;
-  }
+  registerModule(name, module);
 
   return module;
 }
@@ -104,11 +223,11 @@ export function createVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
 // ─── createSsrVueMicroApp ────────────────────────────
 
 /**
- * Create a Tuvix.js micro app module from a Vue 3 component with SSR hydration support.
+ * Create a Tuvix.js micro app module that hydrates server-rendered HTML.
  *
- * Uses `createSSRApp` instead of `createApp` so Vue hydrates existing server-rendered
- * HTML rather than re-rendering from scratch. Drop-in replacement for `createVueMicroApp`
- * when the container already contains SSR markup.
+ * Same as `createVueMicroApp({ ...config, ssr: true })`. When the container
+ * holds markup from `renderVueToString`, Vue adopts those DOM nodes through
+ * `createSSRApp`. An empty container gets a normal client render.
  *
  * @example
  * ```ts
@@ -122,58 +241,9 @@ export function createVueMicroApp(config: VueMicroAppConfig): MicroAppModule {
  * ```
  */
 export function createSsrVueMicroApp(
-  config: VueMicroAppConfig
+  config: VueSsrMicroAppConfig
 ): MicroAppModule {
-  let app: App | null = null;
-
-  const module: MicroAppModule = {
-    async bootstrap() {
-      if (config.bootstrap) {
-        await config.bootstrap();
-      }
-    },
-
-    async mount({ container, props }: MountContext) {
-      const { createSSRApp } = await import('vue');
-
-      app = createSSRApp(config.App, { ...props });
-
-      if (config.plugins) {
-        for (const plugin of config.plugins) {
-          app.use(plugin);
-        }
-      }
-
-      if (props) {
-        app.provide('tuvixProps', props);
-      }
-
-      // Vue SSR mode: automatically hydrates if SSR content already exists in container
-      app.mount(container);
-    },
-
-    async unmount({ container }: UnmountContext) {
-      app?.unmount();
-      app = null;
-      container.innerHTML = '';
-    },
-
-    async update({ props }: UpdateContext) {
-      if (app) {
-        app.config.globalProperties.$tuvixProps = props;
-      }
-    },
-  };
-
-  // Register in global module registry
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    win.__TUVIX_MODULES__ = win.__TUVIX_MODULES__ ?? {};
-    win.__TUVIX_MODULES__[config.name] = module;
-  }
-
-  return module;
+  return createVueMicroApp({ ...config, ssr: true });
 }
 
 // ─── Composables ────────────────────────────────────
