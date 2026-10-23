@@ -1,194 +1,231 @@
-# Routing
+# Yönlendirme
 
-`@tuvix.js/router` provides URL-based micro app activation. When the URL
-matches an `activeWhen` pattern (or a route's `path`), the orchestrator
-mounts the corresponding app. When it stops matching, the orchestrator
-unmounts it.
+Tuvix.js hangi uygulamaların mount edileceğine geçerli path'e bakarak karar verir. Bunu her uygulamadaki `activeWhen` ile, yerleşik router'daki `routes` ile ya da ikisiyle birden tanımlarsınız. Bütün pattern'leri tek bir eşleştirici yorumlar: `@tuvix.js/router` paketindeki `matchPath`. Bu sayede `activeWhen`, router ve `@tuvix.js/server`, `/users/:id` ifadesini aynı şekilde anlar.
 
-There are two ways to use the router:
+## Pattern kuralları
 
-1. **Through the orchestrator** — pass `router` config to
-   `createOrchestrator` and the orchestrator wires everything up.
-2. **Standalone** — call `createRouter` directly when you need URL matching
-   without the orchestrator (e.g. embedded scenarios or tests).
+`activeWhen` string'leri önek eşleştirmesi kullanır:
 
-## Setup via the Orchestrator
+| Pattern | Eşleşir | Eşleşmez | Parametreler |
+| --- | --- | --- | --- |
+| `/dashboard` | `/dashboard`, `/dashboard/`, `/dashboard/stats` | `/dashboards` | yok |
+| `/dashboard/*` | `/dashboard` ile aynı path'ler | `/dashboards` | yok |
+| `/users/:id` | `/users/42`, `/users/42/posts` | `/users` | `{ id: '42' }` |
+| `/v:version/docs` | `/v2/docs` | `/2/docs` | `{ version: '2' }` |
+| `/` | her path | yok | yok |
+
+- Eşleştirici, eşleştirmeden önce `?query` ve `#hash` kısımlarını atar. Bu yüzden `/dashboard?tab=1` yine `/dashboard` ile eşleşir.
+- Parametreleri decode eder: `/users/J%C3%BCrgen` sonucu `{ id: 'Jürgen' }` olur.
+- `.` ve `(` gibi karakterler olduğu gibi eşleşir.
+- Pattern'in ortasındaki `*` tek bir segmentle eşleşir.
+
+Bir pattern'i kendiniz deneyin:
 
 ```ts
-import { createOrchestrator } from '@tuvix.js/core';
+import { matchPath } from '@tuvix.js/router';
 
-const orchestrator = createOrchestrator({
-  router: {
-    mode: 'history',  // or 'hash'
-    base: '/',         // optional base path
-    routes: [
-      { path: '/', app: 'home', exact: true },
-      { path: '/dashboard/*', app: 'dashboard' },
-      { path: '/users/:id', app: 'user-profile' },
-    ],
-  },
-});
+matchPath('/users/:id', '/users/42?tab=posts'); // { matched: true, params: { id: '42' } }
+matchPath('/settings', '/settings/profile').matched; // true
+matchPath('/settings', '/settings/profile', { end: true }).matched; // false
+matchPath('/', '/about', { end: true }).matched; // false
+```
+
+## activeWhen ile uygulamaları etkinleştirme
+
+```ts
+import { createOrchestrator, matchPath } from 'tuvix.js';
+
+const orchestrator = createOrchestrator();
 
 orchestrator.register({
-  name: 'dashboard',
-  entry: 'https://cdn.example.com/dashboard.js',
+  name: 'home',
+  entry: () => import('./apps/home'),
   container: '#app',
-  activeWhen: '/dashboard/*',
+  activeWhen: (path) => matchPath('/', path, { end: true }).matched,
 });
-
-await orchestrator.start();
-```
-
-## Standalone Router
-
-```ts
-import { createRouter } from '@tuvix.js/router';
-
-const router = createRouter({
-  mode: 'history',
-  routes: [
-    { path: '/users/:id', app: 'users' },
-  ],
-});
-
-router.onChange(({ from, to, toRoute }) => {
-  console.log(`navigated ${from} → ${to}`, toRoute?.params);
-});
-```
-
-> Listeners are attached automatically on construction; there is no
-> `start()` to call.
-
-## Route Matching
-
-Routes are evaluated **in order** — the first match wins.
-
-| Pattern | Matches | Params |
-| --- | --- | --- |
-| `/` | exactly `/` | – |
-| `/dashboard` | `/dashboard` (and `/dashboard/`) | – |
-| `/dashboard/*` | `/dashboard` and any nested path | – |
-| `/users/:id` | `/users/42` | `{ id: '42' }` |
-| `/users/:id/*` | `/users/42/posts/3` | `{ id: '42' }` |
-
-Use `exact: true` to disallow trailing segments:
-
-```ts
-{ path: '/settings', app: 'settings', exact: true }
-```
-
-### Reading Params Inside an App
-
-The params live on the `MatchedRoute` exposed by the router, not in the
-mount context. Read them through `router.currentRoute`:
-
-```ts
-const router = orchestrator.getRouter();
 
 orchestrator.register({
-  name: 'user-profile',
-  entry: '/user.js',
+  name: 'user',
+  entry: () => import('./apps/user'),
   container: '#app',
   activeWhen: '/users/:id',
 });
 
-// Inside the app's mount(), look up the latest match
-mount({ container, props }) {
-  const id = router?.currentRoute?.params.id;
-  fetchUser(id).then(/* ... */);
-}
-```
-
-For a more decoupled pattern, push the params into props via
-`updateAppProps()` from a `router.onChange` handler in the shell.
-
-## Programmatic Navigation
-
-```ts
-await router.push('/dashboard/overview');     // pushState
-await router.replace('/users/42');             // replaceState — no history entry
-router.back();
-router.forward();
-
-router.currentPath;            // '/users/42'
-router.currentRoute?.params;   // { id: '42' }
-router.currentRoute?.query;    // parsed query object
-
-router.match('/some/path');    // → MatchedRoute | null without navigating
-router.getActiveApps();        // app names matching the current path
-```
-
-## Navigation Guards
-
-Guards run before every navigation — programmatic and browser-initiated
-back/forward. Return `false` to cancel; the URL is restored automatically.
-
-```ts
-const off = router.beforeEach(async ({ from, to, toRoute }) => {
-  if (to.startsWith('/admin') && !(await isAdmin())) {
-    return false;
-  }
+orchestrator.register({
+  name: 'header',
+  entry: () => import('./apps/header'),
+  container: '#header',
+  activeWhen: '/', // her sayfa
 });
-
-off(); // unsubscribe a single guard
-```
-
-A throwing guard is treated as `false` and logged.
-
-## Listening for Changes
-
-```ts
-router.onChange(({ from, to, fromRoute, toRoute }) => {
-  analytics.page(to);
-});
-```
-
-Pair the orchestrator with a guard to do per-route data prefetching:
-
-```ts
-router.beforeEach(async ({ toRoute }) => {
-  if (toRoute?.route.app === 'dashboard') {
-    await preloadDashboardData();
-  }
-});
-```
-
-## Hash Mode
-
-Use hash mode for static hosting without SPA fallback:
-
-```ts
-createRouter({
-  mode: 'hash',
-  routes: [
-    { path: '/', app: 'home' },
-    { path: '/about', app: 'about' },
-  ],
-});
-// URLs: /#/, /#/about
-```
-
-## Bridging an External Router
-
-If your shell already uses TanStack Router, Next.js App Router, or React
-Router, skip `config.router` entirely and let your existing router drive
-Tuvix.js:
-
-```ts
-const orchestrator = createOrchestrator(); // no router config
 
 await orchestrator.start();
-
-externalRouter.subscribe('onLoad', () => {
-  orchestrator.reconcile(window.location.pathname);
-});
 ```
 
-`reconcile(path?)` mounts/unmounts apps based on the supplied path (or
-`window.location.pathname` when omitted).
+Fonksiyon path'i alır ve boolean döndürür. Tam eşleşme, birden fazla önek ya da feature flag'ler için bunu kullanın.
 
-## Cleanup
+## Yerleşik router
+
+`createOrchestrator` fonksiyonuna `router` verin. Orchestrator, router'ın yaptığı her navigasyondan sonra reconcile eder:
 
 ```ts
-router.destroy(); // remove window listeners and clear all subscribers
+import { createOrchestrator } from 'tuvix.js';
+
+const orchestrator = createOrchestrator({
+  router: {
+    mode: 'history',
+    routes: [
+      { path: '/settings', app: 'settings' },
+      { path: '/billing/*', app: 'billing' },
+    ],
+  },
+});
+
+orchestrator.register({ name: 'settings', entry: () => import('./apps/settings'), container: '#app' });
+orchestrator.register({ name: 'billing', entry: () => import('./apps/billing'), container: '#app' });
+
+await orchestrator.start();
+await orchestrator.navigateTo('/billing/invoices');
 ```
+
+`activeWhen` tanımlanmamış bir uygulama, kendi adını veren route'ları izler. `activeWhen` ile iki farkı vardır:
+
+- Route path'leri tam eşleşir. `/settings`, `/settings` ve `/settings/` ile eşleşir, `/settings/profile` ile eşleşmez. Alt path'ler için `/*` ekleyin.
+- Path'i `/` olan bir route, uygulamasını yalnızca `/` üzerinde etkinleştirir. Her path ile eşleşen bir route için `/*` kullanın.
+
+Bir uygulamada `activeWhen` varsa orchestrator onu kullanır ve `routes` tanımını yok sayar.
+
+Router, `popstate` (history modu) ya da `hashchange` (hash modu) olayını dinler. Link tıklamalarını yakalamaz; sonraki bölüme bakın.
+
+## Link tıklamaları
+
+`interceptLinks`, aynı origin'deki `<a href>` tıklamalarını sizin `navigate` fonksiyonunuza yapılan çağrılara dönüştürür ve bir temizleme fonksiyonu döndürür:
+
+```ts
+import { createOrchestrator, interceptLinks } from 'tuvix.js';
+
+const orchestrator = createOrchestrator({ router: { routes: [] } });
+
+const stop = interceptLinks({
+  navigate: (path) => orchestrator.navigateTo(path),
+  prefetch: (path) => console.debug('user may open', path),
+});
+
+// daha sonra, shell sayfadan ayrılırken
+stop();
+```
+
+Şu tıklamaları tarayıcıya bırakır:
+
+- bir değiştirici tuşla (Ctrl, Meta, Shift, Alt) ya da birincil tuş dışındaki bir fare tuşuyla yapılanlar;
+- `event.defaultPrevented` değeri zaten true olanlar;
+- `target` değeri `_self` dışında olanlar, `download` niteliği, `rel="external"` ya da `data-tuvix-reload` taşıyanlar;
+- başka bir origin'e ya da `base` dışındaki bir path'e gidenler;
+- geçerli path üzerindeki yalnızca hash içeren linkler; böylece tarayıcı kaydırmayı kendisi yapar.
+
+`prefetch(path)`, pointerenter ya da focus olayında her path için bir kez çalışır. `shouldIntercept(anchor, url, event)` ile kendi filtrenizi ekleyebilirsiniz; tıklamayı tarayıcıya bırakmak için `false` döndürün. `root`, dinlemeyi tek bir elemanla sınırlar.
+
+## Navigasyon ve guard'lar
+
+```ts
+import { createRouter } from '@tuvix.js/router';
+
+const router = createRouter({ routes: [{ path: '/users/:id', app: 'user' }] });
+
+const offGuard = router.beforeEach(async ({ to }) => {
+  if (!to.startsWith('/admin')) return true;
+  const response = await fetch('/api/me');
+  return response.ok;
+});
+
+const offChange = router.onChange(({ from, to, toRoute }) => {
+  console.log(`${from} → ${to}`, toRoute?.params);
+});
+
+await router.push('/users/42'); // pushState
+await router.replace('/users/43'); // replaceState
+router.back();
+
+router.currentPath; // '/users/43'
+router.currentRoute?.params; // { id: '43' }
+router.currentRoute?.query; // ayrıştırılmış ?query
+router.match('/users/7'); // MatchedRoute | null, navigasyon yapmaz
+router.getActiveApps('/users/7'); // ['user']
+
+offGuard();
+offChange();
+router.destroy();
+```
+
+- Guard'lar `push`, `replace` ve geri/ileri navigasyonundan önce sırayla çalışır. `false` navigasyonu iptal eder. Hata fırlatan bir guard navigasyonu iptal eder ve hatayı loglar.
+- İptal edilen bir geri/ileri navigasyonu, önceki URL'i `replaceState` ile geri yükler.
+- Geçerli path'e yapılan `push` hiçbir şey yapmaz.
+- `router.match` eşleşen ilk route'u döndürür; `getActiveApps` ise route'u eşleşen her uygulamayı döndürür.
+
+## Base path
+
+```ts
+import { createOrchestrator, interceptLinks } from 'tuvix.js';
+
+const orchestrator = createOrchestrator({
+  router: { base: '/app', routes: [{ path: '/reports/*', app: 'reports' }] },
+});
+
+interceptLinks({ base: '/app', navigate: (path) => orchestrator.navigateTo(path) });
+
+await orchestrator.navigateTo('/reports'); // URL /app/reports olur
+```
+
+`base: '/app'` ile:
+
+- router eşleştirmeden önce `/app` kısmını atar, bu yüzden route'lar ve `activeWhen` pattern'leri bu kısmı içermez;
+- `push('/x')` ve `replace('/x')`, `/app/x` yazar;
+- `/application`, `/application` olarak kalır: base yalnızca segment sınırında atılır;
+- `interceptLinks` aynı `base` değerine ihtiyaç duyar. Aksi halde `/app/x` path'ini `navigateTo` fonksiyonuna verir ve o da `/app/app/x` yazar.
+
+## Hash modu
+
+```ts
+import { createRouter } from '@tuvix.js/router';
+
+const router = createRouter({ mode: 'hash', routes: [{ path: '/about', app: 'about' }] });
+await router.push('/about'); // URL: /#/about
+```
+
+Her path'i `index.html` dosyasına yönlendiremeyen statik hosting'lerde bunu kullanın. Router, hash modunda `base` değerini yok sayar.
+
+## Bir uygulamada parametreleri okuma
+
+Mount context parametre içermez. Parametreleri path'ten okuyun ya da props olarak gönderin:
+
+```ts
+import { createOrchestrator, matchPath } from 'tuvix.js';
+
+const orchestrator = createOrchestrator({
+  router: { routes: [{ path: '/users/:id', app: 'user' }] },
+});
+
+orchestrator.register({
+  name: 'user',
+  entry: () => import('./apps/user'),
+  container: '#app',
+  props: { id: matchPath('/users/:id', location.pathname).params.id },
+});
+
+orchestrator.getRouter()?.onChange(({ toRoute }) => {
+  if (toRoute?.route.app === 'user') {
+    void orchestrator.updateAppProps('user', { id: toRoute.params.id });
+  }
+});
+
+await orchestrator.start();
+```
+
+## Harici router'lar
+
+Navigasyonu TanStack Router, React Router ya da başka bir router yönetiyorsa `config.router` kullanmayın ve `orchestrator.connectRouter({ subscribe, getPath })` çağırın. Bkz. [Harici router](/tr/guide/external-router).
+
+## Yönlendirmenin yapmadıkları
+
+- Route bileşenlerini render etmez. Uygulamalar kendilerini container'lara render eder.
+- Veri yüklemez. Bir guard, `onChange` ya da uygulamanın kendi `mount` fonksiyonunu kullanın.
+- `interceptLinks` çağırmadığınız sürece router link tıklamalarını ele almaz.

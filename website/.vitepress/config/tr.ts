@@ -12,7 +12,19 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'AI Üretici', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Katkı Sağlama', link: '/tr/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Katkı Sağlama', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Değişiklik Günlüğü',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'Katkı Sağlama',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
 
     sidebar: {
@@ -30,8 +42,10 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           text: 'Temel Kavramlar',
           items: [
             { text: 'Mikro Uygulamalar', link: '/tr/guide/micro-apps' },
-            { text: 'Lifecycle Hooks', link: '/tr/guide/lifecycle' },
+            { text: "Lifecycle Hook'ları", link: '/tr/guide/lifecycle' },
+            { text: 'Lifecycle Olayları', link: '/tr/guide/lifecycle-events' },
             { text: 'Yönlendirme', link: '/tr/guide/routing' },
+            { text: 'Harici Router', link: '/tr/guide/external-router' },
             { text: 'Event Bus', link: '/tr/guide/event-bus' },
             { text: 'Sandbox', link: '/tr/guide/sandbox' },
           ],
@@ -43,6 +57,14 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Vue ile', link: '/tr/guide/vue' },
             { text: 'Svelte ile', link: '/tr/guide/svelte' },
             { text: 'Angular ile', link: '/tr/guide/angular' },
+            { text: "SSR Island'ları", link: '/tr/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'Yardım',
+          items: [
+            { text: '0.5 Sürümüne Geçiş', link: '/tr/guide/migration-0-5' },
+            { text: 'Sorun Giderme', link: '/tr/guide/troubleshooting' },
           ],
         },
       ],
@@ -59,7 +81,7 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           ],
         },
         {
-          text: 'Framework Bağlamaları',
+          text: 'Framework Entegrasyonları',
           items: [
             { text: '@tuvix.js/react', link: '/tr/packages/react' },
             { text: '@tuvix.js/vue', link: '/tr/packages/vue' },
@@ -72,6 +94,7 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/tr/packages/devtools' },
             { text: '@tuvix.js/server', link: '/tr/packages/server' },
+            { text: '@tuvix.js/vite', link: '/tr/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/tr/packages/module-federation',
@@ -86,7 +109,7 @@ export const trConfig: LocaleConfig<DefaultTheme.Config>[string] = {
     editLink: {
       pattern:
         'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
-      text: 'Bu sayfayı GitHub\'da düzenle',
+      text: "Bu sayfayı GitHub'da düzenle",
     },
 
     lastUpdated: {

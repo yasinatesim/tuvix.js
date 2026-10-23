@@ -1,157 +1,165 @@
-# With Angular
+# Angular ile
 
-`@tuvix.js/angular` provides Angular 15+ bindings for Tuvix.js, with first-class
-support for Angular 17+ standalone components and SSR hydration.
+`@tuvix.js/angular` bir Angular bileşenini mikro uygulama olarak bootstrap eder ve varsayılanda zone.js kullanmaz. Standalone bileşenleri sunucuda HTML'e de render eder.
 
-## Installation
+Angular 15 ve sonrasını destekler. `renderAngularToString` için Angular 16 veya sonrası ve `@angular/platform-server` gerekir.
+
+## Kurulum
 
 ```bash
-npm install @tuvix.js/angular @angular/core @angular/platform-browser-dynamic
-# or pnpm add @tuvix.js/angular @angular/core @angular/platform-browser-dynamic
+pnpm add @tuvix.js/angular @angular/core @angular/common @angular/platform-browser
+# JIT components (no AOT build step) also need the compiler
+pnpm add @angular/compiler
+# for renderAngularToString
+pnpm add @angular/platform-server
 ```
 
-## NgModule (Legacy)
-
-For Angular 15 / 16 or apps that haven't migrated to standalone components:
-
-```ts
-// app.module.ts
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule],
-  bootstrap: [AppComponent],
-})
-export class AppModule {}
-```
+## Bileşeni mikro uygulamaya dönüştürme
 
 ```ts
 // src/main.ts
 import { createAngularMicroApp } from '@tuvix.js/angular';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app.module';
+import { provideHttpClient } from '@angular/common/http';
+import { AdminComponent } from './admin.component';
 
 export default createAngularMicroApp({
   name: 'admin',
-  module: AppModule,
-  platform: platformBrowserDynamic,
-  selector: 'app-root', // optional, defaults to 'app-root'
-});
-```
-
-> The `platform` parameter is required so the consumer's Angular version is
-> used. This avoids running multiple incompatible Angular runtimes on the
-> same page.
-
-If the container already has an element matching `selector` (typical when SSR
-markup was injected), the binding reuses it instead of appending a duplicate.
-
-## Standalone Components + SSR (Angular 17+)
-
-For Angular 17+, prefer `createSsrAngularMicroApp` — it calls
-`bootstrapApplication` with `provideClientHydration` so SSR markup is
-hydrated rather than re-rendered:
-
-```ts
-// src/main.ts
-import { createSsrAngularMicroApp } from '@tuvix.js/angular';
-import { AboutComponent } from './about.component';
-import { provideHttpClient } from '@angular/common/http';
-
-export default createSsrAngularMicroApp({
-  name: 'about-angular-app',
-  component: AboutComponent,
+  component: AdminComponent,
   providers: [provideHttpClient()],
 });
 ```
 
-Pair this with `renderAngularToString` from `@tuvix.js/angular/server`.
+| Seçenek | Tip | Açıklama |
+| --- | --- | --- |
+| `name` | `string` | Zorunlu. Kayıtlı uygulama adıyla aynı olmalı. |
+| `component` | `Type<C>` | Zorunlu. Kök bileşen; standalone ya da `module` içinde tanımlı. |
+| `module` | `Type<unknown>` | `component` bileşenini tanımlayan NgModule. Provider'ları `importProvidersFrom` ile içe aktarılır. |
+| `providers` | `Array<Provider \| EnvironmentProviders>` | Environment provider'ları. |
+| `selector` | `string` | Host elemanının etiketi. Varsayılan: bileşen selector'ının eleman kısmı, o da yoksa `div`. |
+| `zone` | `boolean` | zone.js ile change detection kullanır. Varsayılan `false`. |
+| `ssr` | `boolean` | `renderAngularToString` çıktısı olan markup'ı devralır. `createSsrAngularMicroApp` bunu açar. |
+| `bootstrap` | `() => void \| Promise<void>` | İlk mount'tan önce bir kez çalışır. |
 
-## Receiving Props
+Her mount `createApplication` çağırır ve bileşeni container içindeki kendi host elemanına bootstrap eder. Aynı sayfadaki iki Angular uygulaması ya da iki container'daki tek modül, ortak bir `app-root` üzerinde çakışmaz.
 
-Angular doesn't have a built-in "update props" channel, so the orchestrator's
-`updateAppProps()` writes the latest props to:
+Bileşende derlenmiş `ɵcmp` yoksa (JIT), adaptör `@angular/compiler` paketini `@angular/platform-browser` paketinden önce yükler. Bu yalnızca adaptör, `@angular/core` dışında bir Angular paketini yükleyen ilk kodsa işe yarar. Bileşen dosyalarınız `@angular/common` (`NgIf`, `AsyncPipe`, `CommonModule`), `@angular/forms`, `@angular/router` ya da başka bir Angular kütüphanesini import ediyorsa bu paketler adaptör çalışmadan önce değerlendirilir ve "JIT compilation failed" hatasıyla başarısız olur. `import '@angular/compiler'` satırını client entry'nizin ilk satırı olarak tutun ya da AOT ile build alın.
 
-```ts
-window.__TUVIX_ANGULAR_PROPS__[name] = props;
-```
+## Props'tan gelen input'lar
 
-Read them inside an Angular service or component:
-
-```ts
-import { Injectable } from '@angular/core';
-
-@Injectable({ providedIn: 'root' })
-export class TuvixPropsService {
-  get<T>(name: string): T | undefined {
-    return (window as any).__TUVIX_ANGULAR_PROPS__?.[name];
-  }
-}
-```
+Props'ları bileşen input'ları olarak tanımlayın:
 
 ```ts
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  template: `<h1>User: {{ userId }}</h1>`,
+  selector: 'app-admin',
   standalone: true,
+  template: `<h1>Admin for {{ userId }}</h1>`,
 })
-export class AppComponent implements OnInit {
-  userId = '';
+export class AdminComponent {
+  @Input() userId = '';
+}
+```
 
-  constructor(private tuvixProps: TuvixPropsService) {}
+- Mount, input'ları ilk change detection'dan önce `ComponentRef.setInput` ile atar; böylece `ngOnInit` bunları görür.
+- `update({ props })` yeni değerleri atar ve change detection çalıştırır. `container` verilirse yalnızca o mount'u günceller.
+- Input olmayan anahtarlar atlanır. Yeni props'ta olmayan input'lar `undefined` değerine döner.
 
-  ngOnInit() {
-    const props = this.tuvixProps.get<{ userId: string }>('admin');
-    this.userId = props?.userId ?? '';
+## zone.js olmadan change detection
+
+Adaptör zone.js'i hiçbir zaman import etmez, bu yüzden sayfada ya da sunucuda `Promise`, zamanlayıcılar veya DOM olayları üzerinde yama yapmaz. Provider'ı Angular sürümüne göre seçer:
+
+| Angular | Provider | DOM olayları change detection tetikler mi |
+| --- | --- | --- |
+| 20+ | `provideZonelessChangeDetection()` | evet |
+| 18-19 | `provideExperimentalZonelessChangeDetection()` | evet |
+| 15-17 | `NgZone` yerine işlem yapmayan bir zone | hayır |
+
+Angular 15-17'de bir tıklamadan sonra change detection'ı hiçbir şey çalıştırmaz. Handler'larınızda `detectChanges()` çağırın:
+
+```ts
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+
+@Component({
+  selector: 'app-counter',
+  standalone: true,
+  template: `<button (click)="add()">{{ count }}</button>`,
+})
+export class CounterComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+  count = 0;
+
+  add(): void {
+    this.count += 1;
+    this.cdr.detectChanges();
   }
 }
 ```
 
-For reactive props, prefer wiring `orchestrator.getEventBus()` to a
-`BehaviorSubject` inside a shared service — this gives you fine-grained
-change detection on every `updateAppProps()` call.
+Zone tabanlı change detection'ı korumak için istemci entry'nizin en üstünde `zone.js` import edin ve `zone: true` geçirin. zone.js yüklü değilse `mount` reject olur.
 
-## Event Bus Integration
+## Sunucuda render
 
 ```ts
-import { Component, OnDestroy } from '@angular/core';
-import type { IEventBus } from '@tuvix.js/event-bus';
+// server-only module
+import { renderAngularToString } from '@tuvix.js/angular/server';
+import { AboutComponent } from './about.component';
+
+export async function renderAbout(): Promise<string> {
+  return renderAngularToString(AboutComponent, { appId: 'about', props: { userId: '42' } });
+}
+```
+
+```ts
+// client
+import { createSsrAngularMicroApp } from '@tuvix.js/angular';
+import { AboutComponent } from './about.component';
+
+export const about = createSsrAngularMicroApp({ name: 'about', component: AboutComponent });
+```
+
+- `renderAngularToString(component, { props?, providers?, appId?, document?, selector? })` önce bileşenin `<style>` etiketlerini, ardından host elemanını döndürür. Böylece island ilk boyamada stilli görünür. Zone olmadan çalışır.
+- `props`, istemcide `mount` ne yapıyorsa onu yapar: bileşen input'larını ilk change detection'dan önce atar. Input olmayan anahtarlar atlanır. İstemcide island'a aynı props'u verin, yoksa hydration farklı içerik gösterir.
+- Bileşenin başlattığı HTTP isteklerini veya zamanlayıcıları beklemez. Veriyi önce yükleyin ve provide edin.
+- Sunucu kodundan çağırın. Tarayıcıda `''` döndürür.
+
+İstemcide `createSsrAngularMicroApp` sunucunun host elemanına render eder, Angular kendi stillerini ekledikten sonra sunucudan gelen satır içi `<style>` etiketlerini kaldırır. `tuvix:mounted` olayı `hydrated: true` bildirir. Bu işlem sunucu DOM'unu değiştirir. Angular'ın yıkıcı olmayan hydration'ı doğrudan `<body>` altında bir işaretçi ister; başka bir sayfanın içindeki island bunu sağlayamaz. Bu yüzden adaptör `provideClientHydration()` eklemez.
+
+## Event bus
+
+```ts
+import { Component, OnDestroy, signal } from '@angular/core';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
 @Component({
-  selector: 'cart-badge',
-  template: `<span>{{ count }}</span>`,
+  selector: 'app-cart-badge',
   standalone: true,
+  template: `<span>{{ count() }}</span>`,
 })
 export class CartBadgeComponent implements OnDestroy {
-  count = 0;
-  private unsub: () => void = () => {};
+  readonly count = signal(0);
+  private readonly off = getGlobalBus().on<{ itemCount: number }>('cart:updated', ({ itemCount }) =>
+    this.count.set(itemCount),
+  );
 
-  constructor() {
-    const bus: IEventBus = (window as any).__tuvixBus;
-    this.unsub = bus.on<{ itemCount: number }>('cart:updated', ({ itemCount }) => {
-      this.count = itemCount;
-    });
-  }
-
-  ngOnDestroy() {
-    this.unsub();
+  ngOnDestroy(): void {
+    this.off();
   }
 }
 ```
 
-> A clean pattern is to expose `orchestrator.getEventBus()` on `window` once
-> during shell startup so micro apps can grab it without dependency injection
-> across the shell boundary.
+Angular 18+ zoneless modda signal'lar change detection'ı kendileri planlar. 15-17'de `set` çağrısından sonra `ChangeDetectorRef.detectChanges()` çağırın.
 
-## API Surface
+## Adaptörün yapmadıkları
 
-| Export | Purpose |
+- zone.js'i veya `@angular/localize` paketini yüklemez. Gerekiyorsa entry dosyanızda import edin.
+- Yıkıcı olmayan hydration yapmaz; yukarıya bakın.
+- Mount'lar arasında state paylaştırmaz. Her mount kendi root injector'ı olan ayrı bir Angular uygulamasıdır, yani `providedIn: 'root'` bir servis her mount için bir kez oluşur.
+
+## API
+
+| Export | Amaç |
 | --- | --- |
-| `createAngularMicroApp({ name, module, platform, selector?, compilerOptions?, bootstrap? })` | NgModule micro app |
-| `createSsrAngularMicroApp({ name, component, providers?, selector?, bootstrap? })` | Standalone component + SSR / hydration |
-| `renderAngularToString(...)` (from `/server`) | SSR render to HTML string |
+| `createAngularMicroApp({ name, component, module?, providers?, selector?, zone?, ssr?, bootstrap? })` | Angular mikro uygulama modülü |
+| `createSsrAngularMicroApp(config)` | `ssr: true` ile aynısı |
+| `@tuvix.js/angular/server` paketinden `renderAngularToString(component, options?)` | Stiller + host elemanı HTML'i |

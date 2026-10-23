@@ -1,151 +1,172 @@
-# Lifecycle Hook'ları
+# Lifecycle hook'ları
 
-## Genel Bakış
+Orchestrator kayıtlı her uygulamayı sabit bir hook ve durum sırasından geçirir. Bu sayfa modülünüzün uyguladığı hook'ları, shell'in okuyabildiği durumları ve hatalarda ya da hızlı navigasyonda ne olduğunu anlatır. Bir uygulamanın sayfada olduğunu dışarıdan öğrenmek için [Lifecycle olayları](/tr/guide/lifecycle-events) sayfasına bakın.
 
-Tuvix.js'teki her mikro uygulama tahmin edilebilir bir lifecycle takip eder.
-Orchestrator hook'ları uygun zamanlarda çağırır — siz onları loader'a dönen
-module üzerinde implement edersiniz.
+## Hook sırası
 
+```text
+register()
+  └─ first activation: load entry → bootstrap() → mount()
+       ├─ updateAppProps() while mounted → update()
+       └─ deactivation → unmount()
+  └─ next activation: mount()   (module cached, no bootstrap)
 ```
-register()  →  bootstrap()  →  mount()  →  update()*  →  unmount()
-                                              ↑   mounted iken döngü
-```
 
-`bootstrap()` sayfa ömrü boyunca yalnızca bir kez çalışır. `mount()` ve
-`unmount()` uygulamanın route'u her aktif/pasif olduğunda çalışır. `update()`
-opsiyoneldir ve shell `orchestrator.updateAppProps()` ile yeni props
-gönderdiğinde çalışır.
-
-## Module Şekli
-
-Tüm hook'lar tek bir context objesi alır — asla pozisyonel argüman değil.
-
-```ts
-interface MicroAppModule {
-  bootstrap?: () => void | Promise<void>;
-  mount: ({ container, props }) => void | Promise<void>;
-  unmount: ({ container }) => void | Promise<void>;
-  update?: ({ props }) => void | Promise<void>;
-}
-```
+Orchestrator her hook'u await eder. Hâlâ mount edilmekte olan bir uygulamada `mount` çağırmaz. `mount` çalışırken de `unmount` çağırmaz: unmount, mount'un tamamlanmasını bekler.
 
 ## bootstrap
 
-İlk `mount()`'tan önce bir kez çağrılır. Veri ön yükleme, global'leri
-register etme veya cache ısıtma gibi tek seferlik kurulum için kullanın.
+Yüklenen her modül için bir kez, entry yüklendikten sonra ve ilk `mount` çağrısından önce çalışır. Yapılandırma okumak gibi remount'lardan sonra da geçerli kalması gereken işler için kullanın.
 
 ```ts
-async bootstrap() {
-  await preloadCriticalChunks();
-}
+import { defineMicroApp } from '@tuvix.js/core';
+
+let config: { apiUrl: string } | undefined;
+
+export default defineMicroApp({
+  name: 'reports',
+  async bootstrap() {
+    const response = await fetch('/reports/config.json');
+    config = (await response.json()) as { apiUrl: string };
+  },
+  mount({ container }) {
+    container.textContent = `API: ${config?.apiUrl ?? 'unknown'}`;
+  },
+  unmount({ container }) {
+    container.replaceChildren();
+  },
+});
 ```
 
-`bootstrap()` throw ederse, orchestrator uygulamayı `error` olarak işaretler
-ve bus'a `app:error` emit eder.
+`bootstrap` hata fırlatırsa uygulama `error` durumuna geçer ve mount başarısız olur. Bir sonraki mount denemesi `bootstrap` fonksiyonunu tekrar çağırır. Bir kez başarıyla çalıştıktan sonra remount'lar onu atlar.
 
 ## mount
 
-Uygulamanın route'u aktif olduğunda (veya `mountApp()` manuel çağrıldığında)
-çalışır. UI'ınızı verilen container'a render edin.
+Uygulama her aktif olduğunda ya da `mountApp(name)` çağırdığınızda çalışır. Context şunları içerir:
 
-```ts
-async mount({ container, props }) {
-  this._root = createRoot(container);
-  this._root.render(<App {...props} />);
-}
-```
+| Alan | Değer |
+| --- | --- |
+| `container` | İçine render edilecek eleman. `sandbox: true` uygulamalarında shadow root içindeki bir eleman. |
+| `props` | Kayıtlı props'ların, yapılan her `updateAppProps` çağrısıyla birleştirilmiş hali. |
+| `name` | Kayıtlı uygulama adı. |
+| `bus` | Orchestrator'ın event bus'ı. |
 
-`props`, `register({ props })`'a iletilenlerdir (sonradan yapılan
-`updateAppProps()` çağrılarıyla birleştirilmiş halde).
-
-## unmount
-
-Route deaktif olduğunda çalışır. **Burada her zaman temizleme yapın** —
-framework instance'larını yok edin, event'lerden unsubscribe olun, timer'ları
-temizleyin.
-
-```ts
-async unmount({ container }) {
-  this._root?.unmount();
-  this._root = null;
-  container.innerHTML = '';
-}
-```
-
-::: warning
-Temizliği atlamaktan kaynaklanan memory leak'ler en yaygın mikro frontend
-bug'ıdır. Orchestrator framework instance'larınızı sizin için yok etmez.
-:::
+`mountApp(name)`, `mount` tamamlandıktan sonra resolve olur; yükleme ya da mount hatasıyla reject olur.
 
 ## update
 
-Opsiyonel. Shell unmount **etmeden** yeni props gönderdiğinde çalışır:
+Uygulama mount edilmişken shell `updateAppProps(name, props)` çağırdığında çalışır:
 
 ```ts
-await orchestrator.updateAppProps('dashboard', { theme: 'dark' });
+import { createOrchestrator } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator();
+await orchestrator.updateAppProps('reports', { range: '7d' });
 ```
 
-UI'ı yerinde patch'lemek için implement edin — bu unmount/remount
-döngüsünün flicker'ını önler:
+Context birleştirilmiş `props` ve `container` değerlerini içerir. `update` yoksa ya da uygulama mount edilmemişse orchestrator props'ları saklar ve bir sonraki `mount` çağrısına geçer. Props değişti diye bir uygulamayı asla remount etmez.
+
+`updateAppProps` önce bekleyen bir mount varsa onu bekler. Böylece güncelleme yeni instance'a ulaşır. Güncelleme sırasında gelen bir `unmount` güncellemeyi bekler.
+
+## unmount
+
+Uygulama pasif olduğunda, `unmountApp(name)`, `unregister(name)` ve `destroy()` çağrılarında çalışır. `mount` fonksiyonunun oluşturduğu her şeyi kaldırın: framework root'ları, listener'lar, timer'lar, bus abonelikleri.
+
+`unmount` sonrasında orchestrator uygulamanın entry stil dosyalarını `document.head` içinden kaldırır. Bir sonraki mount onları geri ekler ve yüklenmelerini bekler.
+
+## Uygulama durumu
 
 ```ts
-async update({ props }) {
-  this._root?.render(<App {...props} />);
-}
+import { createOrchestrator, type AppStatus } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator();
+const status: AppStatus | null = orchestrator.getAppStatus('reports');
+// 'registered' | 'bootstrapping' | 'bootstrapped' | 'mounting' | 'mounted'
+// | 'updating' | 'unmounting' | 'unmounted' | 'error' | null (kayıtlı değil)
 ```
 
-`update()` implement edilmezse, yeni props saklanır ve uygulama bir sonraki
-mount'ta uygulanır. Uygulama yalnızca props değiştiği için **otomatik olarak
-yeniden mount edilmez**.
+| Metot | Döndürdüğü |
+| --- | --- |
+| `getAppStatus(name)` | Durum; bilinmeyen bir ad için `null`. |
+| `getMountedApps()` | Durumu `mounted` olan adlar. |
+| `getRegisteredApps()` | Kayıtlı tüm adlar. |
 
-## Manuel Lifecycle Kontrolü
+## Hatalar ve fallback
 
-Shell, lifecycle'ı router üzerinden geçmeden doğrudan yönetebilir:
+Yükleme, `bootstrap` veya `mount` başarısız olduğunda orchestrator:
+
+1. tanımladıysanız uygulamanın `fallback` HTML'ini container'ına yazar;
+2. durumu `error` yapar;
+3. bus üzerinde `{ name, error, phase }` ile `OrchestratorEvent.APP_ERROR` (`tuvix:app:error`) olayını yayınlar;
+4. `onError(error, name)` çağırır;
+5. `mountApp` çağrısını reject eder. Route değişikliği sırasında başarısız olan bir mount bunun yerine `console.error` ile loglanır ve diğer uygulamalar yine mount edilir.
+
+Başarısız bir `update` veya `unmount`, 2 ile 4 arasındaki adımları çalıştırır ve `updateAppProps` ya da `unmountApp` çağrısını reject eder; fallback HTML yazmaz. `phase` değeri `'load'` (container'ın çözülmesi de buna dahildir), `'bootstrap'`, `'mount'`, `'update'` veya `'unmount'` olur.
 
 ```ts
-await orchestrator.mountApp('dashboard');
-await orchestrator.unmountApp('dashboard');
-await orchestrator.unregister('dashboard');
+import { createOrchestrator, OrchestratorEvent, type AppErrorEvent } from '@tuvix.js/core';
 
-orchestrator.getAppStatus('dashboard');
-// 'registered' | 'bootstrapping' | 'bootstrapped' | 'mounting'
-//   | 'mounted' | 'updating' | 'unmounting' | 'unmounted' | 'error'
+const orchestrator = createOrchestrator();
+orchestrator.getEventBus().on<AppErrorEvent>(OrchestratorEvent.APP_ERROR, ({ name, phase, error }) => {
+  console.error(`${name} failed during ${phase}`, error);
+});
 ```
 
-## Shell Seviyesi Hook'lar
+`error` durumundaki bir uygulamayı aktifleştiren bir sonraki route değişikliği onu yeniden mount etmeyi dener.
 
-Shell genelinde reaksiyonları orchestrator config callback'leri veya event
-bus'a subscribe olarak bağlayın:
+## Hızlı navigasyon
+
+Route değişiklikleri sırayla, birer birer reconcile edilir. Pasif uygulamalar, aktif uygulamalar mount edilmeden önce unmount edilir. Path'ler uygulamaların mount hızından daha hızlı gelirse:
+
+- yalnızca kuyruktaki en yeni path bir sonraki sırada çalışır;
+- entry'si yüklenirken pasif olan bir uygulama mount adımını atlar;
+- `mount` çalışırken pasif olan bir uygulama, `mount` tamamlanır tamamlanmaz unmount edilir.
+
+Bu yüzden A → B → A şeklinde art arda hızlı navigasyon yalnızca A mount edilmiş halde biter ve hiçbir uygulama başka bir uygulamanın hâlâ tuttuğu bir container'a render etmez.
+
+## Shell düzeyindeki hook'lar
 
 ```ts
 import { createOrchestrator, OrchestratorEvent } from '@tuvix.js/core';
 
 const orchestrator = createOrchestrator({
-  router: { /* ... */ },
-
-  onError(error, name) {
-    reportToSentry(error, { app: name });
-  },
-
-  onStatusChange(name, status) {
-    console.log(`[${name}] → ${status}`);
-  },
+  onError: (error, name) => console.error(`[${name}]`, error),
+  onStatusChange: (name, status) => console.debug(`[${name}] ${status}`),
 });
 
 const bus = orchestrator.getEventBus();
-bus.on(OrchestratorEvent.APP_MOUNT,   ({ name }) => analytics.track('app_mount', { name }));
-bus.on(OrchestratorEvent.APP_UNMOUNT, ({ name }) => analytics.track('app_unmount', { name }));
-bus.on(OrchestratorEvent.ROUTE_CHANGE, ({ from, to }) => analytics.page(to, { from }));
+bus.on<{ name: string }>(OrchestratorEvent.APP_MOUNT, ({ name }) => {
+  console.log('mounted', name);
+});
+bus.on<{ name: string }>(OrchestratorEvent.APP_UNMOUNT, ({ name }) => {
+  console.log('unmounted', name);
+});
+bus.on<{ to: string }>(OrchestratorEvent.ROUTE_CHANGE, ({ to }) => {
+  console.log('route', to);
+});
 ```
 
-## Tear Down
+| Olay | Payload | Ne zaman yayınlanır |
+| --- | --- | --- |
+| `tuvix:app:registered` | `{ name }` | `register()` |
+| `tuvix:app:bootstrap` | `{ name }` | `bootstrap` sonrasında |
+| `tuvix:app:mount` | `{ name }` | `mount` sonrasında |
+| `tuvix:app:unmount` | `{ name }` | `unmount` sonrasında |
+| `tuvix:app:error` | `{ name, error, phase }` | yükleme, bootstrap, mount, update veya unmount başarısız olduğunda |
+| `tuvix:app:status-change` | `{ name, status }` | her durum değişikliğinde |
+| `tuvix:route:change` | `{ from, to, fromRoute, toRoute }` | yalnızca yerleşik router navigasyonunda |
+| `tuvix:started` | `{}` | `start()` sonunda |
+| `tuvix:destroyed` | `{}` | `destroy()` sonunda |
 
-`destroy()` idempotent'tir — sayfa shell'den ayrıldığında çağırın:
+Bu bus olaylarını orchestrator yayınlar. [Lifecycle olayları](/tr/guide/lifecycle-events) sayfasındaki `tuvix:mounted` DOM olayları ise adaptörlerden ve `defineMicroApp` fonksiyonundan gelir. Bu olaylar orchestrator olmadan mount edilen island'lar için de tetiklenir.
+
+## Kapatma
 
 ```ts
+import { createOrchestrator } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator();
 await orchestrator.destroy();
 ```
 
-Tüm aktif uygulamaları unmount eder, viewport observer'ı disconnect eder,
-router'ı unsubscribe eder, loader cache'i temizler ve son olarak event bus'ı
-yıkar.
+`destroy()` çalışan bir reconcile varsa onu bekler, tüm uygulamaları unmount eder; router'ı, `connectRouter` aboneliklerini, prefetch'i ve viewport observer'ını durdurur ve loader önbelleğini temizler. Özel bir event bus'ı yok eder, global bus'a dokunmaz. İki kez çağırmak güvenlidir. Sonrasında `register`, `start`, `mountApp`, `unmountApp`, `unregister`, `reconcile` ve `connectRouter` hata fırlatır; bunun yerine yeni bir orchestrator oluşturun.
