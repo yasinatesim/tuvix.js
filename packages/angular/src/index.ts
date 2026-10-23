@@ -1,110 +1,238 @@
+import type { ApplicationRef, ComponentRef, Type } from '@angular/core';
+import {
+  emitLifecycle,
+  hasServerMarkup,
+  registerModule,
+} from '@tuvix.js/loader';
 import type {
   MicroAppModule,
   MountContext,
   UnmountContext,
   UpdateContext,
 } from '@tuvix.js/loader';
+import {
+  applyInputs,
+  bootstrapInto,
+  changeDetectionProviders,
+  ensureCompiler,
+  hostTagName,
+  inputNames,
+  type AngularCore,
+  type AngularProviders,
+  type Props,
+} from './shared';
+
+export type { AngularProviders } from './shared';
 
 // ─── Types ──────────────────────────────────────────
 
-export interface AngularMicroAppConfig {
-  /** Unique name for the micro app */
+export interface AngularMicroAppConfig<C = unknown> {
+  /** Unique name for the micro app. */
   name: string;
 
   /**
-   * Angular NgModule class to bootstrap.
-   * Must be decorated with @NgModule.
-   *
-   * @legacy Use `createSsrAngularMicroApp` for standalone components with SSR support.
+   * Root component. Standalone components work on their own. A component
+   * declared in an NgModule also needs that module in `module`.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  module: any;
+  component: Type<C>;
 
   /**
-   * The `platformBrowserDynamic` function from `@angular/platform-browser-dynamic`.
-   * Must be passed by the consumer to ensure the correct Angular version is used.
-   *
-   * @example
-   * ```ts
-   * import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-   * createAngularMicroApp({ ..., platform: platformBrowserDynamic });
-   * ```
+   * NgModule that declares `component`. The adapter imports its providers
+   * through `importProvidersFrom`.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  platform: () => any;
+  module?: Type<unknown>;
+
+  /** Environment providers for the app, such as `provideHttpClient()`. */
+  providers?: AngularProviders;
 
   /**
-   * CSS selector of the bootstrap component (default: 'app-root').
-   * Must match the selector in the @Component decorator.
+   * Tag name of the host element the adapter creates inside the container.
+   * Default: the element part of the component selector, or `div` when the
+   * selector has no element part.
    */
   selector?: string;
 
   /**
-   * Optional Angular compiler options.
+   * Run change detection through zone.js. Default `false`: the app runs
+   * zoneless and the adapter never loads zone.js.
+   *
+   * Set `true` only after your client entry imported `zone.js`; mount throws
+   * otherwise. On Angular 15-17 without zone.js, nothing runs change
+   * detection after DOM events, so call `ChangeDetectorRef.detectChanges()`
+   * in your handlers. Angular 18+ schedules it for you.
    */
-  compilerOptions?: Record<string, unknown>;
+  zone?: boolean;
 
-  /** Optional one-time setup */
+  /**
+   * Adopt markup from `renderAngularToString` when the container holds it.
+   * Angular re-renders into the server-rendered host element and drops the
+   * inlined server `<style>` tags once its own styles are in `<head>`. This
+   * is not Angular's non-destructive hydration.
+   */
+  ssr?: boolean;
+
+  /** Optional one-time setup. */
   bootstrap?: () => void | Promise<void>;
 }
+
+/** Config for {@link createSsrAngularMicroApp}; `ssr` is always on. */
+export type AngularSsrMicroAppConfig<C = unknown> = Omit<
+  AngularMicroAppConfig<C>,
+  'ssr'
+>;
 
 export interface AngularSsrOptions {
-  /** Additional providers for SSR */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  providers?: any[];
-  /** App ID for hydration matching (default: 'tuvix-app') */
+  /** Environment providers for the server render. */
+  providers?: AngularProviders;
+  /**
+   * Angular `APP_ID` for the server render. Angular puts it in the
+   * `ng-app-id` attribute of the style tags. Default: Angular's `ng`.
+   */
   appId?: string;
-  /** The HTML document template. Default: minimal HTML wrapping the selector */
+  /**
+   * HTML document to render into. It must contain the component's host
+   * element. Default: an empty document with the host element in `<body>`.
+   */
   document?: string;
-  /** Component selector (default: 'app-root') */
+  /** Host element tag name. Default: the element part of the component selector. */
   selector?: string;
+  /**
+   * Values for the component inputs, keyed by input name (or alias). The
+   * server sets them before the first change detection, the same way the
+   * client adapter does on mount, so pass the same object to both sides.
+   * Keys that are not inputs are skipped.
+   */
+  props?: Record<string, unknown>;
 }
 
-export interface AngularSsrMicroAppConfig {
-  /** Unique name for the micro app */
-  name: string;
-  /** Standalone Angular component (Angular 17+) */
-  component: unknown;
-  /** Angular providers for the app */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  providers?: any[];
-  /** Component selector (default: 'app-root') */
-  selector?: string;
-  /** Optional one-time setup */
-  bootstrap?: () => void | Promise<void>;
-}
+// ─── Internals ──────────────────────────────────────
 
-// ─── createAngularMicroApp (NgModule / legacy) ──────
+interface AngularInstance {
+  container: HTMLElement;
+  hydrated: boolean;
+  /** Latest props; a pending mount reads them when it bootstraps. */
+  props: Props;
+  appRef: ApplicationRef | null;
+  componentRef: ComponentRef<unknown> | null;
+  core: AngularCore | null;
+  inputs: ReadonlySet<string>;
+  /** Set by `unmount` while the mount is still awaiting imports. */
+  cancelled: boolean;
+  /** Settles when the mount finished, failed or was cancelled. */
+  ready: Promise<void>;
+}
 
 /**
- * Create a Tuvix.js micro app module from an Angular NgModule.
- *
- * Handles `platformBrowserDynamic().bootstrapModule()` and `appRef.destroy()`
- * lifecycle automatically.
- *
- * @legacy For Angular 17+ standalone components with SSR, use `createSsrAngularMicroApp`.
- *
- * @example
- * ```ts
- * import { createAngularMicroApp } from '@tuvix.js/angular';
- * import { AppModule } from './app.module';
- *
- * import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
- *
- * export default createAngularMicroApp({
- *   name: 'admin',
- *   module: AppModule,
- *   platform: platformBrowserDynamic,
- * });
- * ```
+ * Reuse the server-rendered host element when it is a direct child of the
+ * container; otherwise replace the container content with a fresh one.
  */
-export function createAngularMicroApp(
-  config: AngularMicroAppConfig
+function resolveHost(
+  container: HTMLElement,
+  tag: string,
+  adopt: boolean
+): HTMLElement {
+  if (adopt) {
+    for (const child of Array.from(container.children)) {
+      if (child.localName === tag) return child as HTMLElement;
+    }
+  }
+  const host = container.ownerDocument.createElement(tag);
+  container.replaceChildren(host);
+  return host;
+}
+
+function createAngularModule(
+  config: AngularMicroAppConfig,
+  ssr: boolean
 ): MicroAppModule {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let appRef: any = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let platformRef: any = null;
+  const { name } = config;
+  const instances = new WeakMap<HTMLElement, AngularInstance>();
+  // A WeakMap cannot be iterated; `update` without a container reaches every live instance.
+  const live = new Set<AngularInstance>();
+
+  async function start(instance: AngularInstance): Promise<void> {
+    const { container } = instance;
+    await ensureCompiler([
+      { type: config.component, key: 'ɵcmp' },
+      ...(config.module ? [{ type: config.module, key: 'ɵmod' as const }] : []),
+    ]);
+    // Dynamic on purpose: `@angular/platform-browser` loads `@angular/common`,
+    // which needs the compiler from `ensureCompiler` when the code is JIT.
+    const core = await import('@angular/core');
+    const { createApplication } = await import('@angular/platform-browser');
+
+    const providers: AngularProviders = [
+      ...changeDetectionProviders(core, config.zone === true, name),
+      ...(config.module ? [core.importProvidersFrom(config.module)] : []),
+      ...(config.providers ?? []),
+    ];
+    const appRef = await createApplication({ providers });
+    if (instance.cancelled) {
+      appRef.destroy();
+      return;
+    }
+
+    try {
+      const tag =
+        config.selector ?? hostTagName(core, config.component) ?? 'div';
+      const host = resolveHost(container, tag, instance.hydrated);
+      const inputs = inputNames(core, config.component);
+      const zone = appRef.injector.get(core.NgZone);
+      // Bootstrap inside the zone so template listeners trigger change
+      // detection when `zone: true`. NoopNgZone runs the callback directly.
+      const componentRef = zone.run(() =>
+        bootstrapInto(
+          core,
+          appRef,
+          config.component,
+          host,
+          inputs,
+          instance.props
+        )
+      );
+      // The component styles are in <head> now; drop the inlined server
+      // styles and any other server leftovers next to the host.
+      if (instance.hydrated) container.replaceChildren(host);
+
+      instance.core = core;
+      instance.appRef = appRef;
+      instance.componentRef = componentRef;
+      instance.inputs = inputs;
+    } catch (error) {
+      appRef.destroy();
+      throw error;
+    }
+  }
+
+  function teardown(instance: AngularInstance): void {
+    const { container, appRef, hydrated } = instance;
+    instance.appRef = null;
+    instance.componentRef = null;
+    try {
+      if (appRef && !appRef.destroyed) appRef.destroy();
+    } catch (error) {
+      emitLifecycle('error', { name, container, hydrated, error });
+      throw error;
+    } finally {
+      // The app is gone either way; report it so `isMounted` turns false.
+      container.replaceChildren();
+      emitLifecycle('unmounted', { name, container, hydrated });
+    }
+  }
+
+  // The synchronous part removes the instance from the maps right away, so a
+  // later mount or unmount on the same container never sees it.
+  async function stop(container: HTMLElement): Promise<void> {
+    const instance = instances.get(container);
+    if (!instance) return;
+    instances.delete(container);
+    live.delete(instance);
+    instance.cancelled = true;
+    // Wait for an in-flight mount so it cannot leave an orphan app behind.
+    await instance.ready.catch(() => undefined);
+    // A mount cancelled before bootstrap destroyed its own app already.
+    if (instance.appRef) teardown(instance);
+  }
 
   const module: MicroAppModule = {
     async bootstrap() {
@@ -113,68 +241,133 @@ export function createAngularMicroApp(
       }
     },
 
-    async mount({ container }: MountContext) {
-      // Reuse an existing selector element (e.g. SSR markup) instead of always
-      // appending a new one — appending a duplicate would leave Angular
-      // bootstrapping into the first match and the second sibling orphaned.
-      const selector = config.selector ?? 'app-root';
-      let appRoot = container.querySelector(selector);
-      if (!appRoot) {
-        appRoot = document.createElement(selector);
-        container.appendChild(appRoot);
+    async mount({ container, props }: MountContext) {
+      const stopping = stop(container);
+
+      const instance: AngularInstance = {
+        container,
+        hydrated: false,
+        props: { ...props },
+        appRef: null,
+        componentRef: null,
+        core: null,
+        inputs: new Set(),
+        cancelled: false,
+        ready: Promise.resolve(),
+      };
+      // Register before the first await so an unmount that arrives while
+      // this mount is pending finds the instance and cancels it.
+      instances.set(container, instance);
+      live.add(instance);
+      instance.ready = (async () => {
+        await stopping;
+        if (instance.cancelled) return;
+        instance.hydrated = ssr && hasServerMarkup(container);
+        await start(instance);
+      })();
+
+      try {
+        await instance.ready;
+      } catch (error) {
+        if (instances.get(container) === instance) {
+          instances.delete(container);
+          live.delete(instance);
+        }
+        emitLifecycle('error', {
+          name,
+          container,
+          hydrated: instance.hydrated,
+          error,
+        });
+        throw error;
       }
 
-      platformRef = config.platform();
-      appRef = await platformRef.bootstrapModule(
-        config.module,
-        config.compilerOptions
-      );
+      // A mount cancelled before bootstrap has no app; one cancelled after
+      // reports `mounted` here and `unmounted` from the pending `stop`.
+      if (instance.appRef) {
+        emitLifecycle('mounted', {
+          name,
+          container,
+          hydrated: instance.hydrated,
+        });
+      }
     },
 
     async unmount({ container }: UnmountContext) {
-      if (appRef) {
-        appRef.destroy();
-        appRef = null;
-      }
-      if (platformRef) {
-        platformRef.destroy();
-        platformRef = null;
-      }
-      container.innerHTML = '';
+      await stop(container);
     },
 
-    async update({ props }: UpdateContext) {
-      // Angular doesn't have a direct "update props" mechanism.
-      // Emit an event via the event bus instead, or use a shared service.
-      if (appRef && typeof window !== 'undefined') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-        // Initialize the registry if absent — guard was previously inverted, causing silent drops
-        win.__TUVIX_ANGULAR_PROPS__ = win.__TUVIX_ANGULAR_PROPS__ ?? {};
-        win.__TUVIX_ANGULAR_PROPS__[config.name] = props;
+    async update({ props, container }: UpdateContext) {
+      let targets: AngularInstance[];
+      if (container) {
+        const instance = instances.get(container);
+        targets = instance ? [instance] : [];
+      } else {
+        targets = Array.from(live);
+      }
+      for (const instance of targets) {
+        const previous = instance.props;
+        instance.props = { ...props };
+        const { appRef, componentRef, core } = instance;
+        // Still mounting: the bootstrap picks up `instance.props`.
+        if (!appRef || !componentRef || !core) continue;
+        appRef.injector.get(core.NgZone).run(() => {
+          applyInputs(componentRef, instance.inputs, instance.props, previous);
+          appRef.tick();
+        });
       }
     },
   };
 
-  // Register in global module registry
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    win.__TUVIX_MODULES__ = win.__TUVIX_MODULES__ ?? {};
-    win.__TUVIX_MODULES__[config.name] = module;
-  }
+  registerModule(name, module);
 
   return module;
+}
+
+// ─── createAngularMicroApp ──────────────────────────
+
+/**
+ * Create a Tuvix.js micro app module from an Angular component.
+ *
+ * Each `mount` creates its own application with `createApplication` and
+ * bootstraps the component into a host element inside the container, so two
+ * apps on one page never share an `app-root`. Props reach the component
+ * through `ComponentRef.setInput`, at mount and on `update`. The app runs
+ * without zone.js unless you pass `zone: true`. JIT components get
+ * `@angular/compiler` loaded before `@angular/platform-browser`.
+ *
+ * @example
+ * ```ts
+ * import { createAngularMicroApp } from '@tuvix.js/angular';
+ * import { provideHttpClient } from '@angular/common/http';
+ * import { AdminComponent } from './admin.component';
+ *
+ * export default createAngularMicroApp({
+ *   name: 'admin',
+ *   component: AdminComponent,
+ *   providers: [provideHttpClient()],
+ * });
+ * ```
+ */
+export function createAngularMicroApp<C>(
+  config: AngularMicroAppConfig<C>
+): MicroAppModule {
+  return createAngularModule(
+    config as AngularMicroAppConfig,
+    config.ssr === true
+  );
 }
 
 // ─── createSsrAngularMicroApp ───────────────────────
 
 /**
- * Create a Tuvix.js micro app module from a standalone Angular component (Angular 17+).
+ * Create a Tuvix.js micro app module that adopts markup from
+ * `renderAngularToString`.
  *
- * Supports SSR via `@angular/platform-server` and client hydration via
- * `provideClientHydration`. Intended for use alongside `renderAngularToString`
- * and a `data-tuvix-app` container div with the SSR HTML injected.
+ * Same as `createAngularMicroApp({ ...config, ssr: true })`. When the
+ * container holds server markup, Angular renders into the server's host
+ * element and the `mounted` event reports `hydrated: true`. An empty
+ * container gets a normal client render.
  *
  * @example
  * ```ts
@@ -187,68 +380,8 @@ export function createAngularMicroApp(
  * });
  * ```
  */
-export function createSsrAngularMicroApp(
-  config: AngularSsrMicroAppConfig
+export function createSsrAngularMicroApp<C>(
+  config: AngularSsrMicroAppConfig<C>
 ): MicroAppModule {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let appRef: any = null;
-
-  const module: MicroAppModule = {
-    async bootstrap() {
-      if (config.bootstrap) {
-        await config.bootstrap();
-      }
-    },
-
-    async mount({ container }: MountContext) {
-      const { bootstrapApplication } =
-        await import('@angular/platform-browser');
-      const { provideClientHydration } =
-        await import('@angular/platform-browser');
-
-      const selector = config.selector ?? 'app-root';
-
-      // Ensure selector element exists; reuse SSR-rendered node if present
-      let appRoot = container.querySelector(selector);
-      if (!appRoot) {
-        appRoot = document.createElement(selector);
-        container.appendChild(appRoot);
-      }
-
-      const providers = [provideClientHydration(), ...(config.providers ?? [])];
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      appRef = await bootstrapApplication(config.component as any, {
-        providers,
-      });
-    },
-
-    async unmount({ container }: UnmountContext) {
-      if (appRef) {
-        appRef.destroy();
-        appRef = null;
-      }
-      container.innerHTML = '';
-    },
-
-    async update({ props }: UpdateContext) {
-      if (appRef && typeof window !== 'undefined') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-        // Initialize the registry if absent — guard was previously inverted, causing silent drops
-        win.__TUVIX_ANGULAR_PROPS__ = win.__TUVIX_ANGULAR_PROPS__ ?? {};
-        win.__TUVIX_ANGULAR_PROPS__[config.name] = props;
-      }
-    },
-  };
-
-  // Register in global module registry
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    win.__TUVIX_MODULES__ = win.__TUVIX_MODULES__ ?? {};
-    win.__TUVIX_MODULES__[config.name] = module;
-  }
-
-  return module;
+  return createAngularModule(config as AngularMicroAppConfig, true);
 }
