@@ -1,6 +1,6 @@
 packages:
-  - "packages/*"
-  - "examples/*"
-  - "examples/*/*"
-  - "website"
-  - "chatbot"
+  - 'packages/*'
+  - 'examples/*'
+  - 'examples/*/*'
+  - 'website'
+  - 'chatbot'

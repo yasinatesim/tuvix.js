@@ -1,0 +1,8 @@
+#!/bin/sh
+# Slow checks before code leaves your machine: a full build and the Playwright
+# e2e suite. pre-commit skips these to stay fast; CI runs both again.
+# Install the browser once with: pnpm exec playwright install chromium
+set -e
+
+pnpm build
+pnpm exec playwright test

@@ -1,22 +1,12 @@
 #!/bin/sh
-# tuvix.js pre-commit hook — mirrors ci.yml (except e2e, which runs in CI only)
+# Fast checks on every commit. Slow checks (full build + Playwright e2e)
+# run in .husky/pre-push so a commit takes seconds, and CI runs everything.
 set -e
 
-echo "Running pre-commit checks (mirrors CI)..."
-
-pnpm install --frozen-lockfile
-pnpm test
-pnpm check-types
-pnpm format --check || true
+pnpm lint
 pnpm --filter @tuvix.js/website lint
-pnpm validate-docs
-pnpm validate-i18n
+pnpm format:check
+pnpm check-types
+# `pnpm test` also runs check-package-exports, validate-docs and validate-i18n.
+pnpm test
 pnpm lint:md
-pnpm --filter chatbot test
-
-# NOTE: Playwright/chromium e2e runs in GitHub CI only, not locally.
-# `pnpm exec playwright test` and `pnpm --filter chatbot test:e2e` are
-# intentionally omitted here so commits don't require local browser binaries.
-# The e2e-test and chatbot e2e jobs in ci.yml still gate every push/PR.
-
-echo "All checks passed (e2e runs in CI)."

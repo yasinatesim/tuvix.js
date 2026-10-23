@@ -1,0 +1,21 @@
+# Build output and caches
+dist/
+coverage/
+.turbo/
+.angular/
+node_modules/
+website/.vitepress/dist/
+website/.vitepress/cache/
+test-results/
+playwright-report/
+blob-report/
+
+# Generated or vendored files
+pnpm-lock.yaml
+**/CHANGELOG.md
+chatbot/data/components/
+chatbot/data/huggingface/
+.claude/
+
+# Markdown is checked by markdownlint (`pnpm lint:md`)
+*.md

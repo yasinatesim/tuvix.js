@@ -89,7 +89,7 @@ Supported languages: `en`, `tr`, `es`, `de`, `fr`, `ja`, `zh`, `it`, `pt`, `hi`
 
 - **TypeScript** - All code must be written in TypeScript with strict mode enabled
 - **Formatting** - We use Prettier. Run `pnpm format` to format code
-- **No runtime dependencies** - All packages must have zero runtime dependencies (except workspace deps)
+- **No runtime dependencies** - Packages that run in the browser or in the host app's server (core, loader, router, event-bus, sandbox, server, devtools, module-federation and the framework adapters) have zero runtime dependencies except `@tuvix.js/*` workspace packages; frameworks go in `peerDependencies`. Build-time tools are the exception: `@tuvix.js/cli` depends on `@clack/prompts` and `tar`, and `@tuvix.js/vite` depends on `es-module-lexer`. A new exception needs a line here.
 - **Named exports** - Use named exports, avoid default exports
 - **Error messages** - All errors must start with `[Tuvix ...]` prefix and describe WHAT failed and WHY
 

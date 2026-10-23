@@ -51,3 +51,6 @@ website/.vitepress/cache
 *.tmp
 tmp/
 .tmp/
+
+# Agent working state (BRAID graph cache, scratch output)
+.local-artifacts/

@@ -1,158 +1,139 @@
 # Claude Instructions for Tuvix.js
 
-## Step 1: Enhance the Prompt
+Tuvix.js is a pnpm + turbo monorepo of microfrontend packages (`packages/*`), a VitePress site in `website/` (10 locales), examples and a chatbot. `.claude/SESSION_RULES.md` and `.claude/memory/MEMORY.md` load at session start; read them before the first edit.
 
-**Before doing anything else**, run the `/prompt-enhancer` skill on the user's request.
+## Domain invariant
 
-- This skill uses Braid and generates a Mermaid diagram to expand and clarify the prompt
-- Use the enhanced prompt as the basis for all subsequent implementation work
-- Do NOT begin planning or coding until the prompt has been enhanced
+Every framework adapter (`createReactMicroApp`, `createVueMicroApp`, `createSvelteMicroApp`, `createAngularMicroApp`) returns a `MicroAppModule` registered through `registerModule`, keeps one instance per container, hydrates existing server markup or renders fresh, emits `tuvix:mounted`/`tuvix:error`/`tuvix:unmounted` through `emitLifecycle`, makes `unmount` wait for a pending `mount`, re-renders on `update`, empties the container on `unmount`, and never imports zone.js or another global-patching polyfill.
 
----
+A change to one adapter needs the same change in the other three, or a one-line reason why not.
 
-## Step 2: Implementation
+## Request classes
 
-Build the feature or fix based on the enhanced prompt from Step 1.
+Classify every request first. Depth follows risk.
 
-### Monorepo Rules (pnpm workspace — violations break CI)
+| Class | Signal | Steps |
+| --- | --- | --- |
+| Question | "explain", "why", "how"; no code change | Answer. |
+| Trivial | typo, copy, comment, config value, version bump; no behaviour change | Edit → Verification Protocol → commit message. |
+| Bug | "fix", "bug", a pasted error | prompt-enhancer graph → failing test first → minimal fix → Verification Protocol → reviewer (one round) → changeset → commit message. |
+| Feature / Refactor | "add", "implement", "refactor", "rename" | prompt-enhancer graph → TDD → implement → Verification Protocol → reviewer (one round) → changeset → commit message. |
+| Critical | public API break, `window.__TUVIX_*__` globals, sandbox isolation, SSR HTML output, loader script execution, release or CI config | Feature steps, plus the security checklist in `.claude/references/code-quality/security-checklist.md`; reviewer up to 3 rounds. |
 
-**Package manager:** This is a pnpm monorepo. Always use `pnpm`, never `npm` or `yarn`. Subagents must also use pnpm.
+A Trivial edit that turns out to change behaviour is a Bug from that moment, and TDD applies.
 
-**Package.json protection:** When modifying any `package.json`, only touch `dependencies` / `devDependencies` sections unless explicitly told otherwise. NEVER change `name`, `version`, `bin`, `files`, `publishConfig`, `scripts`, or `license` unless the user explicitly requests it — subagents have destroyed these fields before.
+## Step 1: Enhance the prompt
 
-**Lockfile:** After any `package.json` change, run `pnpm install` from the monorepo root immediately and include `pnpm-lock.yaml` in the same commit. CI runs `--frozen-lockfile` — an out-of-sync lockfile breaks every CI job before any test runs.
+For Bug, Feature, Refactor and Critical requests, run `/prompt-enhancer` before planning or coding. It builds a BRAID graph with the mandatory Check nodes for that class; plan and code from that graph. Trivial requests and questions skip it.
 
-**Subagent constraints:** When dispatching subagents via subagent-driven-development, explicitly state these rules in each subagent prompt:
+## Step 2: Implement
 
-- Use `pnpm`, not `npm`
-- Preserve all existing `package.json` fields beyond deps
-- Run `pnpm install` from root after any dep change and stage `pnpm-lock.yaml`
+### Monorepo rules (violations break CI)
 
-### Styling Rules (applies to ALL packages and website)
+- **pnpm only.** Never npm or yarn. Subagents use pnpm too.
+- **package.json protection.** Touch only `dependencies` / `devDependencies` / `peerDependencies` unless the user asks for more. NEVER change `name`, `version`, `bin`, `files`, `publishConfig`, `scripts` or `license` on your own; subagents have destroyed these fields before.
+- **Lockfile.** After any `package.json` change, run `pnpm install` from the root and keep `pnpm-lock.yaml` in the same change. CI installs with `--frozen-lockfile`, so a stale lockfile fails every job.
+- **Changesets.** Each changed published package gets `.changeset/<slug>.md` (`patch` for fixes, `minor` for features or breaking changes, with a "Breaking" line for the latter).
+- **Runtime dependencies.** See `CONTRIBUTING.md` "Code Style" for the zero-dependency rule and its exceptions.
 
-**Tailwind is FORBIDDEN.** Do not install, import, or use Tailwind CSS anywhere in this project — not in packages, website, or any new code. This is a hard rule with no exceptions.
+### Styling
 
-**Allowed styling approaches:**
+**Tailwind is forbidden** in packages, website and any new code. No exceptions. Use CSS Modules (`.module.css` / `.module.scss`) for component styles, SCSS for shared tokens and mixins, plain CSS where modules add nothing.
 
-- **CSS Modules** (`.module.css` / `.module.scss`) — preferred for component-scoped styles
-- **SCSS** — for shared variables, mixins, and design tokens
-- **Plain CSS** — when modules aren't needed
+### Prose
 
-**Subagent constraint:** Include in every subagent prompt: *"Do NOT use Tailwind CSS. Use CSS Modules (.module.scss) for component styles and SCSS for shared design tokens."*
+All prose follows `.claude/skills/stop-slop/SKILL.md`: docs, READMEs, JSDoc, changesets and commit messages. Docs say what a feature does, when to use it, a runnable example, its edge cases and what it does not do. Never document an export the code lacks.
 
----
+### Subagents
 
-## Step 3: Write Tests with TDD Skill
+Every subagent prompt states:
 
-After implementation, **run the `/test-driven-development` skill** to write proper tests.
+- Use `pnpm`, never npm. Preserve every `package.json` field beyond the dependency sections. Run `pnpm install` from the root after a dependency change and keep the lockfile with it.
+- "Do NOT use Tailwind CSS. Use CSS Modules (.module.scss) for component styles and SCSS for shared design tokens."
+- Follow stop-slop for prose.
+- Never commit or push. Report each verification command as passed, failed or not run.
 
-### Tests Must Pass the CI Pipeline
+## Step 3: Tests (TDD)
 
-Tests must mirror the CI pipeline (`ci.yml`). After writing tests, validate locally by running **every command below in order** — do NOT skip any:
+Run `/test-driven-development` before writing implementation code for Bug, Feature, Refactor and Critical work. Its Test Quality section is binding: name the broken implementation each test must catch, assert behaviour (rendered DOM, event detail, registry entry) instead of `toBeDefined()`, compile or execute runtime code inside the test (esbuild `transform()` for playground examples, `createProject()` into a temp dir for CLI templates), and add `// @vitest-environment node` to tests that use esbuild, `child_process` or other Node-native APIs. After writing tests, dispatch the `test-verifier` agent on them.
 
-> **LOCKFILE RULE:** After modifying ANY `package.json` in any workspace package, run `pnpm install` from the monorepo root **before** any other command. CI uses `--frozen-lockfile` and will fail if `pnpm-lock.yaml` is out of sync. Agents must commit the updated lockfile in the same commit as the `package.json` change.
+## Verification Protocol
 
-These commands mirror the exact jobs in `ci.yml`. Run them in order — skip none:
+Run it after the last edit, once all subagents have finished, never in parallel with them. While you work, scope to your package (`pnpm --filter @tuvix.js/<pkg> build | test | check-types | lint`). The full lane mirrors `ci.yml`:
 
 ```bash
-# 1. Lockfile (if any package.json changed)
-pnpm install
-
-# 2. build job (Node matrix — run on Node 20 locally)
+pnpm install                       # only if a package.json changed
 pnpm install --frozen-lockfile
 pnpm build
-
-# 3. unit-test job
-pnpm test
-pnpm check-types
-
-# 4. lint job
-pnpm format --check || true
-
-# 5. website-lint job
+pnpm lint
+pnpm format:check
+pnpm check-types                   # after the last edit: vitest transpiles and stays green when tsc is red
+pnpm test                          # also runs validate-code-examples, validate-i18n, check-package-exports
+pnpm lint:md
 pnpm --filter @tuvix.js/website lint
-
-# 6. website-build job
 pnpm --filter @tuvix.js/website build
-
-# 7. docs-validation job
 pnpm check-links
 pnpm validate-docs
 pnpm validate-i18n
-
-# 8. e2e-test job — MANDATORY before every commit, no exceptions
 pnpm exec playwright install --with-deps chromium && pnpm exec playwright test
-
-# 9. chatbot tests
 pnpm --filter chatbot test
 pnpm --filter chatbot test:e2e
 ```
 
-**If any command fails, fix it before committing. Never commit after skipping E2E.**
+Report every command as **passed**, **failed** or **not run (reason)**. A command you skipped or could not start is never "passed". Fix failures before handing over. CI runs the same jobs on Node 18, 20 and 22.
 
-**Subagent constraint:** When dispatching subagents that will commit code, their prompt must include: *"Before committing, run the full CI checklist from CLAUDE.md including `pnpm exec playwright test`. Do not commit if E2E fails."*
+Git hooks back this up: `.husky/pre-commit` runs the fast checks, `.husky/pre-push` runs `pnpm build` and the Playwright suite, and CI runs everything.
 
-**`pnpm lint` must exit with 0 errors before any commit.** ESLint errors (`@typescript-eslint/no-explicit-any`, `no-useless-escape`, etc.) break the CI pipeline and must be fixed in the same commit as the implementation — never left for a follow-up.
+## Step 4: Code review
 
-Tests must pass on **Node.js 18, 20, and 22** (matching the CI matrix).
+For Bug, Feature, Refactor and Critical work, run `/wtf-code-reviewer` once after the Verification Protocol. It dispatches `.claude/agents/wtf-code-reviewer.md`, which checks what tools cannot: scope, duplicated concepts, adapter parity, impact radius, error and async paths, and the domain invariant.
 
-### What to Cover
+- A finding is a hypothesis. Read the code it points at; reject a wrong finding in one line with evidence.
+- Fix every accepted Critical and Major finding. Fix a Minor one only when the fix is shorter than the explanation.
+- One round: apply the findings, re-run the Verification Protocol, hand over. Do not re-run the reviewer to confirm your fixes. Critical requests allow up to 3 rounds, then stop and report the open findings.
 
-- Unit tests for individual functions and modules
-- Integration tests for cross-module interactions
-- Edge cases and error handling paths
+### Reviewer false positives
 
-**Do NOT skip test writing even if the implementation seems trivial.**
+Reject these on sight, and add a line here when a new one comes back twice:
 
-### Test Quality Rules
+- `eslint-disable-next-line @typescript-eslint/no-explicit-any` on `window.__TUVIX_*__` globals and framework handles; they cross framework type boundaries on purpose.
+- Positional parameters on existing public APIs (`createReactMicroApp(config)`, `renderVueToString(App, props, plugins)`); changing them breaks consumers.
+- `workspace:*` vs `workspace:^` ranges.
+- Runtime dependencies listed as exceptions in `CONTRIBUTING.md`.
+- Commented-out code.
 
-**String-based tests are insufficient for runtime code.** If you are testing code that runs in a different environment (browser, CDN, iframe) or gets compiled/transformed, string assertions will pass while the runtime fails. Use real compilation/execution tests:
+## Hooks (`.claude/settings.json`)
 
-- For playground code examples → compile with esbuild (`transform()`) inside the test, assert no errors
-- For CLI templates → `createProject()` to a temp dir and check actual file contents
-- For transformer functions → run the actual transform and verify output compiles
+Only hooks wired in `settings.json` run. Each one either blocks or warns:
 
-**Vitest environment:** Code that uses Node.js native modules (like esbuild's native binary) fails in jsdom. Add `// @vitest-environment node` at the top of test files that use esbuild, child_process, or other Node-native APIs.
+| Hook | Event | Effect |
+| --- | --- | --- |
+| `session-start.mjs` | SessionStart | Loads `SESSION_RULES.md` and `MEMORY.md` into context. |
+| `block-git-write.mjs` | PreToolUse(Bash) | **Blocks** (exit 2) `git commit`, `push`, `restore`, `revert`, `merge`, `rebase`, `cherry-pick`, `am`, `stash`, `clean`, `reset --hard`, `checkout` of paths, `switch --discard-changes`/`-f`, `branch -D`. Also checks `bash -c`, `eval`, `$(...)`, backticks and wrappers (`env`, `sudo`, `timeout`, `nice`, `xargs`); skips heredoc bodies unless a shell reads them. |
+| `post-edit-ts.mjs` | PostToolUse(Edit, Write, MultiEdit) | Runs `eslint --fix` and `prettier --write` on the edited file under `packages/*/src`; reports leftover errors (exit 2). |
+| `test-verifier-trigger.mjs` | PostToolUse(Edit, Write, MultiEdit) | **Warns** when a test asserts only `toBeDefined()` / `not.toThrow()`. |
 
-**Tests must prove the feature works, not just that the code exists.** A test that checks `source.includes('createVueMicroApp')` tells you nothing about whether the code actually runs.
+Post-edit hooks see only the file you just edited. The Verification Protocol covers the rest of the repo.
 
----
+## Memory
 
-## Step 4: Code Review
+`.claude/memory/MEMORY.md` is one file with one line per durable, non-obvious fact. Name the file, function or command in each line. When the user states a rule or correction, add it in the same turn. Edit or delete stale lines instead of appending corrections.
 
-Once tests pass, **run the `/wtf-code-reviewer` skill** to validate the implementation.
+## Step 5: Commit message
 
-### Iterative Verification Loop
+Do NOT commit or push; the human does. At the end of every implementation session, after verification and review, print a commit message:
 
-1. Run `/wtf-code-reviewer`
-2. If **REJECTED** or **NEEDS_FIXES**: fix the reported issues, then **go back to Step 3** (re-run tests)
-3. Run `/wtf-code-reviewer` again after fixes
-4. Repeat until status is **VERIFIED** or **APPROVED**
-5. **Maximum 3 iterations** — if still failing after 3 runs, stop and report to user
-
-**Do NOT consider the implementation complete until the reviewer passes.**
-
-Even if linter shows no errors, run the reviewer — it checks for security vulnerabilities, logic errors, missing error handling, breaking changes, integration issues, and architecture violations.
-
----
-
-## Step 5: Commit Message
-
-After both tests and code review pass, **provide a commit message** in this format:
-
-```
+```text
 <type>(<scope>): <short summary>
 
-<body — what changed and why, bullet points if needed>
+<body: what changed and why, bullet points if needed>
 
-<footer — breaking changes, issue refs if applicable>
+<footer: breaking changes, issue refs if applicable>
 ```
 
-**Types:** `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`
+Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`.
 
-### Example
-
-```
+```text
 feat(parser): add support for async token resolution
 
 - Introduced AsyncTokenResolver class to handle promise-based tokens
@@ -162,8 +143,4 @@ feat(parser): add support for async token resolution
 Closes #42
 ```
 
-The message NOT include "Co-Authored-By: Claude <model>  <noreply@anthropic.com>"
-
-Provide the commit message at the very end of every implementation session, after reviewer and tests both pass..
-
-DO NOT commit or push. Just provide message
+The message never includes a `Co-Authored-By` trailer.
