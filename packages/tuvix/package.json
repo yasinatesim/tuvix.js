@@ -47,13 +47,14 @@
     "frontend-architecture"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/tuvix"
+  },
   "publishConfig": {
     "access": "public"
   },
   "sideEffects": false,
-  "homepage": "https://github.com/yasinatesim/tuvix.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yasinatesim/tuvix.js"
-  }
+  "homepage": "https://github.com/yasinatesim/tuvix.js"
 }

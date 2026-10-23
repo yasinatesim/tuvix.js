@@ -5,6 +5,8 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  # Manual runs execute the full CI plus `npm-oidc-check`; they never publish.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -189,9 +191,13 @@ jobs:
         docs-validation,
       ]
     if: github.event_name == 'push'
+    # Publishing uses npm trusted publishing (OIDC). Each package on npmjs.com
+    # trusts this repository and this workflow file (ci.yml); no npm token is
+    # stored anywhere. `id-token: write` lets npm exchange the GitHub OIDC token
+    # for a short-lived publish token and attach a provenance statement.
     permissions:
       contents: write
-      packages: write
+      id-token: write
       pull-requests: write
 
     steps:
@@ -201,12 +207,17 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
+      # No `registry-url`: setup-node would write an .npmrc with a placeholder
+      # NODE_AUTH_TOKEN, and npm prefers any configured token over OIDC.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
+
+      # Trusted publishing needs npm >= 11.5.1; pnpm publish hands off to npm.
+      - name: Install npm 11
+        run: npm install -g npm@11
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -223,7 +234,40 @@ jobs:
           commit: 'chore: release packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # Disable Husky pre-commit hooks — all checks already passed in prior CI jobs
           HUSKY: '0'
+
+  # Manual check that every public package accepts this workflow as its trusted
+  # publisher. It performs the same OIDC token exchange `npm publish` does and
+  # discards the token; nothing is published.
+  npm-oidc-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Exchange the GitHub OIDC token for each package
+        run: |
+          id_token=$(curl -sf -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm:registry.npmjs.org" | jq -r .value)
+          failed=0
+          for manifest in packages/*/package.json; do
+            name=$(jq -r 'select(.private != true) | .name' "$manifest")
+            [ -z "$name" ] && continue
+            escaped=$(jq -rn --arg n "$name" '$n | @uri')
+            status=$(curl -s -o response.json -w '%{http_code}' -X POST \
+              -H "Authorization: Bearer $id_token" \
+              "https://registry.npmjs.org/-/npm/v1/oidc/token/exchange/package/$escaped")
+            if [ "$status" = "201" ] || [ "$status" = "200" ] && jq -e '.token' response.json >/dev/null; then
+              echo "ok      $name"
+            else
+              echo "FAILED  $name (HTTP $status: $(jq -r '.message // .error // empty' response.json 2>/dev/null))"
+              failed=1
+            fi
+            rm -f response.json
+          done
+          exit $failed

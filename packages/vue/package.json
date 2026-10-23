@@ -63,6 +63,11 @@
     "tuvix"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/vue"
+  },
   "sideEffects": false,
   "devDependencies": {
     "@vue/server-renderer": "^3.0.0"

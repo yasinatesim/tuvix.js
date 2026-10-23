@@ -28,6 +28,11 @@
     "create-app"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/cli"
+  },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "tar": "^7.5.11"

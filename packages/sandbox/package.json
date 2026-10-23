@@ -40,5 +40,10 @@
     "proxy"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/sandbox"
+  },
   "sideEffects": false
 }

@@ -68,6 +68,11 @@
     "tuvix"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/angular"
+  },
   "sideEffects": false,
   "devDependencies": {
     "@angular/common": "^16.2.0",

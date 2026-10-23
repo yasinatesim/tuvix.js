@@ -37,6 +37,11 @@
     "@tuvix.js/sandbox": "workspace:^"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/core"
+  },
   "publishConfig": {
     "access": "public"
   },

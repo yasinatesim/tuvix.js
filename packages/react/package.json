@@ -41,6 +41,11 @@
     "tuvix"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasinatesim/tuvix.js.git",
+    "directory": "packages/react"
+  },
   "sideEffects": false,
   "dependencies": {
     "@tuvix.js/event-bus": "workspace:^",
