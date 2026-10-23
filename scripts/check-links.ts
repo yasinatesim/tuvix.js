@@ -1,7 +1,7 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import * as https from "node:https";
-import * as http from "node:http";
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as https from 'node:https';
+import * as http from 'node:http';
 
 export interface BrokenLink {
   file: string;
@@ -15,19 +15,23 @@ export interface ExtractedLink {
   line: number;
 }
 
-export const SKIP_DIRS = new Set(["node_modules", ".git", "dist", ".claude", "docs"]);
-
-export const SKIP_HOSTS = new Set([
-  "localhost",
-  "127.0.0.1",
-  "example.com",
-  "cdn.example.com",
-  "fonts.googleapis.com",
+export const SKIP_DIRS = new Set([
+  'node_modules',
+  '.git',
+  'dist',
+  '.claude',
+  'docs',
 ]);
 
+export const SKIP_HOSTS = new Set([
+  'localhost',
+  '127.0.0.1',
+  'example.com',
+  'cdn.example.com',
+  'fonts.googleapis.com',
+]);
 
-export const GITHUB_REPO_PREFIX =
-  "https://github.com/yasinatesim/tuvix.js";
+export const GITHUB_REPO_PREFIX = 'https://github.com/yasinatesim/tuvix.js';
 
 const HTTP_TIMEOUT_MS = 10_000;
 const RATE_LIMIT_DELAY_MS = 500;
@@ -45,7 +49,7 @@ export function findMarkdownFiles(dir: string): string[] {
 
     if (entry.isDirectory()) {
       results.push(...findMarkdownFiles(fullPath));
-    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
       results.push(fullPath);
     }
   }
@@ -55,7 +59,7 @@ export function findMarkdownFiles(dir: string): string[] {
 
 export function extractLinks(content: string): ExtractedLink[] {
   const links: ExtractedLink[] = [];
-  const lines = content.split("\n");
+  const lines = content.split('\n');
 
   const markdownLinkRegex = /\[(?:[^\]]*)\]\(([^)]+)\)/g;
   const htmlHrefRegex = /href=["']([^"']+)["']/g;
@@ -68,7 +72,7 @@ export function extractLinks(content: string): ExtractedLink[] {
 
     markdownLinkRegex.lastIndex = 0;
     while ((match = markdownLinkRegex.exec(lineContent)) !== null) {
-      const url = match[1].split(" ")[0].trim();
+      const url = match[1].split(' ')[0].trim();
       if (url) {
         links.push({ url, line: lineNumber });
       }
@@ -87,13 +91,13 @@ export function extractLinks(content: string): ExtractedLink[] {
 }
 
 export function shouldSkipUrl(url: string): boolean {
-  if (url.startsWith("#")) {
+  if (url.startsWith('#')) {
     return true;
   }
 
   // VitePress router paths start with / but are not file paths — they are
   // resolved at runtime by VitePress.  Skip them entirely.
-  if (url.startsWith("/") && !url.startsWith("//")) {
+  if (url.startsWith('/') && !url.startsWith('//')) {
     return true;
   }
 
@@ -114,14 +118,14 @@ export function isGitHubRepoUrl(url: string): boolean {
 }
 
 export function isAbsoluteUrl(url: string): boolean {
-  return url.startsWith("http://") || url.startsWith("https://");
+  return url.startsWith('http://') || url.startsWith('https://');
 }
 
 export function checkRelativeLink(
   filePath: string,
-  url: string,
+  url: string
 ): string | null {
-  const cleanUrl = url.split("#")[0].split("?")[0];
+  const cleanUrl = url.split('#')[0].split('?')[0];
 
   if (!cleanUrl) {
     return null;
@@ -134,14 +138,14 @@ export function checkRelativeLink(
     return null;
   }
 
-  if (!resolved.endsWith(".md")) {
-    const withMd = resolved + ".md";
+  if (!resolved.endsWith('.md')) {
+    const withMd = resolved + '.md';
     if (fs.existsSync(withMd)) {
       return null;
     }
   }
 
-  const indexMd = path.join(resolved, "index.md");
+  const indexMd = path.join(resolved, 'index.md');
   if (fs.existsSync(indexMd)) {
     return null;
   }
@@ -152,11 +156,11 @@ export function checkRelativeLink(
 export function httpHeadCheck(url: string): Promise<string | null> {
   return new Promise((resolve) => {
     const parsedUrl = new URL(url);
-    const client = parsedUrl.protocol === "https:" ? https : http;
+    const client = parsedUrl.protocol === 'https:' ? https : http;
 
     const req = client.request(
       parsedUrl,
-      { method: "HEAD", timeout: HTTP_TIMEOUT_MS },
+      { method: 'HEAD', timeout: HTTP_TIMEOUT_MS },
       (res) => {
         const status = res.statusCode ?? 0;
         if (status >= 400) {
@@ -164,15 +168,15 @@ export function httpHeadCheck(url: string): Promise<string | null> {
         } else {
           resolve(null);
         }
-      },
+      }
     );
 
-    req.on("timeout", () => {
+    req.on('timeout', () => {
       req.destroy();
-      resolve("Timeout after 10s");
+      resolve('Timeout after 10s');
     });
 
-    req.on("error", (err: Error) => {
+    req.on('error', (err: Error) => {
       resolve(`Request error: ${err.message}`);
     });
 
@@ -187,7 +191,7 @@ function delay(ms: number): Promise<void> {
 async function main(): Promise<void> {
   const rootDir = path.resolve(
     path.dirname(new URL(import.meta.url).pathname),
-    "..",
+    '..'
   );
 
   console.log(`Scanning for .md files in: ${rootDir}\n`);
@@ -200,7 +204,7 @@ async function main(): Promise<void> {
   let httpChecksCount = 0;
 
   for (const filePath of mdFiles) {
-    const content = fs.readFileSync(filePath, "utf-8");
+    const content = fs.readFileSync(filePath, 'utf-8');
     const links = extractLinks(content);
 
     for (const link of links) {
@@ -253,11 +257,11 @@ async function main(): Promise<void> {
       console.log(`  Line:   ${bl.line}`);
       console.log(`  URL:    ${bl.url}`);
       console.log(`  Reason: ${bl.reason}`);
-      console.log("");
+      console.log('');
     }
     process.exit(1);
   } else {
-    console.log("\nAll links OK!");
+    console.log('\nAll links OK!');
     process.exit(0);
   }
 }
@@ -270,7 +274,7 @@ const isDirectExecution =
 
 if (isDirectExecution) {
   main().catch((err: unknown) => {
-    console.error("Unexpected error:", err);
+    console.error('Unexpected error:', err);
     process.exit(1);
   });
 }

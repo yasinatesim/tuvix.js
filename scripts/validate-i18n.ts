@@ -219,7 +219,10 @@ function validateSidebar(): ValidationError[] {
     const configPath = path.join(CONFIG_DIR, `${locale}.ts`);
 
     if (!fs.existsSync(configPath)) {
-      errors.push({ locale, message: `Config file missing: .vitepress/config/${locale}.ts` });
+      errors.push({
+        locale,
+        message: `Config file missing: .vitepress/config/${locale}.ts`,
+      });
       continue;
     }
 
@@ -247,7 +250,10 @@ function validateSidebar(): ValidationError[] {
         });
       }
 
-      const minGroups = Math.min(enSection.groups.length, locSection.groups.length);
+      const minGroups = Math.min(
+        enSection.groups.length,
+        locSection.groups.length
+      );
       for (let g = 0; g < minGroups; g++) {
         const enGroup = enSection.groups[g]!;
         const locGroup = locSection.groups[g]!;
@@ -269,9 +275,7 @@ function validateSidebar(): ValidationError[] {
 function extractH2Headings(filePath: string): string[] {
   if (!fs.existsSync(filePath)) return [];
   const lines = fs.readFileSync(filePath, 'utf-8').split('\n');
-  return lines
-    .filter((l) => l.startsWith('## '))
-    .map((l) => l.slice(3).trim());
+  return lines.filter((l) => l.startsWith('## ')).map((l) => l.slice(3).trim());
 }
 
 function findMdFiles(dir: string): string[] {

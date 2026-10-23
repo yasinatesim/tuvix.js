@@ -118,12 +118,15 @@ async function downloadAndExtractExample(
 
 // ─── Package JSON Generator ─────────────────────────
 
+/** Version range scaffolded for `tuvix.js` and every `@tuvix.js/*` package. */
+export const TUVIX_VERSION_RANGE = '^0.5.0';
+
 function generatePackageJson(
   name: string,
   template: string,
   typescript: boolean
 ): string {
-  const deps: Record<string, string> = { 'tuvix.js': '^0.1.0' };
+  const deps: Record<string, string> = { 'tuvix.js': TUVIX_VERSION_RANGE };
   const devDeps: Record<string, string> = { vite: '^6.0.0' };
 
   if (typescript) {
@@ -133,25 +136,46 @@ function generatePackageJson(
   if (template === 'react-app') {
     deps['react'] = '^19.0.0';
     deps['react-dom'] = '^19.0.0';
-    deps['@tuvix.js/react'] = '^0.1.0';
+    deps['@tuvix.js/react'] = TUVIX_VERSION_RANGE;
+    // Compiles JSX with the automatic runtime in .jsx files too (without it,
+    // Vite emits React.createElement and App.jsx has no React in scope).
+    devDeps['@vitejs/plugin-react'] = '^4.3.0';
     if (typescript) {
       devDeps['@types/react'] = '^19.0.0';
       devDeps['@types/react-dom'] = '^19.0.0';
     }
   } else if (template === 'vue-app') {
     deps['vue'] = '^3.5.0';
-    deps['@tuvix.js/vue'] = '^0.1.0';
+    deps['@tuvix.js/vue'] = TUVIX_VERSION_RANGE;
+    devDeps['@vitejs/plugin-vue'] = '^5.2.0';
   } else if (template === 'svelte-app') {
-    deps['svelte'] = '^4.0.0';
-    deps['@tuvix.js/svelte'] = '^0.1.0';
-    devDeps['@sveltejs/vite-plugin-svelte'] = '^3.0.0';
+    deps['svelte'] = '^5.0.0';
+    deps['@tuvix.js/svelte'] = TUVIX_VERSION_RANGE;
+    devDeps['@sveltejs/vite-plugin-svelte'] = '^5.0.0';
+    if (typescript) {
+      devDeps['svelte-check'] = '^4.0.0';
+    }
   } else if (template === 'angular-app') {
-    deps['@angular/core'] = '^17.0.0';
-    deps['@angular/platform-browser'] = '^17.0.0';
-    deps['zone.js'] = '^0.14.0';
-    deps['@tuvix.js/core'] = '^0.1.0';
-    devDeps['@angular/compiler'] = '^17.0.0';
-    devDeps['typescript'] = '^5.7.0';
+    // The adapter runs zoneless and loads @angular/compiler for JIT
+    // components (Vite does not AOT-compile), so no zone.js and the compiler
+    // is a runtime dependency.
+    deps['@angular/common'] = '^20.0.0';
+    deps['@angular/compiler'] = '^20.0.0';
+    deps['@angular/core'] = '^20.0.0';
+    deps['@angular/platform-browser'] = '^20.0.0';
+    deps['rxjs'] = '^7.8.0';
+    deps['tslib'] = '^2.6.0';
+    deps['@tuvix.js/angular'] = TUVIX_VERSION_RANGE;
+    devDeps['typescript'] = '~5.8.0';
+  }
+
+  const scripts: Record<string, string> = {
+    dev: 'vite',
+    build: 'vite build',
+    preview: 'vite preview',
+  };
+  if (template === 'svelte-app' && typescript) {
+    scripts['check'] = 'svelte-check --tsconfig ./tsconfig.json';
   }
 
   return JSON.stringify(
@@ -160,11 +184,7 @@ function generatePackageJson(
       version: '0.1.0',
       private: true,
       type: 'module',
-      scripts: {
-        dev: 'vite',
-        build: 'vite build',
-        preview: 'vite preview',
-      },
+      scripts,
       dependencies: deps,
       devDependencies: devDeps,
     },
@@ -296,10 +316,20 @@ export default createReactMicroApp({
   );
 }
 `,
+    'vite.config.ts': `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+});
+`,
   };
 
   if (typescript) {
-    files['tsconfig.json'] = buildTsconfig({ jsx: 'react-jsx' });
+    files['tsconfig.json'] = buildTsconfig({ jsx: 'react-jsx' }, [
+      'src',
+      'vite.config.ts',
+    ]);
   }
 
   return files;
@@ -328,33 +358,45 @@ export default createVueMicroApp({
   App,
 });
 `,
-    'src/App.vue': typescript
-      ? `<template>
+    'src/App.vue': `<template>
   <div style="padding: 24px; font-family: system-ui">
     <h1>Vue Micro App</h1>
     <p>This is a Tuvix.js micro frontend.</p>
+    <pre>{{ JSON.stringify(props, null, 2) }}</pre>
   </div>
 </template>
 
-<script setup lang="ts">
-defineProps<Record<string, unknown>>();
-</script>
-`
-      : `<template>
-  <div style="padding: 24px; font-family: system-ui">
-    <h1>Vue Micro App</h1>
-    <p>This is a Tuvix.js micro frontend.</p>
-  </div>
-</template>
+${typescript ? '<script setup lang="ts">' : '<script setup>'}
+import { inject } from 'vue';
+import { TUVIX_PROPS_KEY } from '@tuvix.js/vue';
 
-<script setup>
-defineProps({});
+// The props the shell passes to mount() and update(), kept reactive.
+const props = inject${typescript ? '<Record<string, unknown>>' : ''}(TUVIX_PROPS_KEY, {});
 </script>
+`,
+    'vite.config.ts': `import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+  plugins: [vue()],
+});
 `,
   };
 
   if (typescript) {
-    files['tsconfig.json'] = buildTsconfig();
+    // Declares `*.vue` modules so tsc accepts the App import.
+    files['src/vite-env.d.ts'] = `/// <reference types="vite/client" />
+
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue';
+  const component: DefineComponent<object, object, unknown>;
+  export default component;
+}
+`;
+    files['tsconfig.json'] = buildTsconfig(undefined, [
+      'src',
+      'vite.config.ts',
+    ]);
   }
 
   return files;
@@ -407,7 +449,13 @@ export default defineMicroApp({
 
 function generateSvelteTemplate(typescript: boolean): Record<string, string> {
   const mainExt = typescript ? 'ts' : 'js';
-  const scriptTag = typescript ? '<script lang="ts">' : '<script>';
+  const props = typescript
+    ? `<script lang="ts">
+  let { name = 'Tuvix.js' }: { name?: string } = $props();
+</script>`
+    : `<script>
+  let { name = 'Tuvix.js' } = $props();
+</script>`;
 
   const files: Record<string, string> = {
     'index.html': `<!DOCTYPE html>
@@ -422,17 +470,18 @@ function generateSvelteTemplate(typescript: boolean): Record<string, string> {
   <script type="module" src="/src/main.${mainExt}"></script>
 </body>
 </html>`,
-    [`src/main.${mainExt}`]: `import { createSvelteMicroApp } from '@tuvix.js/svelte';
+    [`src/main.${mainExt}`]: `import { SvelteMap } from 'svelte/reactivity';
+import { createSvelteMicroApp } from '@tuvix.js/svelte';
 import App from './App.svelte';
 
+// SvelteMap lets update({ props }) re-render in place instead of remounting.
 export default createSvelteMicroApp({
   name: 'my-svelte-app',
   App,
+  SvelteMap,
 });
 `,
-    'src/App.svelte': `${scriptTag}
-  export let name = 'Tuvix.js';
-</script>
+    'src/App.svelte': `${props}
 
 <div style="padding: 24px; font-family: system-ui">
   <h1>Svelte Micro App</h1>
@@ -446,9 +495,21 @@ export default defineConfig({
   plugins: [svelte()],
 });
 `,
+    // svelte-check and vite-plugin-svelte read preprocessing from here;
+    // vitePreprocess handles <script lang="ts">.
+    'svelte.config.js': `import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
+export default {
+  preprocess: vitePreprocess(),
+};
+`,
   };
 
   if (typescript) {
+    // Declares `*.svelte` modules so tsc and svelte-check accept the App import.
+    files['src/vite-env.d.ts'] = `/// <reference types="svelte" />
+/// <reference types="vite/client" />
+`;
     files['tsconfig.json'] = buildTsconfig(undefined, [
       'src',
       'vite.config.ts',
@@ -475,22 +536,15 @@ function generateAngularTemplate(_typescript: boolean): Record<string, string> {
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>`,
-    'src/main.ts': `import { defineMicroApp } from 'tuvix.js';
-import { bootstrapApplication } from '@angular/platform-browser';
+    'src/main.ts': `// Load the JIT compiler before any Angular package that ships partially
+// compiled code (@angular/common, forms, router) is evaluated.
+import '@angular/compiler';
+import { createSsrAngularMicroApp } from '@tuvix.js/angular';
 import { AppComponent } from './app/app.component';
 
-export default defineMicroApp({
+export default createSsrAngularMicroApp({
   name: 'my-angular-app',
-
-  async mount({ container }) {
-    const el = document.createElement('app-root');
-    container.appendChild(el);
-    await bootstrapApplication(AppComponent);
-  },
-
-  async unmount({ container }) {
-    container.innerHTML = '';
-  },
+  component: AppComponent,
 });
 `,
     'src/app/app.component.ts': `import { Component } from '@angular/core';

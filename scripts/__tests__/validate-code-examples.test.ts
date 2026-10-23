@@ -1,466 +1,273 @@
+// @vitest-environment node
+import * as path from 'node:path';
 import { describe, it, expect } from 'vitest';
 import {
-  parseExportsFromContent,
+  ROOT,
+  buildTuvixModuleMap,
+  checkMarkdown,
+  checkedExtension,
   extractCodeBlocks,
-  parseImports,
-  validateContent,
-  TUVIX_PACKAGES,
+  findMarkdownFiles,
+  getLocale,
 } from '../validate-code-examples';
 
-// ─── parseExportsFromContent ────────────────────────────
+const fence = '```';
 
-describe('parseExportsFromContent', () => {
-  it('parses named re-exports from braces', () => {
-    const content = `export { Router, createRouter } from './router';`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('Router');
-    expect(exports).toContain('createRouter');
-  });
+/** Builds a markdown document with one code block. */
+function md(code: string, info = 'ts', before = ''): string {
+  return `# Fixture\n\n${before}${fence}${info}\n${code}\n${fence}\n`;
+}
 
-  it('parses type re-exports', () => {
-    const content = `export type { RouterConfig, IRouter } from './types';`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('RouterConfig');
-    expect(exports).toContain('IRouter');
-  });
+function check(content: string, rel = 'website/guide/fixture.md') {
+  return checkMarkdown([{ path: path.join(ROOT, rel), content }]);
+}
 
-  it('parses export function declarations', () => {
-    const content = `export function createReactMicroApp(config: Config): Module {}`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('createReactMicroApp');
-  });
+const CORRECT = `import { createOrchestrator } from '@tuvix.js/core';
 
-  it('parses export async function declarations', () => {
-    const content = `export async function loadModule(): Promise<void> {}`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('loadModule');
-  });
-
-  it('parses export class declarations', () => {
-    const content = `export class EventBus {}`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('EventBus');
-  });
-
-  it('parses export const declarations', () => {
-    const content = `export const DEFAULT_TIMEOUT = 5000;`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('DEFAULT_TIMEOUT');
-  });
-
-  it('parses export interface declarations', () => {
-    const content = `export interface ReactMicroAppConfig { name: string; }`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('ReactMicroAppConfig');
-  });
-
-  it('parses export enum declarations', () => {
-    const content = `export enum OrchestratorEvent { APP_MOUNTED = 'app:mounted' }`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('OrchestratorEvent');
-  });
-
-  it('parses export type alias declarations', () => {
-    const content = `export type VueSsrMicroAppConfig = VueMicroAppConfig;`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('VueSsrMicroAppConfig');
-  });
-
-  it('handles "as" aliases in braced exports', () => {
-    const content = `export { Foo as Bar } from './foo';`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('Bar');
-    expect(exports).not.toContain('Foo');
-  });
-
-  it('parses multiple export blocks from the same content', () => {
-    const content = `
-export { A, B } from './a';
-export { C } from './c';
-export function doStuff() {}
-export class MyClass {}
-`;
-    const exports = parseExportsFromContent(content);
-    expect(exports.size).toBe(5);
-    expect(exports).toContain('A');
-    expect(exports).toContain('B');
-    expect(exports).toContain('C');
-    expect(exports).toContain('doStuff');
-    expect(exports).toContain('MyClass');
-  });
-
-  it('returns empty set for empty content', () => {
-    const exports = parseExportsFromContent('');
-    expect(exports.size).toBe(0);
-  });
-
-  it('ignores non-export declarations', () => {
-    const content = `
-const internal = 42;
-function helper() {}
-class Private {}
-`;
-    const exports = parseExportsFromContent(content);
-    expect(exports.size).toBe(0);
-  });
-
-  it('ignores exports inside block comments (JSDoc examples)', () => {
-    const content = `
-/**
- * @example
- * \`\`\`ts
- * export const Route = createFileRoute('/github')({});
- * \`\`\`
- */
-export function realExport() {}
-`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('realExport');
-    expect(exports).not.toContain('Route');
-    expect(exports.size).toBe(1);
-  });
-
-  it('ignores exports inside single-line comments', () => {
-    const content = `
-// export const ignored = true;
-export const real = true;
-`;
-    const exports = parseExportsFromContent(content);
-    expect(exports).toContain('real');
-    expect(exports).not.toContain('ignored');
-  });
+const orchestrator = createOrchestrator();
+orchestrator.register({
+  name: 'header',
+  entry: 'https://cdn.example.com/header.js',
+  container: '#header',
+  activeWhen: '/',
 });
+await orchestrator.start();`;
 
 // ─── extractCodeBlocks ──────────────────────────────────
 
 describe('extractCodeBlocks', () => {
-  it('extracts a TypeScript code block', () => {
-    const md = [
-      'Some text',
-      '```ts',
-      'import { Foo } from "bar";',
-      'const x = 1;',
-      '```',
-      'More text',
-    ].join('\n');
-
-    const blocks = extractCodeBlocks(md);
+  it('returns language, meta and 1-based start line of the first code line', () => {
+    const blocks = extractCodeBlocks(md('const a = 1;', 'ts [main.ts]'));
     expect(blocks).toHaveLength(1);
-    expect(blocks[0]!.language).toBe('ts');
-    expect(blocks[0]!.code).toContain('import { Foo }');
-    expect(blocks[0]!.startLine).toBe(3); // 1-indexed, line after ```ts
+    expect(blocks[0]).toMatchObject({
+      language: 'ts',
+      meta: '[main.ts]',
+      code: 'const a = 1;',
+      startLine: 4,
+      indent: 0,
+      skip: false,
+    });
   });
 
-  it('extracts multiple code blocks with different languages', () => {
-    const md = [
-      '```typescript',
-      'const a = 1;',
-      '```',
-      '',
-      '```js',
-      'const b = 2;',
-      '```',
-    ].join('\n');
-
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(2);
-    expect(blocks[0]!.language).toBe('typescript');
-    expect(blocks[1]!.language).toBe('js');
+  it('reads VitePress line-highlight syntax as meta, not language', () => {
+    const [block] = extractCodeBlocks(md('x', 'ts{2,3}'));
+    expect(block!.language).toBe('ts');
+    expect(block!.meta).toBe('{2,3}');
   });
 
-  it('extracts tsx code blocks', () => {
-    const md = ['```tsx', '<div />', '```'].join('\n');
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(1);
-    expect(blocks[0]!.language).toBe('tsx');
-  });
-
-  it('extracts javascript code blocks', () => {
-    const md = ['```javascript', 'var x = 1;', '```'].join('\n');
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(1);
-    expect(blocks[0]!.language).toBe('javascript');
-  });
-
-  it('extracts jsx code blocks', () => {
-    const md = ['```jsx', '<App />', '```'].join('\n');
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(1);
-    expect(blocks[0]!.language).toBe('jsx');
-  });
-
-  it('ignores non-JS/TS code blocks', () => {
-    const md = [
-      '```bash',
-      'npm install',
-      '```',
-      '',
-      '```html',
-      '<div></div>',
-      '```',
-      '',
-      '```json',
-      '{ "key": "value" }',
-      '```',
-    ].join('\n');
-
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(0);
-  });
-
-  it('ignores vue code blocks', () => {
-    const md = ['```vue', '<template><div /></template>', '```'].join('\n');
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(0);
-  });
-
-  it('returns empty array for markdown with no code blocks', () => {
-    const md = 'Just some text\nMore text\n';
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(0);
-  });
-
-  it('correctly tracks line numbers for multiple blocks', () => {
-    const md = [
-      'Line 1',
-      '```ts',
-      'code line 1',
-      '```',
-      'Line 5',
-      '```js',
-      'code line 2',
-      '```',
-    ].join('\n');
-
-    const blocks = extractCodeBlocks(md);
-    expect(blocks).toHaveLength(2);
-    expect(blocks[0]!.startLine).toBe(3);
-    expect(blocks[1]!.startLine).toBe(7);
-  });
-});
-
-// ─── parseImports ───────────────────────────────────────
-
-describe('parseImports', () => {
-  it('parses named imports', () => {
-    const code = `import { createRouter, Router } from '@tuvix.js/router';`;
-    const imports = parseImports(code, 10);
-    expect(imports).toHaveLength(1);
-    expect(imports[0]!.symbols).toEqual(['createRouter', 'Router']);
-    expect(imports[0]!.packageName).toBe('@tuvix.js/router');
-    expect(imports[0]!.line).toBe(10);
-  });
-
-  it('parses type imports', () => {
-    const code = `import type { RouterConfig, IRouter } from '@tuvix.js/router';`;
-    const imports = parseImports(code, 1);
-    expect(imports).toHaveLength(1);
-    expect(imports[0]!.symbols).toEqual(['RouterConfig', 'IRouter']);
-    expect(imports[0]!.packageName).toBe('@tuvix.js/router');
-  });
-
-  it('parses default imports', () => {
-    const code = `import App from './App.vue';`;
-    const imports = parseImports(code, 1);
-    expect(imports).toHaveLength(1);
-    expect(imports[0]!.symbols).toEqual(['App']);
-    expect(imports[0]!.packageName).toBe('./App.vue');
-  });
-
-  it('handles aliased imports (as)', () => {
-    const code = `import { EventBus as Bus } from '@tuvix.js/event-bus';`;
-    const imports = parseImports(code, 1);
-    expect(imports).toHaveLength(1);
-    // The original symbol name (not alias) should be used for validation
-    expect(imports[0]!.symbols).toEqual(['EventBus']);
-  });
-
-  it('parses multiple import lines', () => {
-    const code = [
-      `import { createOrchestrator } from 'tuvix.js';`,
-      `import { Router } from '@tuvix.js/router';`,
-    ].join('\n');
-    const imports = parseImports(code, 5);
-    expect(imports).toHaveLength(2);
-    expect(imports[0]!.line).toBe(5);
-    expect(imports[1]!.line).toBe(6);
-  });
-
-  it('handles imports with single quotes', () => {
-    const code = `import { Foo } from 'tuvix.js';`;
-    const imports = parseImports(code, 1);
-    expect(imports).toHaveLength(1);
-    expect(imports[0]!.packageName).toBe('tuvix.js');
-  });
-
-  it('handles imports with double quotes', () => {
-    const code = `import { Foo } from "tuvix.js";`;
-    const imports = parseImports(code, 1);
-    expect(imports).toHaveLength(1);
-    expect(imports[0]!.packageName).toBe('tuvix.js');
-  });
-
-  it('returns empty array for code without imports', () => {
-    const code = `const x = 1;\nconsole.log(x);`;
-    const imports = parseImports(code, 1);
-    expect(imports).toHaveLength(0);
-  });
-});
-
-// ─── validateContent ────────────────────────────────────
-
-describe('validateContent', () => {
-  const exportMap = new Map<string, Set<string>>([
-    ['tuvix.js', new Set(['createOrchestrator', 'EventBus', 'Router'])],
-    ['@tuvix.js/router', new Set(['Router', 'createRouter', 'matchRoute'])],
-    [
-      '@tuvix.js/event-bus',
-      new Set(['EventBus', 'createEventBus', 'getGlobalBus']),
-    ],
-  ]);
-
-  it('returns no errors for valid imports', () => {
-    const md = [
-      '# Guide',
-      '```ts',
-      `import { createOrchestrator, EventBus } from 'tuvix.js';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(0);
-  });
-
-  it('returns errors for invalid imports', () => {
-    const md = [
-      '# Guide',
-      '```ts',
-      `import { createOrchestrator, nonExistent } from 'tuvix.js';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(1);
-    expect(errors[0]!.symbol).toBe('nonExistent');
-    expect(errors[0]!.packageName).toBe('tuvix.js');
-    expect(errors[0]!.message).toContain('not exported');
-  });
-
-  it('skips non-tuvix imports', () => {
-    const md = [
-      '```ts',
-      `import { useState } from 'react';`,
-      `import express from 'express';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(0);
-  });
-
-  it('reports error for unknown tuvix package (no exports found)', () => {
-    const md = [
-      '```ts',
-      `import { something } from '@tuvix.js/sandbox';`,
-      '```',
-    ].join('\n');
-
-    // @tuvix.js/sandbox is in TUVIX_PACKAGES but not in our test exportMap
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(1);
-    expect(errors[0]!.message).toContain('no known exports');
-  });
-
-  it('validates across multiple code blocks in one file', () => {
-    const md = [
-      '```ts',
-      `import { Router } from '@tuvix.js/router';`,
-      '```',
-      '',
-      '```typescript',
-      `import { FakeSymbol } from '@tuvix.js/router';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(1);
-    expect(errors[0]!.symbol).toBe('FakeSymbol');
-  });
-
-  it('includes correct file path in errors', () => {
-    const md = [
-      '```ts',
-      `import { invalid } from 'tuvix.js';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(
-      md,
-      '/project/website/guide/routing.md',
-      exportMap,
-      TUVIX_PACKAGES,
-      '/project'
+  it('marks no-check fence meta as skipped, alone or after a label', () => {
+    expect(extractCodeBlocks(md('x', 'ts no-check'))[0]!.skip).toBe(true);
+    expect(extractCodeBlocks(md('x', 'tsx [App.tsx] no-check'))[0]!.skip).toBe(
+      true
     );
-    expect(errors[0]!.file).toBe('website/guide/routing.md');
+    expect(extractCodeBlocks(md('x', 'ts [no-checker.ts]'))[0]!.skip).toBe(
+      false
+    );
   });
 
-  it('includes correct line number in errors', () => {
-    const md = [
-      '# Title',
-      '',
-      'Some text',
-      '',
-      '```ts',
-      `import { badSymbol } from 'tuvix.js';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(md, '/project/file.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(1);
-    // Line 6 in the file (1-indexed): ```ts is line 5, code is line 6
-    expect(errors[0]!.line).toBe(6);
+  it('marks a block preceded by the skip comment as skipped', () => {
+    const content = md('x', 'ts', '<!-- tuvix-validate: skip -->\n\n');
+    expect(extractCodeBlocks(content)[0]!.skip).toBe(true);
   });
 
-  it('handles type imports the same as value imports', () => {
-    const md = [
-      '```ts',
-      `import type { Router } from '@tuvix.js/router';`,
-      '```',
-    ].join('\n');
-
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(0);
+  it('strips list indentation and records it', () => {
+    const content = `1. Step\n\n   ${fence}ts\n   const a = 1;\n     const b = 2;\n   ${fence}\n`;
+    const [block] = extractCodeBlocks(content);
+    expect(block!.indent).toBe(3);
+    expect(block!.code).toBe('const a = 1;\n  const b = 2;');
   });
 
-  it('returns empty errors for markdown with no code blocks', () => {
-    const md = 'Just some text\n\nNothing to see here.';
-    const errors = validateContent(md, '/project/README.md', exportMap, TUVIX_PACKAGES, '/project');
-    expect(errors).toHaveLength(0);
+  it('keeps a shorter inner fence inside a longer outer fence', () => {
+    const content = `${fence}\`md\n${fence}ts\nconst a = 1;\n${fence}\n${fence}\`\n`;
+    const blocks = extractCodeBlocks(content);
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0]!.language).toBe('md');
   });
 });
 
-// ─── TUVIX_PACKAGES set ─────────────────────────────────
-
-describe('TUVIX_PACKAGES', () => {
-  it('contains all expected package names', () => {
-    expect(TUVIX_PACKAGES.has('tuvix.js')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/core')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/router')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/event-bus')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/loader')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/sandbox')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/react')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/vue')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/angular')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/devtools')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/module-federation')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/server')).toBe(true);
-    expect(TUVIX_PACKAGES.has('@tuvix.js/svelte')).toBe(true);
+describe('checkedExtension', () => {
+  it('checks every TypeScript block', () => {
+    expect(checkedExtension(extractCodeBlocks(md('x', 'typescript'))[0]!)).toBe(
+      '.ts'
+    );
+    expect(checkedExtension(extractCodeBlocks(md('x', 'tsx'))[0]!)).toBe(
+      '.tsx'
+    );
   });
 
-  it('does not contain external packages', () => {
-    expect(TUVIX_PACKAGES.has('react')).toBe(false);
-    expect(TUVIX_PACKAGES.has('vue')).toBe(false);
-    expect(TUVIX_PACKAGES.has('express')).toBe(false);
+  it('checks JavaScript blocks only when they import a tuvix package', () => {
+    const plain = extractCodeBlocks(md('console.log(1);', 'js'))[0]!;
+    const tuvix = extractCodeBlocks(
+      md(`import { createOrchestrator } from 'tuvix.js';`, 'js')
+    )[0]!;
+    expect(checkedExtension(plain)).toBeNull();
+    expect(checkedExtension(tuvix)).toBe('.js');
+  });
+
+  it('ignores non-code languages and skipped blocks', () => {
+    expect(
+      checkedExtension(extractCodeBlocks(md('pnpm add x', 'bash'))[0]!)
+    ).toBeNull();
+    expect(
+      checkedExtension(extractCodeBlocks(md('x', 'ts no-check'))[0]!)
+    ).toBeNull();
+  });
+});
+
+// ─── classification and discovery ───────────────────────
+
+describe('getLocale', () => {
+  it('treats website locale directories and README.<locale>.md as translated', () => {
+    expect(getLocale('website/tr/guide/a.md')).toBe('tr');
+    expect(getLocale('packages/core/README.ja.md')).toBe('ja');
+    expect(getLocale('README.zh.md')).toBe('zh');
+  });
+
+  it('treats everything else as English', () => {
+    expect(getLocale('website/guide/a.md')).toBeNull();
+    expect(getLocale('website/packages/core.md')).toBeNull();
+    expect(getLocale('packages/core/README.md')).toBeNull();
+    expect(getLocale('README.md')).toBeNull();
+  });
+});
+
+describe('findMarkdownFiles', () => {
+  it('includes READMEs and website pages, excludes changelogs and node_modules', () => {
+    const files = findMarkdownFiles().map((f) => path.relative(ROOT, f));
+    expect(files).toContain('README.md');
+    expect(files).toContain(path.join('packages', 'core', 'README.md'));
+    expect(
+      files.some((f) => f.startsWith(`website${path.sep}guide${path.sep}`))
+    ).toBe(true);
+    expect(files.some((f) => f.includes('CHANGELOG.md'))).toBe(false);
+    expect(files.some((f) => f.includes('node_modules'))).toBe(false);
+  });
+});
+
+describe('buildTuvixModuleMap', () => {
+  it('maps package names and exported subpaths to type entry files', () => {
+    const map = buildTuvixModuleMap();
+    expect(map.get('@tuvix.js/core')).toBe(
+      path.join(ROOT, 'packages/core/src/index.ts')
+    );
+    expect(map.get('@tuvix.js/vue/server')).toBe(
+      path.join(ROOT, 'packages/vue/src/server.ts')
+    );
+    expect(map.get('@tuvix.js/vite/client')).toBe(
+      path.join(ROOT, 'packages/vite/client.d.ts')
+    );
+    expect(map.has('@tuvix.js/core/package.json')).toBe(false);
+  });
+});
+
+// ─── checkMarkdown (real TypeScript program) ────────────
+
+describe('checkMarkdown', () => {
+  it('passes a block that matches the real API', () => {
+    const result = check(md(CORRECT));
+    expect(result.diagnostics).toEqual([]);
+    expect(result.checkedBlocks).toBe(1);
+  });
+
+  it('fails a wrong call signature with markdown line and column', () => {
+    const code = `import { createOrchestrator } from '@tuvix.js/core';\n\ncreateOrchestrator().register('header');`;
+    const { diagnostics } = check(md(code));
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0]).toMatchObject({
+      file: path.join('website', 'guide', 'fixture.md'),
+      line: 6,
+      column: 31,
+      code: 2345,
+      locale: null,
+    });
+  });
+
+  it('fails an import of a name the package does not export', () => {
+    const { diagnostics } = check(
+      md(`import { createApp } from '@tuvix.js/core';\ncreateApp();`)
+    );
+    expect(diagnostics.map((d) => d.code)).toEqual([2305]);
+  });
+
+  it('fails a tuvix subpath that is not exported', () => {
+    const { diagnostics } = check(
+      md(`import { createSandbox } from 'tuvix.js/sandbox';\ncreateSandbox();`)
+    );
+    expect(diagnostics.map((d) => d.code)).toEqual([2307]);
+  });
+
+  it('reports undeclared placeholders', () => {
+    const { diagnostics } = check(md(`await orchestrator.start();`));
+    expect(diagnostics.map((d) => d.code)).toEqual([2304]);
+  });
+
+  it('skips a wrong block marked no-check or preceded by the skip comment', () => {
+    const wrong = `import { createOrchestrator } from '@tuvix.js/core';\ncreateOrchestrator(42);`;
+    expect(check(md(wrong, 'ts no-check'))).toMatchObject({
+      diagnostics: [],
+      checkedBlocks: 0,
+      skippedBlocks: 1,
+    });
+    const skipped = check(md(wrong, 'ts', '<!-- tuvix-validate: skip -->\n'));
+    expect(skipped.diagnostics).toEqual([]);
+    expect(skipped.skippedBlocks).toBe(1);
+  });
+
+  it('types relative and uninstalled imports as any, values and types alike', () => {
+    const code = [
+      `import App, { Header, type HeaderProps } from './App.vue';`,
+      `import * as styles from './styles.module.css';`,
+      `import { thing } from 'some-package-that-is-not-installed';`,
+      `const props: HeaderProps<string> = { title: 'x' };`,
+      `App(Header, props, styles.root, thing);`,
+      `const lazy = await import('./Lazy');`,
+      `lazy.default();`,
+    ].join('\n');
+    expect(check(md(code)).diagnostics).toEqual([]);
+  });
+
+  it('checks TSX against installed React types', () => {
+    const code = [
+      `import { useState } from 'react';`,
+      `export function Counter() {`,
+      `  const [n, setN] = useState(0);`,
+      `  return <button onClick={() => setN(n + 1)}>{n}</button>;`,
+      `}`,
+      `const broken: number = <Counter />;`,
+    ].join('\n');
+    const { diagnostics } = check(md(code, 'tsx'));
+    expect(diagnostics.map((d) => [d.line, d.code])).toEqual([[9, 2322]]);
+  });
+
+  it('resolves the vite client types through a triple-slash reference', () => {
+    const code = [
+      `/// <reference types="@tuvix.js/vite/client" />`,
+      `import { getAssets } from 'virtual:tuvix/assets';`,
+      `const assets = await getAssets(['src/islands/footer/index.ts']);`,
+      `console.log(assets);`,
+    ].join('\n');
+    expect(check(md(code)).diagnostics).toEqual([]);
+  });
+
+  it('keeps blocks isolated so two blocks can declare the same name', () => {
+    expect(check(`${md(CORRECT)}\n${md(CORRECT)}`).diagnostics).toEqual([]);
+  });
+
+  it('checks JavaScript blocks that import tuvix', () => {
+    const { diagnostics } = check(
+      md(
+        `import { createOrchestrator } from 'tuvix.js';\ncreateOrchestrator().register('x');`,
+        'js'
+      )
+    );
+    expect(diagnostics.map((d) => d.code)).toEqual([2345]);
+  });
+
+  it('tags diagnostics from translated files with their locale', () => {
+    const { diagnostics } = check(
+      md(`await orchestrator.start();`),
+      'website/de/guide/fixture.md'
+    );
+    expect(diagnostics[0]!.locale).toBe('de');
   });
 });

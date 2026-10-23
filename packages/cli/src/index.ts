@@ -2,6 +2,7 @@ import { createProject } from './create-project';
 import { runPrompts } from './prompts';
 import { detectPackageManager } from './detect-pm';
 import { installDependencies } from './install';
+import { getCliVersion } from './version';
 import * as path from 'path';
 
 const HELP = `
@@ -75,7 +76,7 @@ async function main(): Promise<void> {
   }
 
   if (parsed.version) {
-    console.log('create-tuvix-app v0.1.0');
+    console.log(`create-tuvix-app v${getCliVersion()}`);
     process.exit(0);
   }
 

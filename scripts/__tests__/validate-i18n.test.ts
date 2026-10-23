@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { parseNavLinks, normalizeNavLink, extractBlock } from '../validate-i18n';
+import {
+  parseNavLinks,
+  normalizeNavLink,
+  extractBlock,
+} from '../validate-i18n';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
@@ -14,19 +18,19 @@ describe('extractBlock', () => {
   });
 
   it('extracts a nested array block', () => {
-    const src = "sidebar: [{ items: [1, 2] }]";
+    const src = 'sidebar: [{ items: [1, 2] }]';
     const result = extractBlock(src, 'sidebar:');
-    expect(result).toBe("[{ items: [1, 2] }]");
+    expect(result).toBe('[{ items: [1, 2] }]');
   });
 
   it('returns null when key is missing', () => {
-    expect(extractBlock("no nav here", 'nav:')).toBeNull();
+    expect(extractBlock('no nav here', 'nav:')).toBeNull();
   });
 
   it('handles deeply nested braces', () => {
-    const src = "nav: { a: { b: { c: 1 } } }";
+    const src = 'nav: { a: { b: { c: 1 } } }';
     const result = extractBlock(src, 'nav:');
-    expect(result).toBe("{ a: { b: { c: 1 } } }");
+    expect(result).toBe('{ a: { b: { c: 1 } } }');
   });
 });
 
@@ -34,8 +38,12 @@ describe('extractBlock', () => {
 
 describe('normalizeNavLink', () => {
   it('strips locale prefix from localized links', () => {
-    expect(normalizeNavLink('/de/guide/getting-started', 'de')).toBe('/guide/getting-started');
-    expect(normalizeNavLink('/tr/guide/getting-started', 'tr')).toBe('/guide/getting-started');
+    expect(normalizeNavLink('/de/guide/getting-started', 'de')).toBe(
+      '/guide/getting-started'
+    );
+    expect(normalizeNavLink('/tr/guide/getting-started', 'tr')).toBe(
+      '/guide/getting-started'
+    );
     expect(normalizeNavLink('/zh/packages/', 'zh')).toBe('/packages/');
   });
 
@@ -106,7 +114,9 @@ describe('parseNavLinks', () => {
   });
 
   it('returns empty array when no nav block', () => {
-    const file = writeTempConfig(`export const config = { themeConfig: { sidebar: [] } };`);
+    const file = writeTempConfig(
+      `export const config = { themeConfig: { sidebar: [] } };`
+    );
     expect(parseNavLinks(file)).toEqual([]);
   });
 
@@ -136,7 +146,9 @@ describe('parseNavLinks', () => {
     `);
 
     const enLinks = parseNavLinks(enFile);
-    const localeLinks = parseNavLinks(localeFile).map((l) => normalizeNavLink(l, 'tr'));
+    const localeLinks = parseNavLinks(localeFile).map((l) =>
+      normalizeNavLink(l, 'tr')
+    );
 
     expect(enLinks).toContain('/chatbot');
     expect(localeLinks).not.toContain('/chatbot');

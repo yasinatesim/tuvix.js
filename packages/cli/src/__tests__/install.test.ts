@@ -33,7 +33,6 @@ describe('installDependencies', () => {
       on: vi.fn().mockImplementation(function (
         this: EventEmitter,
         event: string,
-        // eslint-disable-next-line no-unused-vars
         cb: (code: number) => void
       ) {
         if (event === 'close') setTimeout(() => cb(0), 0);
@@ -54,7 +53,6 @@ describe('installDependencies', () => {
       on: vi.fn().mockImplementation(function (
         this: EventEmitter,
         event: string,
-        // eslint-disable-next-line no-unused-vars
         cb: (code: number) => void
       ) {
         if (event === 'close') setTimeout(() => cb(1), 0);
@@ -77,7 +75,6 @@ describe('installDependencies', () => {
       on: vi.fn().mockImplementation(function (
         this: EventEmitter,
         event: string,
-        // eslint-disable-next-line no-unused-vars
         cb: (err: Error) => void
       ) {
         if (event === 'error') setTimeout(() => cb(new Error('ENOENT')), 0);

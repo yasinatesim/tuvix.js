@@ -134,7 +134,7 @@ describe('createProject', () => {
         fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
       );
       expect(pkg.dependencies['@tuvix.js/svelte']).toBeDefined();
-      expect(pkg.dependencies.svelte).toBeDefined();
+      expect(pkg.dependencies.svelte).toBe('^5.0.0');
       expect(pkg.devDependencies['@sveltejs/vite-plugin-svelte']).toBeDefined();
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -166,7 +166,11 @@ describe('createProject', () => {
         fs.readFileSync(path.join(tmpDir, 'package.json'), 'utf-8')
       );
       expect(pkg.dependencies['@angular/core']).toBeDefined();
-      expect(pkg.dependencies['zone.js']).toBeDefined();
+      expect(pkg.dependencies['@tuvix.js/angular']).toBe('^0.5.0');
+      expect(pkg.dependencies['@tuvix.js/core']).toBeUndefined();
+      expect(pkg.dependencies['zone.js']).toBeUndefined();
+      const main = fs.readFileSync(path.join(tmpDir, 'src/main.ts'), 'utf-8');
+      expect(main).toContain("from '@tuvix.js/angular'");
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
