@@ -39,7 +39,6 @@ module.exports = {
       // No shared modules: the Vite shell has no webpack share scope,
       // so remotes bundle their own React rather than consuming from
       // a scope that never gets populated.
-
     }),
     new HtmlWebpackPlugin({ template: './public/index.html' }),
   ],

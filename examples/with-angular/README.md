@@ -13,9 +13,7 @@
 
 # with-angular
 
-Demonstrates basic **Angular 15+ integration** using `@tuvix.js/angular`.
-
-A single Angular CLI build outputs two distinct micro apps. They are exported to the global scope as Tuvix.js modules and registered with the shell orchestrator.
+Two Angular 16 standalone components mounted side by side by one Tuvix.js shell, with no zone.js on the page.
 
 ## Packages used
 
@@ -40,13 +38,31 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-angular
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:4200](http://localhost:4200).
 
+## What's inside
+
+```text
+with-angular/
+├── angular.json          ← "polyfills": [] (no zone.js)
+└── src/
+    ├── main.ts           ← shell: registers both apps with loader-function entries
+    ├── apps/
+    │   ├── home.ts       ← createAngularMicroApp({ name: 'home', component: HomeApp })
+    │   └── profile.ts
+    └── app/
+        ├── home.component.ts     ← standalone, @Input() name, click counter
+        └── profile.component.ts  ← standalone, @Input() theme
+```
+
 ## Key concepts
 
-- **`createAngularMicroApp(config)`** - Bootstraps an Angular standalone component or NgModules dynamically into a container.
-- **Props mapping** - `@tuvix.js/angular` automatically maps `props` passed from the shell into the Angular component's `@Input()` decorators. Whenever the shell updates a prop, the Angular component receives those changes via the standard lifecycle hooks (e.g., `ngOnChanges`).
+- **`createAngularMicroApp({ name, component })`** bootstraps the component into its own host element inside the container. Pass `module` as well when the component is declared in an NgModule.
+- **Inputs:** the shell's `props` are set with `setInput` before the first change detection, so `ngOnInit` already sees `name` and `theme`.
+- **Zoneless:** the adapter never loads zone.js. Angular 16 has no zoneless scheduler, so `HomeApp` calls `ChangeDetectorRef.detectChanges()` after its click. Angular 18 and later schedule change detection for you.
+- **Code splitting:** each `entry` is `() => import('./apps/home')`, so the Angular CLI emits one lazy chunk per app.
+- **Monorepo note:** `tsconfig.json` maps `@angular/*` and `rxjs` to this example's `node_modules`. Inside the pnpm workspace, `@tuvix.js/angular` is a symlink and would otherwise resolve its own copy of `@angular/core`, which fails with `NG0203`. A project that installs `@tuvix.js/angular` from npm does not need the mapping.

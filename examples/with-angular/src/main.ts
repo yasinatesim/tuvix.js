@@ -1,39 +1,27 @@
-import { createAngularMicroApp } from '@tuvix.js/angular';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { HomeAppModule } from './app/home.module';
-import { ProfileAppModule } from './app/profile.module';
 import { createOrchestrator } from '@tuvix.js/core';
 
-// 1. Create the Angular Micro Apps (pass NgModule + platform from consumer's Angular)
-const homeApp = createAngularMicroApp({ name: 'home', module: HomeAppModule, platform: platformBrowserDynamic, selector: 'app-home' });
-const profileApp = createAngularMicroApp({ name: 'profile', module: ProfileAppModule, platform: platformBrowserDynamic, selector: 'app-profile' });
-
-// 2. We expose the micro apps to the global scope since Angular CLI build outputs a single bundle for this example
-(window as any).__TUVIX_HOME_APP__ = homeApp;
-(window as any).__TUVIX_PROFILE_APP__ = profileApp;
-
-// 3. Initialize Orchestrator
 const orchestrator = createOrchestrator({
   onError(error: Error, appName: string) {
     console.error(`[Shell] App "${appName}" failed:`, error);
   },
 });
 
+// Each entry is a loader function, so the Angular CLI splits every app into
+// its own lazy chunk and the shell loads it on first mount.
 orchestrator.register({
   name: 'home',
-  entry: { scripts: [] },
+  entry: () => import('./apps/home'),
   container: '#home',
-  activeWhen: () => true,
+  activeWhen: '/',
   props: { name: 'Alice' },
 });
 
 orchestrator.register({
   name: 'profile',
-  entry: { scripts: [] },
+  entry: () => import('./apps/profile'),
   container: '#profile',
-  activeWhen: () => true,
+  activeWhen: '/',
   props: { theme: 'dark' },
 });
 
 orchestrator.start();
-console.log('🚀 Tuvix.js shell started (with-angular)');
