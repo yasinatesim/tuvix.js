@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createSSRApp, defineComponent, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import OrbitHome from '../home/OrbitHome.vue';
+import { FRAMEWORK_ICONS } from '../home/brand-icons';
 
 // Plain `{ value }` holders stand in for VitePress's refs; each render mounts a fresh app.
 const data = vi.hoisted(() => ({
@@ -32,7 +33,6 @@ const ORBIT_FRONTMATTER = {
   layout: 'home',
   markdownContent: false,
   hero: {
-    badge: 'TypeScript microfrontends',
     title: 'Many apps.',
     accent: 'One experience.',
     tagline: 'Tagline',
@@ -121,6 +121,15 @@ describe('OrbitHome', () => {
     expect(html).toContain(
       'aria-label="Copy install command: npm i @tuvix.js/react"'
     );
+  });
+
+  it('draws each framework card with its brand mark instead of a letter', async () => {
+    const html = await render(ORBIT_FRONTMATTER);
+    const section = html.slice(html.indexOf('id="orbit-frameworks-title"'));
+
+    expect(section).toContain(`d="${FRAMEWORK_ICONS.react.path}"`);
+    expect(section).toContain(FRAMEWORK_ICONS.react.color);
+    expect(section).not.toMatch(/aria-hidden="true">R</);
   });
 
   it('hides the markdown body when markdownContent is false', async () => {

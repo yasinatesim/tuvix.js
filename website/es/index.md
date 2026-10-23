@@ -12,7 +12,6 @@ markdownContent: false
 
 hero:
   name: Tuvix.js
-  badge: Microfrontends en TypeScript · MIT
   title: Muchas apps.
   accent: Una sola experiencia.
   tagline: Tuvix.js monta micro apps de React, Vue, Svelte, Angular y vanilla JS en una sola página host. El enrutamiento, un event bus, el sandboxing y el renderizado en el servidor llegan como paquetes separados que añades cuando los necesitas.
@@ -87,37 +86,38 @@ features:
     linkText: '@tuvix.js/server'
 
 frameworks:
-  eyebrow: Adaptadores
   title: Elige tu framework
   lead: Cada adaptador convierte un componente en una micro app que el orquestador puede montar, actualizar y desmontar.
   copyLabel: Copiar comando de instalación
   copiedLabel: Copiado
   items:
     - name: React
+      icon: react
       details: createReactMicroApp envuelve un componente. useTuvixProps y useTuvixBus leen props y eventos.
       install: npm i @tuvix.js/react
       link: /es/guide/react
     - name: Vue
+      icon: vue
       details: createVueMicroApp monta una app de Vue 3, con composables para props y el event bus.
       install: npm i @tuvix.js/vue
       link: /es/guide/vue
     - name: Svelte
+      icon: svelte
       details: createSvelteMicroApp monta componentes de Svelte 3, 4 y 5.
       install: npm i @tuvix.js/svelte
       link: /es/guide/svelte
     - name: Angular
+      icon: angular
       details: createAngularMicroApp inicializa un componente de Angular 15+ dentro de su contenedor.
       install: npm i @tuvix.js/angular
       link: /es/guide/angular
     - name: Vanilla JS
-      mark: JS
-      color: vanilla
+      icon: javascript
       details: defineMicroApp da a JavaScript plano los hooks mount, unmount y update.
       install: npm i @tuvix.js/core
       link: /es/guide/micro-apps
 
 packages:
-  eyebrow: Paquetes
   title: 15 paquetes, cada uno con su propia versión
   lead: Empieza con el paquete paraguas. Cambia a paquetes sueltos cuando quieras una instalación más pequeña.
   items:

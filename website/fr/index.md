@@ -12,7 +12,6 @@ markdownContent: false
 
 hero:
   name: Tuvix.js
-  badge: Microfrontends TypeScript · MIT
   title: Plusieurs apps.
   accent: Une seule expérience.
   tagline: Tuvix.js monte des micro apps React, Vue, Svelte, Angular et JavaScript vanilla dans une seule page hôte. Le routage, un event bus, l'isolation et le rendu côté serveur sont des paquets séparés, que vous ajoutez quand vous en avez besoin.
@@ -87,37 +86,38 @@ features:
     linkText: '@tuvix.js/server'
 
 frameworks:
-  eyebrow: Adaptateurs
   title: Choisissez votre framework
   lead: Chaque adaptateur transforme un composant en micro app que l'orchestrateur peut monter, mettre à jour et démonter.
   copyLabel: Copier la commande d'installation
   copiedLabel: Copié
   items:
     - name: React
+      icon: react
       details: createReactMicroApp enveloppe un composant. useTuvixProps et useTuvixBus lisent les props et les événements.
       install: npm i @tuvix.js/react
       link: /fr/guide/react
     - name: Vue
+      icon: vue
       details: createVueMicroApp monte une app Vue 3, avec des composables pour les props et l'event bus.
       install: npm i @tuvix.js/vue
       link: /fr/guide/vue
     - name: Svelte
+      icon: svelte
       details: createSvelteMicroApp monte des composants Svelte 3, 4 et 5.
       install: npm i @tuvix.js/svelte
       link: /fr/guide/svelte
     - name: Angular
+      icon: angular
       details: createAngularMicroApp fait le bootstrap d'un composant Angular 15+ dans son conteneur.
       install: npm i @tuvix.js/angular
       link: /fr/guide/angular
     - name: Vanilla JS
-      mark: JS
-      color: vanilla
+      icon: javascript
       details: defineMicroApp fournit des hooks mount, unmount et update en JavaScript pur.
       install: npm i @tuvix.js/core
       link: /fr/guide/micro-apps
 
 packages:
-  eyebrow: Paquets
   title: 15 paquets, chacun avec sa propre version
   lead: Commencez par le paquet tout-en-un. Passez aux paquets individuels quand vous voulez une installation plus légère.
   items:

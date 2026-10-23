@@ -12,7 +12,6 @@ markdownContent: false
 
 hero:
   name: Tuvix.js
-  badge: TypeScript 微前端 · MIT
   title: 多个应用。
   accent: 统一体验。
   tagline: Tuvix.js 把 React、Vue、Svelte、Angular 和原生 JS 微应用挂载到同一个宿主页面。路由、事件总线、沙箱和服务端渲染都是独立的包，需要时再添加。
@@ -87,37 +86,38 @@ features:
     linkText: '@tuvix.js/server'
 
 frameworks:
-  eyebrow: 适配器
   title: 选择你的框架
   lead: 每个适配器把一个组件变成微应用，编排器可以挂载、更新和卸载它。
   copyLabel: 复制安装命令
   copiedLabel: 已复制
   items:
     - name: React
+      icon: react
       details: createReactMicroApp 包装一个组件。useTuvixProps 和 useTuvixBus 读取 props 和事件。
       install: npm i @tuvix.js/react
       link: /zh/guide/react
     - name: Vue
+      icon: vue
       details: createVueMicroApp 挂载一个 Vue 3 应用，并提供读取 props 和事件总线的 composable。
       install: npm i @tuvix.js/vue
       link: /zh/guide/vue
     - name: Svelte
+      icon: svelte
       details: createSvelteMicroApp 挂载 Svelte 3、4 和 5 组件。
       install: npm i @tuvix.js/svelte
       link: /zh/guide/svelte
     - name: Angular
+      icon: angular
       details: createAngularMicroApp 把 Angular 15+ 组件初始化到它的容器中。
       install: npm i @tuvix.js/angular
       link: /zh/guide/angular
     - name: Vanilla JS
-      mark: JS
-      color: vanilla
+      icon: javascript
       details: defineMicroApp 为原生 JavaScript 提供 mount、unmount 和 update 钩子。
       install: npm i @tuvix.js/core
       link: /zh/guide/micro-apps
 
 packages:
-  eyebrow: 包
   title: 15 个包，各自独立发版
   lead: 从聚合包开始。想要更小的安装体积时，再换成单独的包。
   items:

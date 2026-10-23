@@ -13,7 +13,6 @@ defineProps<{ section: HomeSection<HomePackage> }>();
       <OrbitSectionHead
         id="orbit-packages-title"
         align="split"
-        :eyebrow="section.eyebrow"
         :title="section.title"
         :lead="section.lead"
       />

@@ -12,7 +12,6 @@ defineProps<{ section: HomeSection<HomeFeature> }>();
     <div :class="$style.inner">
       <OrbitSectionHead
         id="orbit-features-title"
-        :eyebrow="section.eyebrow"
         :title="section.title"
         :lead="section.lead"
       />

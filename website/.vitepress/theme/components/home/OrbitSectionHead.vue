@@ -2,24 +2,20 @@
 withDefaults(
   defineProps<{
     id: string;
-    eyebrow?: string;
     title?: string;
     lead?: string;
     align?: 'center' | 'split';
   }>(),
-  { eyebrow: undefined, title: undefined, lead: undefined, align: 'center' }
+  { title: undefined, lead: undefined, align: 'center' }
 );
 </script>
 
 <template>
   <div
-    v-if="eyebrow || title || lead"
+    v-if="title || lead"
     :class="[$style.head, align === 'split' ? $style.split : $style.center]"
   >
     <div>
-      <p v-if="eyebrow" :class="$style.eyebrow">
-        {{ eyebrow }}
-      </p>
       <h2 v-if="title" :id="id" :class="$style.title">
         {{ title }}
       </h2>
@@ -63,14 +59,6 @@ withDefaults(
       margin: 0;
     }
   }
-}
-
-.eyebrow {
-  margin: 0 0 10px;
-  color: var(--orbit-accent-text);
-  @include mono-label;
-  font-weight: 600;
-  text-transform: uppercase;
 }
 
 .title {

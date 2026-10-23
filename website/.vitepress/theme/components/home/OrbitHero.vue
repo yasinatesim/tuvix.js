@@ -30,11 +30,6 @@ const href = (link: string) => (isExternal(link) ? link : withBase(link));
         </slot>
       </div>
 
-      <p v-if="hero.badge" :class="$style.badge">
-        <OrbitIcon name="bolt" :size="13" />
-        <span>{{ hero.badge }}</span>
-      </p>
-
       <h1 :class="$style.title">
         {{ hero.title }}
         <span v-if="hero.accent" :class="$style.accent">{{ hero.accent }}</span>
@@ -153,26 +148,6 @@ const href = (link: string) => (isExternal(link) ? link : withBase(link));
     width: 64px;
     height: 64px;
     border-radius: 16px;
-  }
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 100%;
-  margin: 0 0 24px;
-  padding: 5px 14px;
-  border: 1px solid var(--orbit-accent-line);
-  border-radius: $radius-pill;
-  background: var(--orbit-surface);
-  box-shadow: 0 0 18px var(--orbit-glow);
-  color: var(--orbit-accent-text);
-  @include mono-label;
-
-  svg {
-    flex-shrink: 0;
-    color: var(--orbit-cyan);
   }
 }
 

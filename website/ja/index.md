@@ -12,7 +12,6 @@ markdownContent: false
 
 hero:
   name: Tuvix.js
-  badge: TypeScriptマイクロフロントエンド · MIT
   title: たくさんのアプリを。
   accent: ひとつの体験に。
   tagline: Tuvix.jsは、React、Vue、Svelte、Angular、vanilla JSのマイクロアプリを1つのホストページにマウントします。ルーティング、イベントバス、サンドボックス、サーバーレンダリングは個別のパッケージとして提供され、必要になったときに追加できます。
@@ -87,37 +86,38 @@ features:
     linkText: '@tuvix.js/server'
 
 frameworks:
-  eyebrow: アダプター
   title: フレームワークを選ぶ
   lead: 各アダプターは、コンポーネントをオーケストレーターがマウント、更新、アンマウントできるマイクロアプリに変換します。
   copyLabel: インストールコマンドをコピー
   copiedLabel: コピーしました
   items:
     - name: React
+      icon: react
       details: createReactMicroAppがコンポーネントをラップします。useTuvixPropsとuseTuvixBusでpropsとイベントを読み取ります。
       install: npm i @tuvix.js/react
       link: /ja/guide/react
     - name: Vue
+      icon: vue
       details: createVueMicroAppはVue 3アプリをマウントし、propsとイベントバス用のコンポーザブルを提供します。
       install: npm i @tuvix.js/vue
       link: /ja/guide/vue
     - name: Svelte
+      icon: svelte
       details: createSvelteMicroAppはSvelte 3、4、5のコンポーネントをマウントします。
       install: npm i @tuvix.js/svelte
       link: /ja/guide/svelte
     - name: Angular
+      icon: angular
       details: createAngularMicroAppはAngular 15以降のコンポーネントをコンテナにブートストラップします。
       install: npm i @tuvix.js/angular
       link: /ja/guide/angular
     - name: Vanilla JS
-      mark: JS
-      color: vanilla
+      icon: javascript
       details: defineMicroAppは素のJavaScriptにmount、unmount、updateのフックを提供します。
       install: npm i @tuvix.js/core
       link: /ja/guide/micro-apps
 
 packages:
-  eyebrow: パッケージ
   title: 15のパッケージ、それぞれ独自のバージョン
   lead: まずは統合パッケージから始めましょう。インストールを小さくしたいときは個別のパッケージに切り替えます。
   items:

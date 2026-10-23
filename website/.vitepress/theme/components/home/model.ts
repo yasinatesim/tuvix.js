@@ -10,6 +10,8 @@
  * hides the markdown body below the frontmatter.
  */
 
+import { isFrameworkIcon, type FrameworkIcon } from './brand-icons';
+
 export interface HomeLink {
   text: string;
   link: string;
@@ -20,7 +22,6 @@ export interface HomeAction extends HomeLink {
 }
 
 export interface HomeHero {
-  badge?: string;
   title: string;
   accent?: string;
   tagline?: string;
@@ -48,7 +49,6 @@ export interface HomeFeature {
 }
 
 export interface HomeSection<T> {
-  eyebrow?: string;
   title?: string;
   lead?: string;
   items: T[];
@@ -58,10 +58,8 @@ export interface HomeFramework {
   name: string;
   details: string;
   install: string;
-  /** Short monogram shown in the tile; defaults to the first letter of `name`. */
-  mark: string;
-  /** Palette key for the accent colour (`react`, `vue`, `svelte`, `angular`); other values use the brand accent. */
-  color: string;
+  /** Framework mark from brand-icons.ts; inferred from `name` when `icon` is missing. */
+  icon?: FrameworkIcon;
   link?: string;
 }
 
@@ -134,7 +132,6 @@ function section<T>(
 ): HomeSection<T> {
   const d = dict(value);
   return {
-    eyebrow: str(d.eyebrow),
     title: str(d.title),
     lead: str(d.lead),
     items: list(d.items)
@@ -163,7 +160,6 @@ function resolveHero(fm: Dict, defaults: HomeDefaults): HomeHero {
     .filter((action): action is HomeAction => action !== undefined);
 
   return {
-    badge: str(hero.badge),
     title,
     accent,
     tagline: str(hero.tagline),
@@ -208,13 +204,18 @@ function resolveFeatures(fm: Dict): HomeSection<HomeFeature> {
     };
   };
   return {
-    eyebrow: str(heading.eyebrow),
     title: str(heading.title),
     lead: str(heading.lead),
     items: list(fm.features)
       .map(mapFeature)
       .filter((item): item is HomeFeature => item !== undefined),
   };
+}
+
+/** `React` → `react`; names that are not a known framework get no mark. */
+function inferIcon(name: string): FrameworkIcon | undefined {
+  const key = name.toLowerCase();
+  return isFrameworkIcon(key) ? key : undefined;
 }
 
 function resolveFrameworks(fm: Dict): HomeModel['frameworks'] {
@@ -229,8 +230,7 @@ function resolveFrameworks(fm: Dict): HomeModel['frameworks'] {
       details,
       install,
       link: str(item.link),
-      mark: str(item.mark) ?? name.charAt(0).toUpperCase(),
-      color: str(item.color) ?? name.toLowerCase(),
+      icon: isFrameworkIcon(item.icon) ? item.icon : inferIcon(name),
     };
   });
   if (result.items.length === 0) return undefined;

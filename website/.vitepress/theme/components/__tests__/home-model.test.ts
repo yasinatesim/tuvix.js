@@ -117,7 +117,6 @@ describe('resolveHome locale fallback', () => {
 
     expect(home.hero.title).toBe('Tuvix.js');
     expect(home.hero.accent).toBe('Mikro Frontend Framework');
-    expect(home.hero.badge).toBeUndefined();
     expect(home.hero.logo).toEqual({ src: '/logo.svg', alt: 'Tuvix.js' });
     expect(home.hero.install.command).toBe(DEFAULT_INSTALL_COMMAND);
     expect(home.features.items[0].icon).toBe('🔧');
@@ -156,25 +155,31 @@ describe('resolveHome locale fallback', () => {
     expect(home.footer.columns).toEqual([]);
   });
 
-  it('derives framework monogram and colour from the name unless set', () => {
+  it('uses the frontmatter icon, infers it from a framework name, and drops unknown values', () => {
     const home = resolveHome({
       frameworks: {
         items: [
           { name: 'Svelte', details: 'd', install: 'npm i @tuvix.js/svelte' },
           {
             name: 'Vanilla JS',
-            mark: 'JS',
-            color: 'vanilla',
+            icon: 'javascript',
             details: 'd',
             install: 'npm i @tuvix.js/core',
+          },
+          {
+            name: 'Solid',
+            icon: 'solid',
+            details: 'd',
+            install: 'npm i solid-js',
           },
         ],
       },
     });
 
-    expect(home.frameworks?.items.map((f) => [f.mark, f.color])).toEqual([
-      ['S', 'svelte'],
-      ['JS', 'vanilla'],
+    expect(home.frameworks?.items.map((f) => f.icon)).toEqual([
+      'svelte',
+      'javascript',
+      undefined,
     ]);
   });
 });

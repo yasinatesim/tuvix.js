@@ -3,20 +3,12 @@ import { withBase } from 'vitepress';
 import CopyButton from './CopyButton.vue';
 import OrbitSectionHead from './OrbitSectionHead.vue';
 import { isExternal, type HomeModel } from './model';
+import { FRAMEWORK_ICONS, type FrameworkIcon } from './brand-icons';
 
 defineProps<{ section: NonNullable<HomeModel['frameworks']> }>();
 
-const PALETTE_KEYS: Record<string, true> = {
-  react: true,
-  vue: true,
-  svelte: true,
-  angular: true,
-};
-
-const tileColor = (color: string) =>
-  PALETTE_KEYS[color] === true
-    ? `var(--orbit-${color})`
-    : 'var(--orbit-accent-text)';
+const cardColor = (icon: FrameworkIcon | undefined) =>
+  icon ? FRAMEWORK_ICONS[icon].color : 'var(--orbit-accent-text)';
 
 /** Splits `npm i @tuvix.js/react` into the command and the package name. */
 const splitInstall = (install: string): [string, string] => {
@@ -33,7 +25,6 @@ const splitInstall = (install: string): [string, string] => {
       <OrbitSectionHead
         id="orbit-frameworks-title"
         align="split"
-        :eyebrow="section.eyebrow"
         :title="section.title"
         :lead="section.lead"
       />
@@ -42,9 +33,13 @@ const splitInstall = (install: string): [string, string] => {
           v-for="item in section.items"
           :key="item.name"
           :class="$style.card"
-          :style="{ '--fw-color': tileColor(item.color) }"
+          :style="{ '--fw-color': cardColor(item.icon) }"
         >
-          <span :class="$style.mark" aria-hidden="true">{{ item.mark }}</span>
+          <span v-if="item.icon" :class="$style.mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" focusable="false">
+              <path :d="FRAMEWORK_ICONS[item.icon].path" fill="currentColor" />
+            </svg>
+          </span>
           <h3 :class="$style.name">
             <a
               v-if="item.link"
@@ -125,19 +120,18 @@ const splitInstall = (install: string): [string, string] => {
   }
 }
 
+// Marks sit on a dark tile in both themes so every brand colour keeps its
+// contrast (React cyan and JavaScript yellow wash out on a light surface).
 .mark {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   margin-bottom: 16px;
-  border: 1px solid color-mix(in srgb, var(--fw-color) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fw-color) 35%, transparent);
   border-radius: $radius-md;
-  background: color-mix(in srgb, var(--fw-color) 12%, transparent);
+  background: #0d1117;
   color: var(--fw-color);
-  font-family: $font-mono;
-  font-size: 13px;
-  font-weight: 700;
 }
 
 .name {

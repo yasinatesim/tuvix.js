@@ -12,7 +12,6 @@ markdownContent: false
 
 hero:
   name: Tuvix.js
-  badge: TypeScript mikro frontend'ler · MIT
   title: Çok sayıda uygulama.
   accent: Tek bir deneyim.
   tagline: Tuvix.js; React, Vue, Svelte, Angular ve vanilla JS mikro uygulamalarını tek bir host sayfaya mount eder. Yönlendirme, event bus, sandbox ve sunucu tarafı render ayrı paketler olarak gelir, ihtiyaç duyduğunuzda eklersiniz.
@@ -87,37 +86,38 @@ features:
     linkText: '@tuvix.js/server'
 
 frameworks:
-  eyebrow: Adaptörler
   title: Framework'ünüzü seçin
   lead: Her adaptör bir bileşeni, orchestrator'ın mount, update ve unmount edebildiği bir mikro uygulamaya dönüştürür.
   copyLabel: Kurulum komutunu kopyala
   copiedLabel: Kopyalandı
   items:
     - name: React
+      icon: react
       details: createReactMicroApp bir bileşeni sarar. useTuvixProps ve useTuvixBus props'ları ve olayları okur.
       install: npm i @tuvix.js/react
       link: /tr/guide/react
     - name: Vue
+      icon: vue
       details: createVueMicroApp bir Vue 3 uygulamasını mount eder. Props ve event bus için composable'lar sunar.
       install: npm i @tuvix.js/vue
       link: /tr/guide/vue
     - name: Svelte
+      icon: svelte
       details: createSvelteMicroApp Svelte 3, 4 ve 5 bileşenlerini mount eder.
       install: npm i @tuvix.js/svelte
       link: /tr/guide/svelte
     - name: Angular
+      icon: angular
       details: createAngularMicroApp bir Angular 15+ bileşenini kendi container'ına bootstrap eder.
       install: npm i @tuvix.js/angular
       link: /tr/guide/angular
     - name: Vanilla JS
-      mark: JS
-      color: vanilla
+      icon: javascript
       details: defineMicroApp düz JavaScript'e mount, unmount ve update hook'ları verir.
       install: npm i @tuvix.js/core
       link: /tr/guide/micro-apps
 
 packages:
-  eyebrow: Paketler
   title: Her biri kendi sürümüne sahip 15 paket
   lead: Şemsiye paketle başlayın. Daha küçük bir kurulum istediğinizde tek tek paketlere geçin.
   items:

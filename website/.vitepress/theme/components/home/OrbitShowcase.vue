@@ -5,6 +5,7 @@ import OrbitIcon from './OrbitIcon.vue';
 import { tokenize } from './highlight';
 import type { HomeShowcase } from './model';
 import { HOST_SNIPPET, SHELL_APPS } from './showcase';
+import { FRAMEWORK_ICONS } from './brand-icons';
 
 defineProps<{ showcase: HomeShowcase }>();
 
@@ -78,6 +79,19 @@ onBeforeUnmount(() => clearInterval(timer));
           :data-active="i === active || undefined"
         >
           <span :class="$style.tileHead">
+            <svg
+              :class="$style.tileIcon"
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                :d="FRAMEWORK_ICONS[app.framework].path"
+                fill="currentColor"
+              />
+            </svg>
             <span :class="$style.framework">{{ app.label }}</span>
             <span :class="$style.mounted" :aria-hidden="i !== active">{{
               showcase.mountedLabel
@@ -338,7 +352,6 @@ onBeforeUnmount(() => clearInterval(timer));
 
 .urlLabel {
   color: var(--orbit-text-3);
-  text-transform: uppercase;
 }
 
 .url {
@@ -396,15 +409,18 @@ onBeforeUnmount(() => clearInterval(timer));
   margin-bottom: 4px;
 }
 
+.tileIcon {
+  flex-shrink: 0;
+  color: var(--tile-color);
+}
+
 .framework {
   margin-right: auto;
   white-space: nowrap;
-  font-family: $font-mono;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--tile-color);
+  font-family: $font-heading;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--orbit-text-1);
 }
 
 .tileDot {
@@ -442,15 +458,12 @@ onBeforeUnmount(() => clearInterval(timer));
 }
 
 .mounted {
-  padding: 1px 6px;
+  padding: 1px 7px;
   border-radius: 4px;
   background: color-mix(in srgb, var(--tile-color) 14%, transparent);
   color: var(--tile-color);
-  font-family: $font-mono;
-  font-size: 10px;
-  line-height: 14px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 11px;
+  line-height: 16px;
   opacity: 0;
   transition: opacity 0.35s;
 
