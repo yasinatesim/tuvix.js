@@ -2,24 +2,56 @@
  * Sandbox configuration options
  */
 export interface SandboxOptions {
-  /** Enable CSS isolation via Shadow DOM (default: true) */
+  /** Isolate CSS in a Shadow DOM (default: true). With `false`, no shadow root is attached. */
   css?: boolean;
 
-  /** Enable JS isolation via Proxy (default: true) */
+  /** Isolate global writes via a Proxy window (default: true) */
   js?: boolean;
 
-  /** Allow specific globals to pass through JS sandbox */
+  /**
+   * Extra global names that strict mode lets sandboxed code assign.
+   * Writes to them still land on the proxy, never on the real `window`.
+   */
   allowedGlobals?: string[];
 
-  /** Enable strict mode — block all writes to real window (default: false) */
+  /**
+   * Throw a `TypeError` when sandboxed code assigns or defines a global that is
+   * not in `allowedGlobals` or the built-in allowlist (default: false).
+   * Without strict mode those writes are kept on the proxy.
+   */
   strict?: boolean;
+}
+
+/**
+ * Stylesheets to place inside a shadow root with `adoptStyles`.
+ */
+export interface AdoptStylesOptions {
+  /** Stylesheet URLs, inserted as `<link rel="stylesheet">` in order. */
+  urls?: readonly string[];
+
+  /** CSS source, inserted as `<style>` elements after the links. */
+  cssText?: string | readonly string[];
+}
+
+/**
+ * Handle returned by `adoptStyles`.
+ */
+export interface AdoptedStyles {
+  /** Elements this call inserted. URLs that were already adopted are not repeated. */
+  readonly elements: readonly HTMLElement[];
+
+  /** Resolves when every adopted `<link>` fires `load` or `error`. Never rejects. */
+  readonly ready: Promise<void>;
+
+  /** Remove the elements this call inserted. */
+  remove(): void;
 }
 
 /**
  * CSS sandbox interface
  */
 export interface ICssSandbox {
-  /** Wrap a container element in Shadow DOM */
+  /** Move the container's children into its (new or reused) open shadow root */
   wrap(container: HTMLElement): ShadowRoot;
 
   /** Inject a stylesheet into the shadow root */
@@ -28,7 +60,13 @@ export interface ICssSandbox {
   /** Remove a stylesheet from the shadow root */
   removeStyle(shadowRoot: ShadowRoot, styleEl: HTMLStyleElement): void;
 
-  /** Remove the Shadow DOM wrapper, restore original container */
+  /** Insert an app's stylesheet URLs and CSS text at the start of the shadow root */
+  adoptStyles(
+    shadowRoot: ShadowRoot,
+    styles: AdoptStylesOptions
+  ): AdoptedStyles;
+
+  /** Move content back to the light DOM; the shadow root stays and renders it through a `<slot>` */
   unwrap(container: HTMLElement): void;
 }
 
@@ -36,13 +74,13 @@ export interface ICssSandbox {
  * JS sandbox interface
  */
 export interface IJsSandbox {
-  /** Activate the sandbox — subsequent global accesses go through proxy */
+  /** Mark the sandbox active */
   activate(): void;
 
-  /** Deactivate the sandbox — restore original window */
+  /** Mark the sandbox inactive. Faked globals stay stored. */
   deactivate(): void;
 
-  /** Execute a script string within the sandbox context */
+  /** Execute a script string with `window`, `self` and `globalThis` bound to the proxy */
   execScript(code: string): unknown;
 
   /** Reset the sandbox, clearing all faked properties */
@@ -65,8 +103,8 @@ export interface ISandbox {
   /** JS isolation controls */
   readonly js: IJsSandbox;
 
-  /** Activate all isolation layers */
-  activate(container: HTMLElement): ShadowRoot;
+  /** Activate all isolation layers. Returns the shadow root, or `null` when CSS isolation is off. */
+  activate(container: HTMLElement): ShadowRoot | null;
 
   /** Deactivate all isolation layers */
   deactivate(container: HTMLElement): void;

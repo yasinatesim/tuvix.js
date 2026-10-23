@@ -14,10 +14,11 @@ import { JsSandbox } from './js-sandbox';
  * ```ts
  * const sandbox = new Sandbox({ css: true, js: true });
  * const shadowRoot = sandbox.activate(container);
- *
- * // App runs in isolation — styles and globals are scoped
+ * // Render the app into `shadowRoot ?? container`.
  *
  * sandbox.deactivate(container);
+ * // Activating again reuses the same shadow root.
+ * sandbox.activate(container);
  * ```
  */
 export class Sandbox implements ISandbox {
@@ -50,18 +51,13 @@ export class Sandbox implements ISandbox {
 
   /**
    * Activate all isolation layers for a container.
-   * Returns the Shadow DOM root (if CSS isolation is enabled).
+   * Returns the shadow root when CSS isolation is on, otherwise `null`
+   * (no shadow root is attached).
    */
-  activate(container: HTMLElement): ShadowRoot {
-    let shadowRoot: ShadowRoot;
-
-    if (this.options.css) {
-      shadowRoot = this.cssSandbox.wrap(container);
-    } else {
-      // Return container's shadow root if it exists, or create minimal one
-      shadowRoot =
-        container.shadowRoot ?? container.attachShadow({ mode: 'open' });
-    }
+  activate(container: HTMLElement): ShadowRoot | null {
+    const shadowRoot = this.options.css
+      ? this.cssSandbox.wrap(container)
+      : null;
 
     if (this.options.js) {
       this.jsSandbox.activate();

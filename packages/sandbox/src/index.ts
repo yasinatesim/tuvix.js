@@ -12,4 +12,6 @@ export type {
   ICssSandbox,
   IJsSandbox,
   ISandbox,
+  AdoptStylesOptions,
+  AdoptedStyles,
 } from './types';

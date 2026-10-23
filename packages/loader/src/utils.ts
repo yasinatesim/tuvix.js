@@ -1,9 +1,17 @@
-import type { Entry, EntryConfig } from './types';
+import type { EntryConfig } from './types';
 
 /**
- * Normalize entry to EntryConfig format
+ * Turn a URL entry into an {@link EntryConfig}. Configs pass through unchanged.
+ * Loader-function entries have no URLs; check `typeof entry === 'function'` first.
+ *
+ * @example
+ * ```ts
+ * import { normalizeEntry } from '@tuvix.js/loader';
+ *
+ * normalizeEntry('https://cdn.example.com/app.js'); // { scripts: ['https://cdn.example.com/app.js'] }
+ * ```
  */
-export function normalizeEntry(entry: Entry): EntryConfig {
+export function normalizeEntry(entry: string | EntryConfig): EntryConfig {
   if (typeof entry === 'string') {
     return { scripts: [entry] };
   }
@@ -18,23 +26,30 @@ export function delay(ms: number): Promise<void> {
 }
 
 /**
- * Execute a function with timeout
+ * Run `fn` with a time limit. On timeout the returned promise rejects with
+ * `message` and the signal passed to `fn` aborts with the same error, so `fn`
+ * can stop its work.
  */
 export async function withTimeout<T>(
-  fn: () => Promise<T>,
+  fn: (signal: AbortSignal) => Promise<T>,
   timeoutMs: number,
   message = 'Operation timed out'
 ): Promise<T> {
+  const controller = new AbortController();
   if (timeoutMs <= 0) {
-    return fn();
+    return fn(controller.signal);
   }
 
   let timeoutId!: ReturnType<typeof setTimeout>;
   const timeoutPromise = new Promise<T>((_, reject) => {
-    timeoutId = setTimeout(() => reject(new Error(message)), timeoutMs);
+    timeoutId = setTimeout(() => {
+      const error = new Error(message);
+      reject(error);
+      controller.abort(error);
+    }, timeoutMs);
   });
 
-  return Promise.race([fn(), timeoutPromise]).finally(() => {
+  return Promise.race([fn(controller.signal), timeoutPromise]).finally(() => {
     clearTimeout(timeoutId);
   });
 }
