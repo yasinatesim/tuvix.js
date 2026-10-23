@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { transform } from 'esbuild';
+import { TUVIX_VERSIONS, playgroundImports } from '../playground-imports';
 
 /**
  * Tests for LivePlayground.vue code examples and transformers.
@@ -27,10 +28,14 @@ function extractCodeBlock(varName: string): string | null {
     const codeStart = start + tplMarker.length;
     let i = codeStart;
     while (i < source.length) {
-      if (source[i] === '\\') { i += 2; continue; }
+      if (source[i] === '\\') {
+        i += 2;
+        continue;
+      }
       if (source[i] === '`') {
         // Unescape: \` → `, \$ → $, \\ → \
-        return source.slice(codeStart, i)
+        return source
+          .slice(codeStart, i)
           .replace(/\\`/g, '`')
           .replace(/\\\$/g, '$')
           .replace(/\\\\/g, '\\');
@@ -69,7 +74,10 @@ function extractCodeBlock(varName: string): string | null {
  * Compile TypeScript/TSX code with esbuild — same as the playground does.
  * Returns the error message if compilation fails, null if successful.
  */
-async function compileCode(code: string, loader: 'ts' | 'tsx' = 'ts'): Promise<string | null> {
+async function compileCode(
+  code: string,
+  loader: 'ts' | 'tsx' = 'ts'
+): Promise<string | null> {
   try {
     await transform(code, {
       loader,
@@ -94,7 +102,12 @@ async function compileAngular(code: string): Promise<string | null> {
       loader: 'ts',
       format: 'esm',
       target: 'es2020',
-      tsconfigRaw: JSON.stringify({ compilerOptions: { experimentalDecorators: true, useDefineForClassFields: false } }),
+      tsconfigRaw: JSON.stringify({
+        compilerOptions: {
+          experimentalDecorators: true,
+          useDefineForClassFields: false,
+        },
+      }),
     });
     return null;
   } catch (err: unknown) {
@@ -122,26 +135,118 @@ function extractFunction(fnSignature: string): string | null {
   return source.slice(bodyStart + 1, i - 1);
 }
 
-// ── FRAMEWORK_IMPORTS ──────────────────────────────────────────────
+// ── Import maps ────────────────────────────────────────────────────
 
-describe('FRAMEWORK_IMPORTS', () => {
-  it('includes @tuvix.js/react in react imports', () => {
-    expect(source).toContain("'@tuvix.js/react':");
-    expect(source).toContain("esm.sh/@tuvix.js/react");
+const PACKAGES_DIR = resolve(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  '..',
+  '..',
+  'packages'
+);
+const PACKAGE_DIRS: Record<string, string> = {
+  'tuvix.js': 'tuvix',
+  '@tuvix.js/core': 'core',
+  '@tuvix.js/loader': 'loader',
+  '@tuvix.js/router': 'router',
+  '@tuvix.js/event-bus': 'event-bus',
+  '@tuvix.js/sandbox': 'sandbox',
+  '@tuvix.js/react': 'react',
+  '@tuvix.js/vue': 'vue',
+  '@tuvix.js/svelte': 'svelte',
+};
+
+function readPackageJson(name: string): {
+  name: string;
+  version: string;
+  dependencies?: Record<string, string>;
+} {
+  return JSON.parse(
+    readFileSync(
+      resolve(PACKAGES_DIR, PACKAGE_DIRS[name], 'package.json'),
+      'utf-8'
+    )
+  );
+}
+
+const TAB_IDS = ['vanilla', 'react', 'vue', 'svelte', 'angular'];
+const BINDINGS: Record<string, { pkg: string; peers: string[] }> = {
+  react: { pkg: '@tuvix.js/react', peers: ['react', 'react-dom/client'] },
+  vue: { pkg: '@tuvix.js/vue', peers: ['vue'] },
+  svelte: { pkg: '@tuvix.js/svelte', peers: ['svelte'] },
+};
+
+describe('playground import maps', () => {
+  it('reads every tuvix version from the repo package.json', () => {
+    expect(Object.keys(TUVIX_VERSIONS).sort()).toEqual(
+      Object.keys(PACKAGE_DIRS).sort()
+    );
+    for (const name of Object.keys(PACKAGE_DIRS)) {
+      const pkg = readPackageJson(name);
+      expect(pkg.name).toBe(name);
+      expect(TUVIX_VERSIONS[name]).toBe(pkg.version);
+    }
   });
 
-  it('includes @tuvix.js/vue in vue imports', () => {
-    expect(source).toContain("'@tuvix.js/vue':");
-    expect(source).toContain("esm.sh/@tuvix.js/vue");
-  });
+  for (const tab of TAB_IDS) {
+    it(`pins every tuvix package in the ${tab} map to its repo version`, () => {
+      const imports = playgroundImports(tab);
+      const tuvixEntries = Object.entries(imports).filter(
+        ([name]) => name === 'tuvix.js' || name.startsWith('@tuvix.js/')
+      );
+      expect(tuvixEntries.length).toBeGreaterThan(0);
+      for (const [name, url] of tuvixEntries) {
+        expect(url).toBe(
+          `https://esm.sh/*${name}@${readPackageJson(name).version}`
+        );
+      }
+    });
 
-  it('includes @tuvix.js/svelte in svelte imports', () => {
-    expect(source).toContain("'@tuvix.js/svelte':");
-    expect(source).toContain("esm.sh/@tuvix.js/svelte");
-  });
+    it(`resolves the tuvix dependencies of every package in the ${tab} map`, () => {
+      const imports = playgroundImports(tab);
+      for (const name of Object.keys(imports)) {
+        if (!(name in PACKAGE_DIRS)) continue;
+        // esm.sh `*` leaves dependencies as bare imports; the map must resolve them.
+        for (const dep of Object.keys(
+          readPackageJson(name).dependencies ?? {}
+        )) {
+          expect(imports, `${name} depends on ${dep}`).toHaveProperty([dep]);
+        }
+      }
+    });
+  }
 
-  it('still includes base tuvix.js package', () => {
-    expect(source).toContain("'tuvix.js':");
+  for (const [tab, { pkg, peers }] of Object.entries(BINDINGS)) {
+    it(`maps ${pkg} and its framework imports for the ${tab} tab`, () => {
+      const imports = playgroundImports(tab);
+      expect(imports).toHaveProperty([pkg]);
+      for (const peer of peers) expect(imports).toHaveProperty([peer]);
+    });
+  }
+
+  it('resolves every import in every demo against its tab map', () => {
+    const demos: Record<string, string[]> = {
+      vanilla: ['VANILLA_COUNTER_CODE', 'VANILLA_TODO_CODE'],
+      react: ['REACT_COUNTER_CODE', 'REACT_TODO_CODE'],
+      vue: ['VUE_COUNTER_CODE', 'VUE_TODO_CODE'],
+      angular: ['ANGULAR_COUNTER_CODE', 'ANGULAR_TODO_CODE'],
+    };
+    for (const [tab, vars] of Object.entries(demos)) {
+      const imports = playgroundImports(tab);
+      for (const varName of vars) {
+        const code = extractCodeBlock(varName);
+        expect(code, varName).not.toBeNull();
+        const specifiers = [
+          ...code!.matchAll(/^import .* from '([^']+)';$/gm),
+        ].map((m) => m[1]);
+        expect(specifiers.length, varName).toBeGreaterThan(0);
+        for (const spec of specifiers) {
+          expect(imports, `${varName} imports ${spec}`).toHaveProperty([spec]);
+        }
+      }
+    }
   });
 });
 
@@ -178,14 +283,18 @@ describe('React code examples', () => {
   it('REACT_COUNTER_CODE imports createReactMicroApp from @tuvix.js/react', () => {
     const code = extractCodeBlock('REACT_COUNTER_CODE');
     expect(code).not.toBeNull();
-    expect(code).toContain("import { createReactMicroApp } from '@tuvix.js/react'");
+    expect(code).toContain(
+      "import { createReactMicroApp } from '@tuvix.js/react'"
+    );
     expect(code).not.toContain('defineMicroApp');
   });
 
   it('REACT_TODO_CODE imports createReactMicroApp from @tuvix.js/react', () => {
     const code = extractCodeBlock('REACT_TODO_CODE');
     expect(code).not.toBeNull();
-    expect(code).toContain("import { createReactMicroApp } from '@tuvix.js/react'");
+    expect(code).toContain(
+      "import { createReactMicroApp } from '@tuvix.js/react'"
+    );
     expect(code).not.toContain('defineMicroApp');
   });
 
@@ -255,7 +364,9 @@ describe('Vue code examples', () => {
 // ── Vue SFC transformer still works for fallback ────────────────────
 
 describe('Vue SFC transformer (transformVueSFC)', () => {
-  const fnBody = extractFunction('function transformVueSFC(sfc: string): string');
+  const fnBody = extractFunction(
+    'function transformVueSFC(sfc: string): string'
+  );
 
   it('uses createVueMicroApp in transformer output', () => {
     expect(fnBody).not.toBeNull();
@@ -297,7 +408,9 @@ describe('Svelte code examples', () => {
 // ── Svelte transformer uses createSvelteMicroApp ───────────────────
 
 describe('Svelte transformer (transformSvelte)', () => {
-  const fnBody = extractFunction('async function transformSvelte(code: string): Promise<string>');
+  const fnBody = extractFunction(
+    'async function transformSvelte(code: string): Promise<string>'
+  );
 
   it('outputs createSvelteMicroApp', () => {
     expect(fnBody).not.toBeNull();
@@ -316,7 +429,9 @@ describe('Angular code examples', () => {
     const code = extractCodeBlock('ANGULAR_COUNTER_CODE');
     expect(code).not.toBeNull();
     expect(code).toContain("import { defineMicroApp } from 'tuvix.js'");
-    expect(code).toContain("import { bootstrapApplication } from '@angular/platform-browser'");
+    expect(code).toContain(
+      "import { bootstrapApplication } from '@angular/platform-browser'"
+    );
     expect(code).toContain('defineMicroApp({');
     expect(code).toContain("name: 'counter-angular'");
     expect(code).toContain('bootstrapApplication(CounterComponent)');
@@ -326,7 +441,9 @@ describe('Angular code examples', () => {
     const code = extractCodeBlock('ANGULAR_TODO_CODE');
     expect(code).not.toBeNull();
     expect(code).toContain("import { defineMicroApp } from 'tuvix.js'");
-    expect(code).toContain("import { bootstrapApplication } from '@angular/platform-browser'");
+    expect(code).toContain(
+      "import { bootstrapApplication } from '@angular/platform-browser'"
+    );
     expect(code).toContain('defineMicroApp({');
     expect(code).toContain("name: 'todo-angular'");
     expect(code).toContain('bootstrapApplication(TodoComponent)');
@@ -517,7 +634,9 @@ describe('esbuild compile validation', () => {
     expect(code).toContain('<script>');
     expect(code).toContain('{#each todos');
     // No invalid style interpolation (the old bug)
-    expect(code).not.toContain("style=\"flex:1;color:#e2e8f0;font-size:14px;{todo");
+    expect(code).not.toContain(
+      'style="flex:1;color:#e2e8f0;font-size:14px;{todo'
+    );
     // Should use style: directive instead
     expect(code).toContain('style:text-decoration');
     // No TypeScript annotations — CDN Svelte compiler doesn't support TS

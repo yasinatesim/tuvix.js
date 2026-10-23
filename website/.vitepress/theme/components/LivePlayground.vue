@@ -37,22 +37,14 @@
       <div class="editor-pane">
         <div class="pane-header">
           <span>{{ activeTabObj?.file }}</span>
-          <span
-            v-if="compiling"
-            class="compiling-pill"
-          >Compiling…</span>
+          <span v-if="compiling" class="compiling-pill">Compiling…</span>
         </div>
-        <div
-          ref="editorEl"
-          class="editor-mount"
-        />
+        <div ref="editorEl" class="editor-mount" />
       </div>
 
       <div class="right-pane">
         <div class="preview-pane">
-          <div class="pane-header">
-            <span class="live-dot" />Preview
-          </div>
+          <div class="pane-header"><span class="live-dot" />Preview</div>
           <iframe
             ref="iframeEl"
             class="preview-frame"
@@ -63,12 +55,7 @@
         <div class="console-pane">
           <div class="pane-header">
             Console
-            <button
-              class="clear-btn"
-              @click="messages = []"
-            >
-              Clear
-            </button>
+            <button class="clear-btn" @click="messages = []">Clear</button>
           </div>
           <div class="console-body">
             <div
@@ -79,15 +66,9 @@
             >
               <span class="msg-icon">{{ ICONS[msg.kind] }}</span>
               <span class="msg-text">{{ msg.text }}</span>
-              <span
-                v-if="msg.line"
-                class="msg-loc"
-              >:{{ msg.line }}</span>
+              <span v-if="msg.line" class="msg-loc">:{{ msg.line }}</span>
             </div>
-            <div
-              v-if="!messages.length"
-              class="console-empty"
-            >
+            <div v-if="!messages.length" class="console-empty">
               No output yet
             </div>
           </div>
@@ -99,13 +80,18 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { playgroundImports } from './playground-imports';
 
 // ── Closing script tag via unicode — keeps Vue SFC parser happy ────
 const CS = '<\u002Fscript>';
 
 // ── Icons ──────────────────────────────────────────────────────────
 const ICONS: Record<string, string> = {
-  log: '›', warn: '⚠', error: '✕', 'runtime-error': '❌', success: '✓',
+  log: '›',
+  warn: '⚠',
+  error: '✕',
+  'runtime-error': '❌',
+  success: '✓',
 };
 
 // ── Code examples ──────────────────────────────────────────────────
@@ -334,13 +320,13 @@ app.mount({ container: document.getElementById('app') as HTMLElement });
 const VUE_COUNTER_CODE = [
   "import { createVueMicroApp } from '@tuvix.js/vue';",
   "import { defineComponent, ref } from 'vue';",
-  "",
-  "const CounterApp = defineComponent({",
-  "  setup() {",
-  "    const count = ref(0);",
-  "    return { count };",
-  "  },",
-  "  template: `",
+  '',
+  'const CounterApp = defineComponent({',
+  '  setup() {',
+  '    const count = ref(0);',
+  '    return { count };',
+  '  },',
+  '  template: `',
   '    <div style="font-family:sans-serif;padding:24px;max-width:420px;text-align:center">',
   '      <h2 style="color:#00e5a0;margin:0 0 20px;font-size:20px">Counter — Vue</h2>',
   '      <div style="font-size:48px;font-weight:700;color:#e2e8f0;margin:0 0 20px">{{ count }}</div>',
@@ -351,53 +337,53 @@ const VUE_COUNTER_CODE = [
   '        <button @click="count++"',
   '          style="padding:10px 24px;background:#00e5a0;color:#000;border:none;',
   '                 border-radius:8px;cursor:pointer;font-size:20px;font-weight:600">+</button>',
-  "      </div>",
-  "    </div>",
-  "  `,",
-  "});",
-  "",
-  "const app = createVueMicroApp({",
+  '      </div>',
+  '    </div>',
+  '  `,',
+  '});',
+  '',
+  'const app = createVueMicroApp({',
   "  name: 'counter-vue',",
-  "  App: CounterApp,",
-  "});",
-  "",
+  '  App: CounterApp,',
+  '});',
+  '',
   "app.mount({ container: document.getElementById('app') as HTMLElement });",
 ].join('\n');
 
 const VUE_TODO_CODE = [
   "import { createVueMicroApp } from '@tuvix.js/vue';",
   "import { defineComponent, ref } from 'vue';",
-  "",
-  "const TodoApp = defineComponent({",
-  "  setup() {",
-  "    const todos = ref([",
+  '',
+  'const TodoApp = defineComponent({',
+  '  setup() {',
+  '    const todos = ref([',
   "      { id: 1, title: 'Learn tuvix.js', completed: false },",
   "      { id: 2, title: 'Build micro-apps', completed: false },",
-  "    ]);",
+  '    ]);',
   "    const input = ref('');",
-  "    const editingId = ref(null as number | null);",
+  '    const editingId = ref(null as number | null);',
   "    const editText = ref('');",
-  "",
-  "    const add = () => {",
+  '',
+  '    const add = () => {',
   "      if (input.value.trim()) { todos.value.push({ id: Date.now(), title: input.value.trim(), completed: false }); input.value = ''; }",
-  "    };",
-  "    const remove = (id: number) => { todos.value = todos.value.filter(t => t.id !== id); };",
-  "    const toggle = (id: number) => {",
-  "      const t = todos.value.find(x => x.id === id);",
-  "      if (t) t.completed = !t.completed;",
-  "    };",
-  "    const startEdit = (t: { id: number; title: string }) => { editingId.value = t.id; editText.value = t.title; };",
-  "    const saveEdit = () => {",
-  "      if (editingId.value !== null && editText.value.trim()) {",
-  "        const t = todos.value.find(x => x.id === editingId.value);",
-  "        if (t) t.title = editText.value.trim();",
-  "        editingId.value = null;",
-  "      }",
-  "    };",
-  "",
-  "    return { todos, input, editingId, editText, add, remove, toggle, startEdit, saveEdit };",
-  "  },",
-  "  template: `",
+  '    };',
+  '    const remove = (id: number) => { todos.value = todos.value.filter(t => t.id !== id); };',
+  '    const toggle = (id: number) => {',
+  '      const t = todos.value.find(x => x.id === id);',
+  '      if (t) t.completed = !t.completed;',
+  '    };',
+  '    const startEdit = (t: { id: number; title: string }) => { editingId.value = t.id; editText.value = t.title; };',
+  '    const saveEdit = () => {',
+  '      if (editingId.value !== null && editText.value.trim()) {',
+  '        const t = todos.value.find(x => x.id === editingId.value);',
+  '        if (t) t.title = editText.value.trim();',
+  '        editingId.value = null;',
+  '      }',
+  '    };',
+  '',
+  '    return { todos, input, editingId, editText, add, remove, toggle, startEdit, saveEdit };',
+  '  },',
+  '  template: `',
   '    <div style="font-family:sans-serif;padding:24px;max-width:420px">',
   '      <h2 style="color:#00e5a0;margin:0 0 16px;font-size:20px">Todo — Vue</h2>',
   '      <div style="display:flex;gap:8px;margin-bottom:16px">',
@@ -405,36 +391,36 @@ const VUE_TODO_CODE = [
   '          style="flex:1;padding:8px 12px;border:1px solid #2d3748;border-radius:6px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px" />',
   '        <button @click="add"',
   '          style="padding:8px 16px;background:#00e5a0;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px">Add</button>',
-  "      </div>",
+  '      </div>',
   '      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">',
   '        <li v-for="t in todos" :key="t.id"',
   '          style="display:flex;align-items:center;padding:10px 12px;background:#0d1117;border:1px solid #1e2d3d;border-radius:6px">',
   '          <input type="checkbox" :checked="t.completed" @change="toggle(t.id)"',
   '            style="margin-right:10px;cursor:pointer" />',
-  "          <template v-if=\"editingId === t.id\">",
+  '          <template v-if="editingId === t.id">',
   '            <input v-model="editText" @keydown.enter="saveEdit"',
   '              style="flex:1;padding:4px 8px;border:1px solid #2d3748;border-radius:4px;background:#0d1117;color:#e2e8f0;outline:none;font-size:14px;margin-right:6px" />',
   '            <button @click="saveEdit"',
   '              style="background:none;border:none;color:#00e5a0;cursor:pointer;font-size:14px">Save</button>',
-  "          </template>",
-  "          <template v-else>",
+  '          </template>',
+  '          <template v-else>',
   "            <span :style=\"{ flex:1, color:'#e2e8f0', fontSize:'14px', textDecoration: t.completed ? 'line-through' : 'none', opacity: t.completed ? 0.5 : 1 }\">{{ t.title }}</span>",
   '            <button @click="startEdit(t)"',
   '              style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:14px;margin-right:4px">Edit</button>',
-  "          </template>",
+  '          </template>',
   '          <button @click="remove(t.id)"',
   '            style="background:none;border:none;color:#5c7080;cursor:pointer;font-size:18px;line-height:1">&times;</button>',
-  "        </li>",
-  "      </ul>",
-  "    </div>",
-  "  `,",
-  "});",
-  "",
-  "const app = createVueMicroApp({",
+  '        </li>',
+  '      </ul>',
+  '    </div>',
+  '  `,',
+  '});',
+  '',
+  'const app = createVueMicroApp({',
   "  name: 'todo-vue',",
-  "  App: TodoApp,",
-  "});",
-  "",
+  '  App: TodoApp,',
+  '});',
+  '',
   "app.mount({ container: document.getElementById('app') as HTMLElement });",
 ].join('\n');
 
@@ -641,108 +627,101 @@ app.mount({ container: document.getElementById('app') as HTMLElement });
 
 // ── Demo code map ──────────────────────────────────────────────────
 const DEMO_CODES: Record<string, Record<string, string>> = {
-  vanilla:  { counter: VANILLA_COUNTER_CODE,  todo: VANILLA_TODO_CODE },
-  react:    { counter: REACT_COUNTER_CODE,    todo: REACT_TODO_CODE },
-  vue:      { counter: VUE_COUNTER_CODE,      todo: VUE_TODO_CODE },
-  svelte:   { counter: SVELTE_COUNTER_CODE,   todo: SVELTE_TODO_CODE },
-  angular:  { counter: ANGULAR_COUNTER_CODE,  todo: ANGULAR_TODO_CODE },
+  vanilla: { counter: VANILLA_COUNTER_CODE, todo: VANILLA_TODO_CODE },
+  react: { counter: REACT_COUNTER_CODE, todo: REACT_TODO_CODE },
+  vue: { counter: VUE_COUNTER_CODE, todo: VUE_TODO_CODE },
+  svelte: { counter: SVELTE_COUNTER_CODE, todo: SVELTE_TODO_CODE },
+  angular: { counter: ANGULAR_COUNTER_CODE, todo: ANGULAR_TODO_CODE },
 };
 
 // ── Tab definitions ────────────────────────────────────────────────
 const TABS = [
-  { id: 'vanilla',  label: 'Vanilla JS', file: 'app.ts',      lang: 'vanilla-ts',      icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#f7df1e"><rect width="24" height="24" rx="3"/><path d="M6 17.5c.4.7 1 1.2 1.8 1.2.8 0 1.2-.4 1.2-.9 0-.6-.5-.9-1.4-1.3l-.5-.2C5.7 15.7 5 14.9 5 13.6c0-1.4 1.1-2.5 2.7-2.5 1.2 0 2 .4 2.6 1.5l-1.4.9c-.3-.6-.6-.8-1.2-.8s-.9.4-.9.8c0 .6.4.8 1.2 1.2l.5.2c1.5.6 2.2 1.4 2.2 2.8 0 1.6-1.3 2.6-3 2.6-1.7 0-2.8-.8-3.3-1.9l1.6-.9zM13 17.5c.3.5.6.9 1.2.9.5 0 .9-.2.9-1v-5.3h1.8V17.4c0 1.7-1 2.5-2.5 2.5-1.3 0-2.1-.7-2.5-1.5l1.1-.9z" fill="#000"/></svg>' },
-  { id: 'react',    label: 'React',      file: 'App.tsx',      lang: 'react-ts',        icon: '<svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(120 12 12)"/></svg>' },
-  { id: 'vue',      label: 'Vue',        file: 'main.ts',      lang: 'typescript',            icon: '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M2 3h3.5L12 15 18.5 3H22L12 21z" fill="#42b883"/><path d="M6.5 3h3L12 8.5 14.5 3h3L12 14z" fill="#35495e"/></svg>' },
-  { id: 'svelte',   label: 'Svelte',     file: 'App.svelte',   lang: 'html',            icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#ff3e00"><path d="M20.3 4.3C17.8 1.1 13.2.4 10 2.9L4.2 7.4C2.8 8.5 1.9 10 1.7 11.7c-.2 1.3.1 2.7.9 3.8-.5.8-.8 1.8-.9 2.7-.2 1.8.4 3.5 1.5 4.8 2.5 3.2 7.1 3.9 10.3 1.4l5.8-4.5c1.4-1.1 2.3-2.6 2.5-4.3.2-1.3-.1-2.7-.9-3.8.5-.8.8-1.8.9-2.7.2-1.7-.4-3.5-1.5-4.8z"/><path d="M10.5 18.5c-1.7.5-3.5-.2-4.4-1.7-.6-1-.8-2.2-.5-3.3l.2-.6.5.4c.6.4 1.2.7 1.9.9l.2.1-.1.2c-.2.4-.1.9.2 1.2.5.6 1.3.8 2 .5l5.4-3.4c.3-.2.5-.5.5-.8 0-.3-.1-.6-.4-.8-.5-.4-1.3-.3-1.8.1l-1.9 1.2c-.7.4-1.5.6-2.3.6-1.7 0-3.1-1-3.8-2.5-.6-1.3-.5-2.9.3-4.1.9-1.2 2.3-1.9 3.8-1.8.7 0 1.4.2 2 .5l.5.3-.5-.3 5.5-3.5c.3-.2.7-.3 1-.3 1 0 1.9.5 2.4 1.3.5.8.6 1.8.3 2.7l-.2.6-.5-.4c-.6-.4-1.2-.7-1.9-.9l-.2-.1.1-.2c.2-.4.1-.9-.2-1.2-.5-.6-1.3-.8-2-.5l-5.4 3.4c-.3.2-.5.5-.5.8 0 .3.1.6.4.8.5.4 1.3.3 1.8-.1l1.9-1.2c.7-.4 1.5-.6 2.3-.6 1.7 0 3.1 1 3.8 2.5.6 1.3.5 2.9-.3 4.1-.9 1.2-2.3 1.9-3.8 1.8-.7 0-1.4-.2-2-.5l-5.5 3.5c-.3.2-.6.3-1 .3z" fill="#fff"/></svg>' },
-  { id: 'angular',  label: 'Angular',    file: 'app.component.ts', lang: 'angular-ts',  icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#dd0031"><path d="M12 2L2 6.5l1.6 13.2L12 22l8.4-2.3L22 6.5z"/><path d="M12 4.3l7 2.9-1.3 10.5L12 19.7l-5.7-2-1.3-10.5z" fill="#c3002f"/><path d="M12 6.5L8.5 15h1.3l.7-1.8h3l.7 1.8h1.3L12 6.5zm0 2.4l1.1 2.9h-2.2z" fill="#fff"/></svg>' },
+  {
+    id: 'vanilla',
+    label: 'Vanilla JS',
+    file: 'app.ts',
+    lang: 'vanilla-ts',
+    icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#f7df1e"><rect width="24" height="24" rx="3"/><path d="M6 17.5c.4.7 1 1.2 1.8 1.2.8 0 1.2-.4 1.2-.9 0-.6-.5-.9-1.4-1.3l-.5-.2C5.7 15.7 5 14.9 5 13.6c0-1.4 1.1-2.5 2.7-2.5 1.2 0 2 .4 2.6 1.5l-1.4.9c-.3-.6-.6-.8-1.2-.8s-.9.4-.9.8c0 .6.4.8 1.2 1.2l.5.2c1.5.6 2.2 1.4 2.2 2.8 0 1.6-1.3 2.6-3 2.6-1.7 0-2.8-.8-3.3-1.9l1.6-.9zM13 17.5c.3.5.6.9 1.2.9.5 0 .9-.2.9-1v-5.3h1.8V17.4c0 1.7-1 2.5-2.5 2.5-1.3 0-2.1-.7-2.5-1.5l1.1-.9z" fill="#000"/></svg>',
+  },
+  {
+    id: 'react',
+    label: 'React',
+    file: 'App.tsx',
+    lang: 'react-ts',
+    icon: '<svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2" fill="#61dafb"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="3.8" stroke="#61dafb" stroke-width="1.3" fill="none" transform="rotate(120 12 12)"/></svg>',
+  },
+  {
+    id: 'vue',
+    label: 'Vue',
+    file: 'main.ts',
+    lang: 'typescript',
+    icon: '<svg width="13" height="13" viewBox="0 0 24 24"><path d="M2 3h3.5L12 15 18.5 3H22L12 21z" fill="#42b883"/><path d="M6.5 3h3L12 8.5 14.5 3h3L12 14z" fill="#35495e"/></svg>',
+  },
+  {
+    id: 'svelte',
+    label: 'Svelte',
+    file: 'App.svelte',
+    lang: 'html',
+    icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#ff3e00"><path d="M20.3 4.3C17.8 1.1 13.2.4 10 2.9L4.2 7.4C2.8 8.5 1.9 10 1.7 11.7c-.2 1.3.1 2.7.9 3.8-.5.8-.8 1.8-.9 2.7-.2 1.8.4 3.5 1.5 4.8 2.5 3.2 7.1 3.9 10.3 1.4l5.8-4.5c1.4-1.1 2.3-2.6 2.5-4.3.2-1.3-.1-2.7-.9-3.8.5-.8.8-1.8.9-2.7.2-1.7-.4-3.5-1.5-4.8z"/><path d="M10.5 18.5c-1.7.5-3.5-.2-4.4-1.7-.6-1-.8-2.2-.5-3.3l.2-.6.5.4c.6.4 1.2.7 1.9.9l.2.1-.1.2c-.2.4-.1.9.2 1.2.5.6 1.3.8 2 .5l5.4-3.4c.3-.2.5-.5.5-.8 0-.3-.1-.6-.4-.8-.5-.4-1.3-.3-1.8.1l-1.9 1.2c-.7.4-1.5.6-2.3.6-1.7 0-3.1-1-3.8-2.5-.6-1.3-.5-2.9.3-4.1.9-1.2 2.3-1.9 3.8-1.8.7 0 1.4.2 2 .5l.5.3-.5-.3 5.5-3.5c.3-.2.7-.3 1-.3 1 0 1.9.5 2.4 1.3.5.8.6 1.8.3 2.7l-.2.6-.5-.4c-.6-.4-1.2-.7-1.9-.9l-.2-.1.1-.2c.2-.4.1-.9-.2-1.2-.5-.6-1.3-.8-2-.5l-5.4 3.4c-.3.2-.5.5-.5.8 0 .3.1.6.4.8.5.4 1.3.3 1.8-.1l1.9-1.2c.7-.4 1.5-.6 2.3-.6 1.7 0 3.1 1 3.8 2.5.6 1.3.5 2.9-.3 4.1-.9 1.2-2.3 1.9-3.8 1.8-.7 0-1.4-.2-2-.5l-5.5 3.5c-.3.2-.6.3-1 .3z" fill="#fff"/></svg>',
+  },
+  {
+    id: 'angular',
+    label: 'Angular',
+    file: 'app.component.ts',
+    lang: 'angular-ts',
+    icon: '<svg width="13" height="13" viewBox="0 0 24 24" fill="#dd0031"><path d="M12 2L2 6.5l1.6 13.2L12 22l8.4-2.3L22 6.5z"/><path d="M12 4.3l7 2.9-1.3 10.5L12 19.7l-5.7-2-1.3-10.5z" fill="#c3002f"/><path d="M12 6.5L8.5 15h1.3l.7-1.8h3l.7 1.8h1.3L12 6.5zm0 2.4l1.1 2.9h-2.2z" fill="#fff"/></svg>',
+  },
 ];
 
-// ── Importmaps ─────────────────────────────────────────────────────
-// tuvix.js core is 0.1.4, but framework bindings have independent versions
-const TUVIX = '0.1.4';
-const BASE: Record<string, string> = {
-  'tuvix.js':            `https://esm.sh/tuvix.js@${TUVIX}`,
-  '@tuvix.js/core':      `https://esm.sh/@tuvix.js/core@${TUVIX}`,
-  '@tuvix.js/loader':    `https://esm.sh/@tuvix.js/loader@${TUVIX}`,
-  '@tuvix.js/router':    `https://esm.sh/@tuvix.js/router@${TUVIX}`,
-  '@tuvix.js/event-bus': `https://esm.sh/@tuvix.js/event-bus@${TUVIX}`,
-  '@tuvix.js/sandbox':   `https://esm.sh/@tuvix.js/sandbox@${TUVIX}`,
-};
-const FRAMEWORK_IMPORTS: Record<string, Record<string, string>> = {
-  react: {
-    '@tuvix.js/react':   'https://esm.sh/@tuvix.js/react?external=react,react-dom,react-dom/client',
-    'react':             'https://esm.sh/react@18',
-    'react-dom':         'https://esm.sh/react-dom@18',
-    'react-dom/client':  'https://esm.sh/react-dom@18/client',
-    'react/jsx-runtime': 'https://esm.sh/react@18/jsx-runtime',
-  },
-  vue: {
-    '@tuvix.js/vue': 'https://esm.sh/@tuvix.js/vue?external=vue',
-    // Use full browser build so the runtime template compiler is available
-    'vue': 'https://cdn.jsdelivr.net/npm/vue@3/dist/vue.esm-browser.js',
-  },
-  svelte: {
-    '@tuvix.js/svelte':          'https://esm.sh/@tuvix.js/svelte?external=svelte',
-    'svelte':                    'https://esm.sh/svelte@4',
-    'svelte/internal':           'https://esm.sh/svelte@4/internal',
-    'svelte/internal/disclose-version': 'https://esm.sh/svelte@4/internal/disclose-version',
-    'svelte/store':              'https://esm.sh/svelte@4/store',
-    'svelte/transition':         'https://esm.sh/svelte@4/transition',
-    'svelte/animate':            'https://esm.sh/svelte@4/animate',
-    'svelte/easing':             'https://esm.sh/svelte@4/easing',
-    'svelte/motion':             'https://esm.sh/svelte@4/motion',
-  },
-  angular: {
-    '@angular/core':                    'https://esm.sh/@angular/core@17',
-    '@angular/common':                  'https://esm.sh/@angular/common@17',
-    '@angular/forms':                   'https://esm.sh/@angular/forms@17',
-    '@angular/compiler':                'https://esm.sh/@angular/compiler@17',
-    '@angular/platform-browser':        'https://esm.sh/@angular/platform-browser@17',
-    '@angular/platform-browser/animations': 'https://esm.sh/@angular/platform-browser@17/animations',
-    'rxjs':                             'https://esm.sh/rxjs@7',
-    'rxjs/operators':                   'https://esm.sh/rxjs@7/operators',
-  },
-};
-
 // ── Refs & state ───────────────────────────────────────────────────
-const activeTab  = ref('vanilla');
-const demoType   = ref<'counter' | 'todo'>('counter');
-const editorEl   = ref<HTMLElement>();
-const iframeEl   = ref<HTMLIFrameElement>();
-const messages   = ref<{ kind: string; text: string; line?: number }[]>([]);
-const compiling  = ref(false);
+const activeTab = ref('vanilla');
+const demoType = ref<'counter' | 'todo'>('counter');
+const editorEl = ref<HTMLElement>();
+const iframeEl = ref<HTMLIFrameElement>();
+const messages = ref<{ kind: string; text: string; line?: number }[]>([]);
+const compiling = ref(false);
 
-const activeTabObj = computed(() => TABS.find(t => t.id === activeTab.value));
+const activeTabObj = computed(() => TABS.find((t) => t.id === activeTab.value));
 
 function getCode(tabId: string, demo: string): string {
   return DEMO_CODES[tabId]?.[demo] ?? '';
 }
 
-let esbuild:       typeof import('esbuild-wasm') | null = null;
-let editorInst:    import('monaco-editor').editor.IStandaloneCodeEditor | null = null;
-let monacoApi:     typeof import('monaco-editor') | null = null;
-let debounce:      ReturnType<typeof setTimeout> | null = null;
+let esbuild: typeof import('esbuild-wasm') | null = null;
+let editorInst: import('monaco-editor').editor.IStandaloneCodeEditor | null =
+  null;
+let monacoApi: typeof import('monaco-editor') | null = null;
+let debounce: ReturnType<typeof setTimeout> | null = null;
 let compileId = 0;
 let injectedCss = '';
 
 // ── Frame builder ──────────────────────────────────────────────────
 function buildSrcdoc(code: string, tabId: string, injectedCss = ''): string {
-  const imports = { ...BASE, ...(FRAMEWORK_IMPORTS[tabId] ?? {}) };
+  const imports = playgroundImports(tabId);
   const importmap = JSON.stringify({ imports }, null, 2);
   const safe = code.replaceAll('<' + '/script>', '<\\/' + 'script>');
   // Angular needs zone.js + compiler loaded before anything else
-  const zoneTag = tabId === 'angular'
-    ? ['<script src="https://cdn.jsdelivr.net/npm/zone.js@0.15/bundles/zone.umd.min.js">', CS].join('')
-    : '';
-  const compilerTag = tabId === 'angular'
-    ? ['<script type="module">import "@angular/compiler";', CS].join('')
-    : '';
+  const zoneTag =
+    tabId === 'angular'
+      ? [
+          '<script src="https://cdn.jsdelivr.net/npm/zone.js@0.15/bundles/zone.umd.min.js">',
+          CS,
+        ].join('')
+      : '';
+  const compilerTag =
+    tabId === 'angular'
+      ? ['<script type="module">import "@angular/compiler";', CS].join('')
+      : '';
   return [
     '<!DOCTYPE html><html><head><meta charset="utf-8">',
     '<style>*{box-sizing:border-box}body{margin:0;background:#080c10;color:#e2e8f0}</style>',
-    injectedCss ? `<style>${injectedCss.replaceAll('<' + '/style>', '<\\/style>')}</style>` : '',
+    injectedCss
+      ? `<style>${injectedCss.replaceAll('<' + '/style>', '<\\/style>')}</style>`
+      : '',
     zoneTag,
-    '<script type="importmap">', importmap, CS,
+    '<script type="importmap">',
+    importmap,
+    CS,
     compilerTag,
     '<script>',
     "['log','warn','error'].forEach(m=>{const o=console[m];console[m]=(...a)=>{parent.postMessage({type:'console',level:m,args:a.map(String)},'*');o.apply(console,a)};});",
@@ -750,15 +729,20 @@ function buildSrcdoc(code: string, tabId: string, injectedCss = ''): string {
     "window.addEventListener('unhandledrejection',e=>{parent.postMessage({type:'runtime-error',msg:String(e.reason)},'*');});",
     CS,
     '</head><body><div id="app"></div>',
-    '<script type="module">', safe, "\nparent.postMessage({type:'mounted'},'*');", CS,
+    '<script type="module">',
+    safe,
+    "\nparent.postMessage({type:'mounted'},'*');",
+    CS,
     '</body></html>',
   ].join('');
 }
 
 // ── Vue SFC transformer ────────────────────────────────────────────
 function transformVueSFC(sfc: string): string {
-  const template = sfc.match(/<template>([\s\S]*?)<\/template>/)?.[1]?.trim() ?? '';
-  const scriptRaw = sfc.match(/<script[^>]*>([\s\S]*?)<\/script>/)?.[1]?.trim() ?? '';
+  const template =
+    sfc.match(/<template>([\s\S]*?)<\/template>/)?.[1]?.trim() ?? '';
+  const scriptRaw =
+    sfc.match(/<script[^>]*>([\s\S]*?)<\/script>/)?.[1]?.trim() ?? '';
 
   // Split imports from body
   const lines = scriptRaw.split('\n');
@@ -771,16 +755,16 @@ function transformVueSFC(sfc: string): string {
 
   // Collect top-level const/let/function names to return from setup()
   const names = bodyLines
-    .map(l => l.match(/^\s*(?:const|let|var)\s+(\w+)|^\s*function\s+(\w+)/))
+    .map((l) => l.match(/^\s*(?:const|let|var)\s+(\w+)|^\s*function\s+(\w+)/))
     .filter(Boolean)
-    .map(m => m![1] || m![2]);
+    .map((m) => m![1] || m![2]);
 
   // Escape the template for use inside a JS template literal
   const escapedTpl = template.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
 
   // Remove tuvix imports from user script (we add them ourselves)
   const userImports = importLines
-    .filter(l => !l.includes('tuvix') && !l.includes('defineMicroApp'))
+    .filter((l) => !l.includes('tuvix') && !l.includes('defineMicroApp'))
     .join('\n');
 
   return `
@@ -807,14 +791,26 @@ __app.mount({ container: document.getElementById('app') });
 // ── Svelte transformer ─────────────────────────────────────────────
 async function transformSvelte(code: string): Promise<string> {
   // Load Svelte compiler from CDN (lazy, cached after first load)
-  const svelte = await import(/* @vite-ignore */ 'https://esm.sh/svelte@4/compiler');
-  const { js } = (svelte as { compile: (code: string, opts: Record<string, unknown>) => { js: { code: string } } }).compile(code, {
+  const svelte = await import(
+    /* @vite-ignore */ 'https://esm.sh/svelte@4/compiler'
+  );
+  const { js } = (
+    svelte as {
+      compile: (
+        code: string,
+        opts: Record<string, unknown>
+      ) => { js: { code: string } };
+    }
+  ).compile(code, {
     filename: 'App.svelte',
     generate: 'client',
     enableSourcemap: false,
   });
   // Convert `export default App` to a local var so we can mount it
-  const compiled = (js.code as string).replace(/export default (\w+)/, 'const __SvelteApp = $1');
+  const compiled = (js.code as string).replace(
+    /export default (\w+)/,
+    'const __SvelteApp = $1'
+  );
   return `import { createSvelteMicroApp } from '@tuvix.js/svelte';
 ${compiled}
 const __app = createSvelteMicroApp({ name: 'svelte-app', App: __SvelteApp });
@@ -822,17 +818,25 @@ __app.mount({ container: document.getElementById('app') });`;
 }
 
 // ── Esbuild compilation ────────────────────────────────────────────
-async function compileWithEsbuild(code: string, tabId: string): Promise<string> {
-  const isReact   = tabId === 'react';
+async function compileWithEsbuild(
+  code: string,
+  tabId: string
+): Promise<string> {
+  const isReact = tabId === 'react';
   const isAngular = tabId === 'angular';
   const result = await esbuild!.transform(code, {
-    loader:          isReact ? 'tsx' : 'ts',
-    format:          'esm',
-    target:          'es2020',
-    jsx:             isReact ? 'automatic' : undefined,
-    jsxImportSource: isReact ? 'react'     : undefined,
-    tsconfigRaw:     isAngular
-      ? JSON.stringify({ compilerOptions: { experimentalDecorators: true, useDefineForClassFields: false } })
+    loader: isReact ? 'tsx' : 'ts',
+    format: 'esm',
+    target: 'es2020',
+    jsx: isReact ? 'automatic' : undefined,
+    jsxImportSource: isReact ? 'react' : undefined,
+    tsconfigRaw: isAngular
+      ? JSON.stringify({
+          compilerOptions: {
+            experimentalDecorators: true,
+            useDefineForClassFields: false,
+          },
+        })
       : undefined,
   });
   return result.code;
@@ -857,17 +861,28 @@ async function compile(code: string, tabId: string, id: number) {
       compiled = await compileWithEsbuild(code, tabId);
     }
     if (id !== compileId) return;
-    messages.value = [{ kind: 'success', text: `Compiled in ${Math.round(performance.now() - t0)}ms` }];
-    if (iframeEl.value) iframeEl.value.srcdoc = buildSrcdoc(compiled, tabId, injectedCss);
+    messages.value = [
+      {
+        kind: 'success',
+        text: `Compiled in ${Math.round(performance.now() - t0)}ms`,
+      },
+    ];
+    if (iframeEl.value)
+      iframeEl.value.srcdoc = buildSrcdoc(compiled, tabId, injectedCss);
   } catch (err: unknown) {
     if (id !== compileId) return;
-    const e = err as { errors?: { text: string; location?: { line: number } }[]; message?: string };
+    const e = err as {
+      errors?: { text: string; location?: { line: number } }[];
+      message?: string;
+    };
     const first = e.errors?.[0];
-    messages.value = [{
-      kind: 'error',
-      text: `Build error: ${first?.text ?? e.message ?? String(err)}`,
-      line: first?.location?.line,
-    }];
+    messages.value = [
+      {
+        kind: 'error',
+        text: `Build error: ${first?.text ?? e.message ?? String(err)}`,
+        line: first?.location?.line,
+      },
+    ];
     if (iframeEl.value) iframeEl.value.srcdoc = '';
   } finally {
     if (id === compileId) compiling.value = false;
@@ -876,12 +891,15 @@ async function compile(code: string, tabId: string, id: number) {
 
 function scheduleCompile(code: string) {
   if (debounce) clearTimeout(debounce);
-  debounce = setTimeout(() => { compileId++; compile(code, activeTab.value, compileId); }, 300);
+  debounce = setTimeout(() => {
+    compileId++;
+    compile(code, activeTab.value, compileId);
+  }, 300);
 }
 
 // ── Tab switching ──────────────────────────────────────────────────
 function loadEditor(tabId: string, demo: string) {
-  const tab = TABS.find(t => t.id === tabId)!;
+  const tab = TABS.find((t) => t.id === tabId)!;
   const code = getCode(tabId, demo);
   if (editorInst && monacoApi) {
     const oldModel = editorInst.getModel();
@@ -891,7 +909,9 @@ function loadEditor(tabId: string, demo: string) {
     const newModel = monacoApi.editor.createModel(code, tab.lang, uri);
     editorInst.setModel(newModel);
     oldModel?.dispose();
-    editorInst.onDidChangeModelContent(() => scheduleCompile(editorInst!.getValue()));
+    editorInst.onDidChangeModelContent(() =>
+      scheduleCompile(editorInst!.getValue())
+    );
   }
   messages.value = [];
   if (iframeEl.value) iframeEl.value.srcdoc = '';
@@ -912,8 +932,14 @@ function switchDemo(demo: 'counter' | 'todo') {
 function onMessage(e: MessageEvent) {
   if (e.source !== iframeEl.value?.contentWindow) return;
   const d = e.data;
-  if (d?.type === 'console')       messages.value.push({ kind: d.level, text: d.args.join(' ') });
-  if (d?.type === 'runtime-error') messages.value.push({ kind: 'runtime-error', text: `Runtime: ${d.msg}`, line: d.line });
+  if (d?.type === 'console')
+    messages.value.push({ kind: d.level, text: d.args.join(' ') });
+  if (d?.type === 'runtime-error')
+    messages.value.push({
+      kind: 'runtime-error',
+      text: `Runtime: ${d.msg}`,
+      line: d.line,
+    });
 }
 
 // ── Lifecycle ──────────────────────────────────────────────────────
@@ -926,18 +952,30 @@ onMounted(async () => {
   esbuild = eb;
 
   // Setup Monaco environment for workers
-  (window as Window & { MonacoEnvironment: { getWorkerUrl: (_: string, label: string) => string } }).MonacoEnvironment = {
+  (
+    window as Window & {
+      MonacoEnvironment: { getWorkerUrl: (_: string, label: string) => string };
+    }
+  ).MonacoEnvironment = {
     getWorkerUrl(_: string, label: string) {
       const base = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/esm/vs/';
-      if (label === 'html' || label === 'handlebars') return base + 'language/html/html.worker.js';
-      if (label === 'typescript' || label === 'javascript' || label === 'typescriptreact') return base + 'language/typescript/ts.worker.js';
+      if (label === 'html' || label === 'handlebars')
+        return base + 'language/html/html.worker.js';
+      if (
+        label === 'typescript' ||
+        label === 'javascript' ||
+        label === 'typescriptreact'
+      )
+        return base + 'language/typescript/ts.worker.js';
       return base + 'editor/editor.worker.js';
     },
   };
 
   // Init Monaco — pin version so worker URLs match
   const loader = await import('@monaco-editor/loader');
-  loader.default.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+  loader.default.config({
+    paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' },
+  });
   const monaco = await loader.default.init();
   monacoApi = monaco;
   if (!editorEl.value) return;
@@ -948,22 +986,96 @@ onMounted(async () => {
     defaultToken: '',
     tokenPostfix: '.ts',
     keywords: [
-      'abstract','any','as','async','await','boolean','break','case','catch','class',
-      'const','constructor','continue','debugger','declare','default','delete','do',
-      'else','enum','export','extends','false','finally','for','from','function','get',
-      'if','implements','import','in','infer','instanceof','interface','is','keyof',
-      'let','module','namespace','never','new','null','number','object','of','package',
-      'private','protected','public','readonly','require','return','set','static',
-      'string','super','switch','symbol','this','throw','true','try','type','typeof',
-      'undefined','unique','unknown','var','void','while','with','yield',
+      'abstract',
+      'any',
+      'as',
+      'async',
+      'await',
+      'boolean',
+      'break',
+      'case',
+      'catch',
+      'class',
+      'const',
+      'constructor',
+      'continue',
+      'debugger',
+      'declare',
+      'default',
+      'delete',
+      'do',
+      'else',
+      'enum',
+      'export',
+      'extends',
+      'false',
+      'finally',
+      'for',
+      'from',
+      'function',
+      'get',
+      'if',
+      'implements',
+      'import',
+      'in',
+      'infer',
+      'instanceof',
+      'interface',
+      'is',
+      'keyof',
+      'let',
+      'module',
+      'namespace',
+      'never',
+      'new',
+      'null',
+      'number',
+      'object',
+      'of',
+      'package',
+      'private',
+      'protected',
+      'public',
+      'readonly',
+      'require',
+      'return',
+      'set',
+      'static',
+      'string',
+      'super',
+      'switch',
+      'symbol',
+      'this',
+      'throw',
+      'true',
+      'try',
+      'type',
+      'typeof',
+      'undefined',
+      'unique',
+      'unknown',
+      'var',
+      'void',
+      'while',
+      'with',
+      'yield',
     ],
     tokenizer: {
       root: [
         // Angular: template: ` → switch to embedded HTML (no capture groups — nextEmbedded requires simple rule)
-        [/template\s*:\s*`/, { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' }],
+        [
+          /template\s*:\s*`/,
+          { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' },
+        ],
         [/@[a-zA-Z_$][\w$]*/, 'annotation'],
-        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
-        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [
+          /[a-zA-Z_$][\w$]*(?=\s*\()/,
+          { cases: { '@keywords': 'keyword', '@default': 'function' } },
+        ],
+        [
+          /[a-zA-Z_$][\w$]*/,
+          { cases: { '@keywords': 'keyword', '@default': 'identifier' } },
+        ],
         [/"([^"\\]|\\.)*$/, 'string.invalid'],
         [/"/, { token: 'string.quote', bracket: '@open', next: '@dblString' }],
         [/'([^'\\]|\\.)*$/, 'string.invalid'],
@@ -985,7 +1097,15 @@ onMounted(async () => {
         [/[+\-*/%&|^~?:]/, 'keyword.operator'],
       ],
       htmlTpl: [
-        [/`/, { token: 'string.tpl', bracket: '@close', next: '@pop', nextEmbedded: '@pop' }],
+        [
+          /`/,
+          {
+            token: 'string.tpl',
+            bracket: '@close',
+            next: '@pop',
+            nextEmbedded: '@pop',
+          },
+        ],
       ],
       dblString: [
         [/[^\\"]+/, 'string'],
@@ -1016,14 +1136,79 @@ onMounted(async () => {
     defaultToken: '',
     tokenPostfix: '.tsx',
     keywords: [
-      'abstract','any','as','async','await','boolean','break','case','catch','class',
-      'const','constructor','continue','debugger','declare','default','delete','do',
-      'else','enum','export','extends','false','finally','for','from','function','get',
-      'if','implements','import','in','infer','instanceof','interface','is','keyof',
-      'let','module','namespace','never','new','null','number','object','of','package',
-      'private','protected','public','readonly','require','return','set','static',
-      'string','super','switch','symbol','this','throw','true','try','type','typeof',
-      'undefined','unique','unknown','var','void','while','with','yield',
+      'abstract',
+      'any',
+      'as',
+      'async',
+      'await',
+      'boolean',
+      'break',
+      'case',
+      'catch',
+      'class',
+      'const',
+      'constructor',
+      'continue',
+      'debugger',
+      'declare',
+      'default',
+      'delete',
+      'do',
+      'else',
+      'enum',
+      'export',
+      'extends',
+      'false',
+      'finally',
+      'for',
+      'from',
+      'function',
+      'get',
+      'if',
+      'implements',
+      'import',
+      'in',
+      'infer',
+      'instanceof',
+      'interface',
+      'is',
+      'keyof',
+      'let',
+      'module',
+      'namespace',
+      'never',
+      'new',
+      'null',
+      'number',
+      'object',
+      'of',
+      'package',
+      'private',
+      'protected',
+      'public',
+      'readonly',
+      'require',
+      'return',
+      'set',
+      'static',
+      'string',
+      'super',
+      'switch',
+      'symbol',
+      'this',
+      'throw',
+      'true',
+      'try',
+      'type',
+      'typeof',
+      'undefined',
+      'unique',
+      'unknown',
+      'var',
+      'void',
+      'while',
+      'with',
+      'yield',
     ],
     tokenizer: {
       root: [
@@ -1034,11 +1219,20 @@ onMounted(async () => {
         // JSX fragment open <>
         [/<>/, 'delimiter.html'],
         // JSX opening/self-closing tag: split < from tagName
-        [/(<)([A-Za-z][A-Za-z0-9.-]*)/, ['delimiter.html', { token: 'tag', next: '@jsxAttr' }]],
+        [
+          /(<)([A-Za-z][A-Za-z0-9.-]*)/,
+          ['delimiter.html', { token: 'tag', next: '@jsxAttr' }],
+        ],
         [/@[a-zA-Z_$][\w$]*/, 'annotation'],
         // Function calls: fn( — keywords stay keyword, rest become function
-        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
-        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [
+          /[a-zA-Z_$][\w$]*(?=\s*\()/,
+          { cases: { '@keywords': 'keyword', '@default': 'function' } },
+        ],
+        [
+          /[a-zA-Z_$][\w$]*/,
+          { cases: { '@keywords': 'keyword', '@default': 'identifier' } },
+        ],
         [/"([^"\\]|\\.)*$/, 'string.invalid'],
         [/"/, { token: 'string.quote', bracket: '@open', next: '@dblString' }],
         [/'([^'\\]|\\.)*$/, 'string.invalid'],
@@ -1075,8 +1269,14 @@ onMounted(async () => {
       jsxExpr: [
         [/\{/, { token: 'delimiter', next: '@jsxExpr' }],
         [/\}/, { token: 'delimiter', next: '@pop' }],
-        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
-        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [
+          /[a-zA-Z_$][\w$]*(?=\s*\()/,
+          { cases: { '@keywords': 'keyword', '@default': 'function' } },
+        ],
+        [
+          /[a-zA-Z_$][\w$]*/,
+          { cases: { '@keywords': 'keyword', '@default': 'identifier' } },
+        ],
         [/"([^"\\]|\\.)*"/, 'string'],
         [/'([^'\\]|\\.)*'/, 'string'],
         [/`/, { token: 'string.quote', next: '@backtick' }],
@@ -1120,22 +1320,96 @@ onMounted(async () => {
     defaultToken: '',
     tokenPostfix: '.ts',
     keywords: [
-      'abstract','any','as','async','await','boolean','break','case','catch','class',
-      'const','constructor','continue','debugger','declare','default','delete','do',
-      'else','enum','export','extends','false','finally','for','from','function','get',
-      'if','implements','import','in','infer','instanceof','interface','is','keyof',
-      'let','module','namespace','never','new','null','number','object','of','package',
-      'private','protected','public','readonly','require','return','set','static',
-      'string','super','switch','symbol','this','throw','true','try','type','typeof',
-      'undefined','unique','unknown','var','void','while','with','yield',
+      'abstract',
+      'any',
+      'as',
+      'async',
+      'await',
+      'boolean',
+      'break',
+      'case',
+      'catch',
+      'class',
+      'const',
+      'constructor',
+      'continue',
+      'debugger',
+      'declare',
+      'default',
+      'delete',
+      'do',
+      'else',
+      'enum',
+      'export',
+      'extends',
+      'false',
+      'finally',
+      'for',
+      'from',
+      'function',
+      'get',
+      'if',
+      'implements',
+      'import',
+      'in',
+      'infer',
+      'instanceof',
+      'interface',
+      'is',
+      'keyof',
+      'let',
+      'module',
+      'namespace',
+      'never',
+      'new',
+      'null',
+      'number',
+      'object',
+      'of',
+      'package',
+      'private',
+      'protected',
+      'public',
+      'readonly',
+      'require',
+      'return',
+      'set',
+      'static',
+      'string',
+      'super',
+      'switch',
+      'symbol',
+      'this',
+      'throw',
+      'true',
+      'try',
+      'type',
+      'typeof',
+      'undefined',
+      'unique',
+      'unknown',
+      'var',
+      'void',
+      'while',
+      'with',
+      'yield',
     ],
     tokenizer: {
       root: [
         // = ` (not =>) → embedded HTML template literal
-        [/=(?!>)\s*`/, { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' }],
+        [
+          /=(?!>)\s*`/,
+          { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' },
+        ],
         [/@[a-zA-Z_$][\w$]*/, 'annotation'],
-        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
-        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [
+          /[a-zA-Z_$][\w$]*(?=\s*\()/,
+          { cases: { '@keywords': 'keyword', '@default': 'function' } },
+        ],
+        [
+          /[a-zA-Z_$][\w$]*/,
+          { cases: { '@keywords': 'keyword', '@default': 'identifier' } },
+        ],
         [/"([^"\\]|\\.)*$/, 'string.invalid'],
         [/"/, { token: 'string.quote', bracket: '@open', next: '@dblString' }],
         [/'([^'\\]|\\.)*$/, 'string.invalid'],
@@ -1158,16 +1432,28 @@ onMounted(async () => {
       // Embedded HTML template — exit on ` or temporarily exit on ${
       htmlTpl: [
         [/`/, { token: 'string.tpl', next: '@pop', nextEmbedded: '@pop' }],
-        [/\$\{/, { token: 'delimiter.ts', next: '@tplExpr', nextEmbedded: '@pop' }],
+        [
+          /\$\{/,
+          { token: 'delimiter.ts', next: '@tplExpr', nextEmbedded: '@pop' },
+        ],
       ],
       // Inside ${ ... } — re-enter HTML on closing }
       tplExpr: [
-        [/=(?!>)\s*`/, { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' }],
+        [
+          /=(?!>)\s*`/,
+          { token: 'string.tpl', next: '@htmlTpl', nextEmbedded: 'html' },
+        ],
         [/`/, { token: 'string.quote', next: '@backtick' }],
         [/\{/, { token: 'delimiter', next: '@tplExpr' }],
         [/\}/, { token: 'delimiter.ts', next: '@pop', nextEmbedded: 'html' }],
-        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
-        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [
+          /[a-zA-Z_$][\w$]*(?=\s*\()/,
+          { cases: { '@keywords': 'keyword', '@default': 'function' } },
+        ],
+        [
+          /[a-zA-Z_$][\w$]*/,
+          { cases: { '@keywords': 'keyword', '@default': 'identifier' } },
+        ],
         [/"([^"\\]|\\.)*"/, 'string'],
         [/'([^'\\]|\\.)*'/, 'string'],
         [/\/\/.*$/, 'comment'],
@@ -1201,8 +1487,14 @@ onMounted(async () => {
       tplExprNoEmbed: [
         [/\{/, { token: 'delimiter', next: '@tplExprNoEmbed' }],
         [/\}/, { token: 'delimiter', next: '@pop' }],
-        [/[a-zA-Z_$][\w$]*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'function' } }],
-        [/[a-zA-Z_$][\w$]*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+        [
+          /[a-zA-Z_$][\w$]*(?=\s*\()/,
+          { cases: { '@keywords': 'keyword', '@default': 'function' } },
+        ],
+        [
+          /[a-zA-Z_$][\w$]*/,
+          { cases: { '@keywords': 'keyword', '@default': 'identifier' } },
+        ],
         [/"([^"\\]|\\.)*"/, 'string'],
         [/'([^'\\]|\\.)*'/, 'string'],
         [/\d+/, 'number'],
@@ -1221,75 +1513,78 @@ onMounted(async () => {
   } as import('monaco-editor').languages.IMonarchLanguage);
 
   // Apply same TS diagnostics to angular-ts
-  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({ noSemanticValidation: true, noSyntaxValidation: false });
+  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+    noSemanticValidation: true,
+    noSyntaxValidation: false,
+  });
 
   // Darcula theme (IntelliJ-style)
   monaco.editor.defineTheme('darcula', {
     base: 'vs-dark',
     inherit: true,
     rules: [
-      { token: '',                    foreground: 'A9B7C6', background: '2B2B2B' },
-      { token: 'comment',             foreground: '808080', fontStyle: 'italic' },
-      { token: 'comment.doc',         foreground: '629755', fontStyle: 'italic' },
-      { token: 'string',              foreground: '6A8759' },
-      { token: 'string.escape',       foreground: 'CC7832' },
-      { token: 'keyword',             foreground: 'CC7832', fontStyle: 'bold' },
-      { token: 'keyword.operator',    foreground: 'CC7832' },
-      { token: 'number',              foreground: '6897BB' },
-      { token: 'delimiter',           foreground: 'CC7832' },
-      { token: 'type',                foreground: 'A9B7C6' },
-      { token: 'type.identifier',     foreground: 'A9B7C6' },
-      { token: 'identifier',          foreground: 'A9B7C6' },
-      { token: 'variable',            foreground: 'A9B7C6' },
+      { token: '', foreground: 'A9B7C6', background: '2B2B2B' },
+      { token: 'comment', foreground: '808080', fontStyle: 'italic' },
+      { token: 'comment.doc', foreground: '629755', fontStyle: 'italic' },
+      { token: 'string', foreground: '6A8759' },
+      { token: 'string.escape', foreground: 'CC7832' },
+      { token: 'keyword', foreground: 'CC7832', fontStyle: 'bold' },
+      { token: 'keyword.operator', foreground: 'CC7832' },
+      { token: 'number', foreground: '6897BB' },
+      { token: 'delimiter', foreground: 'CC7832' },
+      { token: 'type', foreground: 'A9B7C6' },
+      { token: 'type.identifier', foreground: 'A9B7C6' },
+      { token: 'identifier', foreground: 'A9B7C6' },
+      { token: 'variable', foreground: 'A9B7C6' },
       { token: 'variable.predefined', foreground: '9876AA' },
-      { token: 'function',            foreground: 'FFC66D' },
-      { token: 'tag',                 foreground: 'E8BF6A' },
-      { token: 'attribute.name',      foreground: 'BABABA' },
-      { token: 'attribute.value',     foreground: '6A8759' },
-      { token: 'metatag',             foreground: 'E8BF6A' },
-      { token: 'annotation',          foreground: 'BBB529' },
-      { token: 'regexp',              foreground: '364135' },
+      { token: 'function', foreground: 'FFC66D' },
+      { token: 'tag', foreground: 'E8BF6A' },
+      { token: 'attribute.name', foreground: 'BABABA' },
+      { token: 'attribute.value', foreground: '6A8759' },
+      { token: 'metatag', foreground: 'E8BF6A' },
+      { token: 'annotation', foreground: 'BBB529' },
+      { token: 'regexp', foreground: '364135' },
       // JSX / HTML tokens (used by typescriptreact and html language modes)
-      { token: 'tag.html',            foreground: 'E8BF6A' },
-      { token: 'tag.tsx',             foreground: 'E8BF6A' },
-      { token: 'tag.ts',              foreground: 'E8BF6A' },
-      { token: 'delimiter.html',      foreground: 'E8BF6A' },
-      { token: 'delimiter.tsx',       foreground: 'E8BF6A' },
+      { token: 'tag.html', foreground: 'E8BF6A' },
+      { token: 'tag.tsx', foreground: 'E8BF6A' },
+      { token: 'tag.ts', foreground: 'E8BF6A' },
+      { token: 'delimiter.html', foreground: 'E8BF6A' },
+      { token: 'delimiter.tsx', foreground: 'E8BF6A' },
       { token: 'attribute.name.html', foreground: 'BABABA' },
-      { token: 'attribute.name.tsx',  foreground: 'BABABA' },
-      { token: 'attribute.value.html',foreground: '6A8759' },
+      { token: 'attribute.name.tsx', foreground: 'BABABA' },
+      { token: 'attribute.value.html', foreground: '6A8759' },
       { token: 'attribute.value.tsx', foreground: '6A8759' },
-      { token: 'string.tpl',          foreground: '6A8759' },
+      { token: 'string.tpl', foreground: '6A8759' },
       // CSS tokens (Monaco embeds CSS inside style="" attributes automatically)
-      { token: 'attribute.name.css',        foreground: '9876AA' },  // property names: font-family, padding
-      { token: 'attribute.value.css',       foreground: 'A9B7C6' },
-      { token: 'keyword.css',               foreground: '6A8759' },  // value keywords: none, flex, bold, sans-serif
-      { token: 'number.css',                foreground: '6897BB' },  // numbers: 24, 0.5
-      { token: 'unit.css',                  foreground: '6897BB' },  // px, em, rem, %
-      { token: 'string.css',                foreground: '6A8759' },
-      { token: 'delimiter.css',             foreground: 'CC7832' },  // : ;
-      { token: 'delimiter.bracket.css',     foreground: 'CC7832' },
-      { token: 'selector.css',              foreground: 'E8BF6A' },
-      { token: 'tag.css',                   foreground: 'E8BF6A' },
-      { token: 'pseudo.css',                foreground: 'A9B7C6' },
-      { token: 'meta.scss',                 foreground: 'BABABA' },
+      { token: 'attribute.name.css', foreground: '9876AA' }, // property names: font-family, padding
+      { token: 'attribute.value.css', foreground: 'A9B7C6' },
+      { token: 'keyword.css', foreground: '6A8759' }, // value keywords: none, flex, bold, sans-serif
+      { token: 'number.css', foreground: '6897BB' }, // numbers: 24, 0.5
+      { token: 'unit.css', foreground: '6897BB' }, // px, em, rem, %
+      { token: 'string.css', foreground: '6A8759' },
+      { token: 'delimiter.css', foreground: 'CC7832' }, // : ;
+      { token: 'delimiter.bracket.css', foreground: 'CC7832' },
+      { token: 'selector.css', foreground: 'E8BF6A' },
+      { token: 'tag.css', foreground: 'E8BF6A' },
+      { token: 'pseudo.css', foreground: 'A9B7C6' },
+      { token: 'meta.scss', foreground: 'BABABA' },
     ],
     colors: {
-      'editor.background':               '#2B2B2B',
-      'editor.foreground':               '#A9B7C6',
-      'editor.lineHighlightBackground':  '#323232',
-      'editor.selectionBackground':      '#214283',
+      'editor.background': '#2B2B2B',
+      'editor.foreground': '#A9B7C6',
+      'editor.lineHighlightBackground': '#323232',
+      'editor.selectionBackground': '#214283',
       'editor.inactiveSelectionBackground': '#214283AA',
-      'editorLineNumber.foreground':     '#606366',
+      'editorLineNumber.foreground': '#606366',
       'editorLineNumber.activeForeground': '#A4A3A3',
-      'editorIndentGuide.background':    '#3B3B3B',
-      'editorCursor.foreground':         '#EFEFEF',
-      'editorWhitespace.foreground':     '#3B3B3B',
-      'editorWidget.background':         '#3C3F41',
-      'editorSuggestWidget.background':  '#3C3F41',
-      'editorSuggestWidget.border':      '#4B4B4B',
+      'editorIndentGuide.background': '#3B3B3B',
+      'editorCursor.foreground': '#EFEFEF',
+      'editorWhitespace.foreground': '#3B3B3B',
+      'editorWidget.background': '#3C3F41',
+      'editorSuggestWidget.background': '#3C3F41',
+      'editorSuggestWidget.border': '#4B4B4B',
       'editorSuggestWidget.selectedBackground': '#4B6EAF',
-      'scrollbarSlider.background':      '#4C5052AA',
+      'scrollbarSlider.background': '#4C5052AA',
       'scrollbarSlider.hoverBackground': '#616161AA',
       'editorBracketHighlight.foreground1': '#FFD700',
       'editorBracketHighlight.foreground2': '#DA70D6',
@@ -1313,36 +1608,41 @@ onMounted(async () => {
   });
   tsDefaults.setDiagnosticsOptions({
     noSemanticValidation: true,
-    noSyntaxValidation:   false,
+    noSyntaxValidation: false,
   });
 
   // Apply same config to TSX (React)
   monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
     noSemanticValidation: true,
-    noSyntaxValidation:   false,
+    noSyntaxValidation: false,
   });
 
   // Create initial model with proper file URI so TypeScript service treats it as a .ts file
   const firstTab = TABS[0];
   const firstCode = getCode(firstTab.id, demoType.value);
   const firstUri = monaco.Uri.parse(`file:///playground/${firstTab.file}`);
-  const firstModel = monaco.editor.createModel(firstCode, firstTab.lang, firstUri);
+  const firstModel = monaco.editor.createModel(
+    firstCode,
+    firstTab.lang,
+    firstUri
+  );
 
   editorInst = monaco.editor.create(editorEl.value, {
-    model:                firstModel,
-    theme:                'darcula',
-    fontSize:             14,
-    fontFamily:           "'FiraCode-Retina', 'Fira Code', 'JetBrains Mono', ui-monospace, monospace",
-    fontLigatures:        true,
-    minimap:              { enabled: false },
+    model: firstModel,
+    theme: 'darcula',
+    fontSize: 14,
+    fontFamily:
+      "'FiraCode-Retina', 'Fira Code', 'JetBrains Mono', ui-monospace, monospace",
+    fontLigatures: true,
+    minimap: { enabled: false },
     scrollBeyondLastLine: false,
-    lineNumbers:          'on',
-    tabSize:              2,
-    automaticLayout:      true,
-    padding:              { top: 14 },
-    wordWrap:             'on',
-    lineHeight:           30,
-    renderWhitespace:     'none',
+    lineNumbers: 'on',
+    tabSize: 2,
+    automaticLayout: true,
+    padding: { top: 14 },
+    wordWrap: 'on',
+    lineHeight: 30,
+    renderWhitespace: 'none',
     bracketPairColorization: { enabled: true },
   });
 
@@ -1364,16 +1664,19 @@ onMounted(async () => {
           atob(codeParam)
             .split('')
             .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
-            .join(''),
+            .join('')
         );
 
         // Strip CSS module imports: replace styles.xxx → 'xxx', remove import line
         decoded = decoded.replace(
           /import\s+(\w+)\s+from\s+['"][^'"]+\.module\.css['"];?\n?/g,
           (_, varName: string) => {
-            decoded = decoded.replace(new RegExp(`\\b${varName}\\.(\\w+)\\b`, 'g'), "'$1'");
+            decoded = decoded.replace(
+              new RegExp(`\\b${varName}\\.(\\w+)\\b`, 'g'),
+              "'$1'"
+            );
             return '';
-          },
+          }
         );
 
         // Decode paired CSS and inject into iframe
@@ -1384,21 +1687,31 @@ onMounted(async () => {
               atob(decodeURIComponent(cssParam))
                 .split('')
                 .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
-                .join(''),
+                .join('')
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         }
 
         // Detect framework from URL param or auto-detect from code
         const tabMap: Record<string, string> = {
-          react: 'react', vue: 'vue', svelte: 'svelte', angular: 'vanilla',
+          react: 'react',
+          vue: 'vue',
+          svelte: 'svelte',
+          angular: 'vanilla',
         };
         const autoDetect = frameworkParam
           ? (tabMap[frameworkParam] ?? frameworkParam)
-          : decoded.includes("from '@tuvix.js/react'") || decoded.includes('from "react"') ? 'react'
-          : decoded.includes("from '@tuvix.js/vue'") || decoded.includes('from "vue"') ? 'vue'
-          : decoded.includes("from '@tuvix.js/svelte'") ? 'svelte'
-          : null;
+          : decoded.includes("from '@tuvix.js/react'") ||
+              decoded.includes('from "react"')
+            ? 'react'
+            : decoded.includes("from '@tuvix.js/vue'") ||
+                decoded.includes('from "vue"')
+              ? 'vue'
+              : decoded.includes("from '@tuvix.js/svelte'")
+                ? 'svelte'
+                : null;
 
         const validIds = TABS.map((t: { id: string }) => t.id);
         if (autoDetect && validIds.includes(autoDetect)) {
@@ -1461,8 +1774,15 @@ onBeforeUnmount(() => {
   line-height: 1;
 }
 
-.tab-btn:hover { background: var(--vp-c-bg-mute); color: var(--vp-c-text-1); }
-.tab-btn.active { background: var(--vp-c-bg-mute); color: var(--vp-c-brand-1); border-color: var(--vp-c-divider); }
+.tab-btn:hover {
+  background: var(--vp-c-bg-mute);
+  color: var(--vp-c-text-1);
+}
+.tab-btn.active {
+  background: var(--vp-c-bg-mute);
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-divider);
+}
 
 /* ── Demo bar ───────────────────────────────────── */
 .demo-bar {
@@ -1489,8 +1809,15 @@ onBeforeUnmount(() => {
   line-height: 1.4;
 }
 
-.demo-btn:hover { background: var(--vp-c-bg-mute); color: var(--vp-c-text-1); }
-.demo-btn.active { background: rgba(0, 229, 160, 0.1); color: var(--vp-c-brand-1); border-color: rgba(0, 229, 160, 0.3); }
+.demo-btn:hover {
+  background: var(--vp-c-bg-mute);
+  color: var(--vp-c-text-1);
+}
+.demo-btn.active {
+  background: rgba(0, 229, 160, 0.1);
+  color: var(--vp-c-brand-1);
+  border-color: rgba(0, 229, 160, 0.3);
+}
 
 /* ── Body ────────────────────────────────────────── */
 .playground-body {
@@ -1528,7 +1855,14 @@ onBeforeUnmount(() => {
   text-transform: none;
 }
 
-@keyframes fade { from { opacity: 1 } to { opacity: 0.3 } }
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.3;
+  }
+}
 
 .live-dot {
   display: inline-block;
@@ -1541,7 +1875,17 @@ onBeforeUnmount(() => {
   animation: pulse 2s ease-in-out infinite;
 }
 
-@keyframes pulse { 0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(0,229,160,.4) } 50% { opacity:.5; box-shadow: 0 0 0 4px rgba(0,229,160,0) } }
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(0, 229, 160, 0.4);
+  }
+  50% {
+    opacity: 0.5;
+    box-shadow: 0 0 0 4px rgba(0, 229, 160, 0);
+  }
+}
 
 /* ── Editor pane ─────────────────────────────────── */
 .editor-pane {
@@ -1552,10 +1896,18 @@ onBeforeUnmount(() => {
   min-width: 0;
 }
 
-.editor-mount { flex: 1; overflow: hidden; }
+.editor-mount {
+  flex: 1;
+  overflow: hidden;
+}
 
 /* ── Right pane ──────────────────────────────────── */
-.right-pane { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.right-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
 
 .preview-pane {
   display: flex;
@@ -1565,41 +1917,97 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-.preview-frame { flex: 1; border: none; background: #080c10; width: 100%; }
+.preview-frame {
+  flex: 1;
+  border: none;
+  background: #080c10;
+  width: 100%;
+}
 
 /* ── Console ─────────────────────────────────────── */
-.console-pane { display: flex; flex-direction: column; height: 128px; flex-shrink: 0; }
+.console-pane {
+  display: flex;
+  flex-direction: column;
+  height: 128px;
+  flex-shrink: 0;
+}
 
 .clear-btn {
-  background: none; border: none; color: var(--vp-c-text-3);
-  font-size: 10px; cursor: pointer; padding: 0; font-family: inherit;
-  text-transform: none; letter-spacing: 0;
+  background: none;
+  border: none;
+  color: var(--vp-c-text-3);
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  text-transform: none;
+  letter-spacing: 0;
 }
-.clear-btn:hover { color: var(--vp-c-text-2); }
+.clear-btn:hover {
+  color: var(--vp-c-text-2);
+}
 
 .console-body {
-  flex: 1; overflow-y: auto; padding: 6px 10px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 10px;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: 12px;
 }
 
-.console-msg { display: flex; align-items: baseline; gap: 6px; padding: 2px 0; line-height: 1.5; }
+.console-msg {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 2px 0;
+  line-height: 1.5;
+}
 
-.console-msg.log .msg-text         { color: var(--vp-c-text-2); }
-.console-msg.warn .msg-text        { color: #e5b700; }
+.console-msg.log .msg-text {
+  color: var(--vp-c-text-2);
+}
+.console-msg.warn .msg-text {
+  color: #e5b700;
+}
 .console-msg.error .msg-text,
-.console-msg.runtime-error .msg-text { color: #f87171; }
-.console-msg.success .msg-text     { color: var(--vp-c-brand-1); }
+.console-msg.runtime-error .msg-text {
+  color: #f87171;
+}
+.console-msg.success .msg-text {
+  color: var(--vp-c-brand-1);
+}
 
-.msg-icon  { flex-shrink: 0; opacity: 0.6; }
-.msg-loc   { margin-left: auto; color: var(--vp-c-text-3); font-size: 10px; }
-.console-empty { color: var(--vp-c-text-3); font-size: 12px; padding: 2px 0; }
+.msg-icon {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.msg-loc {
+  margin-left: auto;
+  color: var(--vp-c-text-3);
+  font-size: 10px;
+}
+.console-empty {
+  color: var(--vp-c-text-3);
+  font-size: 12px;
+  padding: 2px 0;
+}
 
 /* ── Mobile ──────────────────────────────────────── */
 @media (max-width: 768px) {
-  .live-playground { height: auto; }
-  .playground-body { flex-direction: column; }
-  .editor-pane { width: 100%; height: 260px; border-right: none; border-bottom: 1px solid var(--vp-c-divider); }
-  .right-pane { height: 360px; }
+  .live-playground {
+    height: auto;
+  }
+  .playground-body {
+    flex-direction: column;
+  }
+  .editor-pane {
+    width: 100%;
+    height: 260px;
+    border-right: none;
+    border-bottom: 1px solid var(--vp-c-divider);
+  }
+  .right-pane {
+    height: 360px;
+  }
 }
 </style>

@@ -21,7 +21,9 @@ test.beforeEach(async ({ page }) => {
   await page.locator('.live-playground').waitFor({ state: 'visible' });
 });
 
-test('default tab renders preview on first load without refresh', async ({ page }) => {
+test('default tab renders preview on first load without refresh', async ({
+  page,
+}) => {
   // The first tab (vanilla) should auto-compile on mount.
   // Wait for the iframe to receive a srcdoc — proves compilation ran.
   await expect(page.locator('.preview-frame')).toHaveAttribute('srcdoc', /.+/, {
@@ -30,15 +32,21 @@ test('default tab renders preview on first load without refresh', async ({ page 
 });
 
 for (const tab of TABS) {
-  test(`tab "${tab}" renders preview on first click without refresh`, async ({ page }) => {
+  test(`tab "${tab}" renders preview on first click without refresh`, async ({
+    page,
+  }) => {
     // Click the tab immediately — esbuild may not be ready yet.
     // The component should queue/retry compilation once ready.
     await page.locator(`.tab-btn[data-tab="${tab}"]`).click();
 
     // The iframe must receive content within the render timeout.
-    await expect(page.locator('.preview-frame')).toHaveAttribute('srcdoc', /.+/, {
-      timeout: INIT_TIMEOUT,
-    });
+    await expect(page.locator('.preview-frame')).toHaveAttribute(
+      'srcdoc',
+      /.+/,
+      {
+        timeout: INIT_TIMEOUT,
+      }
+    );
 
     // No runtime-error messages should appear in the console pane.
     const errorMsgs = page.locator('.console-msg.runtime-error');
@@ -70,6 +78,46 @@ test('console pane shows no errors on initial load', async ({ page }) => {
     timeout: INIT_TIMEOUT,
   });
 
-  const errorMsgs = page.locator('.console-msg.error, .console-msg.runtime-error');
+  const errorMsgs = page.locator(
+    '.console-msg.error, .console-msg.runtime-error'
+  );
   await expect(errorMsgs).toHaveCount(0);
 });
+
+const LABELS: Record<(typeof TABS)[number], string> = {
+  vanilla: 'Vanilla JS',
+  react: 'React',
+  vue: 'Vue',
+  svelte: 'Svelte',
+  angular: 'Angular',
+};
+
+for (const tab of TABS) {
+  for (const demo of ['Counter', 'Todo'] as const) {
+    test(`${tab} ${demo.toLowerCase()} demo renders with the repo package versions`, async ({
+      page,
+    }) => {
+      // Errors raised inside the preview iframe: failed module loads, bad
+      // import map entries, API mismatches between the demo and the package.
+      const errors: string[] = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      page.on('console', (msg) => {
+        if (msg.type() === 'error')
+          errors.push(`${msg.location().url}: ${msg.text()}`);
+      });
+
+      await page.locator(`.tab-btn[data-tab="${tab}"]`).click();
+      await page.locator('.demo-btn', { hasText: demo }).click();
+
+      const heading = page.frameLocator('.preview-frame').locator('#app h2');
+      await expect(heading).toHaveText(`${demo} — ${LABELS[tab]}`, {
+        timeout: INIT_TIMEOUT,
+      });
+
+      await expect(
+        page.locator('.console-msg.error, .console-msg.runtime-error')
+      ).toHaveCount(0);
+      expect(errors).toEqual([]);
+    });
+  }
+}
