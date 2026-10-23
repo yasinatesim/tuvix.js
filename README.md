@@ -5,8 +5,7 @@
 <h1 align="center">Tuvix.js</h1>
 
 <p align="center">
-  A lightweight and flexible <strong>microfrontend framework</strong> for building scalable, independently deployable frontend applications.<br/>
-  Tuvix.js merges multiple frontend applications into a seamless, unified user experience - just like its name suggests.
+  A microfrontend toolkit: load, mount and connect independently deployed apps written in React, Vue, Svelte, Angular or plain TypeScript, in the browser or as server-rendered islands inside a React page.
 </p>
 
 <p align="center">
@@ -26,306 +25,190 @@
 
 ## ✨ Features
 
-- 🧩 **Framework Agnostic** - Use React, Vue, Svelte, Angular or Vanilla JS
-- 📦 **Independent Deployment** - Deploy each micro app separately
-- 🔗 **Dynamic Module Loading** - Load micro frontends on demand
-- 🛣️ **Built-in Routing** - Seamless routing across micro apps
-- 📡 **Inter-App Communication** - Event bus for cross-app messaging
-- ⚡ **Lightweight** - Zero runtime dependencies, minimal core
-- 🔄 **Lifecycle Management** - Mount, unmount, update hooks
-- 🔒 **Type-Safe** - Full TypeScript support with strict types
+- 🧩 **Framework adapters** for React 18/19, Vue 3, Svelte 3-5 and Angular 15+. Each turns a root component into a micro app module with `mount`, `update` and `unmount`, one instance per container.
+- 🛣️ **Path-based activation.** `activeWhen: '/users/:id'` mounts an app on matching paths. Query strings and hashes never unmount it. One matcher (`matchPath`) serves the orchestrator, the router and the server package.
+- 🔁 **Ordered mounting.** Route changes reconcile one at a time; inactive apps unmount before new ones mount, so quick A → B → A navigation leaves only A on the page.
+- 🔗 **External routers.** `orchestrator.connectRouter()` follows TanStack Router or React Router. `interceptLinks()` turns plain `<a href>` clicks into client navigations.
+- 🏝️ **SSR islands.** `TuvixIsland` hosts Vue, Svelte, Angular and React micro apps in a server-rendered React page, hydrates them in place, and never rewrites their DOM on re-render.
+- 🎨 **Styled first paint.** `@tuvix.js/vite` tells your server which stylesheets each island needs, so you link them in `<head>`.
+- 📦 **Flexible entries.** Script URLs, `{ scripts, styles, type }`, or loader functions such as `() => import('./app')`. Parallel loads, retries, timeouts, SRI hashes.
+- 📡 **Shared event bus.** `getGlobalBus()` returns one bus per page, even across separately bundled apps.
+- 🔔 **Lifecycle events.** `tuvix:mounted`, `tuvix:unmounted`, `tuvix:error`, plus `whenMounted(name)` and `onLifecycle()`.
+- 🔒 **CSS isolation on request.** `sandbox: true` renders an app inside a shadow root with its own stylesheets.
+- 🟦 **TypeScript.** Every library package ships ESM and CommonJS builds with type declarations.
+
+Tuvix.js does not isolate JavaScript between apps: every app runs in the page's `window`. Use an `<iframe>` for untrusted code.
 
 ---
 
 ## 🤖 AI Component Generator
 
-Generate tuvix.js components from natural language using our built-in AI chatbot.
+Generate tuvix.js components from natural language with the chatbot on the documentation site.
 
-- **Chat model:** MiniMax M2.5 via OpenRouter (free API, no self-hosting required)
+- **Chat model:** MiniMax M2.5 via OpenRouter
 - **Embed model:** NVIDIA Nemotron Embed 1B via OpenRouter (RAG retrieval)
 - **Supports:** React, Vue, Svelte, Angular
 - **Dataset:** [tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset) on HuggingFace
 
-> Try it: [AI Generator](/chatbot) on the documentation site
+> Try it: [AI Generator](https://tuvix.js.org/chatbot) on the documentation site
 
 ---
 
 ## 📦 Installation
 
 ```bash
-# All-in-one package
-npm install tuvix.js
+# Orchestrator, router, loader, event bus and sandbox
+pnpm add tuvix.js
 
-# Or install individual packages
-npm install @tuvix.js/core @tuvix.js/router
+# Adapters, as needed
+pnpm add @tuvix.js/react @tuvix.js/vue @tuvix.js/svelte @tuvix.js/angular
+
+# Or scaffold a project
+npx create-tuvix-app my-app --template shell
 ```
 
 ---
 
 ## 🚀 Quick Start
 
-### Host (Shell) Application
+### Shell
 
 ```ts
-import { createOrchestrator } from 'tuvix.js';
+import { createOrchestrator, interceptLinks } from 'tuvix.js';
 
 const orchestrator = createOrchestrator({
-  router: {
-    mode: 'history',
-    routes: [
-      { path: '/dashboard/*', app: 'dashboard' },
-      { path: '/settings/*', app: 'settings' },
-    ],
-  },
+  router: { mode: 'history', routes: [] },
 });
 
 orchestrator.register({
   name: 'dashboard',
-  entry: 'https://cdn.example.com/dashboard/main.js',
+  entry: {
+    scripts: ['https://cdn.example.com/dashboard/main.js'],
+    styles: ['https://cdn.example.com/dashboard/main.css'],
+    type: 'module',
+  },
   container: '#main-content',
   activeWhen: '/dashboard/*',
+  props: { user: 'Guest' },
+  fallback: '<p>Dashboard is unavailable.</p>',
 });
 
 orchestrator.register({
   name: 'settings',
-  entry: 'https://cdn.example.com/settings/main.js',
+  entry: () => import('./apps/settings'),
   container: '#main-content',
   activeWhen: '/settings/*',
 });
 
-orchestrator.start();
+interceptLinks({ navigate: (path) => orchestrator.navigateTo(path) });
+
+await orchestrator.start();
 ```
 
-### Micro Frontend App
+### Micro app
+
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+
+function Dashboard({ user }: { user: string }) {
+  return <h1>Welcome, {user}</h1>;
+}
+
+// Registers itself as "dashboard", so the shell's script entry finds it.
+export default createReactMicroApp({ name: 'dashboard', App: Dashboard });
+```
+
+Without a framework:
 
 ```ts
 import { defineMicroApp } from 'tuvix.js';
 
-let titleEl: HTMLHeadingElement | null = null;
-
 export default defineMicroApp({
-  name: 'dashboard',
-
-  bootstrap() {
-    // One-time setup before first mount (e.g. preload data)
-    console.log('Dashboard bootstrapped');
-  },
-
+  name: 'settings',
   mount({ container, props }) {
-    container.innerHTML = `<h1>Welcome, ${props?.user ?? 'Guest'}!</h1>`;
-    titleEl = container.querySelector('h1');
+    const title = document.createElement('h1');
+    title.textContent = `Settings for ${String(props?.user ?? 'Guest')}`;
+    container.replaceChildren(title);
   },
-
   unmount({ container }) {
-    titleEl = null;
-    container.innerHTML = '';
-  },
-
-  // Triggered when the shell calls orchestrator.updateAppProps(name, props).
-  // Patch the live DOM in place — no remount, no flash.
-  update({ props }) {
-    if (titleEl) {
-      titleEl.textContent = `Welcome, ${props?.user ?? 'Guest'}!`;
-    }
+    container.replaceChildren();
   },
 });
 ```
 
----
-
-## 🔄 Updating Props at Runtime
-
-Pass new props to a mounted micro app without remounting:
+### Update props
 
 ```ts
-// Push updated props from the shell — invokes the micro app's update() hook
-await orchestrator.updateAppProps('dashboard', {
-  user: 'Yasin',
-  theme: 'dark',
-});
+import { createOrchestrator } from 'tuvix.js';
+
+const orchestrator = createOrchestrator();
+await orchestrator.updateAppProps('dashboard', { user: 'Yasin' });
 ```
 
-Props are merged with the original config props. If the app does not implement
-`update()`, the new props are stored and applied on the next mount.
+A mounted app with `update` re-renders in place. Otherwise the orchestrator keeps the merged props for the next mount.
 
 ---
 
-## 🧭 Lifecycle Control (Manual)
+## 🌉 Follow an External Router
 
 ```ts
-// Manually mount / unmount apps outside of route reconciliation
-await orchestrator.mountApp('dashboard');
-await orchestrator.unmountApp('dashboard');
+import { createOrchestrator } from 'tuvix.js';
+import { router } from './router'; // TanStack Router instance
 
-// Inspect current state
-orchestrator.getAppStatus('dashboard');     // 'mounted' | 'mounting' | 'error' | ...
-orchestrator.getMountedApps();              // ['dashboard']
-orchestrator.getRegisteredApps();           // ['dashboard', 'settings']
+const orchestrator = createOrchestrator(); // no built-in router
 
-// Tear everything down (idempotent — safe to call multiple times)
-await orchestrator.destroy();
-```
-
----
-
-## 🌉 Bridging an External Router
-
-If you already use TanStack Router, Next.js App Router, or React Router, skip
-`config.router` entirely and let your existing router drive Tuvix.js via
-`reconcile(path)`:
-
-```ts
-const orchestrator = createOrchestrator(); // no router config
-
-orchestrator.register({
-  name: 'dashboard',
-  entry: '/dashboard.js',
-  container: '#main',
-  activeWhen: '/dashboard/*',
+orchestrator.connectRouter({
+  subscribe: (callback) => router.subscribe('onResolved', callback),
+  getPath: () => router.state.location.pathname,
 });
 
 await orchestrator.start();
-
-// After every navigation, tell tuvix.js what the current path is
-tanstackRouter.subscribe('onLoad', () => {
-  orchestrator.reconcile(window.location.pathname);
-});
 ```
 
 ---
 
-## 👁️ Lazy Mounting (Viewport)
+## 🏝️ Server-Rendered Islands
 
-Defer expensive micro apps until their container scrolls into view:
+```tsx
+import { TuvixIsland } from '@tuvix.js/react';
+import { createSsrSvelteMicroApp } from '@tuvix.js/svelte';
+import Footer from './Footer.svelte';
+
+const footer = createSsrSvelteMicroApp({ name: 'footer', App: Footer });
+
+// `footerHtml` comes from renderSvelteToString() in server-only code.
+export function Layout({ footerHtml }: { footerHtml?: string }) {
+  return <TuvixIsland name="footer" app={footer} props={{ year: 2026 }} ssrHtml={footerHtml} fallback={<footer>© 2026</footer>} />;
+}
+```
+
+During hydration the island reads its HTML from the page, so the client never needs `footerHtml`. See the [SSR Islands guide](https://tuvix.js.org/guide/ssr-islands) and [`examples/with-ssr-islands`](./examples/with-ssr-islands).
+
+---
+
+## 🔔 Lifecycle Events
 
 ```ts
-orchestrator.register({
-  name: 'comments',
-  entry: '/comments.js',
-  container: '#comments-section',
-  mountWhenVisible: true, // mounts on first IntersectionObserver hit
-});
+import { onLifecycle, whenMounted } from 'tuvix.js';
+
+onLifecycle('error', ({ name, error }) => console.error(name, error));
+
+const { container, hydrated } = await whenMounted('footer');
+container.classList.add(hydrated ? 'hydrated' : 'rendered');
 ```
 
 ---
 
-## 🛟 Fallback HTML on Load Failure
+## 🔌 Event Bus
 
 ```ts
-orchestrator.register({
-  name: 'reports',
-  entry: '/reports.js',
-  container: '#reports',
-  activeWhen: '/reports/*',
-  fallback: '<p class="error">Reports temporarily unavailable.</p>',
-});
-```
+import { getGlobalBus } from 'tuvix.js';
 
----
+const bus = getGlobalBus(); // the same bus the orchestrator passes to mount()
 
-## ⚡ Prefetching Strategies
-
-```ts
-const orchestrator = createOrchestrator({
-  router: { /* ... */ },
-  prefetch: {
-    strategy: 'idle', // 'immediate' | 'idle' | 'hover' | 'none' (default)
-  },
-});
-```
-
-| Strategy | When bundles are fetched |
-| --- | --- |
-| `immediate` | Right after `start()` |
-| `idle` | During the next browser idle window (`requestIdleCallback`) |
-| `hover` | After the user's first `mouseover` anywhere on the page |
-| `none` | Never (default) — load on demand only |
-
----
-
-## 🔌 Inter-App Communication
-
-```ts
-import { createEventBus } from 'tuvix.js';
-
-const bus = createEventBus();
-
-// App A — emit event
-bus.emit('user:login', { userId: 42, name: 'Ahmet' });
-
-// App B — subscribe (returns an unsubscribe function)
-const unsubscribe = bus.on('user:login', (data) => {
-  console.log(`${data.name} logged in!`);
-});
-
-// Fire once and auto-unsubscribe
-bus.once('app:ready', () => console.log('ready'));
-
-// Listen to every event for debugging
-bus.onAny((event, data) => console.log('[bus]', event, data));
-
-// Cleanup
-unsubscribe();
-```
-
-The orchestrator exposes its own bus via `orchestrator.getEventBus()` so all
-registered apps share a single channel automatically.
-
----
-
-## 🛣️ Routing
-
-```ts
-import { createRouter } from 'tuvix.js';
-
-const router = createRouter({
-  mode: 'history', // or 'hash'
-  base: '/',       // optional base path
-  routes: [
-    { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/users/:id', app: 'users' },
-    { path: '/settings', app: 'settings', exact: true },
-  ],
-});
-
-// Programmatic navigation
-await router.push('/dashboard/overview');
-await router.replace('/users/42');
-router.back();
-
-// Navigation guards (return false to cancel)
-const off = router.beforeEach(async ({ from, to }) => {
-  if (to.startsWith('/admin') && !isAdmin()) return false;
-});
-
-// React to changes
-router.onChange(({ from, to, toRoute }) => {
-  console.log(`navigated ${from} → ${to}`, toRoute?.params);
-});
-
-// Or use the orchestrator's built-in navigation helper
-await orchestrator.navigateTo('/settings');
-```
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────┐
-│              Tuvix.js Shell                  │
-│  ┌─────────────────────────────────────────┐│
-│  │            Orchestrator                 ││
-│  │  ┌──────────┐ ┌──────────┐ ┌─────────┐ ││
-│  │  │ Router   │ │Event Bus │ │ Loader  │ ││
-│  │  └──────────┘ └──────────┘ └─────────┘ ││
-│  └─────────────────────────────────────────┘│
-│                                             │
-│  ┌───────┐  ┌───────┐  ┌───────┐          │
-│  │ App A │  │ App B │  │ App C │  ...      │
-│  │(React)│  │ (Vue) │  │(Svelte│          │
-│  └───────┘  └───────┘  └───────┘          │
-└─────────────────────────────────────────────┘
+const off = bus.on<{ userId: string }>('user:login', ({ userId }) => console.log(userId));
+bus.emit('user:login', { userId: '42' });
+off();
 ```
 
 ---
@@ -334,165 +217,92 @@ await orchestrator.navigateTo('/settings');
 
 | Package | Description |
 | --- | --- |
-| [`tuvix.js`](./packages/tuvix) | All-in-one umbrella package |
-| [`@tuvix.js/core`](./packages/core) | Core orchestrator with lifecycle management |
-| [`@tuvix.js/router`](./packages/router) | URL-based micro app routing |
-| [`@tuvix.js/event-bus`](./packages/event-bus) | Inter-app communication event bus |
-| [`@tuvix.js/loader`](./packages/loader) | Dynamic module loader |
-| [`@tuvix.js/sandbox`](./packages/sandbox) | CSS/JS isolation (Shadow DOM + Proxy) |
-| [`@tuvix.js/react`](./packages/react) | React 18+ bindings & hooks |
-| [`@tuvix.js/vue`](./packages/vue) | Vue 3 bindings & composables |
-| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5 bindings |
-| [`@tuvix.js/angular`](./packages/angular) | Angular 15+ bindings |
-| [`create-tuvix-app`](./packages/cli) | CLI scaffolding tool |
+| [`tuvix.js`](./packages/tuvix) | Umbrella: core, router, loader, event bus, sandbox |
+| [`@tuvix.js/core`](./packages/core) | Orchestrator: registration, reconcile, props, `connectRouter` |
+| [`@tuvix.js/router`](./packages/router) | History/hash router, `matchPath`, `interceptLinks` |
+| [`@tuvix.js/loader`](./packages/loader) | Entry loading and the lifecycle runtime |
+| [`@tuvix.js/event-bus`](./packages/event-bus) | Pub/sub bus, page-wide `getGlobalBus()` |
+| [`@tuvix.js/sandbox`](./packages/sandbox) | `CssSandbox` (shadow DOM), `JsSandbox` (proxy window) |
+| [`@tuvix.js/react`](./packages/react) | React adapter, `TuvixReactApp`, `TuvixIsland`, hooks |
+| [`@tuvix.js/vue`](./packages/vue) | Vue 3 adapter, `renderVueToString` |
+| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5 adapter, `renderSvelteToString` |
+| [`@tuvix.js/angular`](./packages/angular) | Angular 15+ adapter (zoneless), `renderAngularToString` |
+| [`@tuvix.js/vite`](./packages/vite) | Vite plugin: island stylesheet links for the server-rendered `<head>` |
+| [`@tuvix.js/server`](./packages/server) | Server-side composition of HTML fragments, streaming, metrics |
+| [`@tuvix.js/module-federation`](./packages/module-federation) | Entries backed by webpack Module Federation remotes |
 | [`@tuvix.js/devtools`](./packages/devtools) | In-page debug panel |
-| [`@tuvix.js/server`](./packages/server) | Server-side composition |
-| [`@tuvix.js/module-federation`](./packages/module-federation) | Webpack Module Federation integration |
+| [`create-tuvix-app`](./packages/cli) | Project scaffolding |
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 tuvix.js/
-├── packages/
-│   ├── core/               # @tuvix.js/core
-│   ├── router/             # @tuvix.js/router
-│   ├── event-bus/          # @tuvix.js/event-bus
-│   ├── loader/             # @tuvix.js/loader
-│   ├── sandbox/            # @tuvix.js/sandbox
-│   ├── react/              # @tuvix.js/react
-│   ├── vue/                # @tuvix.js/vue
-│   ├── svelte/             # @tuvix.js/svelte
-│   ├── angular/            # @tuvix.js/angular
-│   ├── cli/                # create-tuvix-app
-│   ├── devtools/           # @tuvix.js/devtools
-│   ├── server/             # @tuvix.js/server
-│   ├── module-federation/  # @tuvix.js/module-federation
-│   └── tuvix/              # tuvix.js (umbrella)
-├── examples/
-│   ├── with-angular/              # Angular 15+ example
-│   ├── with-module-federation-react/ # Module Federation + React example
-│   ├── with-multiple-frameworks/  # Multiple frameworks example
-│   ├── with-react/                # React 18+ example
-│   ├── with-react-devtools/       # React + DevTools example
-│   ├── with-react-event-bus/      # React + Event Bus example
-│   ├── with-react-router/         # React + Router example
-│   ├── with-react-sandbox/        # React + Sandbox example
-│   ├── with-ssr-react/            # SSR + React example
-│   ├── with-ssr-vanilla/          # SSR + Vanilla JS example
-│   ├── with-svelte/               # Svelte 5 example
-│   ├── with-vanilla/              # Vanilla JS example
-│   └── with-vue/                  # Vue 3 example
-├── website/                # Documentation site (VitePress, 10 languages)
-├── .github/                # CI/CD workflows
-├── package.json            # Root workspace config
-├── pnpm-workspace.yaml
-├── tsconfig.base.json
-└── vitest.config.ts
+├── packages/        # the 15 packages above
+├── examples/        # runnable examples, see below
+├── website/         # documentation site (VitePress, 10 languages)
+├── scripts/         # docs and package validators
+└── .changeset/      # release notes for the next version
 ```
-
----
-
-## 🗺️ Roadmap
-
-### ✅ Completed
-
-- [x] Core orchestrator
-- [x] Lifecycle management
-- [x] Dynamic module loading
-- [x] Event bus
-- [x] URL routing with history/hash modes
-- [x] CSS/JS sandbox isolation
-- [x] CLI scaffolding tool (`npx create-tuvix-app`)
-- [x] DevTools browser extension
-- [x] Server-side composition (`@tuvix.js/server`)
-- [x] Module federation support
-- [x] Framework bindings (React, Vue, Svelte, Angular)
-- [x] i18n documentation (10 languages)
-- [x] Example tests & CI coverage for examples
-
-### 🔜 Coming Soon
-
-#### Core Runtime
-
-- [ ] Hot module reload across micro apps
-- [ ] Shared state management adapter (Zustand / Pinia adapter layer)
-- [ ] Plugin system & middleware API
-- [ ] Native ESM / importmap support
-- [x] Intersection Observer–based viewport mounting - lazy-mount apps only when their container scrolls into view, reducing initial JS execution cost
-
-#### Server-Side Rendering
-
-- [x] BigPipe-style streaming SSR - send the shell HTML immediately over chunked transfer encoding, then stream each micro-app fragment as it resolves; dramatically reduces Time To First Byte compared to the current synchronous `composeHTML` approach
-- [x] Pre-compiled shell templates - compile the slot-injection template once at server startup rather than per request
-- [ ] Critical CSS extraction - inline above-the-fold styles in SSR responses for faster Largest Contentful Paint
-- [ ] Edge/CDN-aware server composition with stale-while-revalidate fragment caching
-
-#### Resilience
-
-- [x] Fail-safe fallback fragments - declarative per-app fallback HTML shown automatically when a micro-app fails to load or exceeds its timeout; keeps the page usable even when one service is down
-- [ ] Fragment A/B testing - register multiple versions of a micro-app and select at runtime via cookie matcher or custom predicate, enabling gradual rollouts without redeploying the shell
-
-#### Observability
-
-- [x] Prometheus-compatible metrics endpoint (`/metrics`) from `@tuvix.js/server` - track mount/unmount counts, load durations, and error rates per app
-- [ ] Visual dependency graph in DevTools
-- [ ] VS Code extension for DevTools integration
-
-#### Developer Experience
-
-- [ ] Testing utilities & mock orchestrator
-- [ ] Storybook integration for micro app isolation
-- [ ] Preloading & prefetching strategies (already partially available via `prefetch.strategy` config)
 
 ---
 
 ## 🧪 Examples
 
-Ready-to-run examples for each supported framework are available in the [`examples/`](./examples) directory:
+| Example | Shows |
+| --- | --- |
+| [`with-ssr-islands`](./examples/with-ssr-islands) | React host with server-rendered Vue, Svelte, Angular and React islands |
+| [`with-react`](./examples/with-react) | React shell and micro apps |
+| [`with-vue`](./examples/with-vue) | Vue 3 micro apps |
+| [`with-svelte`](./examples/with-svelte) | Svelte micro apps |
+| [`with-angular`](./examples/with-angular) | Angular micro apps |
+| [`with-vanilla`](./examples/with-vanilla) | No framework |
+| [`with-multiple-frameworks`](./examples/with-multiple-frameworks) | React and Vue in one shell |
+| [`with-react-router`](./examples/with-react-router) | Routing |
+| [`with-react-event-bus`](./examples/with-react-event-bus) | Event bus |
+| [`with-react-sandbox`](./examples/with-react-sandbox) | CSS sandbox |
+| [`with-react-devtools`](./examples/with-react-devtools) | Devtools panel |
+| [`with-module-federation-react`](./examples/with-module-federation-react) | Module Federation |
+| [`with-ssr-react`](./examples/with-ssr-react) | Server composition with `@tuvix.js/server` |
+| [`with-ssr-vanilla`](./examples/with-ssr-vanilla) | Server composition without a framework |
 
-| Example | Framework | Path |
-| --- | --- | --- |
-| [Angular Example](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
-| [Module Federation + React Example](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
-| [Multiple Frameworks Example](./examples/with-multiple-frameworks) | Mixed | `examples/with-multiple-frameworks/` |
-| [React Example](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [React + DevTools Example](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
-| [React + Event Bus Example](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
-| [React + Router Example](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
-| [React + Sandbox Example](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
-| [SSR + React Example](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
-| [SSR + Vanilla JS Example](./examples/with-ssr-vanilla) | No framework | `examples/with-ssr-vanilla/` |
-| [Svelte Example](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
-| [Vanilla JS Example](./examples/with-vanilla) | No framework | `examples/with-vanilla/` |
-| [Vue Example](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+---
 
-Each example demonstrates:
+## 🗺️ Roadmap
 
-- A **shell (host)** application that boots the orchestrator
-- Two **micro frontend apps** registered and loaded dynamically
-- Inter-app communication via the event bus
+Shipped:
+
+- Orchestrator with serialized reconciles, `connectRouter`, viewport mounting and fallback HTML
+- Adapters for React, Vue, Svelte 3-5 and Angular (zoneless), with SSR hydration
+- `TuvixIsland`, lifecycle events, `@tuvix.js/vite` island assets
+- Server composition with streaming and Prometheus metrics (`@tuvix.js/server`)
+- Module Federation entries, in-page devtools, CLI scaffolding
+- Documentation in 10 languages
+
+Planned:
+
+- Hot module reload across micro apps
+- Native ESM / import map support
+- Edge-aware server composition with stale-while-revalidate fragment caching
+- Testing utilities and a mock orchestrator
+- Fragment A/B testing
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read the [Contributing Guide](./CONTRIBUTING.md) before submitting a PR.
+Read the [Contributing Guide](./CONTRIBUTING.md) before you open a pull request.
 
 ```bash
-# Clone the repo
 git clone https://github.com/yasinatesim/tuvix.js.git
-
-# Install dependencies
+cd tuvix.js
 pnpm install
-
-# Build all packages
 pnpm build
-
-# Run tests
 pnpm test
 ```
+
+Coming from 0.4? Read the [migration guide](https://tuvix.js.org/guide/migration-0-5).
 
 ---
 

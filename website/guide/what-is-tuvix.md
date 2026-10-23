@@ -1,67 +1,58 @@
 # What is Tuvix.js?
 
-Tuvix.js is a **lightweight, framework-agnostic microfrontend orchestrator** for building scalable frontend applications composed of independently deployable pieces.
+Tuvix.js is a microfrontend toolkit for the browser. A host page (the shell) registers micro apps, and Tuvix.js loads each app's code, mounts it into a container, passes it props, and unmounts it when the URL or your code says so. Each micro app can use React, Vue, Svelte, Angular or no framework, and each team can build and deploy its app on its own schedule.
 
-## The Problem
+## What it does
 
-As frontends grow, monolithic single-page applications become:
+- **Orchestrates micro apps.** `createOrchestrator()` keeps a registry of apps. For each one it decides, from the current path, whether the app should be mounted, and it runs one reconcile at a time so two apps that share a container never overlap.
+- **Loads code on demand.** An app's `entry` can be a script URL, a list of scripts and stylesheets, or a function such as `() => import('./dashboard')`. The loader retries failed loads and aborts slow ones.
+- **Routes by URL.** `activeWhen: '/dashboard/*'` mounts an app on `/dashboard` and every path below it. You can use the built-in router or follow TanStack Router or React Router with `connectRouter()`.
+- **Adapts frameworks.** `createReactMicroApp`, `createVueMicroApp`, `createSvelteMicroApp` and `createAngularMicroApp` turn a root component into a module with `mount`, `update` and `unmount`.
+- **Hosts islands in a React page.** `TuvixIsland` mounts a Vue, Svelte, Angular or React micro app inside a server-rendered React tree and hydrates the server HTML without sending it twice. See [SSR Islands](/guide/ssr-islands).
+- **Reports lifecycle.** Adapters and `defineMicroApp` dispatch `tuvix:mounted`, `tuvix:unmounted` and `tuvix:error` DOM events, and `whenMounted(name)` resolves once an app is on the page. See [Lifecycle Events](/guide/lifecycle-events).
+- **Connects apps.** All apps on a page share one event bus through `getGlobalBus()`, even when each app bundles its own copy of `@tuvix.js/event-bus`.
+- **Isolates CSS on request.** `sandbox: true` renders an app inside a shadow root, so page CSS and the app's CSS stay apart.
 
-- Hard to scale across multiple teams
-- Slow to build and deploy - one change rebuilds everything
-- Locked into a single framework or version
-- Difficult to test and reason about in isolation
+## When to use it
 
-## The Solution: Microfrontends
+Reach for Tuvix.js when several teams ship parts of one page and need to deploy them separately, or when you want to keep a legacy app running next to a rewrite in another framework. It also fits a single team that wants Vue or Svelte widgets inside a React site with server rendering.
 
-Microfrontends apply microservice principles to the frontend. Each **micro app** is:
+## When not to use it
 
-- **Independently developed** - separate codebase, separate team
-- **Independently deployed** - its own CI/CD pipeline
-- **Framework-agnostic** - one team uses React, another Vue, another Svelte
+- One team, one framework, one deploy: a regular single-page app is simpler.
+- You need hard security isolation between apps. Tuvix.js runs every app in the same JavaScript realm. `JsSandbox` from `@tuvix.js/sandbox` hides global writes made through its proxy, but it does not stop an app from reaching `window`. Use an `<iframe>` for untrusted code.
+- You want one bundle with shared state across every app. Micro apps communicate through events and props, by design.
 
-Tuvix.js provides the **shell** - the thin orchestration layer that loads, mounts and coordinates all micro apps at runtime.
+## Packages
 
-## Architecture
+| Package | Use it for |
+| --- | --- |
+| `tuvix.js` | One install with core, router, event bus, loader and sandbox |
+| `@tuvix.js/core` | `createOrchestrator`, `defineMicroApp` |
+| `@tuvix.js/router` | `createRouter`, `matchPath`, `interceptLinks` |
+| `@tuvix.js/loader` | Entry loading and the lifecycle runtime (`whenMounted`, `onLifecycle`) |
+| `@tuvix.js/event-bus` | `createEventBus`, `getGlobalBus` |
+| `@tuvix.js/sandbox` | `CssSandbox`, `JsSandbox` |
+| `@tuvix.js/react`, `vue`, `svelte`, `angular` | Framework adapters, `TuvixIsland` (React) |
+| `@tuvix.js/vite` | Island stylesheet links for server-rendered `<head>` |
+| `@tuvix.js/server` | Server-side composition of HTML fragments |
+| `@tuvix.js/module-federation` | Entries that load from webpack Module Federation remotes |
+| `@tuvix.js/devtools` | In-page debug panel |
+| `create-tuvix-app` | Project scaffolding |
 
-```
-┌─────────────────────────────────────────────┐
-│                Tuvix.js Shell               │
-│                                             │
-│  ┌────────────┐  ┌──────────┐  ┌────────┐  │
-│  │ Orchestrator│  │  Router  │  │ Loader │  │
-│  └────────────┘  └──────────┘  └────────┘  │
-│                                             │
-│  ┌─────────┐  ┌────────┐  ┌──────────────┐ │
-│  │  React  │  │  Vue   │  │   Angular    │ │
-│  │ Micro   │  │ Micro  │  │    Micro     │ │
-│  │  App    │  │  App   │  │     App      │ │
-│  └─────────┘  └────────┘  └──────────────┘ │
-└─────────────────────────────────────────────┘
-```
+## Key concepts
 
-## Key Concepts
+| Term | Meaning |
+| --- | --- |
+| Shell | The host page that creates the orchestrator and owns the layout |
+| Micro app | A module with `mount` and `unmount` (and optional `bootstrap`, `update`) |
+| Entry | Where the loader gets a micro app: URL, `{ scripts, styles }`, or a loader function |
+| Container | The element a micro app renders into |
+| Island | A micro app the host server-renders and the client hydrates in place |
+| Event bus | A pub/sub channel every app on the page shares |
 
-| Concept | Description |
-|---------|-------------|
-| **Shell** | The host application - loads and coordinates micro apps |
-| **Orchestrator** | Core engine that manages micro app registration and lifecycle |
-| **Micro App** | An independently deployed frontend application |
-| **Entry** | The JavaScript bundle URL of a micro app |
-| **Lifecycle** | mount, unmount, update hooks each micro app implements |
-| **Event Bus** | Typed pub/sub bridge between micro apps |
-| **Sandbox** | CSS + JS isolation to prevent conflicts |
+## Next steps
 
-## How It Compares
-
-| Feature | Tuvix.js | single-spa | Module Federation |
-|---------|----------|------------|-------------------|
-| Zero runtime deps | ✅ | ❌ | ✅ |
-| Event Bus built-in | ✅ | ❌ | ❌ |
-| CSS Sandbox | ✅ | ❌ | ❌ |
-| SSR support | ✅ | Partial | ✅ |
-| TypeScript-first | ✅ | Partial | ✅ |
-| Framework bindings | React, Vue, Svelte, Angular | React, Vue | Any |
-
-## Next Step
-
-→ [Getting Started](/guide/getting-started)
+- [Getting Started](/guide/getting-started) builds a shell and two micro apps.
+- [Architecture](/guide/architecture) shows how a navigation turns into a mount.
+- Coming from 0.4? Read [Migrating to 0.5](/guide/migration-0-5).

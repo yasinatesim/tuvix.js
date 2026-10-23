@@ -7,7 +7,7 @@ export const sharedConfig: UserConfig<DefaultTheme.Config> = {
     'A lightweight, framework-agnostic microfrontend orchestrator. Build scalable, independently deployable frontend applications.',
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#00e5a0' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'Tuvix.js' }],
@@ -19,10 +19,7 @@ export const sharedConfig: UserConfig<DefaultTheme.Config> = {
       },
     ],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    [
-      'link',
-      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    ],
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     [
       'link',
       {
@@ -96,7 +93,10 @@ export const sharedConfig: UserConfig<DefaultTheme.Config> = {
           },
           fr: {
             translations: {
-              button: { buttonText: 'Rechercher', buttonAriaLabel: 'Rechercher' },
+              button: {
+                buttonText: 'Rechercher',
+                buttonAriaLabel: 'Rechercher',
+              },
               modal: {
                 noResultsText: 'Aucun résultat pour',
                 resetButtonTitle: 'Réinitialiser la recherche',
@@ -192,6 +192,5 @@ export const sharedConfig: UserConfig<DefaultTheme.Config> = {
         link: 'https://www.npmjs.com/org/tuvix.js',
       },
     ],
-
   },
 };

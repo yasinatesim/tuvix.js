@@ -13,7 +13,7 @@ export const enConfig: LocaleConfig<DefaultTheme.Config>[string] = {
       { text: 'AI Generator', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Contributing', link: '/contributing' },
       {
-        text: 'v0.1.4',
+        text: 'v0.5.0',
         items: [
           {
             text: 'Changelog',
@@ -43,7 +43,9 @@ export const enConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: 'Micro Apps', link: '/guide/micro-apps' },
             { text: 'Lifecycle Hooks', link: '/guide/lifecycle' },
+            { text: 'Lifecycle Events', link: '/guide/lifecycle-events' },
             { text: 'Routing', link: '/guide/routing' },
+            { text: 'External Router', link: '/guide/external-router' },
             { text: 'Event Bus', link: '/guide/event-bus' },
             { text: 'Sandboxing', link: '/guide/sandbox' },
           ],
@@ -55,6 +57,14 @@ export const enConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'With Vue', link: '/guide/vue' },
             { text: 'With Svelte', link: '/guide/svelte' },
             { text: 'With Angular', link: '/guide/angular' },
+            { text: 'SSR Islands', link: '/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'Help',
+          items: [
+            { text: 'Migrating to 0.5', link: '/guide/migration-0-5' },
+            { text: 'Troubleshooting', link: '/guide/troubleshooting' },
           ],
         },
       ],
@@ -84,6 +94,7 @@ export const enConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/packages/devtools' },
             { text: '@tuvix.js/server', link: '/packages/server' },
+            { text: '@tuvix.js/vite', link: '/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/packages/module-federation',
