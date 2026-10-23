@@ -13,17 +13,15 @@
 
 # with-multiple-frameworks
 
-Demonstrates a **Polyglot Micro-Frontend** architecture where multiple UI frameworks coexist on the same page.
-
-A single Tuvix.js orchestrator dynamically loads and mounts a **React 18** application and a **Vue 3** application side-by-side.
+A React 18 app and a Vue 3 app on the same page, talking to each other over the shared event bus.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
-| `@tuvix.js/core` | Shell orchestrator |
-| `@tuvix.js/react` | Wraps the React component into a standard Tuvix module |
-| `@tuvix.js/vue` | Wraps the Vue component into a standard Tuvix module |
+| `@tuvix.js/core` | Shell orchestrator, `getGlobalBus` |
+| `@tuvix.js/react` | `createReactMicroApp` |
+| `@tuvix.js/vue` | `createVueMicroApp` |
 
 ## Get started
 
@@ -41,13 +39,14 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-multiple-frameworks
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open [http://localhost:5173](http://localhost:5173) and click **Send click to Vue** in the React app.
 
 ## Key concepts
 
-- **Framework Agnostic Shell** - The `@tuvix.js/core` orchestrator doesn't know or care about React or Vue. It only deals with standard lifecycle functions (`bootstrap`, `mount`, `unmount`, `update`).
-- **Adapter Packages** - The framework-specific Tuvix packages (`@tuvix.js/react`, `@tuvix.js/vue`, etc.) handle the heavy lifting of translating standard Tuvix lifecycle events into framework-native render trees.
+- **The shell knows no framework:** it registers two entries and calls `mount`/`unmount` on whatever module each returns.
+- **Adapters do the rendering:** `@tuvix.js/react` creates a React root per container, `@tuvix.js/vue` a Vue app per container.
+- **Cross-framework events:** the React app calls `getGlobalBus().emit('react:clicked', { count })`; the Vue app subscribes with `getGlobalBus().on(...)` and unsubscribes in `onBeforeUnmount`.

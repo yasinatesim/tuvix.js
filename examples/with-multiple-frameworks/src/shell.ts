@@ -8,17 +8,16 @@ const orchestrator = createOrchestrator({
 
 orchestrator.register({
   name: 'react-app',
-  entry: '/src/apps/react-app/main.tsx',
+  entry: () => import('./apps/react-app/main'),
   container: '#react-app',
-  activeWhen: () => true,
+  activeWhen: '/',
 });
 
 orchestrator.register({
   name: 'vue-app',
-  entry: '/src/apps/vue-app/main.ts',
+  entry: () => import('./apps/vue-app/main'),
   container: '#vue-app',
-  activeWhen: () => true,
+  activeWhen: '/',
 });
 
 orchestrator.start();
-console.log('🚀 Tuvix.js shell started (with-multiple-frameworks)');

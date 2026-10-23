@@ -1,10 +1,25 @@
+<script setup lang="ts">
+import { onBeforeUnmount, ref } from 'vue';
+import { getGlobalBus } from '@tuvix.js/core';
+
+const received = ref(0);
+
+const stop = getGlobalBus().on<{ count: number }>(
+  'react:clicked',
+  ({ count }) => {
+    received.value = count;
+  }
+);
+onBeforeUnmount(stop);
+</script>
+
 <template>
   <div class="vue-card">
-    <h2>🟩 Vue 3 Micro App</h2>
+    <h2>Vue 3 Micro App</h2>
     <p>
-      I'm a Vue 3 SFC (Single-File Component) wrapped in <code>createVueMicroApp</code>.
+      A Vue 3 single-file component wrapped in <code>createVueMicroApp</code>.
     </p>
-    <p>Vue handles its own reactivity inside this container independently.</p>
+    <p data-testid="vue-received">Clicks received from React: {{ received }}</p>
   </div>
 </template>
 

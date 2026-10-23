@@ -1,4 +1,4 @@
-import { createOrchestrator } from '@tuvix.js/core';
+import { createOrchestrator, interceptLinks } from '@tuvix.js/core';
 
 const orchestrator = createOrchestrator({
   router: {
@@ -13,29 +13,34 @@ const orchestrator = createOrchestrator({
   },
 });
 
-// In production, `entry` should point to a built JS bundle URL,
-// e.g. 'https://cdn.example.com/home/main.js'
+// Loader functions let Vite split each app into its own chunk in production.
+// An app deployed on its own would use a URL instead:
+//   entry: 'https://cdn.example.com/home/main.js'
 orchestrator.register({
   name: 'home',
-  entry: '/src/apps/home/main.tsx',
+  entry: () => import('./apps/home/main'),
   container: '#app',
-  activeWhen: '/home',
   props: { theme: 'dark', user: 'Alice' },
 });
 
 orchestrator.register({
   name: 'about',
-  entry: '/src/apps/about/main.tsx',
+  entry: () => import('./apps/about/main'),
   container: '#app',
-  activeWhen: '/about',
 });
 
-orchestrator.start();
+const maybeRouter = orchestrator.getRouter();
+if (!maybeRouter) throw new Error('[Shell] router config missing');
+const router = maybeRouter;
 
-// Redirect root to /home
-if (window.location.pathname === '/') {
-  window.history.pushState({}, '', '/home');
-  window.dispatchEvent(new PopStateEvent('popstate'));
+// Nav links switch apps without a page load.
+interceptLinks({ navigate: (path) => router.push(path) });
+
+async function boot(): Promise<void> {
+  if (window.location.pathname === '/') {
+    await router.replace('/home');
+  }
+  await orchestrator.start();
 }
 
-console.log('🚀 Tuvix.js shell started (with-react)');
+boot().catch((error) => console.error('[Shell] start failed:', error));
