@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -8,13 +10,41 @@ import { test, expect } from '@playwright/test';
  * before initialization completes, compile() silently exits because `esbuild`
  * is null. The test verifies that the preview renders on the VERY FIRST click
  * without any page refresh.
+ *
+ * The playground imports each tuvix package from esm.sh at the version in its
+ * repo package.json. A release commit bumps those versions before
+ * `changeset publish` runs, so esm.sh cannot serve them yet and the release
+ * job would wait on its own e2e gate forever. The tests therefore answer those
+ * esm.sh requests with the locally built `dist/index.mjs` of each package:
+ * they check the repo code, not npm availability. Framework packages (React,
+ * Vue, Svelte, Angular) still come from the CDN.
  */
 
 const TABS = ['vanilla', 'react', 'vue', 'svelte', 'angular'] as const;
 const INIT_TIMEOUT = 30_000; // CDN + WASM load budget
 const RENDER_TIMEOUT = 15_000;
 
+const PACKAGES_DIR = path.resolve(__dirname, '../../packages');
+
+/** `https://esm.sh/*@tuvix.js/core@0.5.0` → `core`; `…/*tuvix.js@0.5.0` → `tuvix`. */
+const TUVIX_ESM_URL =
+  /^https:\/\/esm\.sh\/\*(?:@tuvix\.js\/([\w-]+)|tuvix\.js)@[^/?#]+$/;
+
 test.beforeEach(async ({ page }) => {
+  await page.route(TUVIX_ESM_URL, async (route) => {
+    const match = TUVIX_ESM_URL.exec(route.request().url());
+    const dir = match?.[1] ?? 'tuvix';
+    const body = await readFile(
+      path.join(PACKAGES_DIR, dir, 'dist', 'index.mjs'),
+      'utf8'
+    );
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/javascript',
+      headers: { 'access-control-allow-origin': '*' },
+      body,
+    });
+  });
   // Fresh navigation every test — no cached state
   await page.goto('/playground');
   // Wait for the playground shell to be visible before interacting
