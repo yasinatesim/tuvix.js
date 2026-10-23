@@ -17,7 +17,10 @@ export type Unsubscribe = () => void;
  * Event bus configuration options
  */
 export interface EventBusOptions {
-  /** Maximum number of listeners per event (0 = unlimited) */
+  /**
+   * Listener count per event above which `on()` prints a `console.warn`,
+   * once per event name. The listener is still added. 0 (default) disables it.
+   */
   maxListeners?: number;
 
   /** Enable debug logging */

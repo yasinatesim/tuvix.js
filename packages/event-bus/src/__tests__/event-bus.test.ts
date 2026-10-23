@@ -366,22 +366,29 @@ describe('EventBus', () => {
   // ─── Options ────────────────────────────────────
 
   describe('options', () => {
-    it('should warn when maxListeners is exceeded', () => {
-      const logger = vi.fn();
-      const limitedBus = new EventBus({
-        maxListeners: 2,
-        debug: true,
-        logger,
-      });
+    it('warns with console.warn once per event when maxListeners is exceeded, without debug', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const limitedBus = new EventBus({ maxListeners: 2 });
+      const third = vi.fn();
 
       limitedBus.on('test', () => {});
       limitedBus.on('test', () => {});
-      limitedBus.on('test', () => {}); // Should warn
+      expect(warn).not.toHaveBeenCalled();
 
-      const warningCall = logger.mock.calls.find(
-        (call) => typeof call[0] === 'string' && call[0].includes('Warning')
-      );
-      expect(warningCall).toBeDefined();
+      limitedBus.on('test', third);
+      limitedBus.on('test', () => {});
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0]?.[0])).toContain('"test"');
+
+      limitedBus.on('other', () => {});
+      limitedBus.on('other', () => {});
+      limitedBus.on('other', () => {});
+      expect(warn).toHaveBeenCalledTimes(2);
+
+      // The listener past the limit is still added.
+      limitedBus.emit('test', 1);
+      expect(third).toHaveBeenCalledWith(1);
+      warn.mockRestore();
     });
 
     it('should log events when debug is enabled', () => {

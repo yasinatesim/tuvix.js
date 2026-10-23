@@ -7,14 +7,15 @@ export type RouterMode = 'history' | 'hash';
  * Route definition for mapping URLs to micro apps
  */
 export interface RouteConfig {
-  /** URL path pattern (supports wildcards: /app/*) */
+  /**
+   * URL path pattern, matched against the whole path: `/settings` matches
+   * `/settings` only, `/` matches the home page only. End it with `/*` to
+   * also match sub-paths (`/*` matches every path). Supports `:param`.
+   */
   path: string;
 
   /** Name of the micro app to activate */
   app: string;
-
-  /** Whether this route is exact match only */
-  exact?: boolean;
 
   /** Additional metadata for the route */
   meta?: Record<string, unknown>;

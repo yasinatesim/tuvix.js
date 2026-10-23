@@ -26,8 +26,12 @@ export {
 
 export type {
   AppStatus,
+  AppErrorEvent,
+  AppErrorPhase,
+  AppSandboxOption,
   MicroAppConfig,
   RegisteredApp,
+  RouterSource,
   OrchestratorConfig,
   MicroAppDefinition,
 } from '@tuvix.js/core';
@@ -52,8 +56,11 @@ export type {
 export {
   Router,
   createRouter,
+  matchPath,
   matchRoute,
   normalizePath,
+  interceptLinks,
+  resolveLink,
 } from '@tuvix.js/router';
 
 export type {
@@ -65,10 +72,21 @@ export type {
   NavigationEvent,
   NavigationGuard,
   RouteChangeHandler,
+  PathMatch,
+  MatchPathOptions,
+  InterceptLinksOptions,
+  ResolvedLink,
+  ResolveLinkOptions,
 } from '@tuvix.js/router';
 
 // ─── Loader ──────────────────────────────────────
-export { ModuleLoader, createLoader } from '@tuvix.js/loader';
+export {
+  ModuleLoader,
+  createLoader,
+  whenMounted,
+  onLifecycle,
+  isMounted,
+} from '@tuvix.js/loader';
 
 export type {
   Entry,
@@ -81,6 +99,9 @@ export type {
   LoadResult,
   LoadStatus,
   PrefetchStrategy,
+  LifecycleType,
+  LifecycleDetail,
+  LifecycleEvent,
 } from '@tuvix.js/loader';
 
 // ─── Sandbox ─────────────────────────────────────
@@ -96,4 +117,6 @@ export type {
   ISandbox,
   ICssSandbox,
   IJsSandbox,
+  AdoptStylesOptions,
+  AdoptedStyles,
 } from '@tuvix.js/sandbox';

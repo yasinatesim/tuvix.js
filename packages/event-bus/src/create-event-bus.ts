@@ -17,18 +17,34 @@ export function createEventBus(options?: EventBusOptions): IEventBus {
   return new EventBus(options);
 }
 
-let globalBus: IEventBus | null = null;
+// Separately bundled micro apps each get their own copy of this module.
+// Keeping the singleton on `window` gives every copy the same bus.
+const GLOBAL_KEY = '__TUVIX_GLOBAL_BUS__';
+
+type GlobalBusHolder = { [GLOBAL_KEY]?: IEventBus | null };
+
+const serverHolder: GlobalBusHolder = {};
+
+function holder(): GlobalBusHolder {
+  return typeof window === 'undefined'
+    ? serverHolder
+    : (window as unknown as GlobalBusHolder);
+}
 
 /**
  * Get or create the global shared event bus singleton.
- * Useful for cross-app communication where all micro apps
- * need to share the same bus instance.
+ * Every copy of `@tuvix.js/event-bus` on the page returns the same instance,
+ * and the orchestrator uses it unless you pass `eventBus` options.
+ * `options` only apply when this call creates the bus.
  */
 export function getGlobalBus(options?: EventBusOptions): IEventBus {
-  if (!globalBus) {
-    globalBus = new EventBus(options);
+  const h = holder();
+  let bus = h[GLOBAL_KEY];
+  if (!bus) {
+    bus = new EventBus(options);
+    h[GLOBAL_KEY] = bus;
   }
-  return globalBus;
+  return bus;
 }
 
 /**
@@ -36,8 +52,10 @@ export function getGlobalBus(options?: EventBusOptions): IEventBus {
  * Primarily useful for testing.
  */
 export function resetGlobalBus(): void {
-  if (globalBus) {
-    globalBus.destroy();
-    globalBus = null;
+  const h = holder();
+  const bus = h[GLOBAL_KEY];
+  if (bus) {
+    bus.destroy();
+    h[GLOBAL_KEY] = null;
   }
 }

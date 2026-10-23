@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  matchPath,
   pathToRegex,
   parseQuery,
   matchRoute,
@@ -101,8 +102,8 @@ describe('matchRoute', () => {
   const routes = [
     { path: '/dashboard/*', app: 'dashboard' },
     { path: '/users/:id', app: 'user-detail' },
-    { path: '/settings', app: 'settings', exact: true },
-    { path: '/', app: 'home', exact: true },
+    { path: '/settings', app: 'settings' },
+    { path: '/', app: 'home' },
   ];
 
   it('should match wildcard route', () => {
@@ -146,8 +147,12 @@ describe('matchRoute', () => {
 });
 
 describe('isPathActive', () => {
-  it('should return true for root pattern', () => {
-    expect(isPathActive('/anything', '/')).toBe(true);
+  it("treats '/' as exact, like matchRoute, and '/*' as catch-all", () => {
+    expect(isPathActive('/', '/')).toBe(true);
+    expect(isPathActive('/?q=1', '/')).toBe(true);
+    expect(isPathActive('/anything', '/')).toBe(false);
+    expect(matchRoute('/anything', [{ path: '/', app: 'home' }])).toBeNull();
+    expect(isPathActive('/anything/deep', '/*')).toBe(true);
   });
 
   it('should match wildcard pattern', () => {
@@ -159,5 +164,81 @@ describe('isPathActive', () => {
   it('should match exact pattern', () => {
     expect(isPathActive('/settings', '/settings')).toBe(true);
     expect(isPathActive('/settings/sub', '/settings')).toBe(false);
+  });
+});
+
+describe('matchPath', () => {
+  it('ignores the query string and hash', () => {
+    expect(matchPath('/dashboard', '/dashboard?tab=1').matched).toBe(true);
+    expect(matchPath('/dashboard', '/dashboard#top').matched).toBe(true);
+    expect(matchPath('/dashboard', '/dashboard/?tab=1#top').matched).toBe(true);
+  });
+
+  it('captures and decodes :params', () => {
+    expect(matchPath('/users/:id', '/users/42?x=1')).toEqual({
+      matched: true,
+      params: { id: '42' },
+    });
+    expect(matchPath('/files/:name', '/files/a%20b').params).toEqual({
+      name: 'a b',
+    });
+    expect(matchPath('/users/:id', '/users').matched).toBe(false);
+  });
+
+  it('keeps malformed percent-encoding instead of throwing', () => {
+    expect(matchPath('/files/:name', '/files/%E0%A4%A').params).toEqual({
+      name: '%E0%A4%A',
+    });
+  });
+
+  it('matches sub-paths on segment boundaries by default', () => {
+    expect(matchPath('/docs', '/docs/intro').matched).toBe(true);
+    expect(matchPath('/docs/*', '/docs').matched).toBe(true);
+    expect(matchPath('/docs/*', '/docs/a/b').matched).toBe(true);
+    expect(matchPath('/docs', '/docsify').matched).toBe(false);
+    expect(matchPath('/docs/*', '/docsify').matched).toBe(false);
+    expect(matchPath('/users/:id', '/users/42/posts').params).toEqual({
+      id: '42',
+    });
+  });
+
+  it('requires a full match with end: true, except for /*', () => {
+    expect(matchPath('/docs', '/docs/intro', { end: true }).matched).toBe(
+      false
+    );
+    expect(matchPath('/docs', '/docs/', { end: true }).matched).toBe(true);
+    expect(matchPath('/docs/*', '/docs/intro', { end: true }).matched).toBe(
+      true
+    );
+  });
+
+  it("'/' matches every path by default and only '/' with end: true", () => {
+    expect(matchPath('/', '/anything/deep?q=1').matched).toBe(true);
+    expect(matchPath('/', '/', { end: true }).matched).toBe(true);
+    expect(matchPath('/', '/x', { end: true }).matched).toBe(false);
+  });
+
+  it('treats regex characters in patterns literally', () => {
+    expect(matchPath('/a.b', '/a.b').matched).toBe(true);
+    expect(matchPath('/a.b', '/axb').matched).toBe(false);
+    expect(matchPath('/v(1)', '/v(1)').matched).toBe(true);
+  });
+
+  it('reuses the compiled pattern', () => {
+    // A matcher that rebuilds its RegExp per call hands out a new object each time.
+    expect(pathToRegex('/cached/:id').regex).toBe(
+      pathToRegex('/cached/:id').regex
+    );
+  });
+});
+
+describe('matchRoute with query and hash', () => {
+  it('matches a param route when the path has a query and hash', () => {
+    const result = matchRoute('/users/9?tab=a#h', [
+      { path: '/users/:id', app: 'users' },
+    ]);
+    expect(result?.params).toEqual({ id: '9' });
+    expect(result?.query).toEqual({ tab: 'a' });
+    expect(result?.path).toBe('/users/9');
   });
 });

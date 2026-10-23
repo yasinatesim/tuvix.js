@@ -1,8 +1,8 @@
 # @tuvix.js/event-bus
 
-> Lightweight typed pub/sub system for inter-app communication
+> Synchronous publish/subscribe bus for messages between micro apps, with one global bus per page.
 
-Part of the [Tuvix.js](https://github.com/yasinatesim/tuvix.js) microfrontend framework.
+Part of the [Tuvix.js](https://github.com/yasinatesim/tuvix.js) microfrontend framework. Full documentation: [tuvix.js.org/packages/event-bus](https://tuvix.js.org/packages/event-bus).
 
 ## Installation
 
@@ -11,99 +11,82 @@ npm install @tuvix.js/event-bus
 # or pnpm add @tuvix.js/event-bus
 ```
 
-## Quick Start
+## Quick start
 
 ```ts
-import { createEventBus } from '@tuvix.js/event-bus';
+import { getGlobalBus } from '@tuvix.js/event-bus';
 
-const bus = createEventBus();
+const bus = getGlobalBus();
 
-const unsubscribe = bus.on<{ userId: string }>('user:login', ({ userId }) => {
-  console.log('User logged in:', userId);
+const stop = bus.on<{ itemCount: number }>('cart:updated', ({ itemCount }) => {
+  console.log('Items in cart:', itemCount);
 });
 
-bus.emit('user:login', { userId: '123' });
-
-unsubscribe();
+bus.emit('cart:updated', { itemCount: 3 });
+stop();
 ```
 
-## Subscriptions
+The orchestrator from `@tuvix.js/core` uses `getGlobalBus()` (unless you pass `eventBus` options) and passes it to every app as `bus` in the mount context.
 
-```ts
-// Standard subscription — returns an unsubscribe function
-const off = bus.on('cart:update', (cart) => render(cart));
+## API
 
-// Fire once and auto-unsubscribe
-bus.once('app:ready', () => console.log('ready'));
+### `EventBus` and `createEventBus`
 
-// Wildcard — receives every event for inspection or logging
-const offAll = bus.onAny((event, data) => {
-  console.log('[bus]', event, data);
-});
-
-// Manual removal
-bus.off('cart:update', handler);
-bus.offAll('cart:update');     // remove every listener for this event
-bus.offAll();                   // remove every listener for every event (incl. wildcards)
+```ts no-check
+new EventBus(options?: EventBusOptions);
+createEventBus(options?: EventBusOptions): IEventBus;
 ```
 
-## Introspection
+| Option | Type | Default | Meaning |
+| --- | --- | --- | --- |
+| `maxListeners` | `number` | `0` | Per-event count at which `on` prints a `console.warn` when you add one more, once per event name, with or without `debug`. The listener is still added. `0` means no warning. |
+| `debug` | `boolean` | `false` | Logs subscribe, unsubscribe and emit calls. |
+| `logger` | `(message: string, ...args: unknown[]) => void` | `console.log` | Receives debug output. |
 
-```ts
-bus.hasListeners('user:login');   // boolean
-bus.listenerCount('user:login');  // number
-bus.eventNames();                 // string[]
-```
-
-## Shared Global Bus
-
-Use one bus across all micro apps without passing a reference around:
-
-```ts
-import { getGlobalBus, resetGlobalBus } from '@tuvix.js/event-bus';
-
-const bus = getGlobalBus();          // creates on first call, reuses afterwards
-bus.emit('cart:update', { items });
-
-resetGlobalBus();                    // clear & recreate (mostly for tests)
-```
-
-> When using `@tuvix.js/core`, `orchestrator.getEventBus()` already exposes a
-> bus shared with every registered app — prefer that over the global singleton
-> in production code.
-
-## Options
-
-```ts
-const bus = createEventBus({
-  maxListeners: 50,                // warn (don't throw) when exceeded; 0 = unlimited
-  debug: true,                     // log every emit/on/off
-  logger: (...args) => myLog(...), // custom logger sink
-});
-```
-
-## Lifecycle
-
-```ts
-bus.destroy();   // remove all listeners, mark bus unusable
-                  // any subsequent emit/on/once/onAny throws
-```
-
-## Error Handling
-
-Handlers run inside try/catch — a throwing listener is logged but does **not**
-prevent the remaining listeners (or the wildcard listeners) from receiving the
-event.
-
-## API Surface
-
-| Export | Purpose |
+| Method | Behaviour |
 | --- | --- |
-| `createEventBus(options?)` | Factory function |
-| `getGlobalBus()` | Lazy global singleton |
-| `resetGlobalBus()` | Recreate the singleton |
-| `EventBus` | Class implementation |
-| `IEventBus`, `EventHandler`, `WildcardHandler`, `Unsubscribe`, `EventBusOptions` | Types |
+| `on<T>(event, handler): Unsubscribe` | Subscribes; returns a remover. |
+| `once<T>(event, handler): Unsubscribe` | Removes the handler before its first call. Cancel it through the returned function, not `off`. |
+| `emit<T>(event, data?)` | Calls the event's handlers in order, then `onAny` handlers, before returning. A throwing handler is logged with `console.error`; the rest still run. |
+| `off(event, handler)` | Removes one handler. |
+| `offAll(event?)` | Removes an event's handlers, or every handler including `onAny` ones. |
+| `onAny(handler): Unsubscribe` | Handler receives `(eventName, data)` for every event. |
+| `offAny(handler)` | Removes an `onAny` handler. |
+| `hasListeners(event)`, `listenerCount(event)`, `eventNames()` | Inspect subscriptions; `onAny` handlers are not counted. |
+| `destroy()` | Removes every handler. Later `on`, `once`, `emit` and `onAny` calls throw. |
+
+### `getGlobalBus`
+
+```ts no-check
+getGlobalBus(options?: EventBusOptions): IEventBus;
+```
+
+Returns the page's shared bus, stored on `window.__TUVIX_GLOBAL_BUS__`, so micro apps that bundle their own copy of this package get the same instance. `options` apply only on the call that creates it. Without `window`, the bus is a module-level singleton.
+
+### `resetGlobalBus`
+
+```ts no-check
+resetGlobalBus(): void;
+```
+
+Destroys the global bus; the next `getGlobalBus()` creates a new one. Old references throw on use. Meant for tests.
+
+### Types
+
+`EventHandler<T>` (`(data: T) => void`), `WildcardHandler<T>` (`(eventName: string, data: T) => void`), `Unsubscribe` (`() => void`), `EventBusOptions`, `IEventBus`.
+
+## Edge cases
+
+- `emit` works on a copy of the handler list: handlers added during an emit run from the next emit on.
+- The same function subscribed twice to one event is stored once.
+- `emit` does not await async handlers; their rejections are unhandled.
+- Empty or whitespace event names throw `[Tuvix EventBus] Event name must be a non-empty string.`
+- A micro app that bundles 0.4 of this package keeps its own bus.
+
+## What it does not do
+
+- No event map typing; pass the payload type as `on<T>` / `emit<T>`.
+- No replay for late subscribers, no `user:*` patterns, no messages across tabs or iframes.
 
 ## License
 

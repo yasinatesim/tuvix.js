@@ -26,11 +26,14 @@ export class EventBus implements IEventBus {
   private wildcardHandlers: Set<WildcardHandler>;
   private options: Required<EventBusOptions>;
   private destroyed: boolean;
+  /** Events that already triggered the max-listeners warning. */
+  private warnedEvents: Set<string>;
 
   constructor(options: EventBusOptions = {}) {
     this.handlers = new Map();
     this.wildcardHandlers = new Set();
     this.destroyed = false;
+    this.warnedEvents = new Set();
 
     this.options = {
       maxListeners: options.maxListeners ?? 0,
@@ -56,10 +59,13 @@ export class EventBus implements IEventBus {
 
     if (
       this.options.maxListeners > 0 &&
-      handlers.size >= this.options.maxListeners
+      handlers.size >= this.options.maxListeners &&
+      !this.warnedEvents.has(event)
     ) {
-      this.log(
-        `Warning: Max listeners (${this.options.maxListeners}) reached for event "${event}"`
+      // Printed without `debug`: this usually points at a listener leak.
+      this.warnedEvents.add(event);
+      console.warn(
+        `[Tuvix EventBus] Max listeners (${this.options.maxListeners}) reached for event "${event}". The listener was added; check for handlers that are never removed.`
       );
     }
 

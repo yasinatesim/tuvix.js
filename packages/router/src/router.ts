@@ -151,19 +151,11 @@ export class Router implements IRouter {
     const canNavigate = await this.runGuards(event);
     if (!canNavigate) return;
 
-    if (this.mode === 'history') {
-      if (replace) {
-        window.history.replaceState(null, '', to);
-      } else {
-        window.history.pushState(null, '', to);
-      }
+    const url = this.toUrl(to);
+    if (replace) {
+      window.history.replaceState(null, '', url);
     } else {
-      const hashPath = '#' + to;
-      if (replace) {
-        window.history.replaceState(null, '', hashPath);
-      } else {
-        window.history.pushState(null, '', hashPath);
-      }
+      window.history.pushState(null, '', url);
     }
 
     this._currentPath = to;
@@ -225,11 +217,7 @@ export class Router implements IRouter {
       .then((canNavigate) => {
         if (!canNavigate) {
           // replaceState does not trigger popstate, so this won't recurse.
-          if (this.mode === 'history') {
-            window.history.replaceState(null, '', from);
-          } else {
-            window.history.replaceState(null, '', '#' + from);
-          }
+          window.history.replaceState(null, '', this.toUrl(from));
           return;
         }
 
@@ -274,11 +262,22 @@ export class Router implements IRouter {
   private stripBase(path: string): string {
     if (this.base === '/') return path;
 
-    if (path.startsWith(this.base)) {
-      return path.slice(this.base.length) || '/';
+    const rest = path.slice(this.base.length);
+    if (
+      path.startsWith(this.base) &&
+      (rest === '' || rest[0] === '/' || rest[0] === '?' || rest[0] === '#')
+    ) {
+      return rest || '/';
     }
 
     return path;
+  }
+
+  /** Browser URL for an app-relative path: base prefix in history mode, `#path` in hash mode. */
+  private toUrl(path: string): string {
+    if (this.mode === 'hash') return '#' + path;
+    if (this.base === '/') return path;
+    return path === '/' ? this.base : this.base + path;
   }
 
   private ensureAlive(): void {
