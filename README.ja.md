@@ -5,8 +5,7 @@
 <h1 align="center">Tuvix.js</h1>
 
 <p align="center">
-  スケーラブルで独立デプロイ可能なフロントエンドアプリケーションを構築するための、軽量で柔軟な<strong>マイクロフロントエンドフレームワーク</strong>。<br/>
-  Tuvix.jsは複数のフロントエンドアプリケーションをシームレスで統一されたユーザー体験に融合します - その名前が示すとおりに。
+  マイクロフロントエンドツールキットです。React、Vue、Svelte、Angular、またはプレーンなTypeScriptで書かれ、独立してデプロイされるアプリを、ブラウザー上で、あるいはReactページ内のサーバーレンダリングされたアイランドとして、読み込み、マウントし、接続します。
 </p>
 
 <p align="center">
@@ -26,304 +25,190 @@
 
 ## ✨ 特徴
 
-- 🧩 **フレームワーク非依存** - React、Vue、Svelte、Angular、またはVanilla JSが使用可能
-- 📦 **独立Deployment** - 各マイクロアプリを個別にデプロイ
-- 🔗 **動的モジュールローディング** - マイクロフロントエンドをオンデマンドで読み込み
-- 🛣️ **組み込みルーティング** - マイクロアプリ間のシームレスなルーティング
-- 📡 **アプリ間通信** - アプリ間メッセージングのためのイベントバス
-- ⚡ **Lightweight** - ランタイム依存ゼロ、最小限のコア
-- 🔄 **Lifecycle管理** - マウント、アンマウント、アップデートフック
-- 🔒 **Type-Safe** - 厳密な型によるTypeScriptの完全サポート
+- 🧩 **フレームワークアダプター**：React 18/19、Vue 3、Svelte 3-5、Angular 15+に対応します。どのアダプターもルートコンポーネントを`mount`、`update`、`unmount`を持つマイクロアプリモジュールに変換し、コンテナーごとに1つのインスタンスを作ります。
+- 🛣️ **パスベースのアクティベーション**：`activeWhen: '/users/:id'`は、一致するパスでアプリをマウントします。クエリ文字列やハッシュによってアンマウントされることはありません。オーケストレーター、ルーター、サーバーパッケージは1つのマッチャー（`matchPath`）を共有します。
+- 🔁 **順序付きマウント**：ルート変更は1つずつ調整（reconcile）されます。非アクティブなアプリは新しいアプリのマウント前にアンマウントされるため、A → B → Aと素早く移動してもページに残るのはAだけです。
+- 🔗 **外部ルーター**：`orchestrator.connectRouter()`はTanStack RouterやReact Routerに追従します。`interceptLinks()`は通常の`<a href>`クリックをクライアントナビゲーションに変換します。
+- 🏝️ **SSRアイランド**：`TuvixIsland`は、サーバーレンダリングされたReactページ内でVue、Svelte、Angular、Reactのマイクロアプリをホストし、その場でハイドレートします。再レンダリング時にそのDOMを書き換えることはありません。
+- 🎨 **スタイル適用済みの初回描画**：`@tuvix.js/vite`は各アイランドが必要とするスタイルシートをサーバーに伝えるため、それらを`<head>`でリンクできます。
+- 📦 **柔軟なエントリー**：スクリプトURL、`{ scripts, styles, type }`、または`() => import('./app')`のようなローダー関数を使えます。並列読み込み、リトライ、タイムアウト、SRIハッシュに対応します。
+- 📡 **共有イベントバス**：`getGlobalBus()`は、別々にバンドルされたアプリ間でも、ページごとに1つのバスを返します。
+- 🔔 **ライフサイクルイベント**：`tuvix:mounted`、`tuvix:unmounted`、`tuvix:error`に加え、`whenMounted(name)`と`onLifecycle()`を提供します。
+- 🔒 **必要に応じたCSS分離**：`sandbox: true`を指定すると、アプリは独自のスタイルシートを持つShadow Root内にレンダリングされます。
+- 🟦 **TypeScript**：すべてのライブラリパッケージは、型宣言付きのESMビルドとCommonJSビルドを提供します。
+
+Tuvix.jsはアプリ間でJavaScriptを分離しません。すべてのアプリはページの`window`で実行されます。信頼できないコードには`<iframe>`を使ってください。
 
 ---
 
 ## 🤖 AIコンポーネントジェネレーター
 
-内蔵AIチャットボットを使用して、自然言語からtuvix.jsコンポーネントを生成します。
+ドキュメントサイトのチャットボットを使い、自然言語からtuvix.jsコンポーネントを生成できます。
 
-- **チャットモデル：** OpenRouter 経由の MiniMax M2.5（無料 API、セルフホスティング不要）
-- **埋め込みモデル：** OpenRouter 経由の NVIDIA Nemotron Embed 1B（RAG 検索）
-- **対応フレームワーク：** React、Vue、Svelte、Angular
-- **Dataset：** HuggingFaceの[tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+- **チャットモデル：** OpenRouter経由のMiniMax M2.5
+- **埋め込みモデル：** OpenRouter経由のNVIDIA Nemotron Embed 1B（RAG検索）
+- **対応：** React、Vue、Svelte、Angular
+- **データセット：** HuggingFace上の[tuvix-component-dataset](https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset)
+
+> 試してみる：ドキュメントサイトの[AI Generator](https://tuvix.js.org/chatbot)
 
 ---
 
 ## 📦 インストール
 
 ```bash
-# オールインワンパッケージ
-npm install tuvix.js
+# Orchestrator, router, loader, event bus and sandbox
+pnpm add tuvix.js
 
-# または個別パッケージをインストール
-npm install @tuvix.js/core @tuvix.js/router
+# Adapters, as needed
+pnpm add @tuvix.js/react @tuvix.js/vue @tuvix.js/svelte @tuvix.js/angular
+
+# Or scaffold a project
+npx create-tuvix-app my-app --template shell
 ```
 
 ---
 
 ## 🚀 クイックスタート
 
-### ホスト（シェル）アプリケーション
+### シェル
 
 ```ts
-import { createOrchestrator } from 'tuvix.js';
+import { createOrchestrator, interceptLinks } from 'tuvix.js';
 
 const orchestrator = createOrchestrator({
-  router: {
-    mode: 'history',
-    routes: [
-      { path: '/dashboard/*', app: 'dashboard' },
-      { path: '/settings/*', app: 'settings' },
-    ],
-  },
+  router: { mode: 'history', routes: [] },
 });
 
 orchestrator.register({
   name: 'dashboard',
-  entry: 'https://cdn.example.com/dashboard/main.js',
+  entry: {
+    scripts: ['https://cdn.example.com/dashboard/main.js'],
+    styles: ['https://cdn.example.com/dashboard/main.css'],
+    type: 'module',
+  },
   container: '#main-content',
   activeWhen: '/dashboard/*',
+  props: { user: 'Guest' },
+  fallback: '<p>Dashboard is unavailable.</p>',
 });
 
 orchestrator.register({
   name: 'settings',
-  entry: 'https://cdn.example.com/settings/main.js',
+  entry: () => import('./apps/settings'),
   container: '#main-content',
   activeWhen: '/settings/*',
 });
 
-orchestrator.start();
+interceptLinks({ navigate: (path) => orchestrator.navigateTo(path) });
+
+await orchestrator.start();
 ```
 
-### マイクロフロントエンドアプリ
+### マイクロアプリ
+
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+
+function Dashboard({ user }: { user: string }) {
+  return <h1>Welcome, {user}</h1>;
+}
+
+// Registers itself as "dashboard", so the shell's script entry finds it.
+export default createReactMicroApp({ name: 'dashboard', App: Dashboard });
+```
+
+フレームワークを使わない場合：
 
 ```ts
 import { defineMicroApp } from 'tuvix.js';
 
-let titleEl: HTMLHeadingElement | null = null;
-
 export default defineMicroApp({
-  name: 'dashboard',
-
-  bootstrap() {
-    // 初回マウント前の一度きりのセットアップ（データの事前ロードなど）
-    console.log('ダッシュボードが初期化されました');
-  },
-
+  name: 'settings',
   mount({ container, props }) {
-    container.innerHTML = `<h1>ようこそ、${props?.user ?? 'ゲスト'}さん！</h1>`;
-    titleEl = container.querySelector('h1');
+    const title = document.createElement('h1');
+    title.textContent = `Settings for ${String(props?.user ?? 'Guest')}`;
+    container.replaceChildren(title);
   },
-
   unmount({ container }) {
-    titleEl = null;
-    container.innerHTML = '';
-  },
-
-  // shell が orchestrator.updateAppProps(name, props) を呼び出した時にトリガー。
-  // DOM をその場で更新 — リマウントなし、フラッシュなし。
-  update({ props }) {
-    if (titleEl) {
-      titleEl.textContent = `ようこそ、${props?.user ?? 'ゲスト'}さん！`;
-    }
+    container.replaceChildren();
   },
 });
 ```
 
----
-
-## 🔄 実行時の Props 更新
-
-マウント済みのマイクロアプリに、再マウントせずに新しい props を渡します:
+### propsの更新
 
 ```ts
-// shell から更新された props をプッシュ — マイクロアプリの update() フックが呼ばれる
-await orchestrator.updateAppProps('dashboard', {
-  user: 'Yasin',
-  theme: 'dark',
-});
+import { createOrchestrator } from 'tuvix.js';
+
+const orchestrator = createOrchestrator();
+await orchestrator.updateAppProps('dashboard', { user: 'Yasin' });
 ```
 
-Props は元の config props とマージされます。アプリが `update()` を実装していない
-場合、新しい props は保存され、次のマウント時に適用されます。
+`update`を持つマウント済みのアプリは、その場で再レンダリングします。それ以外の場合、オーケストレーターはマージしたpropsを次回のマウントまで保持します。
 
 ---
 
-## 🧭 手動ライフサイクル制御
+## 🌉 外部ルーターに追従する
 
 ```ts
-// ルート調整以外で手動マウント/アンマウント
-await orchestrator.mountApp('dashboard');
-await orchestrator.unmountApp('dashboard');
+import { createOrchestrator } from 'tuvix.js';
+import { router } from './router'; // TanStack Router instance
 
-// 現在の状態を取得
-orchestrator.getAppStatus('dashboard');     // 'mounted' | 'mounting' | 'error' | ...
-orchestrator.getMountedApps();              // ['dashboard']
-orchestrator.getRegisteredApps();           // ['dashboard', 'settings']
+const orchestrator = createOrchestrator(); // no built-in router
 
-// すべて破棄（冪等 — 複数回呼び出しても安全）
-await orchestrator.destroy();
-```
-
----
-
-## 🌉 外部ルーターとのブリッジ
-
-すでに TanStack Router、Next.js App Router、または React Router を使用している場合、
-`config.router` を完全に省略し、既存のルーターから `reconcile(path)` 経由で
-Tuvix.js を駆動できます:
-
-```ts
-const orchestrator = createOrchestrator(); // ルーター設定なし
-
-orchestrator.register({
-  name: 'dashboard',
-  entry: '/dashboard.js',
-  container: '#main',
-  activeWhen: '/dashboard/*',
+orchestrator.connectRouter({
+  subscribe: (callback) => router.subscribe('onResolved', callback),
+  getPath: () => router.state.location.pathname,
 });
 
 await orchestrator.start();
-
-// ナビゲーション後、tuvix.js に現在のパスを伝える
-tanstackRouter.subscribe('onLoad', () => {
-  orchestrator.reconcile(window.location.pathname);
-});
 ```
 
 ---
 
-## 👁️ 遅延マウント（ビューポート）
+## 🏝️ サーバーレンダリングされたアイランド
 
-コンテナがビューポートに入るまで、重いマイクロアプリのマウントを遅延させます:
+```tsx
+import { TuvixIsland } from '@tuvix.js/react';
+import { createSsrSvelteMicroApp } from '@tuvix.js/svelte';
+import Footer from './Footer.svelte';
+
+const footer = createSsrSvelteMicroApp({ name: 'footer', App: Footer });
+
+// `footerHtml` comes from renderSvelteToString() in server-only code.
+export function Layout({ footerHtml }: { footerHtml?: string }) {
+  return <TuvixIsland name="footer" app={footer} props={{ year: 2026 }} ssrHtml={footerHtml} fallback={<footer>© 2026</footer>} />;
+}
+```
+
+ハイドレーション中、アイランドはHTMLをページから読み取るため、クライアントが`footerHtml`を必要とすることはありません。[SSRアイランドガイド](https://tuvix.js.org/guide/ssr-islands)と[`examples/with-ssr-islands`](./examples/with-ssr-islands)を参照してください。
+
+---
+
+## 🔔 ライフサイクルイベント
 
 ```ts
-orchestrator.register({
-  name: 'comments',
-  entry: '/comments.js',
-  container: '#comments-section',
-  mountWhenVisible: true, // 最初の IntersectionObserver ヒットでマウント
-});
+import { onLifecycle, whenMounted } from 'tuvix.js';
+
+onLifecycle('error', ({ name, error }) => console.error(name, error));
+
+const { container, hydrated } = await whenMounted('footer');
+container.classList.add(hydrated ? 'hydrated' : 'rendered');
 ```
 
 ---
 
-## 🛟 ロード失敗時のフォールバック HTML
+## 🔌 イベントバス
 
 ```ts
-orchestrator.register({
-  name: 'reports',
-  entry: '/reports.js',
-  container: '#reports',
-  activeWhen: '/reports/*',
-  fallback: '<p class="error">Reports は一時的に利用できません。</p>',
-});
-```
+import { getGlobalBus } from 'tuvix.js';
 
----
+const bus = getGlobalBus(); // the same bus the orchestrator passes to mount()
 
-## ⚡ プリフェッチ戦略
-
-```ts
-const orchestrator = createOrchestrator({
-  router: { /* ... */ },
-  prefetch: {
-    strategy: 'idle', // 'immediate' | 'idle' | 'hover' | 'none' (デフォルト)
-  },
-});
-```
-
-| 戦略 | バンドルが取得されるタイミング |
-| --- | --- |
-| `immediate` | `start()` 直後 |
-| `idle` | 次のブラウザアイドルウィンドウ（`requestIdleCallback`） |
-| `hover` | ページ上の任意の場所での最初の `mouseover` 後 |
-| `none` | なし（デフォルト） — オンデマンドのみ |
-
----
-
-## 🔌 アプリ間通信
-
-```ts
-import { createEventBus } from 'tuvix.js';
-
-const bus = createEventBus();
-
-// App A — イベントを発行
-bus.emit('user:login', { userId: 42, name: 'Ahmet' });
-
-// App B — 購読（unsubscribe 関数を返す）
-const unsubscribe = bus.on('user:login', (data) => {
-  console.log(`${data.name}がログインしました！`);
-});
-
-// 一度だけ発火して自動的に解除
-bus.once('app:ready', () => console.log('準備完了'));
-
-// デバッグ用にすべてのイベントをリッスン
-bus.onAny((event, data) => console.log('[bus]', event, data));
-
-// クリーンアップ
-unsubscribe();
-```
-
-orchestrator は `orchestrator.getEventBus()` で独自のバスを公開し、登録された
-すべてのアプリは自動的に同じチャンネルを共有します。
-
----
-
-## 🛣️ ルーティング
-
-```ts
-import { createRouter } from 'tuvix.js';
-
-const router = createRouter({
-  mode: 'history', // または 'hash'
-  base: '/',       // オプションのベースパス
-  routes: [
-    { path: '/dashboard/*', app: 'dashboard' },
-    { path: '/users/:id', app: 'users' },
-    { path: '/settings', app: 'settings', exact: true },
-  ],
-});
-
-// プログラマティックナビゲーション
-await router.push('/dashboard/overview');
-await router.replace('/users/42');
-router.back();
-
-// ナビゲーションガード（false を返すとキャンセル）
-const off = router.beforeEach(async ({ from, to }) => {
-  if (to.startsWith('/admin') && !isAdmin()) return false;
-});
-
-// 変更に反応
-router.onChange(({ from, to, toRoute }) => {
-  console.log(`navigated ${from} → ${to}`, toRoute?.params);
-});
-
-// または orchestrator のナビゲーションヘルパーを使用
-await orchestrator.navigateTo('/settings');
-```
-
----
-
-## 🏗️ アーキテクチャ
-
-```
-┌─────────────────────────────────────────────┐
-│              Tuvix.js Shell                  │
-│  ┌─────────────────────────────────────────┐│
-│  │            Orchestrator                 ││
-│  │  ┌──────────┐ ┌──────────┐ ┌─────────┐ ││
-│  │  │ Router   │ │Event Bus │ │ Loader  │ ││
-│  │  └──────────┘ └──────────┘ └─────────┘ ││
-│  └─────────────────────────────────────────┘│
-│                                             │
-│  ┌───────┐  ┌───────┐  ┌───────┐          │
-│  │ App A │  │ App B │  │ App C │  ...      │
-│  │(React)│  │ (Vue) │  │(Svelte│          │
-│  └───────┘  └───────┘  └───────┘          │
-└─────────────────────────────────────────────┘
+const off = bus.on<{ userId: string }>('user:login', ({ userId }) => console.log(userId));
+bus.emit('user:login', { userId: '42' });
+off();
 ```
 
 ---
@@ -332,150 +217,99 @@ await orchestrator.navigateTo('/settings');
 
 | パッケージ | 説明 |
 | --- | --- |
-| [`tuvix.js`](./packages/tuvix) | オールインワンパッケージ |
-| [`@tuvix.js/core`](./packages/core) | Core Orchestrator with Lifecycle management |
-| [`@tuvix.js/router`](./packages/router) | URLベースのマイクロアプリルーティング |
-| [`@tuvix.js/event-bus`](./packages/event-bus) | アプリ間通信イベントバス |
-| [`@tuvix.js/loader`](./packages/loader) | 動的モジュールローダー |
-| [`@tuvix.js/sandbox`](./packages/sandbox) | CSS/JS分離（Shadow DOM + Proxy） |
-| [`@tuvix.js/react`](./packages/react) | React 18+バインディング＆フック |
-| [`@tuvix.js/vue`](./packages/vue) | Vue 3バインディング＆コンポーザブル |
-| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5バインディング |
-| [`@tuvix.js/angular`](./packages/angular) | Angular 15+バインディング |
-| [`create-tuvix-app`](./packages/cli) | CLIスキャフォールディングツール |
+| [`tuvix.js`](./packages/tuvix) | 統合パッケージ：core、router、loader、event bus、sandbox |
+| [`@tuvix.js/core`](./packages/core) | オーケストレーター：登録、調整（reconcile）、props、`connectRouter` |
+| [`@tuvix.js/router`](./packages/router) | History/Hashルーター、`matchPath`、`interceptLinks` |
+| [`@tuvix.js/loader`](./packages/loader) | エントリーの読み込みとライフサイクルランタイム |
+| [`@tuvix.js/event-bus`](./packages/event-bus) | Pub/subバス、ページ全体で共有する`getGlobalBus()` |
+| [`@tuvix.js/sandbox`](./packages/sandbox) | `CssSandbox`（Shadow DOM）、`JsSandbox`（プロキシwindow） |
+| [`@tuvix.js/react`](./packages/react) | Reactアダプター、`TuvixReactApp`、`TuvixIsland`、フック |
+| [`@tuvix.js/vue`](./packages/vue) | Vue 3アダプター、`renderVueToString` |
+| [`@tuvix.js/svelte`](./packages/svelte) | Svelte 3-5アダプター、`renderSvelteToString` |
+| [`@tuvix.js/angular`](./packages/angular) | Angular 15+アダプター（zoneless）、`renderAngularToString` |
+| [`@tuvix.js/vite`](./packages/vite) | Viteプラグイン：サーバーレンダリングされる`<head>`向けのアイランドスタイルシートリンク |
+| [`@tuvix.js/server`](./packages/server) | HTMLフラグメントのサーバーサイド合成、ストリーミング、メトリクス |
+| [`@tuvix.js/module-federation`](./packages/module-federation) | webpack Module Federationのリモートを使うエントリー |
 | [`@tuvix.js/devtools`](./packages/devtools) | ページ内デバッグパネル |
-| [`@tuvix.js/server`](./packages/server) | サーバーサイドコンポジション |
-| [`@tuvix.js/module-federation`](./packages/module-federation) | Webpack Module Federation統合 |
+| [`create-tuvix-app`](./packages/cli) | プロジェクトのスキャフォールディング |
 
 ---
 
 ## 📁 プロジェクト構成
 
-```
+```text
 tuvix.js/
-├── packages/
-│   ├── core/               # @tuvix.js/core
-│   ├── router/             # @tuvix.js/router
-│   ├── event-bus/          # @tuvix.js/event-bus
-│   ├── loader/             # @tuvix.js/loader
-│   ├── sandbox/            # @tuvix.js/sandbox
-│   ├── react/              # @tuvix.js/react
-│   ├── vue/                # @tuvix.js/vue
-│   ├── svelte/             # @tuvix.js/svelte
-│   ├── angular/            # @tuvix.js/angular
-│   ├── cli/                # create-tuvix-app
-│   ├── devtools/           # @tuvix.js/devtools
-│   ├── server/             # @tuvix.js/server
-│   ├── module-federation/  # @tuvix.js/module-federation
-│   └── tuvix/              # tuvix.js（アンブレラパッケージ）
-├── examples/
-│   ├── with-angular/              # Angular 15+サンプル
-│   ├── with-module-federation-react/ # Module Federation + Reactサンプル
-│   ├── with-multiple-frameworks/  # 複数フレームワークサンプル
-│   ├── with-react/                # React 18+サンプル
-│   ├── with-react-devtools/       # React + DevToolsサンプル
-│   ├── with-react-event-bus/      # React + Event Busサンプル
-│   ├── with-react-router/         # React + Routerサンプル
-│   ├── with-react-sandbox/        # React + Sandboxサンプル
-│   ├── with-ssr-react/            # SSR + Reactサンプル
-│   ├── with-ssr-vanilla/          # SSR + Vanilla JSサンプル
-│   ├── with-svelte/               # Svelte 5サンプル
-│   ├── with-vanilla/              # Vanilla JSサンプル
-│   └── with-vue/                  # Vue 3サンプル
-├── website/                # ドキュメントサイト（VitePress、10言語対応）
-├── .github/                # CI/CDワークフロー
-├── package.json            # ルートワークスペース設定
-├── pnpm-workspace.yaml
-├── tsconfig.base.json
-└── vitest.config.ts
+├── packages/        # the 15 packages above
+├── examples/        # runnable examples, see below
+├── website/         # documentation site (VitePress, 10 languages)
+├── scripts/         # docs and package validators
+└── .changeset/      # release notes for the next version
 ```
-
----
-
-## 🗺️ ロードマップ
-
-### ✅ 完了済み
-
-- [x] Core Orchestrator
-- [x] Lifecycle管理
-- [x] 動的モジュールローディング
-- [x] イベントバス
-- [x] history/hashモード対応のURLルーティング
-- [x] CSS/JSサンドボックス分離
-- [x] CLIスキャフォールディングツール（`npx create-tuvix-app`）
-- [x] DevToolsブラウザ拡張機能
-- [x] サーバーサイドコンポジション
-- [x] Module Federationサポート
-- [x] フレームワークバインディング（React、Vue、Svelte、Angular）
-- [x] i18nドキュメント（10言語）
-
-### 🔜 近日公開
-
-- [ ] マイクロアプリ間のホットモジュールリロード
-- [ ] 共有ステート管理アダプター
-- [ ] プリロード＆プリフェッチ戦略
-- [ ] プラグインシステム＆ミドルウェアAPI
-- [ ] DevToolsでのビジュアル依存関係グラフ
-- [ ] Testing utilities & mock Orchestrator
-- [ ] ネイティブESM / importmapサポート
-- [ ] Edge/CDN対応サーバーコンポジション
-- [ ] DevTools統合用VS Code拡張機能
-- [ ] マイクロアプリ分離のためのStorybook統合
 
 ---
 
 ## 🧪 サンプル
 
-サポートされている各フレームワーク向けのすぐに実行できるサンプルが[`examples/`](./examples)ディレクトリにあります：
+| サンプル | 内容 |
+| --- | --- |
+| [`with-ssr-islands`](./examples/with-ssr-islands) | サーバーレンダリングされたVue、Svelte、Angular、Reactのアイランドを持つReactホスト |
+| [`with-react`](./examples/with-react) | Reactのシェルとマイクロアプリ |
+| [`with-vue`](./examples/with-vue) | Vue 3のマイクロアプリ |
+| [`with-svelte`](./examples/with-svelte) | Svelteのマイクロアプリ |
+| [`with-angular`](./examples/with-angular) | Angularのマイクロアプリ |
+| [`with-vanilla`](./examples/with-vanilla) | フレームワークなし |
+| [`with-multiple-frameworks`](./examples/with-multiple-frameworks) | 1つのシェル内のReactとVue |
+| [`with-react-router`](./examples/with-react-router) | ルーティング |
+| [`with-react-event-bus`](./examples/with-react-event-bus) | イベントバス |
+| [`with-react-sandbox`](./examples/with-react-sandbox) | CSSサンドボックス |
+| [`with-react-devtools`](./examples/with-react-devtools) | Devtoolsパネル |
+| [`with-module-federation-react`](./examples/with-module-federation-react) | Module Federation |
+| [`with-ssr-react`](./examples/with-ssr-react) | `@tuvix.js/server`によるサーバー合成 |
+| [`with-ssr-vanilla`](./examples/with-ssr-vanilla) | フレームワークなしのサーバー合成 |
 
-| サンプル | フレームワーク | パス |
-| --- | --- | --- |
-| [Angularサンプル](./examples/with-angular) | Angular 15+ | `examples/with-angular/` |
-| [Module Federation + Reactサンプル](./examples/with-module-federation-react) | React 18+ | `examples/with-module-federation-react/` |
-| [複数フレームワークサンプル](./examples/with-multiple-frameworks) | 複合 | `examples/with-multiple-frameworks/` |
-| [Reactサンプル](./examples/with-react) | React 18+ | `examples/with-react/` |
-| [React + DevToolsサンプル](./examples/with-react-devtools) | React 18+ | `examples/with-react-devtools/` |
-| [React + Event Busサンプル](./examples/with-react-event-bus) | React 18+ | `examples/with-react-event-bus/` |
-| [React + Routerサンプル](./examples/with-react-router) | React 18+ | `examples/with-react-router/` |
-| [React + Sandboxサンプル](./examples/with-react-sandbox) | React 18+ | `examples/with-react-sandbox/` |
-| [SSR + Reactサンプル](./examples/with-ssr-react) | React 18+ | `examples/with-ssr-react/` |
-| [SSR + Vanilla JSサンプル](./examples/with-ssr-vanilla) | フレームワークなし | `examples/with-ssr-vanilla/` |
-| [Svelteサンプル](./examples/with-svelte) | Svelte 5 | `examples/with-svelte/` |
-| [Vanilla JSサンプル](./examples/with-vanilla) | フレームワークなし | `examples/with-vanilla/` |
-| [Vueサンプル](./examples/with-vue) | Vue 3 | `examples/with-vue/` |
+---
 
-各サンプルでは以下を実演します：
+## 🗺️ ロードマップ
 
-- Orchestratorを起動する**Host (Shell)**アプリケーション
-- 動的に登録・読み込みされる2つの**マイクロフロントエンドアプリ**
-- イベントバスによるアプリ間通信
+提供済み：
+
+- 直列化された調整（reconcile）、`connectRouter`、ビューポートでのマウント、フォールバックHTMLを備えたオーケストレーター
+- SSRハイドレーションに対応したReact、Vue、Svelte 3-5、Angular（zoneless）向けアダプター
+- `TuvixIsland`、ライフサイクルイベント、`@tuvix.js/vite`によるアイランドアセット
+- ストリーミングとPrometheusメトリクスに対応したサーバー合成（`@tuvix.js/server`）
+- Module Federationエントリー、ページ内devtools、CLIによるスキャフォールディング
+- 10言語のドキュメント
+
+予定：
+
+- マイクロアプリ間のホットモジュールリロード
+- ネイティブESM / import mapのサポート
+- stale-while-revalidateによるフラグメントキャッシュを備えた、エッジを考慮したサーバー合成
+- テストユーティリティとモックオーケストレーター
+- フラグメントのA/Bテスト
 
 ---
 
 ## 🤝 コントリビュート
 
-コントリビューションを歓迎します！PRを送信する前に[コントリビューションガイド](./CONTRIBUTING.md)をお読みください。
+プルリクエストを作成する前に[コントリビューションガイド](./CONTRIBUTING.md)をお読みください。
 
 ```bash
-# リポジトリをクローン
 git clone https://github.com/yasinatesim/tuvix.js.git
-
-# 依存関係をインストール
+cd tuvix.js
 pnpm install
-
-# 全パッケージをビルド
 pnpm build
-
-# テストを実行
 pnpm test
 ```
+
+0.4から移行しますか？[移行ガイド](https://tuvix.js.org/guide/migration-0-5)をお読みください。
 
 ---
 
 ## 🔑 ライセンス
 
-Copyright © 2026 - MITライセンス。
-詳細は[LICENSE](./LICENSE)をご覧ください。
+Copyright © 2026 - MIT License.
+詳しくは[LICENSE](./LICENSE)を参照してください。
 
 ---
 

@@ -3,12 +3,32 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: 'ガイド', link: '/ja/guide/getting-started', activeMatch: '/ja/guide/' },
-      { text: 'パッケージ', link: '/ja/packages/', activeMatch: '/ja/packages/' },
+      {
+        text: 'ガイド',
+        link: '/ja/guide/getting-started',
+        activeMatch: '/ja/guide/',
+      },
+      {
+        text: 'パッケージ',
+        link: '/ja/packages/',
+        activeMatch: '/ja/packages/',
+      },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'AI ジェネレーター', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'コントリビュート', link: '/ja/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'コントリビュート', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'コントリビュート',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
     sidebar: {
       '/ja/guide/': [
@@ -26,7 +46,12 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: 'マイクロアプリ', link: '/ja/guide/micro-apps' },
             { text: 'ライフサイクルフック', link: '/ja/guide/lifecycle' },
+            {
+              text: 'ライフサイクルイベント',
+              link: '/ja/guide/lifecycle-events',
+            },
             { text: 'ルーティング', link: '/ja/guide/routing' },
+            { text: '外部ルーター', link: '/ja/guide/external-router' },
             { text: 'イベントバス', link: '/ja/guide/event-bus' },
             { text: 'サンドボックス', link: '/ja/guide/sandbox' },
           ],
@@ -38,6 +63,17 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Vueで使う', link: '/ja/guide/vue' },
             { text: 'Svelteで使う', link: '/ja/guide/svelte' },
             { text: 'Angularで使う', link: '/ja/guide/angular' },
+            { text: 'SSRアイランド', link: '/ja/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'ヘルプ',
+          items: [
+            { text: '0.5への移行', link: '/ja/guide/migration-0-5' },
+            {
+              text: 'トラブルシューティング',
+              link: '/ja/guide/troubleshooting',
+            },
           ],
         },
       ],
@@ -67,6 +103,7 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/ja/packages/devtools' },
             { text: '@tuvix.js/server', link: '/ja/packages/server' },
+            { text: '@tuvix.js/vite', link: '/ja/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/ja/packages/module-federation',
@@ -78,7 +115,8 @@ export const jaConfig: LocaleConfig<DefaultTheme.Config>[string] = {
       ],
     },
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: 'GitHubでこのページを編集',
     },
     lastUpdated: { text: '最終更新', formatOptions: { dateStyle: 'short' } },
