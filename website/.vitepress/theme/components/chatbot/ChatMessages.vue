@@ -31,14 +31,8 @@ watch(lastContent, async () => {
 
 <template>
   <div :class="$style.messages">
-    <template
-      v-for="(msg, i) in messages"
-      :key="i"
-    >
-      <UserMessage
-        v-if="msg.role === 'user'"
-        :content="msg.content"
-      />
+    <template v-for="(msg, i) in messages" :key="i">
+      <UserMessage v-if="msg.role === 'user'" :content="msg.content" />
       <BotMessage
         v-else
         :content="msg.content"

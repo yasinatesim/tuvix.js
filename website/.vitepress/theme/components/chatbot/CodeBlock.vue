@@ -3,14 +3,20 @@
 function utf8ToB64(str: string): string {
   return btoa(
     encodeURIComponent(str).replace(/%([0-9A-F]{2})/gi, (_, hex) =>
-      String.fromCharCode(parseInt(hex, 16)),
-    ),
+      String.fromCharCode(parseInt(hex, 16))
+    )
   );
 }
 
-export function buildPlaygroundUrl(code: string, framework: string, pairedCss?: string): string {
+export function buildPlaygroundUrl(
+  code: string,
+  framework: string,
+  pairedCss?: string
+): string {
   const fw = framework ? `&framework=${framework}` : '';
-  const css = pairedCss ? `&css=${encodeURIComponent(utf8ToB64(pairedCss))}` : '';
+  const css = pairedCss
+    ? `&css=${encodeURIComponent(utf8ToB64(pairedCss))}`
+    : '';
   return `/playground?code=${encodeURIComponent(utf8ToB64(code))}${fw}${css}`;
 }
 </script>
@@ -20,7 +26,15 @@ import { ref, computed } from 'vue';
 import hljs from 'highlight.js';
 import { escapeHtml } from './utils';
 
-const JS_LANGS = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript', 'react']);
+const JS_LANGS = new Set([
+  'js',
+  'jsx',
+  'ts',
+  'tsx',
+  'javascript',
+  'typescript',
+  'react',
+]);
 
 const props = defineProps<{
   code: string;
@@ -38,13 +52,17 @@ const highlighted = computed(() => {
     return escapeHtml(props.code);
   }
   // jsx/tsx/js/javascript all go through the javascript highlighter (ignoreIllegals handles JSX)
-  const lang =
-    ['jsx', 'tsx', 'js', 'javascript', 'react'].includes(props.language)
-      ? 'javascript'
-      : props.language;
+  const lang = ['jsx', 'tsx', 'js', 'javascript', 'react'].includes(
+    props.language
+  )
+    ? 'javascript'
+    : props.language;
   try {
     if (lang) {
-      return hljs.highlight(props.code, { language: lang, ignoreIllegals: true }).value;
+      return hljs.highlight(props.code, {
+        language: lang,
+        ignoreIllegals: true,
+      }).value;
     }
     return hljs.highlightAuto(props.code).value;
   } catch {
@@ -54,17 +72,26 @@ const highlighted = computed(() => {
 
 function copyCode() {
   if (typeof navigator === 'undefined') return;
-  navigator.clipboard.writeText(props.code).then(() => {
-    copied.value = true;
-    setTimeout(() => { copied.value = false; }, 1000);
-  }).catch(() => {
-    // Clipboard permission denied — silently ignore, no false-positive feedback
-  });
+  navigator.clipboard
+    .writeText(props.code)
+    .then(() => {
+      copied.value = true;
+      setTimeout(() => {
+        copied.value = false;
+      }, 1000);
+    })
+    .catch(() => {
+      // Clipboard permission denied — silently ignore, no false-positive feedback
+    });
 }
 
 function openInPlayground() {
   if (typeof window !== 'undefined') {
-    window.location.href = buildPlaygroundUrl(props.code, props.framework, props.pairedCss);
+    window.location.href = buildPlaygroundUrl(
+      props.code,
+      props.framework,
+      props.pairedCss
+    );
   }
 }
 </script>
@@ -72,12 +99,11 @@ function openInPlayground() {
 <template>
   <div :class="$style.codeblock">
     <div :class="$style.header">
-      <span :class="$style.lang">{{ language === 'react' ? 'jsx' : (language || 'code') }}</span>
+      <span :class="$style.lang">{{
+        language === 'react' ? 'jsx' : language || 'code'
+      }}</span>
       <div :class="$style.actions">
-        <button
-          :class="$style.btn"
-          @click="copyCode"
-        >
+        <button :class="$style.btn" @click="copyCode">
           {{ copied ? '✓ copied' : 'copy' }}
         </button>
         <button
@@ -163,6 +189,8 @@ function openInPlayground() {
   font-size: $text-sm;
   line-height: 1.6;
 
-  code { font-family: $font-mono; }
+  code {
+    font-family: $font-mono;
+  }
 }
 </style>

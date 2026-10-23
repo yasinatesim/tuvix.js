@@ -9,7 +9,10 @@ const props = defineProps<{
   apiUrl?: string;
 }>();
 
-const API_BASE_URL = props.apiUrl ?? import.meta.env.VITE_CHATBOT_API_URL ?? 'http://localhost:3001';
+const API_BASE_URL =
+  props.apiUrl ??
+  import.meta.env.VITE_CHATBOT_API_URL ??
+  'http://localhost:3001';
 
 const MESSAGE_ROLES = {
   USER: 'user',
@@ -48,7 +51,9 @@ onMounted(() => {
     const saved = localStorage.getItem('chatbot-history');
     const parsed = JSON.parse(saved ?? '[]');
     if (Array.isArray(parsed)) conversationHistory.value = parsed;
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 });
 
 async function handleSend(userMessage: string, framework: string) {
@@ -104,7 +109,10 @@ async function handleSend(userMessage: string, framework: string) {
           }
         } else if (event.type === 'sources') {
           if (Array.isArray(event.content)) {
-            messages.value[botIndex].sources = event.content as Array<{ id: string; score: number }>;
+            messages.value[botIndex].sources = event.content as Array<{
+              id: string;
+              score: number;
+            }>;
           }
         } else if (event.type === 'done') {
           messages.value[botIndex].streaming = false;
@@ -126,15 +134,25 @@ function saveConversation() {
     if (activeConversationId.value) {
       // Update existing conversation in-place rather than duplicating
       conversationHistory.value = conversationHistory.value.map((c) =>
-        c.id === activeConversationId.value ? { ...c, title, messages: messages.value } : c,
+        c.id === activeConversationId.value
+          ? { ...c, title, messages: messages.value }
+          : c
       );
     } else {
       const id = Date.now().toString();
       activeConversationId.value = id;
-      conversationHistory.value = [{ id, title, messages: messages.value }, ...conversationHistory.value].slice(0, 20);
+      conversationHistory.value = [
+        { id, title, messages: messages.value },
+        ...conversationHistory.value,
+      ].slice(0, 20);
     }
-    localStorage.setItem('chatbot-history', JSON.stringify(conversationHistory.value));
-  } catch { /* ignore */ }
+    localStorage.setItem(
+      'chatbot-history',
+      JSON.stringify(conversationHistory.value)
+    );
+  } catch {
+    /* ignore */
+  }
 }
 
 function loadConversation(id: string) {
@@ -184,28 +202,33 @@ function sendExamplePrompt(prompt: string) {
               </button>
             </div>
             <p :class="$style.welcomeFooter">
-              Powered by <a
+              Powered by
+              <a
                 href="https://openrouter.ai/minimax/minimax-m2.5:free"
                 target="_blank"
                 rel="noopener"
-              >MiniMax M2.5</a> &middot; <a
+                >MiniMax M2.5</a
+              >
+              &middot;
+              <a
                 href="https://openrouter.ai/nvidia/llama-nemotron-embed-vl-1b-v2:free"
                 target="_blank"
                 rel="noopener"
-              >NVIDIA Nemotron Embed</a> &middot; <a
+                >NVIDIA Nemotron Embed</a
+              >
+              &middot;
+              <a
                 href="https://huggingface.co/datasets/yasinatesim/tuvix-component-dataset"
                 target="_blank"
                 rel="noopener"
-              >600 examples</a>
+                >600 examples</a
+              >
             </p>
           </div>
         </div>
       </template>
       <template v-else>
-        <ChatMessages
-          :messages="messages"
-          :framework="activeFramework"
-        />
+        <ChatMessages :messages="messages" :framework="activeFramework" />
       </template>
 
       <ChatInput @send="handleSend" />
@@ -259,7 +282,11 @@ function sendExamplePrompt(prompt: string) {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle, var(--vp-c-divider) 1px, transparent 1px);
+    background-image: radial-gradient(
+      circle,
+      var(--vp-c-divider) 1px,
+      transparent 1px
+    );
     background-size: 24px 24px;
     opacity: 0.4;
     pointer-events: none;
@@ -270,7 +297,11 @@ function sendExamplePrompt(prompt: string) {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 50% 50%, var(--vp-c-brand-soft) 0%, transparent 70%);
+    background: radial-gradient(
+      ellipse 60% 50% at 50% 50%,
+      var(--vp-c-brand-soft) 0%,
+      transparent 70%
+    );
     pointer-events: none;
     opacity: 0.6;
   }
@@ -287,10 +318,18 @@ function sendExamplePrompt(prompt: string) {
     animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  > *:nth-child(1) { animation-delay: 0.05s; }
-  > *:nth-child(2) { animation-delay: 0.14s; }
-  > *:nth-child(3) { animation-delay: 0.23s; }
-  > *:nth-child(4) { animation-delay: 0.32s; }
+  > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  > *:nth-child(2) {
+    animation-delay: 0.14s;
+  }
+  > *:nth-child(3) {
+    animation-delay: 0.23s;
+  }
+  > *:nth-child(4) {
+    animation-delay: 0.32s;
+  }
 }
 
 // "AI Component Generator" title — "AI" in brand color
@@ -389,7 +428,10 @@ function sendExamplePrompt(prompt: string) {
     padding: 2px 10px;
     border: 1px solid $chat-border;
     border-radius: $r-pill;
-    transition: color 0.12s, border-color 0.12s, background 0.12s;
+    transition:
+      color 0.12s,
+      border-color 0.12s,
+      background 0.12s;
 
     &:hover {
       color: $chat-brand;

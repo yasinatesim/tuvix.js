@@ -1,0 +1,161 @@
+// Orbit design tokens.
+// Colour values live in the palette maps below; `global.scss` emits them as
+// CSS custom properties for light (`:root`) and dark (`.dark`) so components
+// switch theme at runtime. Components read colours through `var(--orbit-*)`
+// and use the SCSS breakpoints, radii and mixins directly.
+
+$palette-dark: (
+  'bg': #080c10,
+  'surface': #0d131a,
+  'surface-2': #131b24,
+  'surface-sunken': #0a0f14,
+  'border': #1e293b,
+  'border-strong': #2b3a4d,
+  'text-1': #e6eef6,
+  'text-2': #b4c2cf,
+  'text-3': #8796a5,
+  'accent': #00e5a0,
+  'accent-text': #00e5a0,
+  'accent-hover': #47ffb8,
+  'accent-soft': rgba(0, 229, 160, 0.1),
+  'accent-line': rgba(0, 229, 160, 0.3),
+  'on-accent': #04201a,
+  'cyan': #22d3ee,
+  'gradient-from': #00e5a0,
+  'gradient-via': #6effc0,
+  'gradient-to': #22d3ee,
+  'dot': rgba(148, 163, 184, 0.16),
+  'glow': rgba(0, 229, 160, 0.14),
+  'ring': rgba(0, 229, 160, 0.16),
+  'ring-dashed': rgba(148, 163, 184, 0.2),
+  'shadow': 0 24px 48px rgba(0, 0, 0, 0.45),
+  'react': #22d3ee,
+  'vue': #00e5a0,
+  'svelte': #ff6a3d,
+  'angular': #f87171,
+  'syntax-keyword': #47d6ff,
+  'syntax-string': #6effc0,
+  'syntax-fn': #00e5a0,
+  'syntax-prop': #d4e4fa,
+  'syntax-plain': #d4e4fa,
+  'syntax-punct': #8796a5,
+  'syntax-comment': #6b7b8a,
+);
+
+$palette-light: (
+  'bg': #f8fafb,
+  'surface': #ffffff,
+  'surface-2': #eef3f5,
+  'surface-sunken': #f3f7f8,
+  'border': #dde5ea,
+  'border-strong': #c5d1d9,
+  'text-1': #0b1620,
+  'text-2': #384754,
+  'text-3': #56646f,
+  'accent': #00e5a0,
+  'accent-text': #007a55,
+  'accent-hover': #00c98c,
+  'accent-soft': rgba(0, 160, 112, 0.1),
+  'accent-line': rgba(0, 122, 85, 0.35),
+  'on-accent': #04201a,
+  'cyan': #0e7490,
+  'gradient-from': #00976a,
+  'gradient-via': #00976a,
+  'gradient-to': #0891b2,
+  'dot': rgba(15, 23, 42, 0.1),
+  'glow': rgba(0, 229, 160, 0.16),
+  'ring': rgba(0, 122, 85, 0.16),
+  'ring-dashed': rgba(56, 71, 84, 0.18),
+  'shadow': 0 20px 40px rgba(15, 23, 42, 0.08),
+  'react': #0369a1,
+  'vue': #047857,
+  'svelte': #c2410c,
+  'angular': #b91c1c,
+  'syntax-keyword': #0550ae,
+  'syntax-string': #047857,
+  'syntax-fn': #8250df,
+  'syntax-prop': #0b1620,
+  'syntax-plain': #0b1620,
+  'syntax-punct': #56646f,
+  'syntax-comment': #6e7781,
+);
+
+// Layout
+$container: 1200px;
+$gutter: 24px;
+$gutter-sm: 16px;
+
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-pill: 999px;
+
+// Typography (families come from the VitePress variables in global.scss)
+$font-heading: var(--font-heading);
+$font-body: var(--vp-font-family-base);
+$font-mono: var(--vp-font-family-mono);
+
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+@mixin up($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}
+
+@mixin focus-ring($offset: 3px) {
+  &:focus-visible {
+    outline: 2px solid var(--orbit-accent-text);
+    outline-offset: $offset;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+@mixin container {
+  width: 100%;
+  max-width: $container;
+  margin-inline: auto;
+  padding-inline: $gutter-sm;
+
+  @include up($bp-md) {
+    padding-inline: $gutter + 8px;
+  }
+}
+
+@mixin card {
+  background: var(--orbit-surface);
+  border: 1px solid var(--orbit-border);
+  border-radius: $radius-lg;
+}
+
+@mixin mono-label {
+  font-family: $font-mono;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+}
+
+@mixin section-heading {
+  font-family: $font-heading;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--orbit-text-1);
+  font-size: 28px;
+  line-height: 36px;
+  margin: 0;
+
+  @include up($bp-md) {
+    font-size: 34px;
+    line-height: 42px;
+  }
+}

@@ -17,15 +17,8 @@ const emit = defineEmits<{
 
 <template>
   <aside :class="$style.sidebar">
-    <button
-      :class="$style.newChat"
-      @click="emit('newChat')"
-    >
-      + New Chat
-    </button>
-    <p :class="$style.label">
-      HISTORY
-    </p>
+    <button :class="$style.newChat" @click="emit('newChat')">+ New Chat</button>
+    <p :class="$style.label">HISTORY</p>
     <ul :class="$style.list">
       <li
         v-for="conv in conversations"
@@ -99,9 +92,14 @@ const emit = defineEmits<{
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 0;
-  transition: background 0.1s, color 0.1s;
+  transition:
+    background 0.1s,
+    color 0.1s;
 
-  &:hover { background: $chat-surface; color: $chat-text; }
+  &:hover {
+    background: $chat-surface;
+    color: $chat-text;
+  }
 }
 
 .active {

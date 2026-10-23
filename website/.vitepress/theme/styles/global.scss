@@ -1,0 +1,330 @@
+// Orbit theme: palette variables, VitePress overrides and docs restyle.
+@use 'sass:map';
+@use 'tokens' as *;
+
+@mixin emit-palette($palette) {
+  @each $name, $value in $palette {
+    --orbit-#{$name}: #{$value};
+  }
+}
+
+/* ─── Palette + VitePress variables ─────────────────────────────── */
+:root {
+  @include emit-palette($palette-light);
+
+  --font-heading: 'Plus Jakarta Sans', var(--vp-font-family-base);
+  --vp-font-family-base:
+    'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --vp-font-family-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --vp-nav-height: 64px;
+
+  --vp-c-bg: var(--orbit-bg);
+  --vp-c-bg-alt: var(--orbit-surface-sunken);
+  --vp-c-bg-elv: var(--orbit-surface);
+  --vp-c-bg-soft: var(--orbit-surface-2);
+  // Not a VitePress variable; LivePlayground and the package cards use it.
+  --vp-c-bg-mute: var(--orbit-surface-2);
+  --vp-c-divider: var(--orbit-border);
+  --vp-c-gutter: var(--orbit-border);
+  --vp-c-border: var(--orbit-border-strong);
+  --vp-c-text-1: var(--orbit-text-1);
+  --vp-c-text-2: var(--orbit-text-2);
+  --vp-c-text-3: var(--orbit-text-3);
+
+  --vp-c-brand-1: #{map.get($palette-light, 'accent-text')};
+  --vp-c-brand-2: #006b4a;
+  --vp-c-brand-3: #00e5a0;
+  --vp-c-brand-soft: rgba(0, 160, 112, 0.12);
+  --vp-c-tip-1: var(--vp-c-brand-1);
+  --vp-c-tip-2: var(--vp-c-brand-2);
+  --vp-c-tip-3: var(--vp-c-brand-3);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
+
+  --vp-button-brand-bg: var(--orbit-accent);
+  --vp-button-brand-text: var(--orbit-on-accent);
+  --vp-button-brand-hover-bg: var(--orbit-accent-hover);
+  --vp-button-brand-hover-text: var(--orbit-on-accent);
+  --vp-button-brand-active-bg: var(--orbit-accent-hover);
+  --vp-button-brand-active-text: var(--orbit-on-accent);
+
+  --vp-nav-bg-color: rgba(248, 250, 251, 0.82);
+  --vp-nav-screen-bg-color: var(--orbit-bg);
+  --vp-sidebar-bg-color: var(--orbit-surface-sunken);
+
+  --vp-code-color: #00704e;
+  --vp-code-bg: rgba(0, 160, 112, 0.1);
+  --vp-code-block-bg: var(--orbit-surface);
+  --vp-code-copy-code-bg: var(--orbit-surface-2);
+  --vp-code-copy-code-hover-bg: var(--orbit-surface);
+
+  --vp-custom-block-info-bg: var(--orbit-surface-2);
+  --vp-custom-block-note-bg: var(--orbit-surface-2);
+
+  --vp-local-search-bg: var(--orbit-surface);
+  --vp-local-search-result-bg: var(--orbit-surface-2);
+  --vp-local-search-result-border: var(--orbit-border);
+  --vp-local-search-result-selected-bg: var(--orbit-accent-soft);
+  --vp-local-search-result-selected-border: var(--vp-c-brand-1);
+  --vp-local-search-highlight-bg: var(--orbit-accent);
+  --vp-local-search-highlight-text: var(--orbit-on-accent);
+}
+
+.dark {
+  @include emit-palette($palette-dark);
+
+  --vp-c-brand-1: #{map.get($palette-dark, 'accent-text')};
+  --vp-c-brand-2: #47ffb8;
+  --vp-c-brand-3: #00e5a0;
+  --vp-c-brand-soft: rgba(0, 229, 160, 0.1);
+
+  --vp-nav-bg-color: rgba(8, 12, 16, 0.8);
+
+  --vp-code-color: #6effc0;
+  --vp-code-bg: rgba(0, 229, 160, 0.08);
+}
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+::selection {
+  background: var(--orbit-accent);
+  color: var(--orbit-on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--orbit-accent-text);
+  outline-offset: 2px;
+}
+
+/* ─── Typography ────────────────────────────────────────────────── */
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.025em;
+}
+
+.vp-doc h1 {
+  font-weight: 800;
+}
+
+.vp-doc a {
+  text-decoration: underline;
+  text-decoration-color: var(--orbit-accent-line);
+  text-underline-offset: 3px;
+  transition:
+    text-decoration-color 0.2s,
+    color 0.2s;
+}
+
+.vp-doc a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Header anchors and cards keep their own styling */
+.vp-doc a.header-anchor,
+.vp-doc a.pkg-card,
+.vp-doc a.pkg-header-link {
+  text-decoration: none;
+}
+
+/* ─── Nav ───────────────────────────────────────────────────────── */
+.VPNavBar .content-body,
+.VPNavBar:not(.home) {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.VPNavBar .divider-line {
+  background-color: var(--orbit-border);
+}
+
+.VPNavBar .title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.VPNavBar .logo {
+  border-radius: 8px;
+  filter: drop-shadow(0 0 10px var(--orbit-glow));
+}
+
+/* Search button: VitePress shows an icon-only button below 768px; restyle the full field only. */
+@media (min-width: 768px) {
+  .VPNavBarSearch .DocSearch-Button {
+    border: 1px solid var(--orbit-border);
+    background: var(--orbit-surface);
+    border-radius: $radius-md;
+    transition: border-color 0.2s;
+  }
+
+  .VPNavBarSearch .DocSearch-Button:hover {
+    border-color: var(--orbit-accent-line);
+  }
+
+  .VPNavBarSearch .DocSearch-Button .DocSearch-Button-Key {
+    border-color: var(--orbit-border);
+    background: var(--orbit-surface-2);
+    font-family: var(--vp-font-family-mono);
+  }
+}
+
+/* Local search modal */
+.VPLocalSearchBox .shell {
+  border: 1px solid var(--orbit-border);
+  border-radius: $radius-lg !important;
+  box-shadow: var(--orbit-shadow);
+}
+
+.VPLocalSearchBox .search-bar {
+  border-radius: $radius-md;
+}
+
+.VPLocalSearchBox .search-bar:focus-within {
+  border-color: var(--vp-c-brand-1);
+}
+
+.VPLocalSearchBox .result {
+  border-radius: $radius-md !important;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────────── */
+.VPSidebar {
+  border-right: 1px solid var(--orbit-border);
+}
+
+.VPSidebarItem.level-0 > .item > .text,
+.VPSidebarItem.level-0 > .item > .link > .text {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.VPSidebarItem .link:hover .text {
+  color: var(--orbit-text-1);
+}
+
+.VPSidebarItem.is-active > .item .link .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+.VPSidebarItem.is-active > .item > .indicator {
+  background-color: var(--orbit-accent);
+  width: 2px;
+}
+
+/* ─── Outline (right aside) ─────────────────────────────────────── */
+.VPDocAsideOutline .outline-title {
+  font-family: var(--font-heading);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.VPDocAsideOutline .outline-marker {
+  background-color: var(--orbit-accent);
+}
+
+/* ─── Code ──────────────────────────────────────────────────────── */
+.vp-doc div[class*='language-'],
+.vp-code-group .tabs {
+  border: 1px solid var(--orbit-border);
+}
+
+.vp-doc div[class*='language-'] {
+  border-radius: $radius-md;
+}
+
+.vp-doc .vp-code-group .tabs {
+  border-radius: $radius-md $radius-md 0 0;
+  border-bottom: none;
+}
+
+.vp-doc .vp-code-group div[class*='language-'] {
+  border-radius: 0 0 $radius-md $radius-md;
+}
+
+@media (max-width: 639px) {
+  .vp-doc div[class*='language-'],
+  .vp-doc .vp-code-group div[class*='language-'] {
+    border-radius: 0;
+    border-inline: none;
+  }
+}
+
+.vp-doc div[class*='language-'] > span.lang {
+  font-family: var(--vp-font-family-mono);
+}
+
+.vp-doc :not(pre) > code {
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+
+/* ─── Custom containers ─────────────────────────────────────────── */
+.vp-doc .custom-block {
+  border: 1px solid var(--orbit-border);
+  border-left-width: 3px;
+  border-radius: $radius-md;
+}
+
+.vp-doc .custom-block.tip {
+  border-left-color: var(--orbit-accent);
+}
+
+.vp-doc .custom-block.info,
+.vp-doc .custom-block.note,
+.vp-doc .custom-block.details {
+  border-left-color: var(--orbit-cyan);
+}
+
+.vp-doc .custom-block.warning,
+.vp-doc .custom-block.caution {
+  border-left-color: var(--vp-c-warning-1);
+}
+
+.vp-doc .custom-block.danger {
+  border-left-color: var(--vp-c-danger-1);
+}
+
+.vp-doc .custom-block.important {
+  border-left-color: var(--vp-c-important-1);
+}
+
+.vp-doc .custom-block .custom-block-title {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+}
+
+/* ─── Buttons (VitePress VPButton, used outside the Orbit home) ── */
+.VPButton {
+  font-family: var(--font-heading);
+}
+
+.VPButton.brand {
+  font-weight: 700;
+}
+
+/* ─── Footer + prev/next ────────────────────────────────────────── */
+.VPDocFooter .pager-link {
+  border-radius: $radius-md;
+  transition: border-color 0.2s;
+}
+
+.VPDocFooter .pager-link:hover {
+  border-color: var(--orbit-accent-line);
+}
+
+/* ─── Motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

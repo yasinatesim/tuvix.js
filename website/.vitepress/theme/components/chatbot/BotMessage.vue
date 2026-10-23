@@ -12,7 +12,10 @@ export function extractCodeBlocks(md: string): CodeBlockData[] {
   const regex = /```(\w+)?\n([\s\S]*?)```/g;
   let match;
   while ((match = regex.exec(md)) !== null) {
-    blocks.push({ language: match[1] ?? 'plaintext', code: match[2].trimEnd() });
+    blocks.push({
+      language: match[1] ?? 'plaintext',
+      code: match[2].trimEnd(),
+    });
   }
   return blocks;
 }
@@ -42,26 +45,33 @@ const props = defineProps<{
 
 // Only extract/render code blocks after streaming is done — prevents duplicate display
 // Detect fence-less code output from model (import/function/JSX patterns)
-const CODE_PATTERN = /import\s+[\w{*]|function\s+\w+|const\s+\w+\s*=|<\w[\w.]*[\s/>]/;
+const CODE_PATTERN =
+  /import\s+[\w{*]|function\s+\w+|const\s+\w+\s*=|<\w[\w.]*[\s/>]/;
 const FENCE_OPEN_RE = /^```(\w*)\n?/;
 
 const PRE_STYLE =
   'white-space:pre;overflow-x:auto;word-break:normal;font-family:var(--vp-font-family-mono);font-size:13px;line-height:1.6;background:#0d1117;padding:16px;border-radius:6px;margin:0;color:#e8eaed';
-const BLOCK_WRAP = 'border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;margin:8px 0';
-const BLOCK_HDR  = 'padding:4px 12px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--vp-font-family-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--vp-c-text-3)';
+const BLOCK_WRAP =
+  'border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;margin:8px 0';
+const BLOCK_HDR =
+  'padding:4px 12px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);font-family:var(--vp-font-family-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--vp-c-text-3)';
 
 // Normalize language tag for display and hljs
 // 'react' is not a valid hljs lang — map to 'jsx' for display, 'javascript' for hljs
 function normalizeDisplayLang(rawLang: string): string {
-  if (['jsx', 'tsx', 'js', 'javascript', 'react'].includes(rawLang)) return 'jsx';
+  if (['jsx', 'tsx', 'js', 'javascript', 'react'].includes(rawLang))
+    return 'jsx';
   return rawLang;
 }
 
 function renderHighlighted(rawLang: string, code: string): string {
-  const lang = ['jsx', 'tsx', 'js', 'javascript', 'react'].includes(rawLang) ? 'javascript' : rawLang;
+  const lang = ['jsx', 'tsx', 'js', 'javascript', 'react'].includes(rawLang)
+    ? 'javascript'
+    : rawLang;
   try {
     if (lang) {
-      return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
+      return hljs.highlight(code, { language: lang, ignoreIllegals: true })
+        .value;
     }
     return hljs.highlightAuto(code).value;
   } catch {
@@ -75,10 +85,11 @@ function renderCodeBlock(lang: string, code: string): string {
 }
 
 // True when the whole response is code (no fences) — used to suppress the markdown div
-const isFencelessCode = computed(() =>
-  !props.streaming &&
-  extractCodeBlocks(props.content).length === 0 &&
-  CODE_PATTERN.test(props.content),
+const isFencelessCode = computed(
+  () =>
+    !props.streaming &&
+    extractCodeBlocks(props.content).length === 0 &&
+    CODE_PATTERN.test(props.content)
 );
 
 const codeBlocks = computed(() => {
@@ -90,7 +101,9 @@ const codeBlocks = computed(() => {
   if (blocks.length > 0) return blocks;
   // Fence-less fallback: entire response is code
   if (CODE_PATTERN.test(props.content)) {
-    return [{ language: props.framework || 'javascript', code: props.content.trim() }];
+    return [
+      { language: props.framework || 'javascript', code: props.content.trim() },
+    ];
   }
   return [];
 });
@@ -101,7 +114,9 @@ const htmlContent = computed(() => {
     const fenceMatch = props.content.match(FENCE_OPEN_RE);
     if (fenceMatch) {
       const lang = fenceMatch[1] || props.framework || '';
-      const code = props.content.slice(fenceMatch[0].length).replace(/```\s*$/, '');
+      const code = props.content
+        .slice(fenceMatch[0].length)
+        .replace(/```\s*$/, '');
       const raw = renderCodeBlock(lang, code);
       return typeof window !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
     }
@@ -121,7 +136,8 @@ const htmlContent = computed(() => {
         html += renderCodeBlock(lang, (token as { text: string }).text);
       } else if (token.type === 'paragraph' || token.type === 'text') {
         const text = escapeHtml((token as { text: string }).text ?? '');
-        if (text.trim()) html += `<p style="margin:4px 0;font-size:13px;line-height:1.6;color:var(--vp-c-text-2)">${text}</p>`;
+        if (text.trim())
+          html += `<p style="margin:4px 0;font-size:13px;line-height:1.6;color:var(--vp-c-text-2)">${text}</p>`;
       }
     }
     const raw = html || escapeHtml(props.content);
@@ -148,18 +164,15 @@ const htmlContent = computed(() => {
           :code="block.code"
           :language="block.language"
           :framework="framework"
-          :paired-css="block.language !== 'css' && codeBlocks[i - 1]?.language === 'css' ? codeBlocks[i - 1].code : undefined"
+          :paired-css="
+            block.language !== 'css' && codeBlocks[i - 1]?.language === 'css'
+              ? codeBlocks[i - 1].code
+              : undefined
+          "
         />
-        <div
-          v-if="sources && sources.length"
-          :class="$style.sources"
-        >
+        <div v-if="sources && sources.length" :class="$style.sources">
           <span :class="$style.sourcesLabel">Sources:</span>
-          <span
-            v-for="src in sources"
-            :key="src.id"
-            :class="$style.source"
-          >{{
+          <span v-for="src in sources" :key="src.id" :class="$style.source">{{
             src.id
           }}</span>
         </div>
@@ -186,9 +199,20 @@ const htmlContent = computed(() => {
   line-height: 1.65;
   color: $chat-text;
 
-  :deep(p) { margin: 0 0 $sp-3; &:last-child { margin-bottom: 0; } }
-  :deep(strong) { color: $chat-text; font-weight: 600; }
-  :deep(pre) { margin: 0; font-family: $font-mono; }
+  :deep(p) {
+    margin: 0 0 $sp-3;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  :deep(strong) {
+    color: $chat-text;
+    font-weight: 600;
+  }
+  :deep(pre) {
+    margin: 0;
+    font-family: $font-mono;
+  }
   :deep(code) {
     font-family: $font-mono;
     font-size: $text-xs;

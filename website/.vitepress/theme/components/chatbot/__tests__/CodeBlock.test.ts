@@ -8,7 +8,9 @@ describe('CodeBlock', () => {
       const url = buildPlaygroundUrl('const x = 1;', 'react');
       const params = new URLSearchParams(url.split('?')[1]);
       expect(params.get('framework')).toBe('react');
-      const decoded = Buffer.from(params.get('code')!, 'base64').toString('utf-8');
+      const decoded = Buffer.from(params.get('code')!, 'base64').toString(
+        'utf-8'
+      );
       expect(decoded).toBe('const x = 1;');
     });
 

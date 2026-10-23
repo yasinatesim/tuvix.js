@@ -99,8 +99,12 @@ function handleKeydown(e: KeyboardEvent) {
   overflow-y: auto;
   padding: 0;
 
-  &:focus { outline: none; }
-  &::placeholder { color: $chat-text-3; }
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: $chat-text-3;
+  }
 }
 
 .send {
@@ -119,8 +123,13 @@ function handleKeydown(e: KeyboardEvent) {
   align-items: center;
   justify-content: center;
 
-  &:disabled { opacity: 0.3; cursor: not-allowed; }
-  &:not(:disabled):hover { opacity: 0.85; }
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  &:not(:disabled):hover {
+    opacity: 0.85;
+  }
 }
 
 .hint {

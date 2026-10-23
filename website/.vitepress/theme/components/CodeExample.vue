@@ -21,10 +21,7 @@ const active = ref(0);
         {{ tab.label }}
       </button>
     </div>
-    <div
-      v-for="(tab, i) in props.tabs"
-      :key="tab.label"
-    >
+    <div v-for="(tab, i) in props.tabs" :key="tab.label">
       <div v-show="active === i">
         <div :class="`language-${tab.lang}`">
           <pre><code>{{ tab.code }}</code></pre>

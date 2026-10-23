@@ -52,7 +52,7 @@ defineProps<{
             :src="`https://img.shields.io/npm/v/${name}?style=flat&colorA=080c10&colorB=00e5a0`"
             :alt="`${name} version`"
             style="height: 18px; border-radius: 3px"
-          >
+          />
         </a>
       </div>
     </div>

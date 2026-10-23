@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitepress';
 import { sharedConfig } from './config/shared';
 import { enConfig } from './config/en';
@@ -13,6 +14,49 @@ import { hiConfig } from './config/hi';
 
 export default defineConfig({
   ...sharedConfig,
+  head: [
+    ...(sharedConfig.head ?? []).filter(
+      ([tag, attrs]) => !(tag === 'meta' && attrs.name === 'theme-color')
+    ),
+    [
+      'link',
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+    ],
+    [
+      'meta',
+      {
+        name: 'theme-color',
+        media: '(prefers-color-scheme: dark)',
+        content: '#080c10',
+      },
+    ],
+    [
+      'meta',
+      {
+        name: 'theme-color',
+        media: '(prefers-color-scheme: light)',
+        content: '#f8fafb',
+      },
+    ],
+  ],
+  vite: {
+    resolve: {
+      alias: [
+        {
+          // Every `layout: home` page renders the Orbit home instead of VPHome.
+          find: /^.*\/VPHome\.vue$/,
+          replacement: fileURLToPath(
+            new URL('./theme/components/home/OrbitHome.vue', import.meta.url)
+          ),
+        },
+      ],
+    },
+    css: {
+      preprocessorOptions: {
+        scss: { api: 'modern-compiler' },
+      },
+    },
+  },
   locales: {
     root: { label: 'English', lang: 'en', ...enConfig },
     tr: { label: 'Türkçe', lang: 'tr', ...trConfig },

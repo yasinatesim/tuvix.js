@@ -18,17 +18,56 @@ interface LocalePackages {
   tooling: Package[];
 }
 
-const labels: Record<string, { core: string; bindings: string; tooling: string }> = {
-  en: { core: 'Core Packages', bindings: 'Framework Bindings', tooling: 'Tooling' },
-  tr: { core: 'Temel Paketler', bindings: 'Framework Bağlamaları', tooling: 'Araçlar' },
-  es: { core: 'Paquetes Principales', bindings: 'Bindings de Framework', tooling: 'Herramientas' },
-  de: { core: 'Kernpakete', bindings: 'Framework-Bindungen', tooling: 'Werkzeuge' },
-  fr: { core: 'Paquets Principaux', bindings: 'Liaisons Framework', tooling: 'Outils' },
-  ja: { core: 'コアパッケージ', bindings: 'フレームワークバインディング', tooling: 'ツール' },
+const labels: Record<
+  string,
+  { core: string; bindings: string; tooling: string }
+> = {
+  en: {
+    core: 'Core Packages',
+    bindings: 'Framework Bindings',
+    tooling: 'Tooling',
+  },
+  tr: {
+    core: 'Temel Paketler',
+    bindings: 'Framework Bağlamaları',
+    tooling: 'Araçlar',
+  },
+  es: {
+    core: 'Paquetes Principales',
+    bindings: 'Bindings de Framework',
+    tooling: 'Herramientas',
+  },
+  de: {
+    core: 'Kernpakete',
+    bindings: 'Framework-Bindungen',
+    tooling: 'Werkzeuge',
+  },
+  fr: {
+    core: 'Paquets Principaux',
+    bindings: 'Liaisons Framework',
+    tooling: 'Outils',
+  },
+  ja: {
+    core: 'コアパッケージ',
+    bindings: 'フレームワークバインディング',
+    tooling: 'ツール',
+  },
   zh: { core: '核心包', bindings: '框架绑定', tooling: '工具' },
-  it: { core: 'Pacchetti Core', bindings: 'Binding Framework', tooling: 'Strumenti' },
-  pt: { core: 'Pacotes Principais', bindings: 'Bindings de Framework', tooling: 'Ferramentas' },
-  hi: { core: 'मुख्य पैकेज', bindings: 'फ्रेमवर्क बाइंडिंग', tooling: 'टूलिंग' },
+  it: {
+    core: 'Pacchetti Core',
+    bindings: 'Binding Framework',
+    tooling: 'Strumenti',
+  },
+  pt: {
+    core: 'Pacotes Principais',
+    bindings: 'Bindings de Framework',
+    tooling: 'Ferramentas',
+  },
+  hi: {
+    core: 'मुख्य पैकेज',
+    bindings: 'फ्रेमवर्क बाइंडिंग',
+    tooling: 'टूलिंग',
+  },
 };
 
 const prefix = lang.value === 'en' ? '' : `/${lang.value}`;
@@ -38,7 +77,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/core',
       title: 'Core',
-      description: 'The orchestrator — registers, mounts, and manages all micro app lifecycles.',
+      description:
+        'The orchestrator — registers, mounts, and manages all micro app lifecycles.',
       badge: 'Required',
       link: `${prefix}/packages/core`,
       icon: '⚙️',
@@ -46,7 +86,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/router',
       title: 'Router',
-      description: 'URL-based micro app routing with history and hash mode support.',
+      description:
+        'URL-based micro app routing with history and hash mode support.',
       badge: 'Core',
       link: `${prefix}/packages/router`,
       icon: '🔀',
@@ -54,7 +95,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/event-bus',
       title: 'Event Bus',
-      description: 'Typed inter-app communication. Publish and subscribe across micro apps.',
+      description:
+        'Typed inter-app communication. Publish and subscribe across micro apps.',
       badge: 'Core',
       link: `${prefix}/packages/event-bus`,
       icon: '📡',
@@ -62,7 +104,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/loader',
       title: 'Loader',
-      description: 'Dynamic module loading with caching, retry and error boundary support.',
+      description:
+        'Dynamic module loading with caching, retry and error boundary support.',
       badge: 'Core',
       link: `${prefix}/packages/loader`,
       icon: '📦',
@@ -70,7 +113,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/sandbox',
       title: 'Sandbox',
-      description: 'CSS and JS isolation using Shadow DOM and JS Proxy. Prevent style leakage.',
+      description:
+        'CSS and JS isolation using Shadow DOM and JS Proxy. Prevent style leakage.',
       badge: 'Core',
       link: `${prefix}/packages/sandbox`,
       icon: '🔒',
@@ -80,7 +124,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/react',
       title: 'React',
-      description: 'React 18+ bindings with hooks — useMicroApp, useTuvixEvent.',
+      description:
+        'React 18+ bindings with hooks — useMicroApp, useTuvixEvent.',
       badge: 'Binding',
       link: `${prefix}/packages/react`,
       icon: '⚛️',
@@ -88,7 +133,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/vue',
       title: 'Vue',
-      description: 'Vue 3 bindings with composables — useMicroApp, useTuvixEvent.',
+      description:
+        'Vue 3 bindings with composables — useMicroApp, useTuvixEvent.',
       badge: 'Binding',
       link: `${prefix}/packages/vue`,
       icon: '💚',
@@ -96,7 +142,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/svelte',
       title: 'Svelte',
-      description: 'Svelte 3/4/5 bindings with reactive stores and lifecycle integration.',
+      description:
+        'Svelte 3/4/5 bindings with reactive stores and lifecycle integration.',
       badge: 'Binding',
       link: `${prefix}/packages/svelte`,
       icon: '🔥',
@@ -104,7 +151,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/angular',
       title: 'Angular',
-      description: 'Angular 15+ module, service and directive bindings for micro apps.',
+      description:
+        'Angular 15+ module, service and directive bindings for micro apps.',
       badge: 'Binding',
       link: `${prefix}/packages/angular`,
       icon: '🔺',
@@ -114,7 +162,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/devtools',
       title: 'DevTools',
-      description: 'In-browser debug panel. Inspect registered apps, events and loader state.',
+      description:
+        'In-browser debug panel. Inspect registered apps, events and loader state.',
       badge: 'Dev',
       link: `${prefix}/packages/devtools`,
       icon: '🛠️',
@@ -122,7 +171,8 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/server',
       title: 'Server',
-      description: 'Server-side composition — pre-render and stitch micro app HTML on the server.',
+      description:
+        'Server-side composition — pre-render and stitch micro app HTML on the server.',
       badge: 'SSR',
       link: `${prefix}/packages/server`,
       icon: '🖥️',
@@ -130,15 +180,27 @@ const packages: LocalePackages = {
     {
       name: '@tuvix.js/module-federation',
       title: 'Module Federation',
-      description: 'Webpack 5 Module Federation integration for sharing remote micro apps.',
+      description:
+        'Webpack 5 Module Federation integration for sharing remote micro apps.',
       badge: 'Integration',
       link: `${prefix}/packages/module-federation`,
       icon: '🌐',
     },
     {
+      name: '@tuvix.js/vite',
+      title: 'Vite',
+      description:
+        'Vite plugin that puts island CSS and modulepreload links into the SSR head, so server-rendered micro apps are styled on first paint.',
+      badge: 'Build',
+      // English page only for now; locales link to it until they get a translation.
+      link: '/packages/vite',
+      icon: '⚡',
+    },
+    {
       name: 'create-tuvix-app',
       title: 'create-tuvix-app',
-      description: 'CLI scaffolding tool. Instantly bootstrap a Tuvix.js micro app project.',
+      description:
+        'CLI scaffolding tool. Instantly bootstrap a Tuvix.js micro app project.',
       badge: 'CLI',
       link: `${prefix}/packages/create-tuvix-app`,
       icon: '🚀',

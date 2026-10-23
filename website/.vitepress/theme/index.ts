@@ -1,5 +1,6 @@
 import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
+import './styles/global.scss';
 import './style.css';
 import 'highlight.js/styles/github-dark.css';
 import PackagesOverview from './components/PackagesOverview.vue';
