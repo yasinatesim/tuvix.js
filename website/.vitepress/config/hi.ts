@@ -3,13 +3,34 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: 'गाइड', link: '/hi/guide/getting-started', activeMatch: '/hi/guide/' },
-      { text: 'पैकेज', link: '/hi/packages/', activeMatch: '/hi/packages/' },
+      {
+        text: 'गाइड',
+        link: '/hi/guide/getting-started',
+        activeMatch: '/hi/guide/',
+      },
+      {
+        text: 'पैकेज',
+        link: '/hi/packages/',
+        activeMatch: '/hi/packages/',
+      },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'AI जेनरेटर', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'योगदान', link: '/hi/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'योगदान', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'योगदान',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
+
     sidebar: {
       '/hi/guide/': [
         {
@@ -26,9 +47,11 @@ export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: 'Micro Apps', link: '/hi/guide/micro-apps' },
             { text: 'Lifecycle Hooks', link: '/hi/guide/lifecycle' },
+            { text: 'Lifecycle Events', link: '/hi/guide/lifecycle-events' },
             { text: 'रूटिंग', link: '/hi/guide/routing' },
+            { text: 'बाहरी राउटर', link: '/hi/guide/external-router' },
             { text: 'Event Bus', link: '/hi/guide/event-bus' },
-            { text: 'Sandbox', link: '/hi/guide/sandbox' },
+            { text: 'Sandboxing', link: '/hi/guide/sandbox' },
           ],
         },
         {
@@ -38,6 +61,14 @@ export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Vue के साथ', link: '/hi/guide/vue' },
             { text: 'Svelte के साथ', link: '/hi/guide/svelte' },
             { text: 'Angular के साथ', link: '/hi/guide/angular' },
+            { text: 'SSR Islands', link: '/hi/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'सहायता',
+          items: [
+            { text: '0.5 पर माइग्रेट करें', link: '/hi/guide/migration-0-5' },
+            { text: 'समस्या निवारण', link: '/hi/guide/troubleshooting' },
           ],
         },
       ],
@@ -63,26 +94,40 @@ export const hiConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           ],
         },
         {
-          text: 'उपकरण',
+          text: 'टूलिंग',
           items: [
             { text: '@tuvix.js/devtools', link: '/hi/packages/devtools' },
             { text: '@tuvix.js/server', link: '/hi/packages/server' },
+            { text: '@tuvix.js/vite', link: '/hi/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/hi/packages/module-federation',
             },
             { text: 'create-tuvix-app', link: '/hi/packages/create-tuvix-app' },
-            { text: 'tuvix.js (संपूर्ण पैकेज)', link: '/hi/packages/tuvix' },
+            { text: 'tuvix.js (umbrella)', link: '/hi/packages/tuvix' },
           ],
         },
       ],
     },
+
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: 'इस पृष्ठ को GitHub पर संपादित करें',
     },
-    lastUpdated: { text: 'अंतिम अद्यतन', formatOptions: { dateStyle: 'short' } },
-    docFooter: { prev: 'पिछला', next: 'अगला' },
-    outline: { label: 'इस पृष्ठ पर' },
+
+    lastUpdated: {
+      text: 'अंतिम अपडेट',
+      formatOptions: { dateStyle: 'short' },
+    },
+
+    docFooter: {
+      prev: 'पिछला',
+      next: 'अगला',
+    },
+
+    outline: {
+      label: 'इस पृष्ठ पर',
+    },
   },
 };

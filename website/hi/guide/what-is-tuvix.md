@@ -1,67 +1,58 @@
 # Tuvix.js क्या है?
 
-Tuvix.js एक **हल्का, फ्रेमवर्क-अज्ञेयवादी माइक्रोफ्रंटएंड ऑर्केस्ट्रेटर** है जो स्वतंत्र रूप से तैनात करने योग्य भागों से बनी स्केलेबल फ्रंटएंड एप्लिकेशन बनाने के लिए है।
+Tuvix.js ब्राउज़र के लिए एक माइक्रोफ्रंटएंड टूलकिट है। एक होस्ट पेज (shell) माइक्रो ऐप्स register करता है, और Tuvix.js हर ऐप का कोड लोड करता है, उसे एक container में mount करता है, उसे props देता है, और जब URL या आपका कोड कहे तब उसे unmount करता है। हर माइक्रो ऐप React, Vue, Svelte, Angular इस्तेमाल कर सकता है या बिना फ्रेमवर्क के चल सकता है, और हर टीम अपना ऐप अपने शेड्यूल पर build और deploy कर सकती है।
 
-## समस्या
+## यह क्या करता है
 
-जैसे-जैसे फ्रंटएंड बढ़ते हैं, मोनोलिथिक सिंगल-पेज एप्लिकेशन ये हो जाते हैं:
+- **माइक्रो ऐप्स को orchestrate करता है।** `createOrchestrator()` ऐप्स की एक registry रखता है। हर ऐप के लिए यह मौजूदा path से तय करता है कि ऐप mount होना चाहिए या नहीं, और एक समय में एक ही reconcile चलाता है, ताकि एक container साझा करने वाले दो ऐप्स कभी overlap न करें।
+- **ज़रूरत पड़ने पर कोड लोड करता है।** किसी ऐप की `entry` एक script URL, scripts और stylesheets की सूची, या `() => import('./dashboard')` जैसा कोई function हो सकती है। loader विफल लोड को दोबारा आज़माता है और धीमे लोड को रद्द कर देता है।
+- **URL से रूटिंग करता है।** `activeWhen: '/dashboard/*'` किसी ऐप को `/dashboard` पर और उसके नीचे के हर path पर mount करता है। आप बिल्ट-इन राउटर इस्तेमाल कर सकते हैं, या `connectRouter()` से TanStack Router या React Router को follow कर सकते हैं।
+- **फ्रेमवर्क्स को adapt करता है।** `createReactMicroApp`, `createVueMicroApp`, `createSvelteMicroApp` और `createAngularMicroApp` एक root कंपोनेंट को `mount`, `update` और `unmount` वाले module में बदलते हैं।
+- **React पेज में islands होस्ट करता है।** `TuvixIsland` सर्वर पर रेंडर हुए React tree के अंदर Vue, Svelte, Angular या React माइक्रो ऐप mount करता है और सर्वर HTML को दो बार भेजे बिना hydrate करता है। देखें [SSR Islands](/hi/guide/ssr-islands)।
+- **lifecycle की रिपोर्ट देता है।** adapters और `defineMicroApp` `tuvix:mounted`, `tuvix:unmounted` और `tuvix:error` DOM events dispatch करते हैं, और `whenMounted(name)` तब resolve होता है जब ऐप पेज पर आ जाता है। देखें [Lifecycle Events](/hi/guide/lifecycle-events)।
+- **ऐप्स को जोड़ता है।** पेज के सभी ऐप्स `getGlobalBus()` के ज़रिए एक ही event bus साझा करते हैं, तब भी जब हर ऐप `@tuvix.js/event-bus` की अपनी कॉपी bundle करता है।
+- **माँगने पर CSS अलग करता है।** `sandbox: true` किसी ऐप को shadow root के अंदर रेंडर करता है, ताकि पेज की CSS और ऐप की CSS अलग रहें।
 
-- कई टीमों में स्केल करना कठिन
-- बिल्ड और डिप्लॉय में धीमे - एक बदलाव सब कुछ फिर से बनाता है
-- एक ही फ्रेमवर्क या संस्करण में बंद
-- अलग-अलग परीक्षण और समझना कठिन
+## इसे कब इस्तेमाल करें
 
-## समाधान: माइक्रोफ्रंटएंड
+Tuvix.js तब चुनें जब कई टीमें एक पेज के हिस्से ship करती हैं और उन्हें अलग-अलग deploy करना होता है, या जब आप किसी legacy ऐप को दूसरे फ्रेमवर्क में हो रहे rewrite के साथ चलाते रहना चाहते हैं। यह उस अकेली टीम के लिए भी सही है जो सर्वर रेंडरिंग वाली React साइट के अंदर Vue या Svelte widgets चाहती है।
 
-माइक्रोफ्रंटएंड माइक्रोसर्विस सिद्धांतों को फ्रंटएंड पर लागू करते हैं। प्रत्येक **माइक्रो ऐप**:
+## इसे कब इस्तेमाल न करें
 
-- **स्वतंत्र रूप से विकसित** - अलग कोडबेस, अलग टीम
-- **स्वतंत्र रूप से तैनात** - अपनी CI/CD पाइपलाइन
-- **फ्रेमवर्क-अज्ञेयवादी** - एक टीम React, दूसरी Vue, तीसरी Svelte उपयोग करती है
+- एक टीम, एक फ्रेमवर्क, एक deploy: ऐसे में सामान्य single-page ऐप ज़्यादा आसान है।
+- आपको ऐप्स के बीच सख़्त security isolation चाहिए। Tuvix.js हर ऐप को एक ही JavaScript realm में चलाता है। `@tuvix.js/sandbox` का `JsSandbox` अपने proxy से किए गए global writes छिपाता है, पर यह किसी ऐप को `window` तक पहुँचने से नहीं रोकता। untrusted कोड के लिए `<iframe>` इस्तेमाल करें।
+- आप हर ऐप में साझा state वाला एक bundle चाहते हैं। माइक्रो ऐप्स design के तहत events और props से बात करते हैं।
 
-Tuvix.js **शेल** प्रदान करता है - पतली ऑर्केस्ट्रेशन परत जो रनटाइम पर सभी माइक्रो ऐप्स को लोड, माउंट और समन्वयित करती है।
+## पैकेज
 
-## आर्किटेक्चर
+| पैकेज | इसका उपयोग |
+| --- | --- |
+| `tuvix.js` | core, router, event bus, loader और sandbox वाला एक इंस्टॉल |
+| `@tuvix.js/core` | `createOrchestrator`, `defineMicroApp` |
+| `@tuvix.js/router` | `createRouter`, `matchPath`, `interceptLinks` |
+| `@tuvix.js/loader` | entry लोड करना और lifecycle runtime (`whenMounted`, `onLifecycle`) |
+| `@tuvix.js/event-bus` | `createEventBus`, `getGlobalBus` |
+| `@tuvix.js/sandbox` | `CssSandbox`, `JsSandbox` |
+| `@tuvix.js/react`, `vue`, `svelte`, `angular` | फ्रेमवर्क adapters, `TuvixIsland` (React) |
+| `@tuvix.js/vite` | सर्वर पर रेंडर हुए `<head>` के लिए island stylesheet links |
+| `@tuvix.js/server` | HTML fragments का सर्वर-साइड composition |
+| `@tuvix.js/module-federation` | webpack Module Federation remotes से लोड होने वाली entries |
+| `@tuvix.js/devtools` | पेज के अंदर debug panel |
+| `create-tuvix-app` | प्रोजेक्ट scaffolding |
 
-```
-┌─────────────────────────────────────────────┐
-│                Tuvix.js Shell               │
-│                                             │
-│  ┌────────────┐  ┌──────────┐  ┌────────┐  │
-│  │ Orchestrator│  │  Router  │  │ Loader │  │
-│  └────────────┘  └──────────┘  └────────┘  │
-│                                             │
-│  ┌─────────┐  ┌────────┐  ┌──────────────┐ │
-│  │  React  │  │  Vue   │  │   Angular    │ │
-│  │ माइक्रो │  │ माइक्रो│  │   माइक्रो   │ │
-│  │   ऐप    │  │   ऐप   │  │     ऐप      │ │
-│  └─────────┘  └────────┘  └──────────────┘ │
-└─────────────────────────────────────────────┘
-```
+## मुख्य अवधारणाएँ
 
-## मुख्य अवधारणाएं
+| शब्द | अर्थ |
+| --- | --- |
+| Shell | वह होस्ट पेज जो orchestrator बनाता है और layout का मालिक है |
+| माइक्रो ऐप | `mount` और `unmount` (और वैकल्पिक `bootstrap`, `update`) वाला module |
+| Entry | जहाँ से loader माइक्रो ऐप लेता है: URL, `{ scripts, styles }`, या loader function |
+| Container | वह element जिसमें माइक्रो ऐप रेंडर होता है |
+| Island | ऐसा माइक्रो ऐप जिसे होस्ट सर्वर पर रेंडर करता है और क्लाइंट उसी जगह hydrate करता है |
+| Event bus | एक pub/sub चैनल जिसे पेज का हर ऐप साझा करता है |
 
-| अवधारणा | विवरण |
-|----------|-------|
-| **Shell** | होस्ट एप्लिकेशन - माइक्रो ऐप्स को लोड और समन्वयित करता है |
-| **Orchestrator** | कोर इंजन जो माइक्रो ऐप पंजीकरण और जीवनचक्र का प्रबंधन करता है |
-| **Micro App** | एक स्वतंत्र रूप से तैनात फ्रंटएंड एप्लिकेशन |
-| **Entry** | माइक्रो ऐप का JavaScript बंडल URL |
-| **Lifecycle** | mount, unmount, update हुक जो प्रत्येक माइक्रो ऐप लागू करता है |
-| **Event Bus** | माइक्रो ऐप्स के बीच टाइप्ड pub/sub ब्रिज |
-| **Sandbox** | टकराव रोकने के लिए CSS + JS आइसोलेशन |
+## अगले कदम
 
-## तुलना
-
-| विशेषता | Tuvix.js | single-spa | Module Federation |
-|---------|----------|------------|-------------------|
-| शून्य रनटाइम निर्भरता | ✅ | ❌ | ✅ |
-| बिल्ट-इन Event Bus | ✅ | ❌ | ❌ |
-| CSS Sandbox | ✅ | ❌ | ❌ |
-| SSR सपोर्ट | ✅ | आंशिक | ✅ |
-| TypeScript-first | ✅ | आंशिक | ✅ |
-| फ्रेमवर्क बाइंडिंग | React, Vue, Svelte, Angular | React, Vue | कोई भी |
-
-## अगला कदम
-
-→ [शुरू करें](/hi/guide/getting-started)
+- [शुरुआत करें](/hi/guide/getting-started) में आप एक shell और दो माइक्रो ऐप्स बनाते हैं।
+- [आर्किटेक्चर](/hi/guide/architecture) दिखाता है कि navigation कैसे mount में बदलता है।
+- 0.4 से आ रहे हैं? [0.5 पर माइग्रेशन](/hi/guide/migration-0-5) पढ़ें।
