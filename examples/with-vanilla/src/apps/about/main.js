@@ -3,10 +3,6 @@ import { defineMicroApp } from '@tuvix.js/core';
 export default defineMicroApp({
   name: 'about',
 
-  bootstrap() {
-    console.log('[about] bootstrapped');
-  },
-
   mount({ container }) {
     container.innerHTML = `
       <div style="font-family: system-ui; color: #e0e0e0;">
@@ -23,6 +19,6 @@ export default defineMicroApp({
   },
 
   unmount({ container }) {
-    container.innerHTML = '';
+    container.replaceChildren();
   },
 });

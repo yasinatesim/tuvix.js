@@ -8,19 +8,18 @@ const orchestrator = createOrchestrator({
 
 orchestrator.register({
   name: 'home',
-  entry: '/src/apps/home/main.ts',
+  entry: () => import('./apps/home/main'),
   container: '#home',
-  activeWhen: () => true,
+  activeWhen: '/',
   props: { name: 'Alice' },
 });
 
 orchestrator.register({
   name: 'profile',
-  entry: '/src/apps/profile/main.ts',
+  entry: () => import('./apps/profile/main'),
   container: '#profile',
-  activeWhen: () => true,
+  activeWhen: '/',
   props: { theme: 'dark' },
 });
 
 orchestrator.start();
-console.log('🚀 Tuvix.js shell started (with-vue)');

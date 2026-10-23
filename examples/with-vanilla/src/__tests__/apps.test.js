@@ -10,25 +10,40 @@ describe('home micro-app', () => {
     document.body.appendChild(container);
   });
 
-  it('mounts and shows "Guest" when no user prop given', () => {
-    homeApp.mount({ container, props: {} });
+  it('mounts and shows "Guest" when no user prop given', async () => {
+    await homeApp.mount({ container, props: {} });
     expect(container.innerHTML).toContain('Guest');
   });
 
-  it('mounts and shows provided user prop', () => {
-    homeApp.mount({ container, props: { user: 'Alice' } });
+  it('mounts and shows provided user prop', async () => {
+    await homeApp.mount({ container, props: { user: 'Alice' } });
     expect(container.innerHTML).toContain('Alice');
   });
 
-  it('mounts and renders home heading', () => {
-    homeApp.mount({ container, props: {} });
+  it('mounts and renders home heading', async () => {
+    await homeApp.mount({ container, props: {} });
     expect(container.innerHTML).toContain('🏠 Home');
   });
 
-  it('unmount clears container', () => {
-    homeApp.mount({ container, props: {} });
+  it('update re-renders with new props', async () => {
+    await homeApp.mount({ container, props: { user: 'Alice' } });
+    await homeApp.update({ container, props: { user: 'Bob' } });
+    expect(container.innerHTML).toContain('Bob');
+    expect(container.innerHTML).not.toContain('Alice');
+  });
+
+  it('escapes HTML in props', async () => {
+    await homeApp.mount({
+      container,
+      props: { user: '<img src=x onerror=alert(1)>' },
+    });
+    expect(container.querySelector('img')).toBeNull();
+  });
+
+  it('unmount clears container', async () => {
+    await homeApp.mount({ container, props: {} });
     expect(container.innerHTML).not.toBe('');
-    homeApp.unmount({ container });
+    await homeApp.unmount({ container });
     expect(container.innerHTML).toBe('');
   });
 });
@@ -41,20 +56,20 @@ describe('about micro-app', () => {
     document.body.appendChild(container);
   });
 
-  it('mounts and renders about heading', () => {
-    aboutApp.mount({ container });
+  it('mounts and renders about heading', async () => {
+    await aboutApp.mount({ container });
     expect(container.innerHTML).toContain('ℹ️ About');
   });
 
-  it('mounts and renders framework-free description', () => {
-    aboutApp.mount({ container });
+  it('mounts and renders framework-free description', async () => {
+    await aboutApp.mount({ container });
     expect(container.innerHTML).toContain('Zero framework dependencies');
   });
 
-  it('unmount clears container', () => {
-    aboutApp.mount({ container });
+  it('unmount clears container', async () => {
+    await aboutApp.mount({ container });
     expect(container.innerHTML).not.toBe('');
-    aboutApp.unmount({ container });
+    await aboutApp.unmount({ container });
     expect(container.innerHTML).toBe('');
   });
 });

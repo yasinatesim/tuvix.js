@@ -13,16 +13,14 @@
 
 # with-vue
 
-Demonstrates basic **Vue 3 integration** using `@tuvix.js/vue`.
-
-Two Vue Single-File Components (`.vue`) are compiled by Vite, exported as Tuvix.js compatible modules via `createVueMicroApp`, and loaded dynamically by the central orchestrator.
+Two Vue 3 single-file components mounted by one Tuvix.js shell, each receiving props from the shell.
 
 ## Packages used
 
 | Package | Role |
 |---|---|
 | `@tuvix.js/core` | Shell orchestrator |
-| `@tuvix.js/vue` | `createVueMicroApp` wrapper, `useTuvixProps` composable |
+| `@tuvix.js/vue` | `createVueMicroApp` wrapper |
 
 ## Get started
 
@@ -40,13 +38,15 @@ npm run dev
 ```bash
 git clone https://github.com/yasinatesim/tuvix.js.git
 cd tuvix.js/examples/with-vue
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173).
 
 ## Key concepts
 
-- **`createVueMicroApp(App, config)`** - Wraps a root Vue component automatically hooking into the Tuvix mount/unmount lifecycle.
-- **`useTuvixProps()`** - A Vue composable that makes shell-provided properties available as reactivity wrapped Vue refs inside your component setup.
+- **`createVueMicroApp({ name, App })`** creates one Vue app per container and renders `App` with the shell's props.
+- **Props are component props:** declare them with `defineProps` (`HomeApp.vue` reads `name`, `ProfileApp.vue` reads `theme`). When the shell calls `orchestrator.updateAppProps(name, props)`, the adapter writes the new values into a reactive object and the component re-renders without losing local state.
+- **`inject('tuvixProps')`** returns the same reactive props object, for components deep in the tree.
+- **Code splitting:** each `entry` is `() => import('./apps/home/main')`, so Vite emits one chunk per app.
