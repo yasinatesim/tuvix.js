@@ -17,8 +17,16 @@ import { join } from 'path';
 const DATA_DIR = join(process.cwd(), 'data/components');
 
 const V2_CATEGORIES = [
-  'header', 'sidebar', 'form', 'card', 'layout',
-  'footer', 'modal', 'table', 'navigation', 'notification',
+  'header',
+  'sidebar',
+  'form',
+  'card',
+  'layout',
+  'footer',
+  'modal',
+  'table',
+  'navigation',
+  'notification',
 ];
 
 interface DataRecord {
@@ -31,10 +39,13 @@ interface DataRecord {
 function loadAllRecords(): DataRecord[] {
   const records: DataRecord[] = [];
   const files = readdirSync(DATA_DIR).filter(
-    (f) => f.endsWith('.jsonl') && V2_CATEGORIES.some((cat) => f === `${cat}.jsonl`),
+    (f) =>
+      f.endsWith('.jsonl') && V2_CATEGORIES.some((cat) => f === `${cat}.jsonl`)
   );
   for (const file of files) {
-    const lines = readFileSync(join(DATA_DIR, file), 'utf-8').split('\n').filter(Boolean);
+    const lines = readFileSync(join(DATA_DIR, file), 'utf-8')
+      .split('\n')
+      .filter(Boolean);
     for (const line of lines) {
       records.push(JSON.parse(line) as DataRecord);
     }
@@ -45,12 +56,13 @@ function loadAllRecords(): DataRecord[] {
 /** Extract the <script> block from a Vue or Svelte SFC */
 function extractScriptBlock(code: string, recordId: string): string {
   const match = code.match(/<script[^>]*>([\s\S]*?)<\/script>/);
-  if (!match) throw new Error(`${recordId}: no <script> block found in SFC code`);
+  if (!match)
+    throw new Error(`${recordId}: no <script> block found in SFC code`);
   return match[1].trim();
 }
 
 const hasV2Data = V2_CATEGORIES.some((cat) =>
-  existsSync(join(DATA_DIR, `${cat}.jsonl`)),
+  existsSync(join(DATA_DIR, `${cat}.jsonl`))
 );
 
 describe('Dataset compilation (JSONL records)', () => {
@@ -122,7 +134,7 @@ describe('Dataset compilation (JSONL records)', () => {
       it(record.id, async () => {
         const codeWithoutTemplate = record.code.replace(
           /template:\s*`[\s\S]*?`,/,
-          "template: '',",
+          "template: '',"
         );
         const result = await transform(codeWithoutTemplate, {
           loader: 'ts',
@@ -148,7 +160,9 @@ describe('Dataset compilation (JSONL records)', () => {
         const result = await transform(scriptContent, {
           loader: 'js',
         }).catch((err) => {
-          throw new Error(`${record.id} script failed to compile:\n${err.message}`);
+          throw new Error(
+            `${record.id} script failed to compile:\n${err.message}`
+          );
         });
         expect(result.code.length).toBeGreaterThan(0);
       });

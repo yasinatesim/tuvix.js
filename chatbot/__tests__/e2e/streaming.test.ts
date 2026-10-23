@@ -9,7 +9,11 @@ beforeAll(async () => {
   const { createApp } = await import('../../src/server');
 
   const mockRag = {
-    async *generate(_msg: string, _fw: string | null, onSources: (s: Array<{ id: string; score: number }>) => void) {
+    async *generate(
+      _msg: string,
+      _fw: string | null,
+      onSources: (s: Array<{ id: string; score: number }>) => void
+    ) {
       onSources([{ id: 'test-001', score: 0.1 }]);
       yield 'Hello ';
       yield 'world';
@@ -24,13 +28,16 @@ beforeAll(async () => {
   await new Promise<void>((resolve) => {
     server = app.listen(0, () => {
       const addr = server.address();
-      if (addr && typeof addr === 'object') baseUrl = `http://localhost:${addr.port}`;
+      if (addr && typeof addr === 'object')
+        baseUrl = `http://localhost:${addr.port}`;
       resolve();
     });
   });
 });
 
-afterAll(() => { server?.close(); });
+afterAll(() => {
+  server?.close();
+});
 
 describe('Chat API - SSE Streaming', () => {
   it('streams tokens via SSE', async () => {
@@ -88,7 +95,11 @@ describe('Rate Limiting', () => {
   beforeAll(async () => {
     const { createApp } = await import('../../src/server');
     const mockRag = {
-      async *generate(_m: string, _f: string | null, onSources: (s: Array<{ id: string; score: number }>) => void) {
+      async *generate(
+        _m: string,
+        _f: string | null,
+        onSources: (s: Array<{ id: string; score: number }>) => void
+      ) {
         onSources([]);
         yield 'ok';
       },
@@ -100,13 +111,16 @@ describe('Rate Limiting', () => {
     await new Promise<void>((resolve) => {
       rlServer = app.listen(0, () => {
         const addr = rlServer.address();
-        if (addr && typeof addr === 'object') rlBaseUrl = `http://localhost:${addr.port}`;
+        if (addr && typeof addr === 'object')
+          rlBaseUrl = `http://localhost:${addr.port}`;
         resolve();
       });
     });
   });
 
-  afterAll(() => { rlServer?.close(); });
+  afterAll(() => {
+    rlServer?.close();
+  });
 
   it('returns 429 after 10 requests from the same IP within one minute', async () => {
     for (let i = 0; i < 10; i++) {

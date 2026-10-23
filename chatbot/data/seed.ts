@@ -1,7 +1,10 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { createOpenRouterClient } from '../src/services/openrouter';
-import { createVectorStore, type ComponentRecord } from '../src/services/vectordb';
+import {
+  createVectorStore,
+  type ComponentRecord,
+} from '../src/services/vectordb';
 import { CONFIG } from '../src/config';
 
 const DATA_DIR = join(import.meta.dirname, 'components');
@@ -28,7 +31,9 @@ async function seed() {
       try {
         records.push(JSON.parse(l));
       } catch {
-        console.error(`Skipping malformed JSONL line ${lineIdx + 1} in ${file}`);
+        console.error(
+          `Skipping malformed JSONL line ${lineIdx + 1} in ${file}`
+        );
       }
     }
 
@@ -39,7 +44,9 @@ async function seed() {
     const embeddings: number[][] = [];
     for (let i = 0; i < records.length; i += BATCH_SIZE) {
       const batch = records.slice(i, i + BATCH_SIZE);
-      const batchEmbeddings = await Promise.all(batch.map((r) => llm.embed(r.description)));
+      const batchEmbeddings = await Promise.all(
+        batch.map((r) => llm.embed(r.description))
+      );
       embeddings.push(...batchEmbeddings);
     }
 
@@ -51,4 +58,7 @@ async function seed() {
   console.log(`✅ Done! ${total} total records seeded.`);
 }
 
-seed().catch((err) => { console.error(err); process.exit(1); });
+seed().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

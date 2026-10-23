@@ -5,13 +5,37 @@ import { join } from 'path';
 const ANGULAR_TEMPLATE_DIR = join(process.cwd(), 'scripts/templates/angular');
 
 const CATEGORIES = [
-  'card', 'footer', 'form', 'header', 'layout',
-  'modal', 'navigation', 'notification', 'sidebar', 'table',
+  'card',
+  'footer',
+  'form',
+  'header',
+  'layout',
+  'modal',
+  'navigation',
+  'notification',
+  'sidebar',
+  'table',
 ];
 
-const REQUIRED_FIELDS = ['variant', 'description', 'tags', 'code', 'dependencies'];
-const REQUIRED_ANGULAR_IMPORTS = ['@angular/core', 'defineMicroApp', 'tuvix.js', 'bootstrapApplication'];
-const REQUIRED_API_FIELDS = ['standalone: true', 'defineMicroApp', 'mount', 'unmount'];
+const REQUIRED_FIELDS = [
+  'variant',
+  'description',
+  'tags',
+  'code',
+  'dependencies',
+];
+const REQUIRED_ANGULAR_IMPORTS = [
+  '@angular/core',
+  'defineMicroApp',
+  'tuvix.js',
+  'bootstrapApplication',
+];
+const REQUIRED_API_FIELDS = [
+  'standalone: true',
+  'defineMicroApp',
+  'mount',
+  'unmount',
+];
 
 describe('Angular template files', () => {
   for (const category of CATEGORIES) {
@@ -31,7 +55,10 @@ describe('Angular template files', () => {
 
         for (const tmpl of tmplList) {
           for (const field of REQUIRED_FIELDS) {
-            expect(tmpl[field], `${category}/${tmpl.variant} missing "${field}"`).toBeDefined();
+            expect(
+              tmpl[field],
+              `${category}/${tmpl.variant} missing "${field}"`
+            ).toBeDefined();
           }
         }
       });
@@ -53,7 +80,10 @@ describe('Angular template files', () => {
         const tmplList: Array<Record<string, unknown>> = mod.default;
 
         for (const tmpl of tmplList) {
-          expect(Array.isArray(tmpl.tags), `${category}/${tmpl.variant} tags must be array`).toBe(true);
+          expect(
+            Array.isArray(tmpl.tags),
+            `${category}/${tmpl.variant} tags must be array`
+          ).toBe(true);
         }
       });
 
@@ -64,7 +94,10 @@ describe('Angular template files', () => {
         for (const tmpl of tmplList) {
           const code = tmpl.code as string;
           for (const required of REQUIRED_ANGULAR_IMPORTS) {
-            expect(code, `${category}/${tmpl.variant} missing "${required}"`).toContain(required);
+            expect(
+              code,
+              `${category}/${tmpl.variant} missing "${required}"`
+            ).toContain(required);
           }
         }
       });
@@ -76,11 +109,20 @@ describe('Angular template files', () => {
         for (const tmpl of tmplList) {
           const code = tmpl.code as string;
           for (const field of REQUIRED_API_FIELDS) {
-            expect(code, `${category}/${tmpl.variant} missing API field "${field}"`).toContain(field);
+            expect(
+              code,
+              `${category}/${tmpl.variant} missing API field "${field}"`
+            ).toContain(field);
           }
           // Must NOT use old API
-          expect(code, `${category}/${tmpl.variant} should not use createAngularMicroApp`).not.toContain('createAngularMicroApp');
-          expect(code, `${category}/${tmpl.variant} should not use NgModule`).not.toContain('NgModule');
+          expect(
+            code,
+            `${category}/${tmpl.variant} should not use createAngularMicroApp`
+          ).not.toContain('createAngularMicroApp');
+          expect(
+            code,
+            `${category}/${tmpl.variant} should not use NgModule`
+          ).not.toContain('NgModule');
         }
       });
     });

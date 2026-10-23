@@ -37,7 +37,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'multi-column',
@@ -86,7 +91,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-newsletter',
@@ -135,11 +145,17 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'corporate',
-    description: 'Corporate footer with company info, links and contact details',
+    description:
+      'Corporate footer with company info, links and contact details',
     tags: ['footer', 'corporate', 'business'],
     code: `import { defineMicroApp } from 'tuvix.js';
 import { Component } from '@angular/core';
@@ -187,7 +203,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-social',
@@ -234,7 +255,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'dark',
@@ -276,7 +302,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'centered',
@@ -316,7 +347,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-logo',
@@ -360,7 +396,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-sitemap',
@@ -409,7 +450,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-legal',
@@ -454,7 +500,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-map',
@@ -501,7 +552,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-app-links',
@@ -548,7 +604,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'transparent',
@@ -587,7 +648,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-awards',
@@ -637,7 +703,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'with-payment',
@@ -684,7 +755,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
 ];
 

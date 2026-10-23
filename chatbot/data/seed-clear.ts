@@ -15,4 +15,7 @@ async function clearCollection() {
   console.log('Ready to re-seed.');
 }
 
-clearCollection().catch((err) => { console.error(err); process.exit(1); });
+clearCollection().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

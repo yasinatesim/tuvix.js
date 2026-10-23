@@ -58,11 +58,17 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'blog',
-    description: 'Blog layout with article content area and aside widget column',
+    description:
+      'Blog layout with article content area and aside widget column',
     tags: ['layout', 'blog', 'content'],
     code: `import { defineMicroApp } from 'tuvix.js';
 import { Component } from '@angular/core';
@@ -112,7 +118,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'portfolio',
@@ -165,7 +176,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'landing',
@@ -219,7 +235,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'admin',
@@ -270,7 +291,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'e-commerce',
@@ -328,11 +354,17 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'docs',
-    description: 'Documentation layout with navigation sidebar and content area',
+    description:
+      'Documentation layout with navigation sidebar and content area',
     tags: ['layout', 'docs', 'documentation'],
     code: `import { defineMicroApp } from 'tuvix.js';
 import { Component } from '@angular/core';
@@ -382,7 +414,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'saas-app',
@@ -434,7 +471,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'split',
@@ -479,7 +521,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'three-column',
@@ -534,7 +581,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'two-column',
@@ -579,7 +631,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'full-width',
@@ -625,7 +682,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'sticky-header',
@@ -676,7 +738,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'sticky-sidebar',
@@ -721,7 +788,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
   {
     variant: 'grid',
@@ -772,7 +844,12 @@ const app = defineMicroApp({
 });
 
 app.mount({ container: document.getElementById('app') as HTMLElement });`,
-    dependencies: ['tuvix.js', '@tuvix.js/core', '@angular/core', '@angular/platform-browser'],
+    dependencies: [
+      'tuvix.js',
+      '@tuvix.js/core',
+      '@angular/core',
+      '@angular/platform-browser',
+    ],
   },
 ];
 

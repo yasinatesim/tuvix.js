@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   # Main chatbot API server
   chatbot:
@@ -13,7 +13,7 @@ services:
       - PORT=3001
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
     ports:
-      - "3001:3001"
+      - '3001:3001'
     depends_on:
       chromadb:
         condition: service_started
@@ -36,7 +36,7 @@ services:
     depends_on:
       chromadb:
         condition: service_started
-    entrypoint: ["/bin/sh", "-c"]
+    entrypoint: ['/bin/sh', '-c']
     command:
       - |
         echo "⏳ Clearing old ChromaDB collection..."
@@ -44,7 +44,7 @@ services:
         echo "⏳ Seeding dataset into ChromaDB via OpenRouter embeddings..."
         tsx data/seed.ts
         echo "✅ Dataset seeded!"
-    restart: "no"
+    restart: 'no'
     networks:
       - dokploy-network
 

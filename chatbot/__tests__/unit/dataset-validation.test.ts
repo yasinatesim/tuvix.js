@@ -7,23 +7,39 @@ const DATA_DIR = join(process.cwd(), 'data/components');
 
 // v2 dataset uses singular category names (card.jsonl, not cards.jsonl)
 const V2_CATEGORIES = [
-  'header', 'sidebar', 'form', 'card', 'layout',
-  'footer', 'modal', 'table', 'navigation', 'notification',
+  'header',
+  'sidebar',
+  'form',
+  'card',
+  'layout',
+  'footer',
+  'modal',
+  'table',
+  'navigation',
+  'notification',
 ];
 const hasV2Data = V2_CATEGORIES.some((cat) =>
-  existsSync(join(DATA_DIR, `${cat}.jsonl`)),
+  existsSync(join(DATA_DIR, `${cat}.jsonl`))
 );
 
 const EXPECTED_TOTAL = 600;
 const EXPECTED_PER_CATEGORY = 60;
-const REQUIRED_FIELDS = ['id', 'description', 'framework', 'category', 'tags', 'code', 'dependencies'];
+const REQUIRED_FIELDS = [
+  'id',
+  'description',
+  'framework',
+  'category',
+  'tags',
+  'code',
+  'dependencies',
+];
 const VALID_FRAMEWORKS = ['react', 'vue', 'svelte', 'angular'];
 // Svelte is '' (falsy) because Svelte SFCs are raw component files — no @tuvix.js/svelte import
 const FRAMEWORK_IMPORTS: Record<string, string> = {
   react: '@tuvix.js/react',
   vue: '@tuvix.js/vue',
-  svelte: '',  // Svelte SFC — no package import in the component file itself
-  angular: 'tuvix.js',  // Angular now uses defineMicroApp from 'tuvix.js'
+  svelte: '', // Svelte SFC — no package import in the component file itself
+  angular: 'tuvix.js', // Angular now uses defineMicroApp from 'tuvix.js'
 };
 
 describe('Dataset v2 Validation', () => {
@@ -32,13 +48,16 @@ describe('Dataset v2 Validation', () => {
     return;
   }
 
-  const files = readdirSync(DATA_DIR).filter((f) =>
-    f.endsWith('.jsonl') && V2_CATEGORIES.some((cat) => f === `${cat}.jsonl`),
+  const files = readdirSync(DATA_DIR).filter(
+    (f) =>
+      f.endsWith('.jsonl') && V2_CATEGORIES.some((cat) => f === `${cat}.jsonl`)
   );
   const allRecords: Record<string, unknown>[] = [];
 
   files.forEach((file) => {
-    const lines = readFileSync(join(DATA_DIR, file), 'utf-8').split('\n').filter(Boolean);
+    const lines = readFileSync(join(DATA_DIR, file), 'utf-8')
+      .split('\n')
+      .filter(Boolean);
     lines.forEach((line) => allRecords.push(JSON.parse(line)));
   });
 
@@ -72,7 +91,9 @@ describe('Dataset v2 Validation', () => {
       const code = record.code as string;
       const expectedImport = FRAMEWORK_IMPORTS[fw];
       if (!expectedImport) continue; // Svelte SFC — no package import needed
-      expect(code, `${record.id} missing correct import`).toContain(expectedImport);
+      expect(code, `${record.id} missing correct import`).toContain(
+        expectedImport
+      );
     }
   });
 
@@ -80,7 +101,9 @@ describe('Dataset v2 Validation', () => {
     const reactRecords = allRecords.filter((r) => r.framework === 'react');
     for (const record of reactRecords) {
       const code = record.code as string;
-      expect(code, `${record.id} uses wrong API field`).not.toContain('component:');
+      expect(code, `${record.id} uses wrong API field`).not.toContain(
+        'component:'
+      );
       expect(code, `${record.id} missing App:`).toContain('App:');
       expect(code, `${record.id} missing name:`).toContain('name:');
     }
@@ -90,7 +113,9 @@ describe('Dataset v2 Validation', () => {
     const vueRecords = allRecords.filter((r) => r.framework === 'vue');
     for (const record of vueRecords) {
       const code = record.code as string;
-      expect(code, `${record.id} missing createVueMicroApp`).toContain('createVueMicroApp');
+      expect(code, `${record.id} missing createVueMicroApp`).toContain(
+        'createVueMicroApp'
+      );
       expect(code, `${record.id} missing App:`).toContain('App:');
       expect(code, `${record.id} missing name:`).toContain('name:');
     }
@@ -101,7 +126,10 @@ describe('Dataset v2 Validation', () => {
     for (const record of svelteRecords) {
       const code = record.code as string;
       // Svelte files are raw SFC — no createSvelteMicroApp in the code itself
-      expect(code, `${record.id} should not contain createSvelteMicroApp`).not.toContain('createSvelteMicroApp');
+      expect(
+        code,
+        `${record.id} should not contain createSvelteMicroApp`
+      ).not.toContain('createSvelteMicroApp');
       // Must have a <script> block
       expect(code, `${record.id} missing <script> block`).toContain('<script>');
     }
@@ -111,17 +139,28 @@ describe('Dataset v2 Validation', () => {
     const angularRecords = allRecords.filter((r) => r.framework === 'angular');
     for (const record of angularRecords) {
       const code = record.code as string;
-      expect(code, `${record.id} missing defineMicroApp`).toContain('defineMicroApp');
-      expect(code, `${record.id} missing standalone: true`).toContain('standalone: true');
-      expect(code, `${record.id} missing bootstrapApplication`).toContain('bootstrapApplication');
+      expect(code, `${record.id} missing defineMicroApp`).toContain(
+        'defineMicroApp'
+      );
+      expect(code, `${record.id} missing standalone: true`).toContain(
+        'standalone: true'
+      );
+      expect(code, `${record.id} missing bootstrapApplication`).toContain(
+        'bootstrapApplication'
+      );
       expect(code, `${record.id} missing name:`).toContain('name:');
       // Must NOT use old API
-      expect(code, `${record.id} should not use createAngularMicroApp`).not.toContain('createAngularMicroApp');
+      expect(
+        code,
+        `${record.id} should not use createAngularMicroApp`
+      ).not.toContain('createAngularMicroApp');
     }
   });
 
   it('each category has exactly 60 records', () => {
-    const categories = [...new Set(allRecords.map((r) => r.category as string))];
+    const categories = [
+      ...new Set(allRecords.map((r) => r.category as string)),
+    ];
     expect(categories.length).toBe(10);
     for (const cat of categories) {
       const count = allRecords.filter((r) => r.category === cat).length;

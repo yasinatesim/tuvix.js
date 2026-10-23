@@ -25,7 +25,7 @@ describe('System Prompts', () => {
       // createSvelteMicroApp appears only in the "NO createSvelteMicroApp" forbidden rule
       expect(prompt).toContain('NO createSvelteMicroApp');
       // Must NOT show createSvelteMicroApp as a usage pattern (in import or call)
-      expect(prompt).not.toContain("import { createSvelteMicroApp }");
+      expect(prompt).not.toContain('import { createSvelteMicroApp }');
     });
 
     it('Angular prompt uses defineMicroApp from tuvix.js', () => {
@@ -35,7 +35,7 @@ describe('System Prompts', () => {
       expect(prompt).toContain('Angular');
       expect(prompt).toContain('bootstrapApplication');
       // createAngularMicroApp only appears in the FORBIDDEN rule, not as correct usage
-      expect(prompt).not.toContain("import { createAngularMicroApp }");
+      expect(prompt).not.toContain('import { createAngularMicroApp }');
     });
 
     it('null framework generates vanilla JS prompt with defineMicroApp', () => {
@@ -56,7 +56,12 @@ describe('System Prompts', () => {
     });
 
     it('includes examples when provided', () => {
-      const examples = [{ code: 'const A = () => <div>A</div>;', description: 'Simple component' }];
+      const examples = [
+        {
+          code: 'const A = () => <div>A</div>;',
+          description: 'Simple component',
+        },
+      ];
       const prompt = buildSystemPrompt('react', examples);
       expect(prompt).toContain('const A = () => <div>A</div>;');
       expect(prompt).toContain('Simple component');

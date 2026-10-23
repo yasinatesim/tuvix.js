@@ -21,15 +21,26 @@ export interface DatasetRecord {
 }
 
 const FRAMEWORKS = ['react', 'vue', 'svelte', 'angular'] as const;
-type Framework = typeof FRAMEWORKS[number];
+type Framework = (typeof FRAMEWORKS)[number];
 
 const CATEGORIES = [
-  'header', 'sidebar', 'form', 'card', 'layout',
-  'footer', 'modal', 'table', 'navigation', 'notification',
+  'header',
+  'sidebar',
+  'form',
+  'card',
+  'layout',
+  'footer',
+  'modal',
+  'table',
+  'navigation',
+  'notification',
 ] as const;
-type Category = typeof CATEGORIES[number];
+type Category = (typeof CATEGORIES)[number];
 
-async function loadTemplates(framework: Framework, category: Category): Promise<ComponentTemplate[]> {
+async function loadTemplates(
+  framework: Framework,
+  category: Category
+): Promise<ComponentTemplate[]> {
   const mod = await import(`./templates/${framework}/${category}.js`);
   return mod.default;
 }
@@ -38,7 +49,7 @@ function buildRecord(
   framework: Framework,
   category: Category,
   template: ComponentTemplate,
-  index: number,
+  index: number
 ): DatasetRecord {
   const pad = String(index + 1).padStart(3, '0');
   return {
@@ -63,7 +74,9 @@ async function generate() {
 
     for (const framework of FRAMEWORKS) {
       const templates = await loadTemplates(framework, category);
-      templates.forEach((t, i) => records.push(buildRecord(framework, category, t, i)));
+      templates.forEach((t, i) =>
+        records.push(buildRecord(framework, category, t, i))
+      );
     }
 
     const jsonl = records.map((r) => JSON.stringify(r)).join('\n') + '\n';

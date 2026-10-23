@@ -13,11 +13,19 @@ import { join } from 'path';
 const TEMPLATE_DIR = join(process.cwd(), 'scripts/templates');
 
 const CATEGORIES = [
-  'card', 'footer', 'form', 'header', 'layout',
-  'modal', 'navigation', 'notification', 'sidebar', 'table',
+  'card',
+  'footer',
+  'form',
+  'header',
+  'layout',
+  'modal',
+  'navigation',
+  'notification',
+  'sidebar',
+  'table',
 ] as const;
 
-type Category = typeof CATEGORIES[number];
+type Category = (typeof CATEGORIES)[number];
 
 interface Template {
   variant: string;
@@ -27,7 +35,10 @@ interface Template {
   dependencies: string[];
 }
 
-async function loadTemplates(framework: string, category: Category): Promise<Template[]> {
+async function loadTemplates(
+  framework: string,
+  category: Category
+): Promise<Template[]> {
   const mod = await import(join(TEMPLATE_DIR, framework, `${category}.ts`));
   return mod.default as Template[];
 }
@@ -55,7 +66,7 @@ describe('React template compilation', () => {
             jsxFragment: 'React.Fragment',
           }).catch((err) => {
             throw new Error(
-              `react/${category}/${tmpl.variant} failed to compile:\n${err.message}`,
+              `react/${category}/${tmpl.variant} failed to compile:\n${err.message}`
             );
           });
 
@@ -82,7 +93,7 @@ describe('Angular template compilation', () => {
             },
           }).catch((err) => {
             throw new Error(
-              `angular/${category}/${tmpl.variant} failed to compile:\n${err.message}`,
+              `angular/${category}/${tmpl.variant} failed to compile:\n${err.message}`
             );
           });
 
@@ -109,14 +120,14 @@ describe('Vue template compilation (TypeScript module)', () => {
           // being misinterpreted as JS template literal interpolation by esbuild
           const codeWithoutTemplate = tmpl.code.replace(
             /template:\s*`[\s\S]*?`,/,
-            "template: '',",
+            "template: '',"
           );
 
           const result = await transform(codeWithoutTemplate, {
             loader: 'ts',
           }).catch((err) => {
             throw new Error(
-              `vue/${category}/${tmpl.variant} failed to compile:\n${err.message}`,
+              `vue/${category}/${tmpl.variant} failed to compile:\n${err.message}`
             );
           });
 
@@ -141,7 +152,7 @@ describe('Svelte template compilation (script block)', () => {
             scriptContent = extractScriptBlock(tmpl.code);
           } catch {
             throw new Error(
-              `svelte/${category}/${tmpl.variant}: could not extract <script> block`,
+              `svelte/${category}/${tmpl.variant}: could not extract <script> block`
             );
           }
 
@@ -149,7 +160,7 @@ describe('Svelte template compilation (script block)', () => {
             loader: 'js',
           }).catch((err) => {
             throw new Error(
-              `svelte/${category}/${tmpl.variant} script failed to compile:\n${err.message}`,
+              `svelte/${category}/${tmpl.variant} script failed to compile:\n${err.message}`
             );
           });
 

@@ -99,7 +99,9 @@ describe('createApp', () => {
         .post('/api/chat')
         .set('Origin', 'http://localhost:5173')
         .send({ message: 'make a header', framework: 'react' });
-      expect(res.headers['access-control-allow-origin']).toBe('http://localhost:5173');
+      expect(res.headers['access-control-allow-origin']).toBe(
+        'http://localhost:5173'
+      );
     });
   });
 

@@ -13,7 +13,11 @@ function Header() { return <header><nav>Home | About</nav></header>; }
 export default createReactMicroApp({ name: 'header', App: Header });`;
 
   const mockRag = {
-    async *generate(_msg: string, _fw: string, onSources: (s: Array<{ id: string; score: number }>) => void) {
+    async *generate(
+      _msg: string,
+      _fw: string,
+      onSources: (s: Array<{ id: string; score: number }>) => void
+    ) {
       onSources([{ id: 'react-header-001', score: 0.12 }]);
       yield '```tsx\n';
       yield componentCode;
@@ -29,13 +33,16 @@ export default createReactMicroApp({ name: 'header', App: Header });`;
   await new Promise<void>((resolve) => {
     server = app.listen(0, () => {
       const addr = server.address();
-      if (addr && typeof addr === 'object') baseUrl = `http://localhost:${addr.port}`;
+      if (addr && typeof addr === 'object')
+        baseUrl = `http://localhost:${addr.port}`;
       resolve();
     });
   });
 });
 
-afterAll(() => { server?.close(); });
+afterAll(() => {
+  server?.close();
+});
 
 describe('Chat API - Full Flow', () => {
   it('returns SSE stream with code block content', async () => {
@@ -47,11 +54,14 @@ describe('Chat API - Full Flow', () => {
 
     expect(res.status).toBe(200);
     const text = await res.text();
-    const events = text.split('\n')
+    const events = text
+      .split('\n')
       .filter((l) => l.startsWith('data: '))
       .map((l) => JSON.parse(l.slice(6)));
 
-    const tokens = events.filter((e) => e.type === 'token').map((e) => e.content);
+    const tokens = events
+      .filter((e) => e.type === 'token')
+      .map((e) => e.content);
     const fullContent = tokens.join('');
     expect(fullContent).toContain('createReactMicroApp');
     expect(fullContent).toContain('@tuvix.js/react');
