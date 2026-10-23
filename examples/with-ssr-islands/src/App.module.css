@@ -1,0 +1,47 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgb(225, 225, 230);
+  background: white;
+}
+
+.brand {
+  color: rgb(20, 20, 30);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.navLink {
+  color: rgb(70, 70, 90);
+  text-decoration: none;
+}
+
+.navLink[aria-current='page'] {
+  color: rgb(20, 20, 30);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.counter {
+  border: 1px solid rgb(20, 20, 30);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  background: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+.main {
+  padding: 2rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}

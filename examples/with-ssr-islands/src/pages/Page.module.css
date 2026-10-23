@@ -1,0 +1,23 @@
+.intro {
+  margin: 0 0 2rem;
+  max-width: 44rem;
+}
+
+.intro h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.5rem;
+}
+
+.fallback {
+  border: 2px dashed rgb(160, 160, 160);
+  border-radius: 12px;
+  padding: 1.25rem;
+  color: rgb(90, 90, 90);
+  background: rgb(248, 248, 248);
+}

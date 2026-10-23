@@ -1,0 +1,31 @@
+.box {
+  border: 2px solid rgb(97, 218, 251);
+  border-radius: 12px;
+  padding: 1.25rem;
+  background: rgb(235, 250, 255);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  color: rgb(8, 126, 164);
+  font-size: 1.25rem;
+}
+
+.text {
+  margin: 0 0 1rem;
+}
+
+.button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  background: rgb(8, 126, 164);
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
