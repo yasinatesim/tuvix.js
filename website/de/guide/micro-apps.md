@@ -1,175 +1,181 @@
 # Micro Apps
 
-A **micro app** is an independently built and deployed frontend application
-that integrates with the Tuvix.js shell via a standard lifecycle interface.
+Eine Micro App ist ein Modul mit den Funktionen `mount` und `unmount`. Die Shell ruft `mount` mit einem Container-Element und Props auf; die App rendert in dieses Element. Die Shell ruft `unmount` auf, wenn die App die Seite verlassen soll; die App entfernt, was sie gerendert hat.
 
-## The MicroAppModule Interface
-
-Every micro app's bundle must expose an object of this shape (the framework
-adapters do this for you):
+## Die Form des Moduls
 
 ```ts
-interface MicroAppModule {
-  bootstrap?: () => void | Promise<void>;
-  mount: ({ container, props }: { container: HTMLElement; props?: Record<string, unknown> })
-    => void | Promise<void>;
-  unmount: ({ container }: { container: HTMLElement }) => void | Promise<void>;
-  update?: ({ props }: { props: Record<string, unknown> }) => void | Promise<void>;
-}
+import type { MicroAppModule } from '@tuvix.js/loader';
+
+const app: MicroAppModule = {
+  bootstrap: async () => {},
+  mount: async ({ container, props, name, bus }) => {
+    container.textContent = `${name ?? 'app'} mounted`;
+    void props;
+    void bus;
+  },
+  update: async ({ props, container }) => {
+    if (container) container.dataset.props = JSON.stringify(props);
+  },
+  unmount: async ({ container }) => {
+    container.replaceChildren();
+  },
+};
 ```
 
-The hook receives a single context object — never positional arguments.
+| Hook | Erforderlich | Aufgerufen |
+| --- | --- | --- |
+| `bootstrap()` | nein | Einmal, nach dem ersten Laden, vor dem ersten `mount`. |
+| `mount({ container, props, name, bus })` | ja | Jedes Mal, wenn die App aktiv wird. |
+| `update({ props, container })` | nein | Wenn die Shell `updateAppProps` aufruft, während die App gemountet ist. |
+| `unmount({ container })` | ja | Jedes Mal, wenn die App inaktiv wird. |
 
-## How the Loader Finds Your Module
+Jeder Hook darf ein Promise zurückgeben. Der Orchestrator wartet darauf, bevor er den nächsten Schritt ausführt.
 
-After fetching and executing the bundle, the loader looks for the module in
-this priority order:
+## Von Hand schreiben
 
-1. `window.__TUVIX_MODULES__[name]` — the recommended pattern.
-2. New global properties added to `window` after the script ran (UMD / IIFE
-   fallback for legacy bundles).
-
-ES module bundles are loaded with `<script type="module">` and **cannot** rely
-on the UMD fallback, so they must self-register.
-
-## Vanilla JS Example
+`defineMicroApp` validiert die Hooks, registriert das Modul unter `name`, löst `tuvix:mounted`, `tuvix:unmounted` und `tuvix:error` auf dem Container aus und gibt das Modul zurück:
 
 ```ts
-// dashboard/main.ts
 import { defineMicroApp } from '@tuvix.js/core';
 
-let titleEl: HTMLHeadingElement | null = null;
+let off: (() => void) | undefined;
 
-const module = defineMicroApp({
-  name: 'dashboard',
+export default defineMicroApp({
+  name: 'notifications',
 
-  bootstrap() {
-    // One-time setup before first mount
-  },
-
-  mount({ container, props }) {
-    container.innerHTML = `<h1>Hello, ${props?.user ?? 'Guest'}!</h1>`;
-    titleEl = container.querySelector('h1');
+  mount({ container, props, bus }) {
+    const list = document.createElement('ul');
+    container.replaceChildren(list);
+    off = bus?.on<{ text: string }>('notify', ({ text }) => {
+      const item = document.createElement('li');
+      item.textContent = text;
+      list.append(item);
+    });
+    container.dataset.user = String(props?.user ?? '');
   },
 
   unmount({ container }) {
-    titleEl = null;
-    container.innerHTML = '';
-  },
-
-  // Triggered by orchestrator.updateAppProps('dashboard', { user: 'Yasin' }).
-  update({ props }) {
-    if (titleEl) titleEl.textContent = `Hello, ${props?.user ?? 'Guest'}!`;
+    off?.();
+    off = undefined;
+    container.replaceChildren();
   },
 });
-
-// Self-register so the loader can find us
-declare global {
-  interface Window { __TUVIX_MODULES__?: Record<string, unknown>; }
-}
-window.__TUVIX_MODULES__ = window.__TUVIX_MODULES__ ?? {};
-window.__TUVIX_MODULES__['dashboard'] = module;
-
-export default module;
 ```
 
-> The framework adapters (`createReactMicroApp`, `createVueMicroApp`,
-> `createSvelteMicroApp`, `createAngularMicroApp`) handle the
-> self-registration automatically.
+Verwende den `bus` aus dem Mount-Kontext. Er ist der Bus des Orchestrators, also `getGlobalBus()`, sofern die Shell keine `eventBus`-Optionen übergeben hat.
 
-## Passing Props
+## Einen Adapter verwenden
 
-The shell can supply props at registration time and update them at runtime:
+Adapter bauen das Modul aus einer Komponente und übernehmen Details, die du sonst selbst schreiben würdest:
+
+- eine Framework-Instanz pro Container, sodass ein Modul an mehreren Stellen mounten kann;
+- `update` rendert mit neuen Props neu, ohne erneuten Mount;
+- ein `unmount`, das eintrifft, während `mount` noch lädt, wartet und hinterlässt einen leeren Container;
+- die Events `tuvix:mounted`, `tuvix:unmounted` und `tuvix:error` auf dem Container;
+- Hydration von serverseitig gerendertem Markup, wenn du `ssr: true` übergibst.
+
+```tsx
+import { createReactMicroApp } from '@tuvix.js/react';
+
+function Cart({ items }: { items: number }) {
+  return <p>{items} items</p>;
+}
+
+export default createReactMicroApp({ name: 'cart', App: Cart });
+```
+
+## Das Modul für den Loader bereitstellen
+
+Der Orchestrator bekommt ein Modul über den `entry` der App:
 
 ```ts
-// Shell — initial props
+import { createOrchestrator } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator();
+
+// Bundled with the shell, code-split by your bundler.
+orchestrator.register({
+  name: 'cart',
+  entry: () => import('./apps/cart'),
+  container: '#cart',
+  activeWhen: '/shop/*',
+});
+
+// Deployed on its own. The script registers itself by name.
+orchestrator.register({
+  name: 'notifications',
+  entry: { scripts: ['https://cdn.example.com/notifications/main.js'], type: 'module' },
+  container: '#notifications',
+  activeWhen: '/',
+});
+```
+
+Bei einem URL-Entry muss das Modul `registerModule(name, module)` aufrufen (Adapter und `defineMicroApp` tun das) oder ein globales UMD-Objekt mit einer `mount`-Funktion bereitstellen. Eine Loader-Funktion muss nur zum Modul oder zu `{ default: module }` auflösen.
+
+## Props übergeben
+
+```ts
+import { createOrchestrator } from '@tuvix.js/core';
+
+const orchestrator = createOrchestrator();
+
 orchestrator.register({
   name: 'profile',
-  entry: '/profile.js',
+  entry: () => import('./apps/profile'),
   container: '#app',
   activeWhen: '/profile/*',
-  props: { userId: getCurrentUserId(), theme: 'dark' },
+  props: { userId: '42', theme: 'dark' },
 });
 
-// Shell — push new props later
 await orchestrator.updateAppProps('profile', { theme: 'light' });
+// The app now has { userId: '42', theme: 'light' }.
 ```
 
-The micro app receives them inside `mount()`:
+- Props werden flach zusammengeführt. Um einen Schlüssel zu entfernen, setze ihn auf `undefined`.
+- Ist die App gemountet und hat sie `update`, ruft der Orchestrator es auf und wird aufgelöst, sobald es abgeschlossen ist. Ein abgelehntes `update` versetzt die App in den Status `error` und ruft `onError` auf.
+- Ist die App nicht gemountet oder hat sie kein `update`, speichert der Orchestrator die zusammengeführten Props für den nächsten Mount. Er mountet die App nicht neu.
+
+## Ein Modul an mehreren Stellen mounten
+
+Adapter halten pro Container eine eigene Instanz. `TuvixIsland` und dein eigener Code können `mount` mit demselben Modul auf zwei Containern aufrufen:
 
 ```ts
-mount({ container, props }) {
-  const { userId, theme } = (props ?? {}) as { userId: string; theme: string };
-  render(container, userId, theme);
+import { createVueMicroApp } from '@tuvix.js/vue';
+import Price from './Price.vue';
+
+const price = createVueMicroApp({ name: 'price', App: Price });
+
+const first = document.querySelector<HTMLElement>('#price-1');
+const second = document.querySelector<HTMLElement>('#price-2');
+if (first && second) {
+  await price.mount({ container: first, props: { sku: 'a' } });
+  await price.mount({ container: second, props: { sku: 'b' } });
+  await price.update?.({ props: { sku: 'c' }, container: second }); // only #price-2
 }
 ```
 
-If the app implements `update()`, it receives the merged props in place — no
-remount, no flash. If it doesn't, the new props are stored and used on the
-next mount.
+Ohne `container` aktualisiert `update` jeden Mount dieses Moduls. Der Orchestrator übergibt immer `container`.
 
-## Registration Options
+## Build und Deployment
 
-```ts
-orchestrator.register({
-  name: 'reports',
-  entry: '/reports.js',          // string or { scripts: [...], styles: [...] }
-  container: '#main',             // CSS selector or HTMLElement
-  activeWhen: '/reports/*',       // string pattern or (path) => boolean
-  props: { user: 'Yasin' },
-  fallback: '<p>Reports unavailable.</p>',
-  mountWhenVisible: false,        // true = lazy mount via IntersectionObserver
-});
-```
-
-`activeWhen` can also be a function for fully custom matching:
+Baue jede App als ES-Modul-Bundle und registriere sie mit `type: 'module'`, oder als IIFE/UMD-Bundle und registriere ihre URL als klassisches Skript. Mit Vite:
 
 ```ts
-activeWhen: (path) => path.startsWith('/reports') || path === '/dashboard',
-```
-
-## Building for Production
-
-Each micro app is a standalone JavaScript bundle. Use any bundler — here are
-the most common configurations.
-
-### Vite (recommended)
-
-```ts
-// vite.config.ts
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
-    lib: {
-      entry: './src/main.ts',
-      name: 'Dashboard',
-      formats: ['iife'],          // self-contained, sets window globals
-      fileName: () => 'main.js',
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom'], // share with the shell
-      output: {
-        globals: { react: 'React', 'react-dom': 'ReactDOM' },
-      },
-    },
+    lib: { entry: 'src/main.ts', formats: ['es'], fileName: 'main' },
+    // Leave dependencies bundled unless the shell provides them.
   },
 });
 ```
 
-### Webpack 5
+Denk an Framework-Kopien: Zwei Micro Apps, die jeweils React bündeln, liefern React zweimal aus. Die Seite funktioniert trotzdem, weil jede App ihren eigenen Root rendert. Um eine einzige Kopie zu teilen, verwende Import Maps, Module Federation (`@tuvix.js/module-federation`) oder lass die Shell die Apps über Entries mit Loader-Funktion bündeln.
 
-```js
-module.exports = {
-  entry: './src/main.ts',
-  output: {
-    library: { type: 'module' },
-    filename: 'main.mjs',
-  },
-  experiments: { outputModule: true },
-};
-```
+## Was eine Micro App nicht tun darf
 
-> When you ship ES modules (`.mjs` / `.mts` / `.tsx` / `.jsx` extensions),
-> the loader uses `<script type="module">` — make sure your bundle calls
-> `window.__TUVIX_MODULES__[name] = module` before the export executes.
+- Außerhalb ihres Containers schreiben. Tuvix.js hindert sie nicht daran, und die nächste App in diesem Container rechnet nicht damit.
+- Nach `unmount` Listener, Timer oder Subscriptions zurücklassen.
+- Sich darauf verlassen, dass `bootstrap` mehr als einmal läuft. Es läuft einmal pro geladenem Modul.

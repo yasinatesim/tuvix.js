@@ -1,21 +1,21 @@
 # Zu Tuvix.js beitragen
 
-Vielen Dank für dein Interesse an einer Mitarbeit! Ob Fehlerbehebung, neues Feature, Dokumentationsverbesserung oder Übersetzung - alle Beiträge sind willkommen.
+Danke für dein Interesse an einer Mitarbeit! Ob Fehlerbehebung, neues Feature, Verbesserung der Dokumentation oder Übersetzung: Alle Beiträge sind willkommen.
 
 ## Möglichkeiten beizutragen
 
-- **Fehlerberichte** - [Issue erstellen](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
-- **Feature-Anfragen** - [Diskussion starten](https://github.com/yasinatesim/tuvix.js/issues)
-- **Code** - Fehler beheben, Features hinzufügen, Tests verbessern
-- **Dokumentation** - Tippfehler korrigieren, Beispiele hinzufügen, Klarheit verbessern
-- **Übersetzungen** - Dokumentation in anderen Sprachen hinzufügen oder verbessern
+- **Fehlerberichte**: [Issue erstellen](https://github.com/yasinatesim/tuvix.js/issues/new?template=bug_report.md)
+- **Feature-Wünsche**: [Diskussion starten](https://github.com/yasinatesim/tuvix.js/issues)
+- **Code**: Fehler beheben, Features hinzufügen, Tests verbessern
+- **Dokumentation**: Tippfehler korrigieren, Beispiele hinzufügen, Verständlichkeit verbessern
+- **Übersetzungen**: Dokumentation in anderen Sprachen hinzufügen oder verbessern
 
 ## Erste Schritte
 
-### 1. Fork und Clone
+### 1. Forken und klonen
 
 ```bash
-git clone https://github.com/DEIN_BENUTZERNAME/tuvix.js.git
+git clone https://github.com/YOUR_USERNAME/tuvix.js.git
 cd tuvix.js
 ```
 
@@ -39,7 +39,7 @@ pnpm build
 pnpm test
 ```
 
-### 5. Docs-Entwicklungsserver starten
+### 5. Dev-Server der Doku starten
 
 ```bash
 cd website
@@ -47,7 +47,7 @@ pnpm install
 pnpm dev
 ```
 
-Öffne `http://localhost:5173` in deinem Browser, um die Dokumentation anzuzeigen.
+Öffne `http://localhost:5173` in deinem Browser, um eine Vorschau der Doku zu sehen.
 
 ## Projektstruktur
 
@@ -69,21 +69,21 @@ tuvix.js/
 │   ├── create-tuvix-app/
 │   └── tuvix/          tuvix.js umbrella
 └── website/
-    ├── .vitepress/     VitePress-Konfiguration und Theme
-    ├── guide/          Englische Dokumentation
-    ├── packages/       Paket-API-Dokumentation
-    ├── tr/             Türkische Übersetzungen
-    ├── es/             Spanische Übersetzungen
-    └── ...             Andere Sprachen
+    ├── .vitepress/     VitePress config and theme
+    ├── guide/          English documentation
+    ├── packages/       Package API docs
+    ├── tr/             Turkish translations
+    ├── es/             Spanish translations
+    └── ...             Other languages
 ```
 
 ## Code-Stil
 
-- **TypeScript** - strikter Modus, der gesamte Code muss typisiert sein
-- **Prettier** - führe `pnpm format` zum Formatieren aus
-- **Keine Laufzeitabhängigkeiten** - Pakete dürfen keine Laufzeitabhängigkeiten haben
-- **Benannte Exporte** - vermeide Default-Exporte
-- **Fehlermeldungen** - mit `[Tuvix ...]` voranstellen
+- **TypeScript**: Strict Mode, der gesamte Code muss typisiert sein
+- **Prettier**: Führe `pnpm format` zum Formatieren aus
+- **Keine Laufzeitabhängigkeiten**: Pakete dürfen keine Laufzeitabhängigkeiten haben
+- **Benannte Exporte**: Vermeide Default-Exporte
+- **Fehlermeldungen**: Mit `[Tuvix ...]` als Präfix beginnen
 
 ## Commit-Nachrichten
 
@@ -97,12 +97,12 @@ chore: bump vitepress to 1.7.0
 test(event-bus): add once() edge case tests
 ```
 
-## Pull-Request-Prozess
+## Ablauf für Pull Requests
 
 1. Erstelle einen Branch von `master`:
 
    ```bash
-   git checkout -b feat/mein-feature
+   git checkout -b feat/my-feature
    ```
 
 2. Nimm deine Änderungen vor und füge Tests hinzu
@@ -121,56 +121,56 @@ test(event-bus): add once() edge case tests
    pnpm changeset
    ```
 
-5. Pushe und erstelle einen PR gegen `master`
+5. Pushe und öffne einen PR gegen `master`
 
-6. Ein Maintainer wird deinen PR überprüfen. Bitte antworte innerhalb von 7 Tagen auf Feedback.
+6. Ein Maintainer prüft deinen PR. Bitte reagiere innerhalb von 7 Tagen auf Feedback.
 
 ## Eine Übersetzung hinzufügen
 
-Die gesamte Dokumentation befindet sich in Markdown unter `website/`. Jede Sprache hat ihr eigenes Verzeichnis:
+Die gesamte Dokumentation liegt als Markdown unter `website/`. Jede Sprache hat ein eigenes Verzeichnis:
 
 ```
 website/
-├── index.md              ← Englisch (Stammverzeichnis)
-├── guide/                ← Englische Anleitungen
-├── tr/                   ← Türkisch
+├── index.md              ← English (root)
+├── guide/                ← English guides
+├── tr/                   ← Turkish
 │   ├── index.md
 │   ├── guide/
 │   └── packages/
-├── es/                   ← Spanisch
+├── es/                   ← Spanish
 └── ...
 ```
 
 ### Schritte zum Hinzufügen oder Verbessern einer Übersetzung
 
 1. Kopiere englische Dateien von `website/guide/` nach `website/<lang>/guide/`
-2. Übersetze den Markdown-Inhalt (Code-Blöcke auf Englisch lassen)
+2. Übersetze den Markdown-Inhalt (Code-Blöcke bleiben auf Englisch)
 3. Aktualisiere die Sidebar-Konfiguration in `website/.vitepress/config/<lang>.ts`
-4. Führe `cd website && pnpm dev` zur Vorschau aus
+4. Führe `cd website && pnpm dev` für eine Vorschau aus
 
 ::: tip Übersetzungstipps
 
-- Alle Code-Beispiele auf Englisch lassen
-- UI-Labels, Beschreibungen und erklärende Texte übersetzen
-- Einheimische Terminologie verwenden, wo Standardübersetzungen existieren
+- Lass alle Code-Beispiele auf Englisch
+- Übersetze UI-Beschriftungen, Beschreibungen und erklärende Texte
+- Verwende die übliche Fachterminologie der Sprache, wo es etablierte Übersetzungen gibt
 :::
 
 ## Unterstützte Sprachen
 
 | Sprache | Code | Status |
-|---------|------|--------|
-| Englisch | `en` | Vollständig (Referenz) |
-| Türkisch | `tr` | In Bearbeitung |
-| Spanisch | `es` | In Bearbeitung |
-| Deutsch | `de` | In Bearbeitung |
-| Französisch | `fr` | In Bearbeitung |
-| Japanisch | `ja` | In Bearbeitung |
-| Chinesisch | `zh` | In Bearbeitung |
-| Italienisch | `it` | In Bearbeitung |
-| Portugiesisch | `pt` | In Bearbeitung |
-| Hindi | `hi` | In Bearbeitung |
+|----------|------|--------|
+| Englisch  | `en` | Vollständig (Referenz) |
+| Türkisch  | `tr` | In Arbeit |
+| Spanisch  | `es` | In Arbeit |
+| Deutsch   | `de` | In Arbeit |
+| Französisch   | `fr` | In Arbeit |
+| Japanisch | `ja` | In Arbeit |
+| Chinesisch  | `zh` | In Arbeit |
+| Italienisch  | `it` | In Arbeit |
+| Portugiesisch | `pt` | In Arbeit |
+| Hindi    | `hi` | In Arbeit |
 
-Wenn du zu einer dieser Sprachen beitragen möchtest, prüfe die [offenen Übersetzungs-Issues](https://github.com/yasinatesim/tuvix.js/labels/translation) oder erstelle ein neues.
+Wenn du zu einer dieser Sprachen beitragen möchtest, sieh dir die [offenen Übersetzungs-Issues](https://github.com/yasinatesim/tuvix.js/labels/translation) an oder eröffne ein neues.
 
 ## Verhaltenskodex
 
@@ -178,4 +178,4 @@ Dieses Projekt folgt dem [Contributor Covenant](https://www.contributor-covenant
 
 ## Lizenz
 
-Mit deinem Beitrag erklärst du dich damit einverstanden, dass deine Beiträge unter der MIT-Lizenz lizenziert werden.
+Mit deinem Beitrag stimmst du zu, dass deine Beiträge unter der MIT-Lizenz lizenziert werden.

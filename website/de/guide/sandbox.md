@@ -1,137 +1,155 @@
 # Sandboxing
 
-`@tuvix.js/sandbox` provides CSS and JavaScript isolation primitives so a
-micro app can render without leaking styles or polluting the host page's
-globals.
+`@tuvix.js/sandbox` bietet zwei Werkzeuge. `CssSandbox` legt eine App in einen Shadow Root, damit ihr CSS und das CSS der Seite getrennt bleiben. `JsSandbox` führt Code gegen ein Proxy-`window` aus, sodass seine globalen Schreibzugriffe auf dem Proxy landen. Der Orchestrator verwendet `CssSandbox` für Apps, die du mit `sandbox: true` registrierst; `JsSandbox` wendet er nie an.
 
-> The orchestrator does **not** auto-sandbox apps. You opt in by wrapping
-> your `mount` / `unmount` hooks with `Sandbox`, `CssSandbox`, or `JsSandbox`
-> directly. This keeps the core small and the cost explicit.
+## CSS-Isolation pro App
 
-## CSS Isolation (Shadow DOM)
+```ts
+import { createOrchestrator } from 'tuvix.js';
 
-`CssSandbox` upgrades a container into a Shadow DOM host. Styles you inject
-live inside the shadow root and cannot bleed out, and global page styles
-cannot bleed in.
+const orchestrator = createOrchestrator();
+
+orchestrator.register({
+  name: 'widget',
+  entry: {
+    scripts: ['https://cdn.example.com/widget/main.js'],
+    styles: ['https://cdn.example.com/widget/main.css'],
+    type: 'module',
+  },
+  container: '#widget',
+  activeWhen: '/',
+  sandbox: true, // same as { css: true }
+});
+```
+
+Für diese App führt der Orchestrator folgende Schritte aus:
+
+1. Er hängt einen offenen Shadow Root an `#widget` an (oder verwendet den aus einem früheren Mount wieder);
+2. er erzeugt darin ein `<div data-tuvix-sandbox-root>` und übergibt dieses Element als `container` an `mount`;
+3. er fügt die `styles` des Entry als `<link>`-Tags in den Shadow Root ein, nicht in `document.head`, und wartet bis zu `loader.timeout` darauf, dass sie geladen sind, bevor er `mount` aufruft.
+
+Das CSS der Seite erreicht die App nicht mehr, und das CSS der App erreicht die Seite nicht mehr. Vererbte Eigenschaften wie `color` und `font-family` fließen weiterhin vom Host-Element hinein; setze sie im CSS der App auf `:host`, um das zu verhindern.
+
+Verwende es, wenn eine App globale Selektoren mitbringt (`button { ... }`, ein CSS-Reset) oder wenn das CSS der Seite die App kaputt macht.
+
+### Sonderfälle
+
+- Styles, die ein Framework zur Laufzeit einfügt, landen in `document.head`, außerhalb des Shadow Root. Die CSS-Injection von Vite, CSS-in-JS-Bibliotheken und die Komponenten-Styles von Angular tun das alle. Liefere eine CSS-Datei aus und trage sie in `entry.styles` ein, oder füge das CSS selbst in den Shadow Root ein.
+- Portals, Modals und Toasts, die in `document.body` rendern, verlassen den Shadow Root und verlieren die Styles der App.
+- `document.querySelector` aus der App heraus findet keine Elemente im Shadow Root. Suche stattdessen ab `container`.
+- Entries in Form einer Loader-Funktion listen keine `styles` auf, daher fügt dein Bundler ihr CSS in `document.head` ein, wo der Shadow Root es fernhält. Registriere Apps mit Sandbox über einen Entry der Form `{ scripts, styles, type }`.
+
+## CssSandbox von Hand
 
 ```ts
 import { CssSandbox } from '@tuvix.js/sandbox';
 
+declare const container: HTMLElement;
+
 const css = new CssSandbox();
+const shadow = css.wrap(container); // moves existing children into the shadow root
 
-// Wrap once per container (idempotent — repeats return the same root)
-const shadow = css.wrap(container);
+const adopted = css.adoptStyles(shadow, {
+  urls: ['/widget/main.css'],
+  cssText: ':host { display: block; font-family: system-ui; }',
+});
+await adopted.ready; // resolves once each <link> fired load or error
 
-// Add scoped styles
-const styleEl = css.addStyle(shadow, '.btn { color: red }');
+const button = document.createElement('button');
+button.textContent = 'Buy';
+shadow.append(button);
 
-// Render your UI inside `shadow` instead of `container`
-shadow.appendChild(buildUi());
-
-// On unmount: restore non-style children back to the container
-css.removeStyle(shadow, styleEl); // optional — unwrap discards styles too
+// Later
+adopted.remove();
 css.unwrap(container);
 ```
 
-```
-container (host)
-└── ShadowRoot
-    ├── <style>.btn { color: red }</style>
-    └── <button class="btn">Click</button>     ← scoped, can't be themed from outside
-```
+| Methode | Wirkung |
+| --- | --- |
+| `wrap(container)` | Hängt einen offenen Shadow Root an oder verwendet einen vorhandenen offenen wieder und verschiebt die Kinder des Containers hinein. |
+| `adoptStyles(shadow, { urls, cssText })` | Fügt `<link>`- und `<style>`-Elemente am Anfang des Shadow Root ein. Überspringt eine URL, die dort bereits übernommen wurde. Gibt `{ elements, ready, remove }` zurück. |
+| `addStyle(shadow, css)` / `removeStyle(shadow, el)` | Hängt ein `<style>` an oder entfernt es. |
+| `unwrap(container)` | Verschiebt Nicht-Style-Knoten zurück ins Light DOM und hinterlässt einen `<slot>`, damit sie gerendert werden. Nimmt `<style>`- und Stylesheet-`<link>`-Knoten (auch die aus `addStyle` und `adoptStyles`) aus dem DOM; das nächste `wrap` dieses Containers fügt sie in ihrer Reihenfolge wieder ein. |
 
-Shadow DOM is supported in all modern browsers. Components that rely on
-portals to `document.body` (popovers, modals) need explicit handling — they
-escape the shadow root by design.
+`wrap` wirft einen Fehler, wenn das Element keinen Shadow Root aufnehmen kann (zum Beispiel `<input>`) oder bereits einen geschlossenen hat. `ready` wird nie abgelehnt. jsdom löst bei Links nie `load` aus, also warte in jsdom-Tests nicht auf `ready`. Rufst du `removeStyle` oder `adopted.remove()` auf, während der Container entpackt ist, kommt dieses Stylesheet beim nächsten `wrap` nicht zurück.
 
-## JS Isolation (Proxy Scope)
-
-`JsSandbox` produces a `proxyWindow` whose **writes** go to a per-instance
-`fakeWindow` map. **Reads** pass through to the real window unless they were
-shadowed by a write. This means sandboxed code cannot pollute global state
-even after `deactivate()`.
+## JsSandbox
 
 ```ts
 import { JsSandbox } from '@tuvix.js/sandbox';
 
-const js = new JsSandbox(
-  ['gtag', 'dataLayer'], // additional allowed globals (in strict mode)
-  /* strict */ true,      // warn when sandboxed code touches non-allowed globals
-);
+const js = new JsSandbox(['dataLayer'], /* strict */ true);
 
-js.activate();
+js.execScript('window.dataLayer = []'); // allowed, stored on the proxy
+console.log('dataLayer' in window); // false, unless the page defined it
 
-// Run a snippet inside the sandbox
-js.execScript('window.myVar = 42; console.log(window.location.href)');
+try {
+  js.execScript('counter = 1'); // bare assignment to a global that is not allowed
+} catch (error) {
+  console.log(error instanceof TypeError); // true: strict mode blocked the write
+}
 
-js.deactivate();
-js.reset(); // clear fakeWindow
+const loose = new JsSandbox(); // not strict
+loose.execScript('var version = 2; build = 7;');
+console.log(Reflect.get(loose.proxyWindow, 'version'), 'version' in window); // 2 false
+
+js.reset(); // forget every stored global
 ```
 
-`execScript` calls `new Function(...)` and binds `window`, `self`, and
-`globalThis` to the proxy.
+- Schreibzugriffe und `Object.defineProperty` über den Proxy gehen in einen Speicher der Sandbox. Lesezugriffe prüfen zuerst diesen Speicher, dann das echte `window`.
+- Mit `strict: true` wirft das Zuweisen, die `var`-Deklaration auf oberster Ebene oder `Object.defineProperty` für ein Global außerhalb der eingebauten Allowlist und `allowedGlobals` einen `TypeError` und speichert nichts.
+- `execScript(code)` führt `code` innerhalb von `with (scope)` aus, wobei `window`, `self`, `globalThis` und `this` an den Proxy gebunden sind. Nackte Zuweisungen (`x = 1`), `var x` auf oberster Ebene und `window.x = 1` landen alle auf dem Proxy; `let` und `const` bleiben lokal im Skript.
+- Innerhalb von `execScript` liefert das Lesen eines nicht deklarierten Bezeichners `undefined`, statt einen `ReferenceError` zu werfen, und eine `"use strict"`-Direktive hat keine Wirkung, weil `with` den Sloppy Mode braucht. Es verwendet `new Function`, daher braucht deine Content Security Policy `unsafe-eval`.
+- `activate()` und `deactivate()` setzen das Flag `active`. Der Proxy speichert Schreibzugriffe in beiden Zuständen.
 
-## Combined Sandbox
+`JsSandbox` deckt nur Code ab, der über `proxyWindow` auf Globals zugreift. Ein per `<script>`-Tag geladenes Skript, ein gebündeltes Modul, Timer und Event Listener verwenden alle das echte `window`. Betrachte es als Schutz vor versehentlichen globalen Schreibzugriffen in Snippets, die du ausführst, nicht als Sicherheitsgrenze.
 
-`createSandbox` (or `new Sandbox(...)`) wires both isolations together:
+## Kombinierte Sandbox
 
 ```ts
 import { createSandbox } from '@tuvix.js/sandbox';
 
-const sandbox = createSandbox({
-  css: true,
-  js: true,
-  allowedGlobals: ['gtag'],
-  strict: false,
-});
-
-// Returns the shadow root when css isolation is on
-const shadow = sandbox.activate(container);
-
-// Use sandbox.css / sandbox.js for fine-grained calls if needed
-sandbox.css.addStyle(shadow, '/* ... */');
-
-// Cleanup
-sandbox.deactivate(container);
-sandbox.destroy(container); // deactivate + reset js fakes
-```
-
-## Wiring into a Micro App
-
-```ts
-import { defineMicroApp } from '@tuvix.js/core';
-import { createSandbox } from '@tuvix.js/sandbox';
+declare const container: HTMLElement;
 
 const sandbox = createSandbox({ css: true, js: false });
 
+const shadow = sandbox.activate(container); // ShadowRoot | null
+if (shadow) sandbox.css.addStyle(shadow, '.box { padding: 8px; }');
+
+sandbox.deactivate(container); // unwrap
+sandbox.destroy(container); // deactivate + reset the JS store
+```
+
+`activate` gibt `null` zurück, wenn `css` `false` ist; dann hängt es nichts an.
+
+## Verwendung in einer Micro App
+
+```ts
+import { defineMicroApp } from '@tuvix.js/core';
+import { CssSandbox } from '@tuvix.js/sandbox';
+
+const css = new CssSandbox();
+
 export default defineMicroApp({
   name: 'widget',
-
-  mount({ container, props }) {
-    const shadow = sandbox.activate(container);
-    sandbox.css.addStyle(shadow, '.box { padding: 8px; }');
-    shadow.appendChild(renderWidget(props));
+  mount({ container }) {
+    const shadow = css.wrap(container);
+    css.addStyle(shadow, 'p { color: rebeccapurple; }');
+    const text = document.createElement('p');
+    text.textContent = 'Isolated';
+    shadow.append(text);
   },
-
   unmount({ container }) {
-    sandbox.deactivate(container);
+    container.shadowRoot?.replaceChildren();
+    css.unwrap(container);
   },
 });
 ```
 
-## When Not to Sandbox
+Verwende lieber `sandbox: true` bei `register`, wenn der Orchestrator die App mountet; das erledigt dieselbe Arbeit und verwendet den Shadow Root über erneute Mounts hinweg wieder.
 
-Skip the sandbox when your micro app:
+## Wann du nicht sandboxen solltest
 
-- Uses portals into `document.body` (popovers, toasts) and you don't need style isolation
-- Loads design-system styles globally on purpose
-- Already runs in a separate iframe or web component context
-
-## API Surface
-
-| Export | Purpose |
-| --- | --- |
-| `CssSandbox` | Shadow DOM wrap / unwrap, scoped style helpers |
-| `JsSandbox` | Proxy window + `execScript` |
-| `Sandbox` / `createSandbox` | Combined CSS + JS isolation |
-| `SandboxOptions`, `ISandbox`, `ICssSandbox`, `IJsSandbox` | Types |
+- Die App verwendet Portals in `document.body` und braucht dort ihre Styles.
+- Das Design-System der Seite soll die App gestalten.
+- Du brauchst echte JavaScript-Isolation. Verwende ein `<iframe>`.

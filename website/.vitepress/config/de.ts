@@ -3,12 +3,28 @@ import type { DefaultTheme, LocaleConfig } from 'vitepress';
 export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
   themeConfig: {
     nav: [
-      { text: 'Anleitung', link: '/de/guide/getting-started', activeMatch: '/de/guide/' },
+      {
+        text: 'Anleitung',
+        link: '/de/guide/getting-started',
+        activeMatch: '/de/guide/',
+      },
       { text: 'Pakete', link: '/de/packages/', activeMatch: '/de/packages/' },
       { text: 'Playground', link: '/playground', activeMatch: '/playground' },
       { text: 'KI-Generator', link: '/chatbot', activeMatch: '/chatbot' },
       { text: 'Beitragen', link: '/de/contributing' },
-      { text: 'v0.1.4', items: [{ text: 'Changelog', link: 'https://github.com/yasinatesim/tuvix.js/releases' }, { text: 'Beitragen', link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md' }] },
+      {
+        text: 'v0.5.0',
+        items: [
+          {
+            text: 'Changelog',
+            link: 'https://github.com/yasinatesim/tuvix.js/releases',
+          },
+          {
+            text: 'Beitragen',
+            link: 'https://github.com/yasinatesim/tuvix.js/blob/master/CONTRIBUTING.md',
+          },
+        ],
+      },
     ],
     sidebar: {
       '/de/guide/': [
@@ -26,9 +42,11 @@ export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: 'Micro Apps', link: '/de/guide/micro-apps' },
             { text: 'Lifecycle Hooks', link: '/de/guide/lifecycle' },
+            { text: 'Lifecycle-Events', link: '/de/guide/lifecycle-events' },
             { text: 'Routing', link: '/de/guide/routing' },
+            { text: 'Externer Router', link: '/de/guide/external-router' },
             { text: 'Event Bus', link: '/de/guide/event-bus' },
-            { text: 'Sandbox', link: '/de/guide/sandbox' },
+            { text: 'Sandboxing', link: '/de/guide/sandbox' },
           ],
         },
         {
@@ -38,6 +56,14 @@ export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
             { text: 'Mit Vue', link: '/de/guide/vue' },
             { text: 'Mit Svelte', link: '/de/guide/svelte' },
             { text: 'Mit Angular', link: '/de/guide/angular' },
+            { text: 'SSR-Islands', link: '/de/guide/ssr-islands' },
+          ],
+        },
+        {
+          text: 'Hilfe',
+          items: [
+            { text: 'Migration auf 0.5', link: '/de/guide/migration-0-5' },
+            { text: 'Fehlerbehebung', link: '/de/guide/troubleshooting' },
           ],
         },
       ],
@@ -67,6 +93,7 @@ export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
           items: [
             { text: '@tuvix.js/devtools', link: '/de/packages/devtools' },
             { text: '@tuvix.js/server', link: '/de/packages/server' },
+            { text: '@tuvix.js/vite', link: '/de/packages/vite' },
             {
               text: '@tuvix.js/module-federation',
               link: '/de/packages/module-federation',
@@ -78,10 +105,14 @@ export const deConfig: LocaleConfig<DefaultTheme.Config>[string] = {
       ],
     },
     editLink: {
-      pattern: 'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
+      pattern:
+        'https://github.com/yasinatesim/tuvix.js/edit/master/website/:path',
       text: 'Diese Seite auf GitHub bearbeiten',
     },
-    lastUpdated: { text: 'Zuletzt aktualisiert', formatOptions: { dateStyle: 'short' } },
+    lastUpdated: {
+      text: 'Zuletzt aktualisiert',
+      formatOptions: { dateStyle: 'short' },
+    },
     docFooter: { prev: 'Zurück', next: 'Weiter' },
     outline: { label: 'Auf dieser Seite' },
   },
